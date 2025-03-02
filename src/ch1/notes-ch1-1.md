@@ -1,3 +1,8 @@
+<div class="nav">
+    <a href="notes-introduction.html">← Previous</a>
+    <a href="index.html">↑ Up</a>
+    <a href="notes-ch1-2.html">Next →</a>
+</div>
 
 ## Section 1.1
 ### Introduction

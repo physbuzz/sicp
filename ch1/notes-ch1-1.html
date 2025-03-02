@@ -108,40 +108,26 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             background-color: #f8f9fa;
         }
 
-        /* Navigation bar */
-        .navbar {
-            background-color: #2c3e50;
-            color: white;
-            padding: 1rem;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .navbar-content {
-            max-width: 1000px;
-            margin: 0 auto;
+        /* Navigation styling (for custom nav in markdown) */
+        .nav {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e1e4e8;
         }
 
-        .navbar a {
-            color: white;
+        .nav a {
+            padding: 0.5rem 1rem;
+            background-color: #f1f1f1;
+            border-radius: 4px;
             text-decoration: none;
-            margin-left: 1.5rem;
+            color: #0366d6;
             font-weight: 500;
         }
 
-        .navbar a:hover {
-            text-decoration: underline;
-        }
-
-        .navbar .logo {
-            font-weight: bold;
-            font-size: 1.2rem;
-            margin-left: 0;
+        .nav a:hover {
+            background-color: #e1e4e8;
         }
 
         /* Center column layout */
@@ -215,23 +201,21 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
         }
 
         /* Code blocks */
-        .codehilite {
+        .code-box {
             background-color: #f6f8fa;
             border-radius: 6px;
-            overflow-x: auto;
+            overflow: hidden;
             margin: 1rem 0 1.5rem;
             border: 1px solid #e1e4e8;
         }
 
         .code-header {
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 9pt;
+            font-size: 0.75rem;
             color: #6a737d;
-            padding: 0.5rem 1rem;
+            padding: 0.3rem 0 0rem 0.3rem;
             border-bottom: 1px solid #e1e4e8;
             background-color: #fafbfc;
-            border-top-left-radius: 6px;
-            border-top-right-radius: 6px;
         }
 
         .code-header a {
@@ -244,20 +228,45 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             color: #0366d6;
         }
 
+        /* Standalone code blocks (triple backticks) */
+        .codehilite {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        /* When inside a code-box, remove default styling */
+        .code-box .codehilite {
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Adjust padding for code blocks inside code-box */
+        .code-box .codehilite pre {
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        /* Normal padding for standalone code blocks */
+        .codehilite pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
         .code-output {
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 9pt;
+            font-size: 0.9rem;
             color: #6a737d;
             padding: 0.5rem 1rem;
             border-top: 1px solid #e1e4e8;
             background-color: #fafbfc;
             white-space: pre-wrap;
-        }
-
-        .codehilite pre {
-            padding: 1rem;
-            overflow-x: auto;
-            margin: 0;
         }
 
         code {
@@ -310,20 +319,14 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     </style>
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <div class="navbar">
-        <div class="navbar-content">
-            <a href="/index.html" class="logo">SICP Notes</a>
-            <div>
-                <a href="/ch1/notes-ch1-1.html">Chapter 1</a>
-                <a href="/meetings/index.html">Meetings</a>
-                <a href="https://github.com/yourusername/sicp-notes" target="_blank">GitHub</a>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
-        <h2>Section 1.1</h2>
+        <div class="nav">
+    <a href="notes-introduction.html">← Previous</a>
+    <a href="index.html">↑ Up</a>
+    <a href="notes-ch1-2.html">Next →</a>
+</div>
+
+<h2>Section 1.1</h2>
 <h3>Introduction</h3>
 <ul>
 <li>Lisp, for List Processing, was invented in the late 1950s</li>
@@ -397,6 +400,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h4>Exercise 1.1</h4>
 <p>Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.</p>
 <h5>Solution</h5>
+<div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-1.rkt" download>ch1-code/ex1-1.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
@@ -448,10 +452,14 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="w">   </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
 </code></pre></div>
 
+
+</div>
+
 <h4>Exercise 1.2</h4>
 <p>Translate the following expression into prefix form:
 $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <h5>Solution</h5>
+<div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-2.rkt" download>ch1-code/ex1-2.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
@@ -464,9 +472,13 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <span class="w">      </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">7</span><span class="p">)))</span>
 </code></pre></div>
 
+
+</div>
+
 <h4>Exercise 1.3</h4>
 <p>Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.</p>
 <h5>Solution</h5>
+<div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-3.rkt" download>ch1-code/ex1-3.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
@@ -490,6 +502,9 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <span class="p">(</span><span class="n">largesquare</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
 
+
+</div>
+
 <h4>Exercise 1.4</h4>
 <p>Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">a-plus-abs-b</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
@@ -497,6 +512,7 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-4.rkt" download>ch1-code/ex1-4.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
@@ -509,6 +525,9 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <span class="p">(</span><span class="n">a-plus-abs-b</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">-3</span><span class="p">)</span>
 <span class="p">(</span><span class="n">a-plus-abs-b</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
+
+
+</div>
 
 <h4>Exercise 1.5</h4>
 <p>Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:</p>
@@ -553,6 +572,7 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 
 <p>What happens when Alyssa attempts to use this to compute square roots? Explain.</p>
 <h5>Solution</h5>
+<div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-6.rkt" download>ch1-code/ex1-6.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
@@ -599,6 +619,9 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
 <span class="p">(</span><span class="n">my-sqrt2</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
 </code></pre></div>
+
+
+</div>
     </div>
 </body>
 </html>

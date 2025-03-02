@@ -106,6 +106,9 @@ class ComposableMarkdownPreprocessor(Preprocessor):
             with open(full_path, 'r', encoding='utf-8') as f:
                 code = f.read()
 
+            # Start code box
+            result.append('<div class="code-box">')
+
             # Add code header with filename and link
             if self.show_filename:
                 url_path = file_path
@@ -136,6 +139,9 @@ class ComposableMarkdownPreprocessor(Preprocessor):
             if self.run_link and (language == "racket" or language == "rkt"):
                 run_url = f"{self.sandbox_url.rstrip('/')}/?code={file_path}"
                 result.append(f"<a href='{run_url}' class='run-racket' target='_blank'>▶ Run code</a>")
+
+            # Close code box - only once regardless of output
+            result.append('</div>')
 
         except FileNotFoundError:
             result.append(f"> ⚠️ Error: File not found: `{file_path}`")
