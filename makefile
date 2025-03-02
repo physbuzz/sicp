@@ -1,38 +1,49 @@
 # Makefile for SICP notes project
-# Converts markdown files to HTML in-place
+# Converts markdown files to HTML, mirroring the src structure to the root directory
 
 # Define the Python interpreter and script
 PYTHON = python3
 MD2HTML = build/md2html.py
 
-# Define the base directory for the project
-BASE_DIR = .
+# Define the source and output directories
+SRC_DIR = src
+OUT_DIR = .
 
-# Find all markdown files in the project
-MD_FILES := $(shell find $(BASE_DIR)/src -name "*.md")
+# Find all markdown files in the source directory
+MD_FILES := $(shell find $(SRC_DIR) -name "*.md")
 
-# Generate the corresponding HTML file paths
-HTML_FILES := $(MD_FILES:.md=.html)
+# Generate the corresponding HTML file paths in the output directory
+HTML_FILES := $(patsubst $(SRC_DIR)/%,$(OUT_DIR)/%,$(MD_FILES:.md=.html))
 
-# Default target
-all: $(HTML_FILES)
-
-# Pattern rule to convert .md to .html
-%.html: %.md
-	@echo "Converting $< to $@..."
-	@$(PYTHON) $(MD2HTML) $< -o $@ -b $(dir $<)
+# Default target - print diagnostics and build
+all:
+	@echo "Building all markdown files..."
+	@mkdir -p $(OUT_DIR)
+	@for md_file in $(MD_FILES); do \
+		html_file=$${md_file%.md}.html; \
+		out_file=$(OUT_DIR)/$${html_file#$(SRC_DIR)/}; \
+		dir_name=$$(dirname $$out_file); \
+		mkdir -p $$dir_name; \
+		echo "Converting $$md_file to $$out_file..."; \
+		$(PYTHON) $(MD2HTML) $$md_file -o $$out_file -b $$(dirname $$md_file); \
+	done
 
 # Build index separately
-index: src/index.html
-
-src/index.html: src/index.md
+index:
 	@echo "Building main index..."
-	@$(PYTHON) $(MD2HTML) $< -o $@ -b src/
+	@$(PYTHON) $(MD2HTML) $(SRC_DIR)/index.md -o $(OUT_DIR)/index.html -b $(SRC_DIR)
 
-# Clean generated HTML files
+# Clean generated HTML files in output directory
 clean:
 	@echo "Cleaning generated HTML files..."
-	@find $(BASE_DIR)/src -name "*.html" -type f -delete
+	@for md_file in $(MD_FILES); do \
+		html_file=$${md_file%.md}.html; \
+		out_file=$(OUT_DIR)/$${html_file#$(SRC_DIR)/}; \
+		if [ -f $$out_file ]; then \
+			echo "Removing $$out_file..."; \
+			rm $$out_file; \
+		fi; \
+	done
 
 # Force rebuild all files
 rebuild: clean all
@@ -40,33 +51,71 @@ rebuild: clean all
 # Build a specific chapter
 ch1:
 	@echo "Building Chapter 1..."
-	@find $(BASE_DIR)/src/ch1 -name "*.md" -exec $(PYTHON) $(MD2HTML) {} -o {:.md=.html} -b $(dir {}) \;
+	@mkdir -p $(OUT_DIR)/ch1
+	@find $(SRC_DIR)/ch1 -name "*.md" | while read file; do \
+		out_file=$(OUT_DIR)/$${file#$(SRC_DIR)/}; \
+		out_file=$${out_file%.md}.html; \
+		mkdir -p $$(dirname $$out_file); \
+		echo "Converting $$file to $$out_file..."; \
+		$(PYTHON) $(MD2HTML) $$file -o $$out_file -b $$(dirname $$file); \
+	done
 
 # Build meeting notes
 meetings:
 	@echo "Building meeting notes..."
-	@find $(BASE_DIR)/src/meetings -name "*.md" -exec $(PYTHON) $(MD2HTML) {} -o {:.md=.html} -b $(dir {}) \;
+	@mkdir -p $(OUT_DIR)/meetings
+	@find $(SRC_DIR)/meetings -name "*.md" | while read file; do \
+		out_file=$(OUT_DIR)/$${file#$(SRC_DIR)/}; \
+		out_file=$${out_file%.md}.html; \
+		mkdir -p $$(dirname $$out_file); \
+		echo "Converting $$file to $$out_file..."; \
+		$(PYTHON) $(MD2HTML) $$file -o $$out_file -b $$(dirname $$file); \
+	done
+
+# Copy static assets (if any)
+assets:
+	@echo "Copying static assets..."
+	@if [ -d "$(SRC_DIR)/assets" ]; then \
+		mkdir -p $(OUT_DIR)/assets; \
+		cp -r $(SRC_DIR)/assets/* $(OUT_DIR)/assets/; \
+	fi
+
+# Build everything including assets
+full: all assets
 
 # Watch for changes and rebuild (requires inotifywait)
 watch:
 	@echo "Watching for changes in src directory..."
 	@while true; do \
-		inotifywait -r -e modify,create,delete $(BASE_DIR)/src; \
+		inotifywait -r -e modify,create,delete $(SRC_DIR); \
 		$(MAKE) all; \
 	done
 
 # Show help
 help:
-	@echo "SICP Notes Makefile"
-	@echo "-------------------"
+	@echo "SICP Notes Makefile for GitHub Pages"
+	@echo "-----------------------------------"
 	@echo "Targets:"
 	@echo "  all      - Build all markdown files to HTML (default)"
 	@echo "  index    - Only build the main index.html"
 	@echo "  ch1      - Only build Chapter 1 files"
 	@echo "  meetings - Only build meeting notes"
+	@echo "  assets   - Copy static assets to output directory"
+	@echo "  full     - Build all HTML files and copy assets"
 	@echo "  clean    - Remove all generated HTML files"
 	@echo "  rebuild  - Force rebuild all files"
 	@echo "  watch    - Watch for changes and rebuild (requires inotifywait)"
 	@echo "  help     - Show this help message"
 
-.PHONY: all clean rebuild index ch1 meetings watch help
+# Add a debug target to print file paths
+debug:
+	@echo "Markdown Files:"
+	@for file in $(MD_FILES); do echo "  $$file"; done
+	@echo "HTML Files (would be):"
+	@for md_file in $(MD_FILES); do \
+		html_file=$${md_file%.md}.html; \
+		out_file=$(OUT_DIR)/$${html_file#$(SRC_DIR)/}; \
+		echo "  $$out_file"; \
+	done
+
+.PHONY: all clean rebuild index ch1 meetings assets full watch help debug

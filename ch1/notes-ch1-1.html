@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notes-ch1-1.md</title>
+    <style>
+        /* Pygments Syntax Highlighting */
+        pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #880000 } /* Name.Constant */
+.codehilite .nd { color: #AA22FF } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #0000FF } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #666666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #0000FF } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+        /* Basic reset and fonts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 2rem 1rem;
+            background-color: #f8f9fa;
+        }
+
+        /* Center column layout */
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: #34495e;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* Code blocks */
+        .codehilite {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+            border: 1px solid #e1e4e8;
+        }
+
+        code {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+            padding: 0.2em 0.4em;
+            background-color: #f6f8fa;
+            border-radius: 3px;
+        }
+
+        .codehilite code {
+            padding: 0;
+            background-color: transparent;
+        }
+
+        /* Links */
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Run button */
+        .run-racket {
+            display: inline-block;
+            margin-top: 0.5rem;
+            padding: 0.4rem 0.8rem;
+            background-color: #3c8dbc;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+        
+        .run-racket:hover {
+            background-color: #367fa9;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Section 1.1</h2>
+<h3>Introduction</h3>
+<ul>
+<li>Lisp, for List Processing, was invented in the late 1950s</li>
+<li>Seminal paper "Recursive Functions of Symbolic Expressions and Their Computation by Machine" (<a href="https://dl.acm.org/doi/10.1145/367177.367199">McCarthy 1960</a>)</li>
+<li>There are many lisp dialects, we're using Scheme introduced in <a href="https://dspace.mit.edu/handle/1721.1/5794">Steele and Sussman 1975</a></li>
+<li>Common Lisp was developed in the 80's and 90's to make an industrial standard.</li>
+<li>Cool paper <a href="https://pubmed.ncbi.nlm.nih.gov/17800710/">Sussman and Wisdom 1992</a> about solar system chaos. This would be nice to compare to my own calculations where I was able to reproduce the eccentricity of <a href="https://en.wikipedia.org/wiki/Milankovitch_cycles#/media/File:MilankovitchCyclesOrbitandCores.png">this graph</a> to about 100KYRs.</li>
+</ul>
+<h3>1.1.1-1.1.3</h3>
+<ul>
+<li><strong>Definition:</strong> <em>Primitive expressions</em> are the simplest entities the language is concerned with.</li>
+<li>Prefix notation is used. The operator is the leftmost element and can take an arbitrary number of elements, for example <code>(+ 1 2 3 4)</code> evaluated to 10. </li>
+<li>REPL = "read-eval-print loop"</li>
+<li>Pretty printing is defined such that each operator with a deeper nesting starts at a deeper level of indentation. For example</li>
+</ul>
+<div class="codehilite"><pre><span></span><code>(+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
+</code></pre></div>
+
+<p>becomes</p>
+<div class="codehilite"><pre><span></span><code>(+ (* 3
+      (+ (* 2 4)
+         (+ 3 5)))
+   (+ (- 10 7)
+      6))
+</code></pre></div>
+
+<ul>
+<li>We can associate values with variables. <code>(define size 2)</code> defines a value in a global environment.</li>
+<li>Evaluation can be done recursively in this model, "tree accumulation" is one way to evaluate tree expressions.</li>
+<li><em>Special forms</em> are exceptions to the general evaluation rules. "define" is one of them. We deal with a very simple language -&gt; small number of special forms.</li>
+</ul>
+<h3>1.4</h3>
+<p>The syntax to define a procedure is
+<code>(define (square x) (* x x))</code></p>
+<h3>1.5</h3>
+<p>For chapters 1 and 2 we can use the substitution model, but in chapter 3 we'll need to deal with mutable data and will need a more complicated model.</p>
+<p>Models define the "meaning" of procedure application. They're generally ways to think about procedures, rather than being ways that the interpreter actually works.</p>
+<p>Applicative ordering vs. normal ordering. 
+<em>Normal-order evaluation</em> is when the interpreter fully expands and then reduces the expression.
+<em>Applicative-order evaluation</em> is when the interpreter evaluates the arguments needed for the immediate expression and then applies them.</p>
+<h3>1.6</h3>
+<p>New special form <code>cond</code>:</p>
+<div class="codehilite"><pre><span></span><code>(define (abs x)
+  (cond ((&gt; x 0) x)
+        ((= x 0) 0)
+        ((&lt; x 0) (- x))))
+</code></pre></div>
+
+<p>Also <code>else</code></p>
+<div class="codehilite"><pre><span></span><code><span class="ss">(</span><span class="nv">define</span><span class="w"> </span><span class="ss">(</span><span class="nv">abs</span><span class="w"> </span><span class="nv">x</span><span class="ss">)</span>
+<span class="w">  </span><span class="ss">(</span><span class="nv">cond</span><span class="w"> </span><span class="ss">((</span><span class="o">&lt;</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="mi">0</span><span class="ss">)</span><span class="w"> </span><span class="ss">(</span><span class="o">-</span><span class="w"> </span><span class="nv">x</span><span class="ss">))</span>
+<span class="w">        </span><span class="ss">(</span><span class="k">else</span><span class="w"> </span><span class="nv">x</span><span class="ss">)))</span>
+</code></pre></div>
+
+<p>Also</p>
+<div class="codehilite"><pre><span></span><code><span class="ss">(</span><span class="nv">define</span><span class="w"> </span><span class="ss">(</span><span class="nv">abs</span><span class="w"> </span><span class="nv">x</span><span class="ss">)</span>
+<span class="w">  </span><span class="ss">(</span><span class="k">if</span><span class="w"> </span><span class="ss">(</span><span class="o">&lt;</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="mi">0</span><span class="ss">)</span>
+<span class="w">      </span><span class="ss">(</span><span class="o">-</span><span class="w"> </span><span class="nv">x</span><span class="ss">)</span>
+<span class="w">      </span><span class="nv">x</span><span class="ss">))</span>
+</code></pre></div>
+
+<p>The format for <code>if</code> statements is 
+<code>(if predicate consequent alternative)</code></p>
+<p>There's also <code>and</code>, <code>or</code>, <code>not</code>, </p>
+<h3>Aside on Mathematica:</h3>
+<p><code>(+ 1 2 3 4)</code> is represented in mathematica as <code>Add[1,2,3,4]</code>. in Mathematica, this expression gets substituted with <code>10</code> immediately, but say we have another expression <code>expression = add[1,2,3,4]</code> (lowercase "A"). Then in fact <code>expression[[0]]</code> returns <code>add</code>, <code>expression[[1]]</code> returns <code>1</code>, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through <code>Head[expression]</code> which returns <code>add</code>).</p>
+<p>One example is that "it is meaningless to speak of the value of <code>(+ x 1)</code>". In Mathematica <code>add[x,1]</code> is perfectly meaningful even if add and x have no definitions! It is <code>add[x,1]</code>!</p>
+<p>To translate <code>(define (square x) (* x x))</code> to Mathematica, we'd do something like 
+<code>Set[square,Function[x,Times[x,x]]]</code> which I think is a bit different because <code>Function[x,x*x]</code> can be regarded as a lambda. Functions can also be defined via replacement rules and pattern matching, but that's a whole different ball game which is a core aspect of Wolfram language but we can ignore.</p>
+<h3>Exercises</h3>
+<h4>1.1</h4>
+<p>@import()</p>
+    </div>
+</body>
+</html>
