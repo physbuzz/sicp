@@ -1,3 +1,4 @@
+# Claude 3.7 generated makefile
 # Makefile for SICP notes project
 # Converts markdown files to HTML, mirroring the src structure to the root directory
 
