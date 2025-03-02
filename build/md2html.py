@@ -53,28 +53,39 @@ def get_html_template(title, html_content, pygments_css):
             background-color: #f8f9fa;
         }}
 
-        /* Navigation styling (for custom nav in markdown) */
+                /* Navigation styling */
         .nav {{
             display: flex;
             justify-content: space-between;
             margin-bottom: 2rem;
-            padding-bottom: 1rem;
+            padding-bottom: 0.8rem;
             border-bottom: 1px solid #e1e4e8;
         }}
 
-        .nav a {{
-            padding: 0.5rem 1rem;
-            background-color: #f1f1f1;
+        .nav span {{
+            padding: 0.4rem 0.8rem;
             border-radius: 4px;
-            text-decoration: none;
-            color: #0366d6;
             font-weight: 500;
+            font-size: 0.9rem;
         }}
 
-        .nav a:hover {{
-            background-color: #e1e4e8;
+        .nav .activenav {{
+            background-color: #f1f8ff;
         }}
 
+        .nav .activenav a {{
+            color: #0366d6;
+            text-decoration: none;
+        }}
+
+        .nav .activenav a:hover {{
+            text-decoration: underline;
+        }}
+
+        .nav .inactivenav {{
+            color: #959da5;
+            background-color: #f6f8fa;
+        }}
         /* Center column layout */
         .container {{
             max-width: 800px;

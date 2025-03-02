@@ -112,7 +112,7 @@ class ComposableMarkdownPreprocessor(Preprocessor):
             # Add code header with filename and link
             if self.show_filename:
                 url_path = file_path
-                code_header = f'<div class="code-header"><a href="{url_path}" download>{file_path}</a></div>'
+                code_header = f'<div class="code-header"><a href="{url_path}">{file_path}</a></div>'
                 result.append(code_header)
 
             # Create markdown code block

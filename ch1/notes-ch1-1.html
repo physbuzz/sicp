@@ -108,28 +108,39 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             background-color: #f8f9fa;
         }
 
-        /* Navigation styling (for custom nav in markdown) */
+                /* Navigation styling */
         .nav {
             display: flex;
             justify-content: space-between;
             margin-bottom: 2rem;
-            padding-bottom: 1rem;
+            padding-bottom: 0.8rem;
             border-bottom: 1px solid #e1e4e8;
         }
 
-        .nav a {
-            padding: 0.5rem 1rem;
-            background-color: #f1f1f1;
+        .nav span {
+            padding: 0.4rem 0.8rem;
             border-radius: 4px;
-            text-decoration: none;
-            color: #0366d6;
             font-weight: 500;
+            font-size: 0.9rem;
         }
 
-        .nav a:hover {
-            background-color: #e1e4e8;
+        .nav .activenav {
+            background-color: #f1f8ff;
         }
 
+        .nav .activenav a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .nav .activenav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav .inactivenav {
+            color: #959da5;
+            background-color: #f6f8fa;
+        }
         /* Center column layout */
         .container {
             max-width: 800px;
@@ -321,9 +332,9 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <body>
     <div class="container">
         <div class="nav">
-    <a href="notes-introduction.html">← Previous</a>
-    <a href="index.html">↑ Up</a>
-    <a href="notes-ch1-2.html">Next →</a>
+    <span class="inactivenav">← Previous</span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="inactivenav">Next →</span>
 </div>
 
 <h2>Section 1.1</h2>
@@ -401,7 +412,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <p>Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.</p>
 <h5>Solution</h5>
 <div class="code-box">
-<div class="code-header"><a href="ch1-code/ex1-1.rkt" download>ch1-code/ex1-1.rkt</a></div>
+<div class="code-header"><a href="ch1-code/ex1-1.rkt">ch1-code/ex1-1.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
 
@@ -460,7 +471,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <h5>Solution</h5>
 <div class="code-box">
-<div class="code-header"><a href="ch1-code/ex1-2.rkt" download>ch1-code/ex1-2.rkt</a></div>
+<div class="code-header"><a href="ch1-code/ex1-2.rkt">ch1-code/ex1-2.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
 <span class="c1">;(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7)))</span>
@@ -479,7 +490,7 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <p>Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.</p>
 <h5>Solution</h5>
 <div class="code-box">
-<div class="code-header"><a href="ch1-code/ex1-3.rkt" download>ch1-code/ex1-3.rkt</a></div>
+<div class="code-header"><a href="ch1-code/ex1-3.rkt">ch1-code/ex1-3.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
 
@@ -513,7 +524,7 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 
 <h5>Solution</h5>
 <div class="code-box">
-<div class="code-header"><a href="ch1-code/ex1-4.rkt" download>ch1-code/ex1-4.rkt</a></div>
+<div class="code-header"><a href="ch1-code/ex1-4.rkt">ch1-code/ex1-4.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
 
@@ -573,7 +584,7 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <p>What happens when Alyssa attempts to use this to compute square roots? Explain.</p>
 <h5>Solution</h5>
 <div class="code-box">
-<div class="code-header"><a href="ch1-code/ex1-6.rkt" download>ch1-code/ex1-6.rkt</a></div>
+<div class="code-header"><a href="ch1-code/ex1-6.rkt">ch1-code/ex1-6.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
 

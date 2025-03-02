@@ -1,7 +1,7 @@
 <div class="nav">
-    <a href="notes-introduction.html">← Previous</a>
-    <a href="index.html">↑ Up</a>
-    <a href="notes-ch1-2.html">Next →</a>
+    <span class="inactivenav">← Previous</span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="inactivenav">Next →</span>
 </div>
 
 ## Section 1.1
