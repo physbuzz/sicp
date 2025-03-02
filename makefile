@@ -8,7 +8,7 @@ MD2HTML = build/md2html.py
 
 # Define the source and output directories
 SRC_DIR = src
-OUT_DIR = html
+OUT_DIR = docs
 
 # Find all markdown files in the source directory
 MD_FILES := $(shell find $(SRC_DIR) -name "*.md")

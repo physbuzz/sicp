@@ -81,6 +81,9 @@ The format for `if` statements is
 
 There's also `and`, `or`, `not`, 
 
+### More Notes
+Bound variable, free variable, variable scope, captured variable (changing from free to bound)
+
 ### Aside on Mathematica:
 
 `(+ 1 2 3 4)` is represented in mathematica as `Add[1,2,3,4]`. in Mathematica, this expression gets substituted with `10` immediately, but say we have another expression `expression = add[1,2,3,4]` (lowercase "A"). Then in fact `expression[[0]]` returns `add`, `expression[[1]]` returns `1`, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through `Head[expression]` which returns `add`).
@@ -197,13 +200,17 @@ our function is evaluated with applicative order evaluation. So,
 The `good-enough?` test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also, in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers. An alternative strategy for implementing good-enough? is to watch how guess changes from one iteration to the next and to stop when the change is a very small fraction of the guess. Design a square-root procedure that uses this kind of end test. Does this work better for small and large numbers?
 
 ##### Solution
-If $\hat{y}$ is our guess for $\sqrt{x}$, our procedure halts when $|\hat{y}^2-x|<\varepsilon.$ Plug in $\hat{y}=\sqrt{x}+\delta y$ and write $\delta y^2\approx 0$ to get:
+If $y$ is our guess for $\sqrt{x}$, our procedure halts when $|y^2-x|<\varepsilon.$ Plug in $y=\sqrt{x}+\delta y$ and write $\delta y^2\approx 0$ to get:
 
-$$
+<p>$$
 \begin{align*}
-\varepsilon\approx |\hat{y}^2-x|
+\varepsilon\approx |y^2-x|\\
+&\approx |x+2\delta y \sqrt{x} - x|
 \end{align*}
-$$
+$$</p>
+So that $\delta y\approx \varepsilon/(2\sqrt{x})$. If $x$ is very large, this means that for fixed epsilon we get a ton of digits of accuracy in $\delta y.$ If $x$ is small, we get very few digits of accuracy in $y$. 
+
+
 
 
 

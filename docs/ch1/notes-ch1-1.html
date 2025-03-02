@@ -337,6 +337,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
     <span class="inactivenav">Next →</span>
 </div>
 
+<p><a href="https://sarabander.github.io/sicp/html/1_002e1.xhtml">https://sarabander.github.io/sicp/html/1_002e1.xhtml</a></p>
 <h2>Section 1.1</h2>
 <h3>Introduction</h3>
 <ul>
@@ -402,6 +403,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <p>The format for <code>if</code> statements is 
 <code>(if predicate consequent alternative)</code></p>
 <p>There's also <code>and</code>, <code>or</code>, <code>not</code>, </p>
+<h3>More Notes</h3>
+<p>Bound variable, free variable, variable scope, captured variable (changing from free to bound)</p>
 <h3>Aside on Mathematica:</h3>
 <p><code>(+ 1 2 3 4)</code> is represented in mathematica as <code>Add[1,2,3,4]</code>. in Mathematica, this expression gets substituted with <code>10</code> immediately, but say we have another expression <code>expression = add[1,2,3,4]</code> (lowercase "A"). Then in fact <code>expression[[0]]</code> returns <code>add</code>, <code>expression[[1]]</code> returns <code>1</code>, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through <code>Head[expression]</code> which returns <code>add</code>).</p>
 <p>One example is that "it is meaningless to speak of the value of <code>(+ x 1)</code>". In Mathematica <code>add[x,1]</code> is perfectly meaningful even if add and x have no definitions! It is <code>add[x,1]</code>!</p>
@@ -583,56 +586,21 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 
 <p>What happens when Alyssa attempts to use this to compute square roots? Explain.</p>
 <h5>Solution</h5>
-<div class="code-box">
-<div class="code-header"><a href="ch1-code/ex1-6.rkt">ch1-code/ex1-6.rkt</a></div>
-
-<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span>
-<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span>
-<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="mf">0.001</span><span class="p">))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="w">      </span><span class="n">guess</span>
-<span class="w">      </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
-
-<span class="c1">; The version which uses the new-if statement hangs!</span>
-<span class="cm">#|(define (new-if predicate </span>
-<span class="cm">                then-clause </span>
-<span class="cm">                else-clause)</span>
-<span class="cm">  (cond (predicate then-clause)</span>
-<span class="cm">        (else else-clause))) |#</span>
-
-<span class="c1">; Interestingly, the version using an old if-statement also hangs ;)</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">new-if</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">then-clause</span><span class="w"> </span><span class="n">else-clause</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">then-clause</span><span class="w"> </span><span class="n">else-clause</span><span class="p">))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">new-if</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="w">          </span><span class="n">guess</span>
-<span class="w">          </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-sqrt2</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
-
-<span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
-<span class="p">(</span><span class="n">my-sqrt2</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
-</code></pre></div>
-
-
-</div>
+<p>The key here is not the behavior of <code>cond</code> versus <code>if</code>. Instead, 
+our function is evaluated with applicative order evaluation. So,
+<code>new-if cond A B</code>, both <code>A</code> and <code>B</code> are both evaluated before being passed to
+<code>new-if</code>. Since <code>B</code> contains a recursive call, this blows up!  </p>
+<h4>Exercise 1.7</h4>
+<p>The <code>good-enough?</code> test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also, in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers. An alternative strategy for implementing good-enough? is to watch how guess changes from one iteration to the next and to stop when the change is a very small fraction of the guess. Design a square-root procedure that uses this kind of end test. Does this work better for small and large numbers?</p>
+<h5>Solution</h5>
+<p>If $y$ is our guess for $\sqrt{x}$, our procedure halts when $|y^2-x|&lt;\varepsilon.$ Plug in $y=\sqrt{x}+\delta y$ and write $\delta y^2\approx 0$ to get:</p>
+<p>$$
+\begin{align*}
+\varepsilon\approx |y^2-x|\\
+&\approx |x+2\delta y \sqrt{x} - x|
+\end{align*}
+$$</p>
+<p>So that $\delta y\approx \varepsilon/(2\sqrt{x})$. If $x$ is very large, this means that for fixed epsilon we get a ton of digits of accuracy in $\delta y.$ If $x$ is small, we get very few digits of accuracy in $y$. </p>
     </div>
 </body>
 </html>
