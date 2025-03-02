@@ -4,7 +4,12 @@
     <span class="inactivenav">Next →</span>
 </div>
 
+
+[https://sarabander.github.io/sicp/html/1_002e1.xhtml](https://sarabander.github.io/sicp/html/1_002e1.xhtml)
+
 ## Section 1.1
+
+
 ### Introduction
 
 - Lisp, for List Processing, was invented in the late 1950s
@@ -180,6 +185,29 @@ Delighted, Alyssa uses new-if to rewrite the square-root program:
 What happens when Alyssa attempts to use this to compute square roots? Explain.
 
 ##### Solution
-@src(ch1-code/ex1-6.rkt)
+
+The key here is not the behavior of `cond` versus `if`. Instead, 
+our function is evaluated with applicative order evaluation. So,
+`new-if cond A B`, both `A` and `B` are both evaluated before being passed to
+`new-if`. Since `B` contains a recursive call, this blows up!  
+
+
+#### Exercise 1.7
+
+The `good-enough?` test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also, in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers. An alternative strategy for implementing good-enough? is to watch how guess changes from one iteration to the next and to stop when the change is a very small fraction of the guess. Design a square-root procedure that uses this kind of end test. Does this work better for small and large numbers?
+
+##### Solution
+If $\hat{y}$ is our guess for $\sqrt{x}$, our procedure halts when $|\hat{y}^2-x|<\varepsilon.$ Plug in $\hat{y}=\sqrt{x}+\delta y$ and write $\delta y^2\approx 0$ to get:
+
+$$
+\begin{align*}
+\varepsilon\approx |\hat{y}^2-x|
+\end{align*}
+$$
+
+
+
+
+
 
 
