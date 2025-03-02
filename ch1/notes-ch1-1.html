@@ -250,8 +250,201 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <p>To translate <code>(define (square x) (* x x))</code> to Mathematica, we'd do something like 
 <code>Set[square,Function[x,Times[x,x]]]</code> which I think is a bit different because <code>Function[x,x*x]</code> can be regarded as a lambda. Functions can also be defined via replacement rules and pattern matching, but that's a whole different ball game which is a core aspect of Wolfram language but we can ignore.</p>
 <h3>Exercises</h3>
-<h4>1.1</h4>
-<p>@import()</p>
+<h4>Exercise 1.1</h4>
+<p>Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.</p>
+<h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="c1">; 10</span>
+<span class="mi">10</span>
+
+<span class="c1">; 12</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+
+<span class="c1">; 8</span>
+<span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1">; 3</span>
+<span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1">; (2*4) + (4-6) == 6</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">6</span><span class="p">))</span>
+
+<span class="c1">; nothing</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1">; nothing</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1">; (4+3+12) = 19</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+
+<span class="c1">; false (#f)</span>
+<span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+
+<span class="c1">; (if (and true true) b a) == 4</span>
+<span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)))</span>
+<span class="w">    </span><span class="n">b</span>
+<span class="w">    </span><span class="n">a</span><span class="p">)</span>
+
+<span class="c1">; + 6 7 a = 16</span>
+<span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="w">      </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="mi">25</span><span class="p">))</span>
+
+<span class="c1">; 2 + 4 = 6</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+
+<span class="c1">; 4*(a+1)=16</span>
+<span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">         </span><span class="p">((</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="mi">-1</span><span class="p">))</span>
+<span class="w">   </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+<h4>Exercise 1.2</h4>
+<p>Translate the following expression into prefix form:
+$$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
+<h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="c1">;(/ (+ 5 4 (- 2 (- 3 (+ 6 (/ 4 5))))) (* 3 (- 6 2) (- 2 7)))</span>
+<span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">)))))</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">7</span><span class="p">)))</span>
+</code></pre></div>
+
+<h4>Exercise 1.3</h4>
+<p>Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.</p>
+<h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mymin2</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mymin3</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">mymin2</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">mymin2</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">largesquare</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">mymin3</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">mymin3</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="p">)))))</span>
+
+<span class="cm">#| </span>
+<span class="cm">; A more typical solution to this problem is:</span>
+<span class="cm">(define (f1 a b c)</span>
+<span class="cm">  (if (&lt; a b)</span>
+<span class="cm">      (if (&lt; a c)</span>
+<span class="cm">          (+ (* b b) (* c c))</span>
+<span class="cm">          (+ (* b b) (* a a)))</span>
+<span class="cm">      (if (&lt; b c)</span>
+<span class="cm">          (+ (* a a) (* c c))</span>
+<span class="cm">          (+ (* a a) (* b b)))))</span>
+<span class="cm">|#</span>
+
+<span class="p">(</span><span class="n">largesquare</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Exercise 1.4</h4>
+<p>Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">a-plus-abs-b</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="nb">-</span><span class="p">)</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+
+<span class="c1">; returns a+|b| by performing a+b if b&gt;0, else a-b.</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">a-plus-abs-b</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="nb">-</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">a-plus-abs-b</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">-3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">a-plus-abs-b</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+
+<h4>Exercise 1.5</h4>
+<p>Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">p</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">test</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="nv">y</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nv">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="mi">0</span><span class="w"> </span>
+<span class="w">      </span><span class="nv">y</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Then he evaluates the expression</p>
+<p><code>(test 0 (p))</code></p>
+<p>What behavior will Ben observe with an interpreter that uses applicative-order evaluation? What behavior will he observe with an interpreter that uses normal-order evaluation? Explain your answer. (Assume that the evaluation rule for the special form if is the same whether the interpreter is using normal or applicative order: The predicate expression is evaluated first, and the result determines whether to evaluate the consequent or the alternative expression.)</p>
+<h5>Solution</h5>
+<p>So, <code>(p)</code> is a bomb, and whenever we evaluate it we get stuck in an infinite loop. The question is whether we encounter this bomb or not.</p>
+<p>Using applicative order evaluation, we first evaluate both arguments. <code>0</code> evaluates to <code>0</code>, but evaluating <code>(p)</code> triggers our bomb. So our applicative order evaluator hangs or crashes. Scheme is applicative order, so we expect it to hang or crash.</p>
+<p>Normal ordering is different, we "fully expand then reduce" but as the problem points out, the word "fully expand" does not refer to the argument of the if-statement, and so we're saved from fully expanding <code>(p)</code> right off the bat. When we evaluate <code>(if (= 0 0) 0 (p))</code>, our reduce step is smart enough to only evaluate <code>0</code>, so the expression returns <code>0</code>. I'm told this is the semantics of Haskell, so we'd expect some Haskell program implementing the same idea to run just fine.</p>
+<h4>1.6</h4>
+<p>Alyssa P. Hacker doesn’t see why if needs to be provided as a special form. “Why can’t I just define it as an ordinary procedure in terms of cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">new-if</span><span class="w"> </span><span class="nv">predicate</span><span class="w"> </span>
+<span class="w">                </span><span class="nv">then-clause</span><span class="w"> </span>
+<span class="w">                </span><span class="nv">else-clause</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">(</span><span class="nf">predicate</span><span class="w"> </span><span class="nv">then-clause</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="nv">else-clause</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>Eva demonstrates the program for Alyssa:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nf">new-if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="mi">5</span>
+
+<span class="p">(</span><span class="nf">new-if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="mi">0</span>
+</code></pre></div>
+
+<p>Delighted, Alyssa uses new-if to rewrite the square-root program:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nf">sqrt-iter</span><span class="w"> </span><span class="nv">guess</span><span class="w"> </span><span class="nv">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nf">new-if</span><span class="w"> </span><span class="p">(</span><span class="nf">good-enough?</span><span class="w"> </span><span class="nv">guess</span><span class="w"> </span><span class="nv">x</span><span class="p">)</span>
+<span class="w">          </span><span class="nv">guess</span>
+<span class="w">          </span><span class="p">(</span><span class="nf">sqrt-iter</span><span class="w"> </span><span class="p">(</span><span class="nf">improve</span><span class="w"> </span><span class="nv">guess</span><span class="w"> </span><span class="nv">x</span><span class="p">)</span><span class="w"> </span><span class="nv">x</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>What happens when Alyssa attempts to use this to compute square roots? Explain.</p>
+<h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="mf">0.001</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">      </span><span class="n">guess</span>
+<span class="w">      </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1">; The version which uses the new-if statement hangs!</span>
+<span class="cm">#|(define (new-if predicate </span>
+<span class="cm">                then-clause </span>
+<span class="cm">                else-clause)</span>
+<span class="cm">  (cond (predicate then-clause)</span>
+<span class="cm">        (else else-clause))) |#</span>
+
+<span class="c1">; Interestingly, the version using an old if-statement also hangs ;)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">new-if</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">then-clause</span><span class="w"> </span><span class="n">else-clause</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">then-clause</span><span class="w"> </span><span class="n">else-clause</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">new-if</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">          </span><span class="n">guess</span>
+<span class="w">          </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-sqrt2</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">my-sqrt2</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+</code></pre></div>
     </div>
 </body>
 </html>

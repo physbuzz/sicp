@@ -14,11 +14,11 @@
 - Prefix notation is used. The operator is the leftmost element and can take an arbitrary number of elements, for example `(+ 1 2 3 4)` evaluated to 10. 
 - REPL = "read-eval-print loop"
 - Pretty printing is defined such that each operator with a deeper nesting starts at a deeper level of indentation. For example
-```
+```rkt
 (+ (* 3 (+ (* 2 4) (+ 3 5))) (+ (- 10 7) 6))
 ```
 becomes
-```
+```rkt
 (+ (* 3
       (+ (* 2 4)
          (+ 3 5)))
@@ -46,20 +46,20 @@ Applicative ordering vs. normal ordering.
 
 ### 1.6
 New special form `cond`:
-```
+```rkt
 (define (abs x)
   (cond ((> x 0) x)
         ((= x 0) 0)
         ((< x 0) (- x))))
 ```
 Also `else`
-```
+```rkt
 (define (abs x)
   (cond ((< x 0) (- x))
         (else x)))
 ```
 Also
-```
+```rkt
 (define (abs x)
   (if (< x 0)
       (- x)
@@ -82,12 +82,99 @@ To translate `(define (square x) (* x x))` to Mathematica, we'd do something lik
 
 ### Exercises
 
-#### 1.1
+#### Exercise 1.1
 
-@import()
+Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.
+
+##### Solution
+
+@src(ch1-code/ex1-1.rkt)
+
+#### Exercise 1.2
+Translate the following expression into prefix form:
+$$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$
+
+##### Solution
+
+@src(ch1-code/ex1-2.rkt)
+
+#### Exercise 1.3
+Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.
+##### Solution
+
+@src(ch1-code/ex1-3.rkt)
+
+#### Exercise 1.4
+
+Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:
+
+```rkt
+(define (a-plus-abs-b a b)
+  ((if (> b 0) + -) a b))
+```
+##### Solution
+
+@src(ch1-code/ex1-4.rkt)
+
+#### Exercise 1.5
+Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:
+
+```rkt
+(define (p) (p))
+
+(define (test x y) 
+  (if (= x 0) 
+      0 
+      y))
+```
+Then he evaluates the expression
+
+`(test 0 (p))`
+
+What behavior will Ben observe with an interpreter that uses applicative-order evaluation? What behavior will he observe with an interpreter that uses normal-order evaluation? Explain your answer. (Assume that the evaluation rule for the special form if is the same whether the interpreter is using normal or applicative order: The predicate expression is evaluated first, and the result determines whether to evaluate the consequent or the alternative expression.)
+
+##### Solution
+
+So, `(p)` is a bomb, and whenever we evaluate it we get stuck in an infinite loop. The question is whether we encounter this bomb or not.
+
+Using applicative order evaluation, we first evaluate both arguments. `0` evaluates to `0`, but evaluating `(p)` triggers our bomb. So our applicative order evaluator hangs or crashes. Scheme is applicative order, so we expect it to hang or crash.
+
+Normal ordering is different, we "fully expand then reduce" but as the problem points out, the word "fully expand" does not refer to the argument of the if-statement, and so we're saved from fully expanding `(p)` right off the bat. When we evaluate `(if (= 0 0) 0 (p))`, our reduce step is smart enough to only evaluate `0`, so the expression returns `0`. I'm told this is the semantics of Haskell, so we'd expect some Haskell program implementing the same idea to run just fine.
 
 
+#### 1.6
 
+Alyssa P. Hacker doesn’t see why if needs to be provided as a special form. “Why can’t I just define it as an ordinary procedure in terms of cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:
 
+```rkt
+(define (new-if predicate 
+                then-clause 
+                else-clause)
+  (cond (predicate then-clause)
+        (else else-clause)))
+```
+Eva demonstrates the program for Alyssa:
+
+```rkt
+(new-if (= 2 3) 0 5)
+5
+
+(new-if (= 1 1) 0 5)
+0
+```
+
+Delighted, Alyssa uses new-if to rewrite the square-root program:
+
+```rkt
+(define (sqrt-iter guess x)
+  (new-if (good-enough? guess x)
+          guess
+          (sqrt-iter (improve guess x) x)))
+```
+
+What happens when Alyssa attempts to use this to compute square roots? Explain.
+
+##### Solution
+@src(ch1-code/ex1-6.rkt)
 
 
