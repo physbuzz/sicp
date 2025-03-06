@@ -214,21 +214,17 @@ def get_html_template(title, html_content, pygments_css):
             overflow-x: auto;
             margin: 0;
         }}
-Untitled
 
         .code-output {{
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             color: #6a737d;
-            padding: 0.5rem 1rem;
+            padding: 0.2rem 0 0.3rem 0.3rem;
             border-top: 1px solid #e1e4e8;
             background-color: #fafbfc;
         }}
-        
         .code-output span {{
-            display: block;
-            font-weight: bold;
-            margin-bottom: 0.5rem;
+            color: #de37cc;
         }}
         
         .code-output pre {{
