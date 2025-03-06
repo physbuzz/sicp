@@ -8,9 +8,10 @@
 - Discord: [https://www.codeandcoffee.dev/](https://www.codeandcoffee.dev/)
 - [Racket IDE](https://www.racket-lang.org/)
 
-# Notes
+# Book club Notes
 - [Chapter 1-1](ch1/notes-ch1-1.html)
 
-# Minutes
+# Meetings
 - [Feb 23, 2025](meetings/02-23-2025.html)
+- [March 2, 2025](meetings/03-02-2025.html)
 

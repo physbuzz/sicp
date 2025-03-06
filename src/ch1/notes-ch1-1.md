@@ -154,6 +154,8 @@ Using applicative order evaluation, we first evaluate both arguments. `0` evalua
 
 Normal ordering is different, we "fully expand then reduce" but as the problem points out, the word "fully expand" does not refer to the argument of the if-statement, and so we're saved from fully expanding `(p)` right off the bat. When we evaluate `(if (= 0 0) 0 (p))`, our reduce step is smart enough to only evaluate `0`, so the expression returns `0`. I'm told this is the semantics of Haskell, so we'd expect some Haskell program implementing the same idea to run just fine.
 
+This is the same reasoning as given in the answers to [this stackoverflow question](https://stackoverflow.com/questions/16036139/seek-for-some-explanation-on-sicp-exercise-1-5).
+
 
 #### 1.6
 
@@ -189,31 +191,46 @@ What happens when Alyssa attempts to use this to compute square roots? Explain.
 
 ##### Solution
 
-The key here is not the behavior of `cond` versus `if`. Instead, 
-our function is evaluated with applicative order evaluation. So,
-`new-if cond A B`, both `A` and `B` are both evaluated before being passed to
-`new-if`. Since `B` contains a recursive call, this blows up!  
+The key here is not the behavior of `cond` versus `if`, but in the conditional evaluation of each of the terms following the `if` special form. 
 
+`(if cond A B)` evaluated B only on the condition that cond is false. 
+
+But `(new-if cond A B)` will evaluate `cond`, `A`, and `B`, regardless of how `new-if` is defined (at least given what we know at this point in the text, not sure if something arises later). Since B contains a recursive function call, we immediately get infinite recursion.
 
 #### Exercise 1.7
 
 The `good-enough?` test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also, in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers. An alternative strategy for implementing good-enough? is to watch how guess changes from one iteration to the next and to stop when the change is a very small fraction of the guess. Design a square-root procedure that uses this kind of end test. Does this work better for small and large numbers?
 
 ##### Solution
-If $y$ is our guess for $\sqrt{x}$, our procedure halts when $|y^2-x|<\varepsilon.$ Plug in $y=\sqrt{x}+\delta y$ and write $\delta y^2\approx 0$ to get:
 
+If $y$ is our guess for $\sqrt{x}$, we can write $y=\sqrt{x}+\delta y$ and plug this into our stopping condition $|y^2-x|\lt \varepsilon$ to get:
 <p>$$
 \begin{align*}
-\varepsilon\approx |y^2-x|\\
-&\approx |x+2\delta y \sqrt{x} - x|
+\varepsilon&\approx |y^2-x|\\
+&\approx |x+2\delta y \sqrt{x} - x| \\
+&\;\Downarrow\\
+\varepsilon&\approx 2|\delta y|\sqrt{x}
 \end{align*}
 $$</p>
-So that $\delta y\approx \varepsilon/(2\sqrt{x})$. If $x$ is very large, this means that for fixed epsilon we get a ton of digits of accuracy in $\delta y.$ If $x$ is small, we get very few digits of accuracy in $y$. 
+So that our error magnitude is $\delta y\approx \varepsilon/(2\sqrt{x})$. If $x$ is very large, this means that for fixed epsilon we get a ton of digits of accuracy in $\delta y.$ If $x$ is small, we get very few digits of accuracy in $y$. 
 
+For large $x$, I imagine there would be problems where $|y^2-x|$ cannot be less than epsilon due to floating point precision errors, but I didn't find an example of this. 
 
+For small $x$, the implementation of the procedure demonstrates that using the fractional change as a stop condition is better.
 
+@src(ch1-code/ex1-7.rkt)
 
+#### Exercise 1.8
+Newton’s method for cube roots is based on the fact that if y
+ is an approximation to the cube root of x
+, then a better approximation is given by the value
+$$\frac{x/y^2+2y}{3}.$$
 
+Use this formula to implement a cube-root procedure analogous to the square-root procedure. (In 1.3.4 we will see how to implement Newton’s method in general as an abstraction of these square-root and cube-root procedures.)
+
+##### Solution
+
+@src(ch1-code/ex1-8.rkt)
 
 
 

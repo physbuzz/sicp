@@ -560,6 +560,7 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <p>So, <code>(p)</code> is a bomb, and whenever we evaluate it we get stuck in an infinite loop. The question is whether we encounter this bomb or not.</p>
 <p>Using applicative order evaluation, we first evaluate both arguments. <code>0</code> evaluates to <code>0</code>, but evaluating <code>(p)</code> triggers our bomb. So our applicative order evaluator hangs or crashes. Scheme is applicative order, so we expect it to hang or crash.</p>
 <p>Normal ordering is different, we "fully expand then reduce" but as the problem points out, the word "fully expand" does not refer to the argument of the if-statement, and so we're saved from fully expanding <code>(p)</code> right off the bat. When we evaluate <code>(if (= 0 0) 0 (p))</code>, our reduce step is smart enough to only evaluate <code>0</code>, so the expression returns <code>0</code>. I'm told this is the semantics of Haskell, so we'd expect some Haskell program implementing the same idea to run just fine.</p>
+<p>This is the same reasoning as given in the answers to <a href="https://stackoverflow.com/questions/16036139/seek-for-some-explanation-on-sicp-exercise-1-5">this stackoverflow question</a>.</p>
 <h4>1.6</h4>
 <p>Alyssa P. Hacker doesn’t see why if needs to be provided as a special form. “Why can’t I just define it as an ordinary procedure in terms of cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">new-if</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span>
@@ -586,18 +587,19 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 
 <p>What happens when Alyssa attempts to use this to compute square roots? Explain.</p>
 <h5>Solution</h5>
-<p>The key here is not the behavior of <code>cond</code> versus <code>if</code>. Instead, 
-our function is evaluated with applicative order evaluation. So,
-<code>new-if cond A B</code>, both <code>A</code> and <code>B</code> are both evaluated before being passed to
-<code>new-if</code>. Since <code>B</code> contains a recursive call, this blows up!  </p>
+<p>The key here is not the behavior of <code>cond</code> versus <code>if</code>, but in the conditional evaluation of each of the terms following the <code>if</code> special form. </p>
+<p><code>(if cond A B)</code> evaluated B only on the condition that cond is false. </p>
+<p>But <code>(new-if cond A B)</code> will evaluate <code>cond</code>, <code>A</code>, and <code>B</code>, regardless of how <code>new-if</code> is defined (at least given what we know at this point in the text, not sure if something arises later). Since B contains a recursive function call, we immediately get infinite recursion.</p>
 <h4>Exercise 1.7</h4>
 <p>The <code>good-enough?</code> test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also, in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers. An alternative strategy for implementing good-enough? is to watch how guess changes from one iteration to the next and to stop when the change is a very small fraction of the guess. Design a square-root procedure that uses this kind of end test. Does this work better for small and large numbers?</p>
 <h5>Solution</h5>
-<p>If $y$ is our guess for $\sqrt{x}$, our procedure halts when $|y^2-x|&lt;\varepsilon.$ Plug in $y=\sqrt{x}+\delta y$ and write $\delta y^2\approx 0$ to get:</p>
+<p>If $y$ is our guess for $\sqrt{x}$, we can write $y=\sqrt{x}+\delta y$ and plug this into our stopping condition $|y^2-x|\lt \varepsilon$ to get:</p>
 <p>$$
 \begin{align*}
-\varepsilon\approx |y^2-x|\\
-&\approx |x+2\delta y \sqrt{x} - x|
+\varepsilon&\approx |y^2-x|\\
+&\approx |x+2\delta y \sqrt{x} - x| \\
+&\;\Downarrow\\
+\varepsilon&\approx 2|\delta y|\sqrt{x}
 \end{align*}
 $$</p>
 <p>So that $\delta y\approx \varepsilon/(2\sqrt{x})$. If $x$ is very large, this means that for fixed epsilon we get a ton of digits of accuracy in $\delta y.$ If $x$ is small, we get very few digits of accuracy in $y$. </p>
