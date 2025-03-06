@@ -20,24 +20,22 @@
 (define (my-sqrt x)
   (sqrt-iter 1.0 x))
 
-; The version which uses the new-if statement hangs!
-#|(define (new-if predicate 
-                then-clause 
-                else-clause)
-  (cond (predicate then-clause)
-        (else else-clause))) |#
-
-; Interestingly, the version using an old if-statement also hangs ;)
-(define (new-if predicate then-clause else-clause)
-  (if predicate then-clause else-clause))
-
-(define (sqrt-iter2 guess x)
-  (new-if (good-enough? guess x)
-          guess
-          (sqrt-iter2 (improve guess x) x)))
-
-(define (my-sqrt2 x)
-  (sqrt-iter2 1.0 x))
-
 (my-sqrt 2.0)
-(my-sqrt2 2.0)
+
+; The version which uses the new-if statement hangs!
+; (define (new-if predicate 
+;                then-clause 
+;                else-clause)
+;  (cond (predicate then-clause)
+;        (else else-clause)))
+
+; This version also hangs:
+; (define (new-if predicate then-clause else-clause)
+;   (if predicate then-clause else-clause))
+; (define (sqrt-iter2 guess x)
+;   (new-if (good-enough? guess x)
+;           guess
+;           (sqrt-iter2 (improve guess x) x)))
+; (define (my-sqrt2 x)
+;   (sqrt-iter2 1.0 x))
+;  (my-sqrt2 2.0)

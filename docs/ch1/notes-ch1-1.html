@@ -269,6 +269,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             overflow-x: auto;
             margin: 0;
         }
+Untitled
 
         .code-output {
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
@@ -277,7 +278,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             padding: 0.5rem 1rem;
             border-top: 1px solid #e1e4e8;
             background-color: #fafbfc;
+        }
+        
+        .code-output span {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .code-output pre {
+            margin: 0;
             white-space: pre-wrap;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
         }
 
         code {
@@ -467,6 +479,22 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+10
+12
+8
+3
+6
+19
+#f
+4
+16
+6
+16
+</pre>
+</div>
 </div>
 
 <h4>Exercise 1.2</h4>
@@ -487,6 +515,12 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+-37/150
+</pre>
+</div>
 </div>
 
 <h4>Exercise 1.3</h4>
@@ -517,6 +551,12 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+13
+</pre>
+</div>
 </div>
 
 <h4>Exercise 1.4</h4>
@@ -541,6 +581,13 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+4
+4
+</pre>
+</div>
 </div>
 
 <h4>Exercise 1.5</h4>
@@ -602,7 +649,100 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 \varepsilon&\approx 2|\delta y|\sqrt{x}
 \end{align*}
 $$</p>
-<p>So that $\delta y\approx \varepsilon/(2\sqrt{x})$. If $x$ is very large, this means that for fixed epsilon we get a ton of digits of accuracy in $\delta y.$ If $x$ is small, we get very few digits of accuracy in $y$. </p>
+<p>So that our error magnitude is $\delta y\approx \varepsilon/(2\sqrt{x})$. If $x$ is very large, this means that for fixed epsilon we get a ton of digits of accuracy in $\delta y.$ If $x$ is small, we get very few digits of accuracy in $y$. </p>
+<p>For large $x$, I imagine there would be problems where $|y^2-x|$ cannot be less than epsilon due to floating point precision errors, but I didn't find an example of this. </p>
+<p>For small $x$, the implementation of the procedure demonstrates that using the fractional change as a stop condition is better.</p>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-7.rkt">ch1-code/ex1-7.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="mf">0.001</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">      </span><span class="n">guess</span>
+<span class="w">      </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">sqrt-iter</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1">; Given the last and 2nd last guesses, check if the fractional change is good enough.</span>
+<span class="c1">; I&#39;m choosing the formula |guessL-guessLL|/guessL &lt; 0.001</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough2?</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">guessLL</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">guessLL</span><span class="p">))</span><span class="w"> </span><span class="n">guessL</span><span class="p">)</span><span class="w"> </span><span class="mf">0.01</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">guessLL</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough2?</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">guessLL</span><span class="p">)</span>
+<span class="w">      </span><span class="n">guessL</span>
+<span class="w">      </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-sqrt2</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">sqrt-iter2</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="mf">1.1</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">)</span>
+<span class="p">(</span><span class="n">my-sqrt2</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+0.03230844833048122
+0.010000000025490743
+</pre>
+</div>
+</div>
+
+<h4>Exercise 1.8</h4>
+<p>Newton’s method for cube roots is based on the fact that if y
+ is an approximation to the cube root of x
+, then a better approximation is given by the value
+$$\frac{x/y^2+2y}{3}.$$</p>
+<p>Use this formula to implement a cube-root procedure analogous to the square-root procedure. (In 1.3.4 we will see how to implement Newton’s method in general as an abstraction of these square-root and cube-root procedures.)</p>
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-8.rkt">ch1-code/ex1-8.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+
+<span class="c1">; Fractional good-enough like in ex 1-7</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">guessLL</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">guessLL</span><span class="p">))</span><span class="w"> </span><span class="n">guessL</span><span class="p">)</span><span class="w"> </span><span class="mf">0.01</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">curt-iter</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">guessLL</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">guessLL</span><span class="p">)</span>
+<span class="w">      </span><span class="n">guessL</span>
+<span class="w">      </span><span class="p">(</span><span class="n">curt-iter</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">guessL</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-curt</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">curt-iter</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="mf">1.1</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="c1">; 1.4422495703074083</span>
+<span class="p">(</span><span class="n">my-curt</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1.4422497895989996
+</pre>
+</div>
+</div>
     </div>
 </body>
 </html>

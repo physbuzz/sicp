@@ -129,10 +129,10 @@ class ComposableMarkdownPreprocessor(Preprocessor):
 
                     # Add output section
                     result.append('<div class="code-output">')
-                    result.append('Output:')
-                    result.append('```')
+                    result.append('<span>Output:</span>')
+                    result.append('<pre>')
                     result.extend(output.splitlines())
-                    result.append('```')
+                    result.append('</pre>')
                     result.append('</div>')
 
             # Add run link if configured and it's a Racket file

@@ -214,6 +214,7 @@ def get_html_template(title, html_content, pygments_css):
             overflow-x: auto;
             margin: 0;
         }}
+Untitled
 
         .code-output {{
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
@@ -222,7 +223,18 @@ def get_html_template(title, html_content, pygments_css):
             padding: 0.5rem 1rem;
             border-top: 1px solid #e1e4e8;
             background-color: #fafbfc;
+        }}
+        
+        .code-output span {{
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }}
+        
+        .code-output pre {{
+            margin: 0;
             white-space: pre-wrap;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
         }}
 
         code {{
