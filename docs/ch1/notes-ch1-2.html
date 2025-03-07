@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notes-ch1-2.md</title>
+    <!-- MathJax for LaTeX support -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']]
+            }
+        };
+    </script>
+    <style>
+        /* Pygments Syntax Highlighting */
+        pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #880000 } /* Name.Constant */
+.codehilite .nd { color: #AA22FF } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #0000FF } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #666666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #0000FF } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+        /* Basic reset and fonts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+                /* Navigation styling */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .nav span {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav .activenav {
+            background-color: #f1f8ff;
+        }
+
+        .nav .activenav a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .nav .activenav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav .inactivenav {
+            color: #959da5;
+            background-color: #f6f8fa;
+        }
+        /* Center column layout */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: #34495e;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.8rem 0 1rem;
+            color: #34495e;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        h5 {
+            font-size: 1.1rem;
+            margin: 1.2rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        /* Solution styling */
+        h5:has(+p:contains("Solution")) {
+            margin-bottom: 0;
+        }
+
+        h5:has(+p:contains("Solution")) + p {
+            font-weight: bold;
+            color: #3c8dbc;
+            border-left: 3px solid #3c8dbc;
+            padding-left: 0.8rem;
+            margin: 0.5rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* List styling */
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        .code-box {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        .code-header {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.3rem 0 0rem 0.3rem;
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+
+        .code-header a {
+            color: #6a737d;
+            text-decoration: none;
+        }
+
+        .code-header a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+        /* Standalone code blocks (triple backticks) */
+        .codehilite {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        /* When inside a code-box, remove default styling */
+        .code-box .codehilite {
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Adjust padding for code blocks inside code-box */
+        .code-box .codehilite pre {
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        /* Normal padding for standalone code blocks */
+        .codehilite pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .code-output {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            border-top: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+        .code-output span {
+            color: #de37cc;
+        }
+        
+        .code-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        code {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+            padding: 0.2em 0.4em;
+            background-color: #f6f8fa;
+            border-radius: 3px;
+        }
+
+        .codehilite code {
+            padding: 0;
+            background-color: transparent;
+        }
+
+        /* Links */
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Run button */
+        .run-racket {
+            display: inline-block;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.4rem 0.8rem;
+            background-color: #3c8dbc;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .run-racket:hover {
+            background-color: #367fa9;
+            text-decoration: none;
+        }
+
+        /* Make LaTeX display nicely */
+        .MathJax {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+    <span class="activenav"><a href="notes-ch1-1.html">← Previous</a></span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="inactivenav">Next →</span>
+</div>
+
+<p><a href="https://sarabander.github.io/sicp/html/1_002e2.xhtml">https://sarabander.github.io/sicp/html/1_002e2.xhtml</a></p>
+<h2>Section 1.2</h2>
+<h3>Introduction</h3>
+<h3>Exercises</h3>
+<h4>Exercise 1.9</h4>
+<p>Each of the following two procedures defines a method for adding two positive integers in terms of the procedures inc, which increments its argument by 1, and dec, which decrements its argument by 1.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="n">b</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">dec</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="n">b</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">dec</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>Using the substitution model, illustrate the process generated by each procedure in evaluating <code>(+ 4 5)</code>. Are these processes iterative or recursive?</p>
+<h5>Solution</h5>
+<p>Using the first definition:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">; (define (+ a b)</span>
+<span class="c1">;   (if (= a 0) </span>
+<span class="c1">;       b </span>
+<span class="c1">;       (inc (+ (dec a) b))))</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+<span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">5</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">5</span><span class="p">))))</span>
+<span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">5</span><span class="p">)))))</span>
+<span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="mi">5</span><span class="p">))))</span>
+<span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="mi">6</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="mi">7</span><span class="p">))</span>
+<span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+<span class="mi">9</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="c1">; (define (+ a b)</span>
+<span class="c1">;   (if (= a 0) </span>
+<span class="c1">;       b </span>
+<span class="c1">;       (+ (dec a) (inc b))))</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span>
+<span class="mi">9</span>
+</code></pre></div>
+
+<h4>Exercise 1.10</h4>
+<p>The following procedure computes a mathematical function called Ackermann’s function.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+</code></pre></div>
+
+<p>What are the values of the following expressions?</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Consider the following procedures, where A is the procedure defined above:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">h</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Give concise mathematical definitions for the functions computed by the procedures f, g, and h for positive integer values of n. For example, <code>(k n)</code> computes $5n^2$.</p>
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-10.rkt">ch1-code/ex1-10.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1024
+65536
+65536
+</pre>
+</div>
+</div>
+
+<p>For the first function,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">             </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="c1">; simplify assuming n &gt;= 0</span>
+<span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The second function,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">             </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="c1">; (A 1 0) is 0 </span>
+<span class="c1">; (A 1 1) is 2</span>
+<span class="c1">; (A 1 n) for n&gt;=2 is </span>
+<span class="c1">; =(* 2 (A 1 (- n 1)))</span>
+<span class="c1">; so (A 1 2) is (* 2 2)=4</span>
+<span class="c1">; so (A 1 3) is (* 2 (* 2 2))=8</span>
+<span class="c1">; so (A 1 n) is 2^n, simple proof by induction.</span>
+</code></pre></div>
+
+<p>The third function,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">A</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="c1">; (A 2 0) is 0</span>
+<span class="c1">; (A 2 1) is 2</span>
+<span class="c1">; (A 2 n) for n&gt;=2 is</span>
+<span class="c1">; =(A 1 (A 2 (- n 1)))</span>
+<span class="c1">; =(pow 2 (A 2 (- n 1))) </span>
+<span class="c1">; eg. (A 2 2) is 2^2</span>
+<span class="c1">; eg. (A 2 3) is 2^(2^2)</span>
+<span class="c1">; eg. (A 2 4) is 2^(2^(2^2))</span>
+</code></pre></div>
+
+<p>So This can be described with Knuth's up arrow notation, <code>(A 2 n)</code> is $2\uparrow \uparrow n$.</p>
+<h4>Exercise 1.11</h4>
+<p>A function $f$ is defined by the rule that $f(n)=n$ if $n\lt 3$ and $f(n)=f(n-1)+2f(n-2)+3f(n-3)$ if $n\geq 3.$ Write a procedure that computes $f$ by means of a recursive process. Write a procedure that computes $f$ by means of an iterative process.</p>
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-11a.rkt">ch1-code/ex1-11a.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span>
+<span class="w">     </span><span class="n">n</span>
+<span class="w">     </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">3</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-rec</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1
+2
+4
+11
+25
+59
+</pre>
+</div>
+</div>
+
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-11b.rkt">ch1-code/ex1-11b.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f-it</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">f-it-helper</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f-it-helper</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="nb">count</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nb">count</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">    </span><span class="n">c</span>
+<span class="w">    </span><span class="p">(</span><span class="n">f-it-helper</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">c</span><span class="p">))</span><span class="w"> </span>
+<span class="w">      </span><span class="n">a</span><span class="w"> </span>
+<span class="w">      </span><span class="n">b</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nb">count</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="n">f-it</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-it</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-it</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-it</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-it</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f-it</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1
+2
+4
+11
+25
+59
+</pre>
+</div>
+</div>
+
+<h4>Exercise 1.12</h4>
+<p>Write a recursive procedure that computes elements of Pascal's triangle.</p>
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-12.rkt">ch1-code/ex1-12.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">    </span><span class="mi">1</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">choose</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1
+6
+15
+20
+15
+6
+1
+</pre>
+</div>
+</div>
+
+<h4>Exercise 1.13</h4>
+<p>Prove that $\textrm{Fib}(n)$ is the closest integer to $\varphi^n/\sqrt{5}$ where $\varphi=(1+\sqrt{5})/2.$ Hint: Let $\psi=(1-\sqrt{5})/2.$ Use induction and the definition of the Fibonacci numbers to prove that $\textrm{Fib}(n)=(\varphi^n-\psi^n)/\sqrt{5}.$</p>
+<h5>Solution</h5>
+<h4>Exercise 1.14</h4>
+<p>Draw the tree illustrating the process generated by the <code>count-change</code> procedure of 1.2.2 in making change for 11 cents. What are the orders of growth of the space and number of steps used by this process as the amount to be changed increases?</p>
+<h4>Exercise 1.15</h4>
+<p>The sine of an angle (specified in radians) can be computed by making use of the approximation $\sin x\approx x$
+ if x
+ is sufficiently small, and the trigonometric identity
+$$ \sin x = 3 \sin \frac{x}{3}-4\sin^3\frac{x}{3}$$
+to reduce the size of the argument of $\sin.$ (For purposes of this exercise an angle is considered “sufficiently small” if its magnitude is not greater than 0.1 radians.) These ideas are incorporated in the following procedures:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">cube</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">(</span><span class="n">cube</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sine</span><span class="w"> </span><span class="nb">angle</span><span class="p">)</span>
+<span class="w">   </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="nb">angle</span><span class="p">)</span><span class="w"> </span><span class="mf">0.1</span><span class="p">))</span>
+<span class="w">       </span><span class="nb">angle</span>
+<span class="w">       </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="p">(</span><span class="n">sine</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="nb">angle</span><span class="w"> </span><span class="mf">3.0</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>How many times is the procedure <code>p</code> applied when <code>(sine 12.15)</code> is evaluated?
+What is the order of growth in space and number of steps (as a function of $a$
+) used by the process generated by the sine procedure when <code>(sine a)</code> is evaluated?</p>
+<h4>Exercise 1.16</h4>
+<p>Design a procedure that evolves an iterative exponentiation process that uses successive squaring and uses a logarithmic number of steps, as does <code>fast-expt</code>. (Hint: Using the observation that $(b^{n/2})^2=(b^2)^{n/2},$
+keep, along with the exponent $n$
+ and the base $b,$
+an additional state variable $a,$
+and define the state transformation in such a way that the product $ab^n$
+ is unchanged from state to state. At the beginning of the process $a$
+ is taken to be $1,$ and the answer is given by the value of $a$
+ at the end of the process. In general, the technique of defining an <em>invariant quantity</em> that remains unchanged from state to state is a powerful way to think about the design of iterative algorithms.)</p>
+<h4>Exercise 1.17</h4>
+<p>The exponentiation algorithms in this section are based on performing exponentiation by means of repeated multiplication. In a similar way, one can perform integer multiplication by means of repeated addition. The following multiplication procedure (in which it is assumed that our language can only add, not multiply) is analogous to the expt procedure:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>This algorithm takes a number of steps that is linear in <code>b</code>. Now suppose we include, together with addition, operations <code>double</code>, which doubles an integer, and <code>halve</code>, which divides an (even) integer by 2. Using these, design a multiplication procedure analogous to <code>fast-expt</code> that uses a logarithmic number of steps.</p>
+<h4>Exercise 1.18</h4>
+<p>Using the results of Exercise 1.16 and Exercise 1.17, devise a procedure that generates an iterative process for multiplying two integers in terms of adding, doubling, and halving and uses a logarithmic number of steps.</p>
+<h4>Exercise 1.19</h4>
+<p>There is a clever algorithm for computing the Fibonacci numbers in a logarithmic number of steps. Recall the transformation of the state variables $a$ and $b$
+ in the fib-iter process of 1.2.2: $a\leftarrow a+b$ and $b\leftarrow a.$
+Call this transformation $T$
+, and observe that applying $T$
+ over and over again $n$
+ times, starting with $1$ and $0,$ produces the pair $\textrm{Fib}(n+1)$ and $\textrm{Fib}(n).$ 
+In other words, the Fibonacci numbers are produced by applying $T^n,$ the $n^{\textrm{th}}$
+ power of the transformation $T$, starting with the pair $(1, 0).$
+Now consider $T$ to be the special case of $p=0$ and $q=1$ in a family of transformations $T_{pq}$ where $T_{pq}$ transforms the pair $(a,b)$ according to
+$a\leftarrow bq+aq+ap$ and $b\leftarrow bp+aq.$ Shoe that if we apply such a transformation 
+$T_{pq}$ twice, the effect is the same as using a single transformation $T_{p'q'}$ of the same form,
+and compute $p'$ and $q'$ in terms of $p$ and $q.$ This gives us an explicit way to 
+square these transformations, and thus we can compute $T^n$ using successive squaring, as in the 
+<code>fast-expt</code> procedure. Put this all together to complete the following procedure, which runs in
+a logarithmic number of steps:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fib</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fib-iter</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fib-iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="nb">count</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="nb">count</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="n">b</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">even?</span><span class="w"> </span><span class="nb">count</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">fib-iter</span><span class="w"> </span><span class="n">a</span>
+<span class="w">                   </span><span class="n">b</span>
+<span class="w">                   </span><span class="n">⟨??⟩</span><span class="w">  </span><span class="c1">;compute p&#39;</span>
+<span class="w">                   </span><span class="n">⟨??⟩</span><span class="w">  </span><span class="c1">;compute q&#39;</span>
+<span class="w">                   </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="nb">count</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="n">fib-iter</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">p</span><span class="p">))</span>
+<span class="w">                   </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">q</span><span class="p">))</span>
+<span class="w">                   </span><span class="n">p</span>
+<span class="w">                   </span><span class="n">q</span>
+<span class="w">                   </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nb">count</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+</code></pre></div>
+
+<h4>Exercise 1.20</h4>
+<p>The process that a procedure generates is of course dependent on the rules used by the interpreter. As an example, consider the iterative gcd procedure given above. Suppose we were to interpret this procedure using normal-order evaluation, as discussed in 1.1.5. (The normal-order-evaluation rule for if is described in Exercise 1.5.) Using the substitution method (for normal order), illustrate the process generated in evaluating (gcd 206 40) and indicate the remainder operations that are actually performed. How many remainder operations are actually performed in the normal-order evaluation of (gcd 206 40)? In the applicative-order evaluation?</p>
+<p>Exercise 1.21: Use the smallest-divisor procedure to find the smallest divisor of each of the following numbers: 199, 1999, 19999.</p>
+<p>Exercise 1.22: Most Lisp implementations include a primitive called runtime that returns an integer that specifies the amount of time the system has been running (measured, for example, in microseconds). The following timed-prime-test procedure, when called with an integer n
+, prints n
+ and checks to see if n
+ is prime. If n
+ is prime, the procedure prints three asterisks followed by the amount of time used in performing the test.</p>
+<p>(define (timed-prime-test n)
+  (newline)
+  (display n)
+  (start-prime-test n (runtime)))
+(define (start-prime-test n start-time)
+  (if (prime? n)
+      (report-prime (- (runtime) 
+                       start-time))))
+(define (report-prime elapsed-time)
+  (display " *** ")
+  (display elapsed-time))
+Using this procedure, write a procedure search-for-primes that checks the primality of consecutive odd integers in a specified range. Use your procedure to find the three smallest primes larger than 1000; larger than 10,000; larger than 100,000; larger than 1,000,000. Note the time needed to test each prime. Since the testing algorithm has order of growth of Θ(n⎯⎯√)
+, you should expect that testing for primes around 10,000 should take about 10⎯⎯⎯⎯√
+ times as long as testing for primes around 1000. Do your timing data bear this out? How well do the data for 100,000 and 1,000,000 support the Θ(n⎯⎯√)
+ prediction? Is your result compatible with the notion that programs on your machine run in time proportional to the number of steps required for the computation?</p>
+<p>Exercise 1.23: The smallest-divisor procedure shown at the start of this section does lots of needless testing: After it checks to see if the number is divisible by 2 there is no point in checking to see if it is divisible by any larger even numbers. This suggests that the values used for test-divisor should not be 2, 3, 4, 5, 6, …, but rather 2, 3, 5, 7, 9, …. To implement this change, define a procedure next that returns 3 if its input is equal to 2 and otherwise returns its input plus 2. Modify the smallest-divisor procedure to use (next test-divisor) instead of (+ test-divisor 1). With timed-prime-test incorporating this modified version of smallest-divisor, run the test for each of the 12 primes found in Exercise 1.22. Since this modification halves the number of test steps, you should expect it to run about twice as fast. Is this expectation confirmed? If not, what is the observed ratio of the speeds of the two algorithms, and how do you explain the fact that it is different from 2?</p>
+<p>Exercise 1.24: Modify the timed-prime-test procedure of Exercise 1.22 to use fast-prime? (the Fermat method), and test each of the 12 primes you found in that exercise. Since the Fermat test has Θ(logn)
+ growth, how would you expect the time to test primes near 1,000,000 to compare with the time needed to test primes near 1000? Do your data bear this out? Can you explain any discrepancy you find?</p>
+<p>Exercise 1.25: Alyssa P. Hacker complains that we went to a lot of extra work in writing expmod. After all, she says, since we already know how to compute exponentials, we could have simply written</p>
+<p>(define (expmod base exp m)
+  (remainder (fast-expt base exp) m))
+Is she correct? Would this procedure serve as well for our fast prime tester? Explain.</p>
+<p>Exercise 1.26: Louis Reasoner is having great difficulty doing Exercise 1.24. His fast-prime? test seems to run more slowly than his prime? test. Louis calls his friend Eva Lu Ator over to help. When they examine Louis’s code, they find that he has rewritten the expmod procedure to use an explicit multiplication, rather than calling square:</p>
+<p>(define (expmod base exp m)
+  (cond ((= exp 0) 1)
+        ((even? exp)
+         (remainder 
+          (<em> (expmod base (/ exp 2) m)
+             (expmod base (/ exp 2) m))
+          m))
+        (else
+         (remainder 
+          (</em> base 
+             (expmod base (- exp 1) m))
+          m))))
+“I don’t see what difference that could make,” says Louis. “I do.” says Eva. “By writing the procedure like that, you have transformed the Θ(logn)
+ process into a Θ(n)
+ process.” Explain.</p>
+<p>Exercise 1.27: Demonstrate that the Carmichael numbers listed in Footnote 47 really do fool the Fermat test. That is, write a procedure that takes an integer n
+ and tests whether an
+ is congruent to a
+ modulo n
+ for every a\lt n
+, and try your procedure on the given Carmichael numbers.</p>
+<p>Exercise 1.28: One variant of the Fermat test that cannot be fooled is called the Miller-Rabin test (Miller 1976; Rabin 1980). This starts from an alternate form of Fermat’s Little Theorem, which states that if n
+ is a prime number and a
+ is any positive integer less than n
+, then a
+ raised to the (n−1)
+-st power is congruent to 1 modulo n
+. To test the primality of a number n
+ by the Miller-Rabin test, we pick a random number a\lt n
+ and raise a
+ to the (n−1)
+-st power modulo n
+ using the expmod procedure. However, whenever we perform the squaring step in expmod, we check to see if we have discovered a “nontrivial square root of 1 modulo n
+,” that is, a number not equal to 1 or n−1
+ whose square is equal to 1 modulo n
+. It is possible to prove that if such a nontrivial square root of 1 exists, then n
+ is not prime. It is also possible to prove that if n
+ is an odd number that is not prime, then, for at least half the numbers a\lt n
+, computing an−1
+ in this way will reveal a nontrivial square root of 1 modulo n
+. (This is why the Miller-Rabin test cannot be fooled.) Modify the expmod procedure to signal if it discovers a nontrivial square root of 1, and use this to implement the Miller-Rabin test with a procedure analogous to fermat-test. Check your procedure by testing various known primes and non-primes. Hint: One convenient way to make expmod signal is to have it return 0.</p>
+    </div>
+</body>
+</html>
