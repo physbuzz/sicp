@@ -29,6 +29,14 @@ clean_outputs:
 rebuild:
 	$(BUILD_SCRIPT) rebuild
 
+# Watch for file changes and rebuild as needed
+watch:
+	$(BUILD_SCRIPT) watch
+
+# Watch for file changes without initial build
+watch-only:
+	$(BUILD_SCRIPT) watch --no-initial-build
+
 # Help target
 help:
 	@echo "SICP Notes Build System"
@@ -40,6 +48,8 @@ help:
 	@echo "  clean        - Clean all generated files"
 	@echo "  clean_outputs - Clean just the output files"
 	@echo "  rebuild      - Force rebuild everything"
+	@echo "  watch        - Watch for file changes and rebuild as needed"
+	@echo "  watch-only   - Watch for changes without performing initial build"
 	@echo "  help         - Show this help message"
 
-.PHONY: all html racket clean clean_outputs rebuild help
+.PHONY: all html racket clean clean_outputs rebuild watch watch-only help
