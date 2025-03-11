@@ -11,16 +11,170 @@
 
 ### 1.2.1-1.2.2
 
-- We distinguish between the *local evolution* and the *global evolution* of the process.
+- We distinguish between the *local evolution* and the *global behavior* of the process. It's easier to reason about the local evolution. 
 - A linear recursive process is one that grows linearly at each step of the recursion. As an example, the naively implemented factorial using `(* n (factorial (- n 1)))` is
 a linear recursive process.
-- A linear iterative process is one that takes a number of steps that grows linearly with $n$. 
+- A linear iterative process is one that takes a number of steps that grows linearly with $n$. For example, the factorial defined using `(fact-iter (* n count) (- count 1))` is linear recursive.
 - Using tail-recursion, we can specify "loop" constructs without using them explicitly. 
 So what looks like a recursive implementation is in fact equivalent to an iterative loop like we might be familiar with in other languages.
 
 ### 1.2.3
- - We write that $R(n)$ is $\Theta(f(n))$ if...
+ - We write that a positive function $R(n)$ is $\Theta(f(n))$ as $n\to\infty$ if...
 $$\exists_{k_1,k_2,N}:\forall_{n\gt N}\;\; k_1 f(n)\leq R(n)\leq k_2 f(n)$$
+
+Again, a footnote is critical here:
+> These statements mask a great deal of oversimplification. For instance, if we count process steps as “machine operations” we are making the assumption that the number of machine operations needed to perform, say, a multiplication is independent of the size of the numbers to be multiplied, which is false if the numbers are sufficiently large. Similar remarks hold for the estimates of space. Like the design and description of a process, the analysis of a process can be carried out at various levels of abstraction.
+
+So, you know, we aren't aiming for perfectly formal proofs that algorithms are of a certain order of growth, rather we want to
+come up with heuristic arguments of our own and understand the heuristic arguments of others, using models of computation.
+
+### 1.2.4
+`fast-expt` is such a cool algorithm
+```rkt
+(define (even? n)
+  (= (remainder n 2) 0))
+(define (fast-expt b n)
+  (cond ((= n 0) 
+         1)
+        ((even? n) 
+         (square (fast-expt b (/ n 2))))
+        (else 
+         (* b (fast-expt b (- n 1))))))
+```
+Okay... in C this can be implemented easily as well as a recursive algorithm...
+```c
+int fastexpt(int b, int n){
+    if(n==0)
+        return 1;
+    if(n%2==0){
+        int k=fastexpt(b,n/2);
+        return k*k;
+    }
+    return b*fastexpt(b,n-1);
+}
+```
+The tricky thing is exercise 1.16 turning this into an iterative process.
+
+### 1.2.5
+
+Euclidean algorithm, also known as "a banger".
+
+**Lamé’s Theorem:** If Euclid’s Algorithm requires $k$
+ steps to compute the $\textrm{GCD}$ of some pair, then the smaller number in the pair must be greater than or equal to the $k^{th}$
+ Fibonacci number.
+
+> [43] This
+> theorem was proved in 1845 by Gabriel Lamé, a French mathematician and
+> engineer known chiefly for his contributions to mathematical physics. To prove
+> the theorem, we consider pairs ${(a_k, b_k)}$, where ${a_k \ge b_k}$, 
+> for which Euclid's Algorithm terminates in $k$ steps. The proof
+> is based on the claim that, if ${(a_{k+1}, b_{k+1})} \to {(a_k, b_k)} \to {(a_{k-1}, b_{k-1})}$ 
+> are three successive pairs 
+> in the reduction process, then we must have $b_{k+1} \ge b_k + b_{k-1}$. 
+> To verify the claim, consider that a reduction step is defined by applying the 
+> transformation ${a_{k-1} = b_k}$, ${b_{k-1} =}$ remainder of $a_k$ 
+> divided by $b_k$. The second equation means that $a_k = {qb_k} + {b_{k-1}}$ 
+> for some positive integer $q$. And since $q$ must be at least 1 we have 
+> $a_k = {qb_k} + b_{k-1} \ge b_k + b_{k-1}$. But in the previous reduction 
+> step we have $b_{k+1} = a_k$. Therefore, $b_{k+1} = a_k \ge b_k + b_{k-1}$.
+> This verifies the claim. Now we can prove the theorem by induction on $k$, 
+> the number of steps that the algorithm requires to terminate. The result is true for 
+> ${k = 1}$, since this merely requires that $b$ be at least as large as ${\text{Fib}(1) = 1}$. 
+> Now, assume that the result is true for all integers less than or equal
+> to $k$ and establish the result for ${k + 1}$. 
+> Let ${(a_{k+1}, b_{k+1})} \to {(a_k, b_k)} \to {(a_{k-1}, b_{k-1})}$ 
+> be successive pairs in the reduction 
+> process. By our induction hypotheses, we have $b_{k-1} \ge {\text{Fib}(k - 1)}$ 
+> and $b_k \ge {\text{Fib}(k)}$. Thus, applying the claim we just proved together with 
+> the definition of the Fibonacci numbers gives 
+> $b_{k+1} \ge b_k + b_{k-1} \ge {\text{Fib}(k)} + {\text{Fib}(k-1)} = {\text{Fib}(k+1)}$, 
+> which completes the proof of Lamé's Theorem.
+
+> [44] If d
+ is a divisor of n
+, then so is n/d
+. But d
+ and n/d
+ cannot both be greater than n⎯⎯√
+.
+
+### 1.2.6
+
+**Fermat's Little Theorem.** If $n$ is a prime number and $a$ is any positive integer 
+less than $n,$ then $a^n\equiv a\textrm{ mod }n.$
+
+Other algorithms worth implementing might be writing the digits of the decimal form of $1/a$ 
+in base $b$. IIRC period of repetition is equal to $b^n \textrm{ mod }a.$ For example,
+$10^n\textrm{ mod }7$ takes on six values, so $7^{-1}=0.\overline{142857}$ has period six.
+Compare that to $10^n\textrm{ mod }11$ which only ever takes on values $1,10$. So $11^{-1}=0.\overline{09}$ has period two.
+
+Another algorithm is the extended Euclidean algorithm, which actually finds the integers such that 
+$ax+by=\textrm{gcd}(a,b).$ I've needed this a few times in Advent of Code problems.
+
+It's tempting to mention continued fractions here, but they get their time in the limelight
+in the next chapter.
+
+### Appendices!
+
+#### An aside on other asymptotic relations
+ - First off, let's avoid the temptation to go Bourbaki style and get too into the weeds with definitions and equivalences and all that. It would be a colossal waste of time. Wikipedia does this a little bit. We want to just get the intention of the definitions and maybe a little bit of the formality.
+ - Another book, "The Algorithm Design Manual" by Skiena, first defines $O(n)$ and $\Omega(n).$ For simplicity's sake we just care about the limit $n\to \infty$ and consider only positive functions $R(n).$
+
+**Definition of $O(f(n))$:** We write that $R(n)$ is $O(f(n))$ as $n\to \infty$ if
+$$\exists_{c,N}:\forall_{n\gt N}\;\; R(n)\leq c \cdot f(n)$$
+$R(n)=O(f(n))$ is a statement that the growth rate of $f(n)$ times a constant is an upper bound on $R(n)$ for sufficiently large $n.$
+
+**Definition of $\Omega(f(n))$:** We write that $R(n)$ is $\Omega(f(n))$ as $n\to\infty$ if
+$$\exists_{c,N}:\forall_{n\gt N}\;\; 0 \leq c \cdot f(n) \leq R(n)$$
+$R(n)=\Omega(f(n))$ is a statement that the growth rate of $f(n)$ times a constant is a lower bound on $R(n)$ for sufficiently large $n.$
+
+Once we have those two definitions, something is $\Theta(f(n))$ if it is both $O(f(n))$ and $\Omega(f(n)).$
+
+**Definition of $f(n)\gg g(n)$:** $f(n)\gg g(n)$ as $n\to a$ if $\lim_{n\to a} \frac{g(n)}{f(n)}=0.$ This definition gives:
+$$n!\gg 2^n \gg n^3\gg n^2\gg n\log n\gg n\gg \log n \gg 1$$
+
+**Definition of $f(n)\sim g(n)$:** $f(n)\sim g(n)$ as $n\to a$ if $\lim_{n\to a} \frac{g(n)}{f(n)}=1.$
+
+#### An aside on asymptotic series
+I have to write this because it's a physicist's bread and butter! For example, Stirling's formula is an asymptotic series, and in quantum field theories Feynman diagrams are used to calculate terms in an asymptotic series.
+
+An asymptotic series is defined as follows. Note that this is an abuse of notation, and that *we never actually carry out the infinite sum*.
+
+**Definition of $\sum_{i=1}^\infty f_i(n) \sim g(n)$:** We write $\sum_{i=1}^\infty f_i(n) \sim g(n)$ as $n\to a$ if:
+
+ - $f_1(n)\sim g(n)$ as $n\to a$
+ - The remainder is asymptotic to $f_2$: $g(n)-f_1(n)\sim f_2(n)$ as $n\to a$
+ - That remainder is asymptotic to $f_3$: $g(n)-f_1(n)-f_2(n)\sim f_3(n)$, and so on $(\textrm{as }n\to a).$ 
+
+For example, Stirling's formula can be written using this abuse of notation as:
+$$\log(n!)\sim n\log(n)-n+\frac{1}{2}\log(2\pi n) + \sum_{k=2}^\infty \frac{(-1)^k B_k}{k(k-1)n^{k-1}}$$
+The coefficients $B_k$ grow so rapidly that for any fixed $n$, the infinite sum doesn't converge! In fact we really mean to have an 
+asymptotic relation. Another way of writing this is that for any fixed $M$ and as $n\to\infty:$
+$$\log(n!)=n\log(n)-n+\frac{1}{2}\log(2\pi n) + \sum_{k=2}^M \frac{(-1)^k B_k}{k(k-1)n^{k-1}} + O\left(\frac{1}{n^M}\right)$$
+
+There's another simpler example of asymptotic series that I really like. Say that you're stuck on a desert island and you have to compute $f(0.1)$, where $f$ is a transcendental function defined by the integral
+$$f(a)=\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x.$$
+Well, let's use a series expansion and totally ignore issues of convergence and real analysis:
+<p>$$\begin{align*}
+\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x &= \int_0^\infty e^{-x/a}\sum_{n=0}^\infty (-1)^n x^n \mathrm{d}x \\
+&= \sum_{n=0}^\infty \int_0^\infty (-1)^n e^{-x/a} x^n \mathrm{d}x \\
+&= \sum_{n=0}^\infty (-1)^n n!a^{n+1} \tag{integrate by parts}\\
+\end{align*}$$</p>
+This infinite sum has a radius of convergence of zero! However if we plug in $a=0.1$ and keep the first few terms, we get
+$$f(0.1)\approx 0.1 - 0.01 + 0.002 - 0.0006 + 0.00024=0.09164$$
+compared to the true value of $f(0.1)=0.0915633\ldots$
+
+Really what we've proven is that
+$$\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x \sim \sum_{n=0}^\infty (-1)^n n!a^{n+1} \tag{as $a\to 0$}$$
+
+TLDR this is the simplest example of coming up with an asymptotic series (as $a\to 0$) for a crazy integral.
+
+I learned this from Bender and Orszag's "Advanced Mathematical Methods for Scientists and Engineers: Asymptotic Methods and Perturbation Theory". The title is a mouthful, and it comes across a lot better in video format. Carl Bender writes a lot of these equations with a smile on his face, because $\sum_{n-1}^\infty (-1)^n n!$ is an absurd sum and is kind of a joke! To a physicist or applied mathematician, what we mean by the infinite sum is really $f(1)$ where $f$ is the transcendental function defined above.
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LYNOGk3ZjFM?si=ulaELbRC-a_tg0VM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+
+
 
 
 

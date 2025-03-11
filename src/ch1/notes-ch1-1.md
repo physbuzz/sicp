@@ -20,8 +20,10 @@
 
 ### 1.1.1-1.1.3
 
-- **Definition:** *Primitive expressions* are the simplest entities the language is concerned with.
+- ***Primitive expressions*** are the simplest entities the language is concerned with (numerals, built-in operators, names).
+- Lisp uses prefix notation.
 - Prefix notation is used. The operator is the leftmost element and can take an arbitrary number of elements, for example `(+ 1 2 3 4)` evaluated to 10. 
+- A ***combination*** is an expression with the leftmost element the operator and the operations to the right operands.
 - REPL = "read-eval-print loop"
 - Pretty printing is defined such that each operator with a deeper nesting starts at a deeper level of indentation. For example
 ```rkt
@@ -44,6 +46,34 @@ becomes
 The syntax to define a procedure is
 `(define (square x) (* x x))`
 
+Note that the fact that we're allowed to evaluate a sequence of expressions here is relegated to a footnote!!
+
+> [14] More generally, the body of the procedure can be a sequence of expressions. In this case, the interpreter evaluates each expression in the sequence in turn and returns the value of the final expression as the value of the procedure application. 
+
+So, the authors aren't going to give us any more warning, they're just going to start throwing stuff like the following at us without explanation. 
+```rkt
+(define hello-world 
+  (display "Hello ")
+  (display "World")
+  (display "!")
+  (newline))
+```
+
+Supposedly this can also be handled with the `begin` keyword. eg.
+```rkt
+(define x 0)
+(if (= x 0) 
+  (begin
+    (display "Hello ")
+    (display "World")
+    (newline))
+  (begin
+    (display "Goodbye ")
+    (display "World")
+    (newline)))
+```
+One way to think of this is that `define` contains an implicit `begin`.
+
 ### 1.5
 
 For chapters 1 and 2 we can use the substitution model, but in chapter 3 we'll need to deal with mutable data and will need a more complicated model.
@@ -51,7 +81,9 @@ For chapters 1 and 2 we can use the substitution model, but in chapter 3 we'll n
 Models define the "meaning" of procedure application. They're generally ways to think about procedures, rather than being ways that the interpreter actually works.
 
 Applicative ordering vs. normal ordering. 
+
 *Normal-order evaluation* is when the interpreter fully expands and then reduces the expression.
+
 *Applicative-order evaluation* is when the interpreter evaluates the arguments needed for the immediate expression and then applies them.
 
 ### 1.6
@@ -76,22 +108,82 @@ Also
       x))
 ```
 
-The format for `if` statements is 
-`(if predicate consequent alternative)`
+- `(if predicate consequent alternative)` is a *special form* which evaluates `predicate` and then evaluates `consequent` if `predicate` is true or `alternative` if `predicate is` false. This breaks the strict rule of applicative order evaluation, which might lead you to believe that all three terms are evaluated.
 
 There's also `and`, `or`, `not`, 
 
-### More Notes
-Bound variable, free variable, variable scope, captured variable (changing from free to bound)
+### 1.7
+This breaks the strict rule of applicative order evaluation, which might lead you to believe that `bool a b` are all evaluated.
 
-### Aside on Mathematica:
+We asked something here: if we removed the ability of the `if` to evaluate only one argument at a time so that we had to evaluate all arguments, would we end up at a non- Turing complete language? In our discussion we brought up the fixed point combinator and this seems to desire some conversation about lambda calculus, which we're not discussing right now. Might be nice to read [Combinators and the story of computation](https://writings.stephenwolfram.com/2020/12/combinators-and-the-story-of-computation/), but let's get through this book and think about theoretical comp sci later!
 
-`(+ 1 2 3 4)` is represented in mathematica as `Add[1,2,3,4]`. in Mathematica, this expression gets substituted with `10` immediately, but say we have another expression `expression = add[1,2,3,4]` (lowercase "A"). Then in fact `expression[[0]]` returns `add`, `expression[[1]]` returns `1`, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through `Head[expression]` which returns `add`).
+### 1.8
 
-One example is that "it is meaningless to speak of the value of `(+ x 1)`". In Mathematica `add[x,1]` is perfectly meaningful even if add and x have no definitions! It is `add[x,1]`!
+Bound variable, free variable, variable scope, captured variable (changing from free to bound), lexical scoping.
 
-To translate `(define (square x) (* x x))` to Mathematica, we'd do something like 
-`Set[square,Function[x,Times[x,x]]]` which I think is a bit different because `Function[x,x*x]` can be regarded as a lambda. Functions can also be defined via replacement rules and pattern matching, but that's a whole different ball game which is a core aspect of Wolfram language but we can ignore.
+> Lexical scoping dictates that free variables in a procedure are taken to refer to bindings made by enclosing procedure definitions; that is, they are looked up in the environment in which the procedure was defined. We will see how this works in detail in chapter 3 when we study environments and the detailed behavior of the interpreter.
+
+
+### Aside on Mathematica/WL
+
+It's illustrative to compare Wolfram Language (WL)'s under-the-hood behavior to Scheme. Note that because this is "under the hood", 
+this isn't a good introduction to WL! Also note: Mathematica refers to the front-end, WL / Wolfram Language / WolframScript you can get for free (still need a license). It's sort of a Jupyter notebook vs. Python thing. Mathematica .nb files are the notebooks, wolfram language .wl files are the python files.
+
+Also, note that I'm in 2025 reading about this stuff from the 80's :P I'm sure this has all been said before and said much better, I'm just coming up with my own analogies as I go along.
+
+#### Basic expressions in WL
+
+`(+ 1 2 3 4)` is represented in WL as `Plus[1,2,3,4]`. This can also be written as `1+2+3+4`, which is syntax sugar. In order to see the full form but also make sure that this expression doesn't evaluate to 10 immediately, we want to use `FullForm[HoldForm[...]]`:
+
+```mathematica
+In[]:= FullForm[HoldForm[1+2+3+4]]
+Out[]= HoldForm[Plus[1,2,3,4]]
+```
+
+In Mathematica, this expression gets substituted with `10` immediately, but say we have another expression `expression = plus[1,2,3,4]` (lowercase "P"). Then in fact `expression[[0]]` returns `plus`, `expression[[1]]` returns `1`, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through `Head[expression]` which returns `add`).
+
+One example is that "it is meaningless to speak of the value of `(+ x 1)`". In Mathematica `plus[x,1]` is perfectly meaningful even if add and x have no definitions! It is `plus[x,1]`!
+
+#### Defines in WL
+
+To translate `(define x 5)` to Mathematica, it's easy: `Set[x,5]`. The syntax sugar version is `x=5`.
+
+To translate `(define x (display "Hi") 5)` to Mathematica, we'd have to do `SetDelayed[x,CompoundExpression[Print["Hi"],5]]`. 
+The syntax sugar version is `x:=(Print["Hi"]; 5)`. Here CompoundExpression is like `begin` in Scheme, it evaluates its arguments one-by-one and returns the final value. SetDelayed ensures that the righthand side isn't evaluated until `x` is called.
+
+To translate `(define (square x) (* x x))` to Mathematica, it gets a bit gnarly! I think this is really a lambda expression in Scheme, so it should be `Set[square,Function[x,Times[x,x]]]`. The syntax sugar version is `square = x |-> x*x`.
+
+In Mathematica, it's more typical to use pattern matching though. The syntax sugar version is `f[x_] = x^2`, which expands to this crazy expression:
+```mathematica
+In[]:= FullForm[HoldForm[f[x_] = x^2]]
+Out[]= HoldForm[Set[f[Pattern[x,Blank[]]],Power[x,2]]]
+```
+It's something like: Whenever `f[arg]` is called from now on, we check if arg matches the pattern `Pattern[x,Blank[]]` (which it does, because that's the empty pattern). If it does, then `x` on the righthand side of Set gets replaced with `arg`.
+
+
+Well anyways, this is the cause of a huge amount of confusion, but you get an enormous amount from this! For example, here we write a complicated expression and then look at the definition using `?f`:
+
+```mathematica
+In[]:= f[y_]=FullSimplify[Integrate[Cos[x]^2,{x,0,y}]];
+In[]:= ?f
+Out[]=  Symbol	
+        Global`f	
+        f[y_]=1/2 (y+Cos[y] Sin[y])
+```
+The evaluation rules mean that the integral and simplification get evaluated symbolically before assignment. In most other languages you'd think of this as metaprogramming. The analogy with Scheme isn't totally precise, because `x` is a symbolic expression. But what I'm saying is that it's a set of definitions where this:
+
+```rkt
+(FullSimplify
+  (Integrate
+    (Pow (Cos x) 2) (List x 0 y)))
+```
+becomes this:
+```rkt
+(/ (+ y (* (Cos y) (Sin y))) 2)
+```
+
+
+
 
 ### Exercises
 

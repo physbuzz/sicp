@@ -339,7 +339,67 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </head>
 <body>
     <div class="container">
-        <h2>Question</h2>
+        <h1>Chapter 1.1</h1>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What does Lisp stand for? REPL? What are prefix/postfix/infix? What is a "combination" in Lisp?</p>
+<h3>Answer</h3>
+<p>Lisp = "List Processing". REPL = Read-Eval-Print-Loop. Prefix = <code>(+ a b)</code>. Postfix might look something like <code>(a b +)</code>. Infix would be <code>(a + b)</code>.</p>
+<p>A combination is term in parentheses of the form <code>(a b c ...)</code> where <code>a</code> is the operator and <code>b c ...</code> are the operands.</p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>How do you define a named constant in Lisp? A named function?</p>
+<h3>Answer</h3>
+<p>Named variable: <code>(define pi 3.14159)</code></p>
+<p>Named function: <code>(define (square x) (* x x))</code></p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>Exercise 1.5: how does this procedure evaluate using normal order? Using applicative order?</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">test</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="p">(</span><span class="n">test</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+</code></pre></div>
+
+<h3>Answer</h3>
+<p>This is a point of confusion! Using applicative order, we first evaluate the arguments of <code>test</code>. One of these is a recursive bomb, so it gets implement recursion right away. This is how Scheme evaluates things, so this program will blow up.</p>
+<p>In normal order evaluation, we don't evaluate the arguments right away, and in fact <code>if</code> is a special form with an evaluation rule such that in applicative or normal order the unused argument is not evaluated if it doesn't need to be. So <code>(if (= 0 0) 0 (p))</code> never evaluates <code>(p)</code>. The argument isn't 100% convincing to me, but the bottom line is that Haskell uses normal order evaluation and in Haskell the analogue of <code>test 0 p</code> runs just fine, with <code>p</code> never evaluating its infinite recursive call.</p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>Loosely define the substitution model of evaluation of a Scheme program, and write out the evaluation of <code>(f 5)</code> in the program below using the substitution model.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum-of-squares</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">sum-of-squares</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+
+<h3>Answer</h3>
+<p>The substitution model is just obtained by evaluating function arguments and then substituting the definitions of the smallest sub-expressions that can be evaluated. </p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">sum-of-squares</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="p">(</span><span class="n">sum-of-squares</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">36</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="mi">136</span>
+</code></pre></div>
+
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>How do you write <code>if</code> and <code>cond</code> statements in Scheme? What's special about their evaluation?</p>
+<h3>Answer</h3>
+<p><code>(if bool a b)</code> is a <em>special form</em> which evaluates <code>bool</code> and then evaluates <code>a</code> if bool is true or <code>b</code> if bool is false. 
+This breaks the strict rule of applicative order evaluation, which might lead you to believe that <code>bool a b</code> are all evaluated.</p>
+<p><code>cond</code> is another way to achieve conditional evaluation. Here we see how to evaluate <code>e1</code>, <code>e2</code>, or <code>e3</code> based on Boolean predicates <code>p1</code> and <code>p2</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">(</span><span class="n">p1</span><span class="w"> </span><span class="n">e1</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">p2</span><span class="w"> </span><span class="n">e2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="n">e3</span><span class="p">))</span>
+</code></pre></div>
+
+<h1>Chapter 1.2</h1>
+<h2>Question</h2>
 <h3>Statement</h3>
 <p>Write out the linear recursive and linear iterative factorial functions.</p>
 <h3>Answer</h3>
@@ -398,9 +458,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Answer</h3>
 <p>The linear iterative version is $\Theta(n)$ time and $\Theta(1)$ space.</p>
 <p>The tree-recursive Fibonacci algorithm takes $\Theta(\varphi^n)$ steps and $\Theta(n)$ space.</p>
-<h2>Question</h2>
-<h3>Statement</h3>
-<h3>Answer</h3>
 <h2>Question</h2>
 <h3>Statement</h3>
 <h3>Answer</h3>

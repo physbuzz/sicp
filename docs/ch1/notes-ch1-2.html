@@ -349,18 +349,148 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2>Section 1.2</h2>
 <h3>1.2.1-1.2.2</h3>
 <ul>
-<li>We distinguish between the <em>local evolution</em> and the <em>global evolution</em> of the process.</li>
+<li>We distinguish between the <em>local evolution</em> and the <em>global behavior</em> of the process. It's easier to reason about the local evolution. </li>
 <li>A linear recursive process is one that grows linearly at each step of the recursion. As an example, the naively implemented factorial using <code>(* n (factorial (- n 1)))</code> is
 a linear recursive process.</li>
-<li>A linear iterative process is one that takes a number of steps that grows linearly with $n$. </li>
+<li>A linear iterative process is one that takes a number of steps that grows linearly with $n$. For example, the factorial defined using <code>(fact-iter (* n count) (- count 1))</code> is linear recursive.</li>
 <li>Using tail-recursion, we can specify "loop" constructs without using them explicitly. 
 So what looks like a recursive implementation is in fact equivalent to an iterative loop like we might be familiar with in other languages.</li>
 </ul>
 <h3>1.2.3</h3>
 <ul>
-<li>We write that $R(n)$ is $\Theta(f(n))$ if...
+<li>We write that a positive function $R(n)$ is $\Theta(f(n))$ as $n\to\infty$ if...
 $$\exists_{k_1,k_2,N}:\forall_{n\gt N}\;\; k_1 f(n)\leq R(n)\leq k_2 f(n)$$</li>
 </ul>
+<p>Again, a footnote is critical here:</p>
+<blockquote>
+<p>These statements mask a great deal of oversimplification. For instance, if we count process steps as “machine operations” we are making the assumption that the number of machine operations needed to perform, say, a multiplication is independent of the size of the numbers to be multiplied, which is false if the numbers are sufficiently large. Similar remarks hold for the estimates of space. Like the design and description of a process, the analysis of a process can be carried out at various levels of abstraction.</p>
+</blockquote>
+<p>So, you know, we aren't aiming for perfectly formal proofs that algorithms are of a certain order of growth, rather we want to
+come up with heuristic arguments of our own and understand the heuristic arguments of others, using models of computation.</p>
+<h3>1.2.4</h3>
+<p><code>fast-expt</code> is such a cool algorithm</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">even?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fast-expt</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">even?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="p">(</span><span class="n">fast-expt</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="n">fast-expt</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+</code></pre></div>
+
+<p>Okay... in C this can be implemented easily as well as a recursive algorithm...</p>
+<div class="codehilite"><pre><span></span><code><span class="kt">int</span><span class="w"> </span><span class="nf">fastexpt</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">){</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">==</span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">    </span><span class="k">if</span><span class="p">(</span><span class="n">n</span><span class="o">%</span><span class="mi">2</span><span class="o">==</span><span class="mi">0</span><span class="p">){</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">k</span><span class="o">=</span><span class="n">fastexpt</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">n</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">k</span><span class="o">*</span><span class="n">k</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">b</span><span class="o">*</span><span class="n">fastexpt</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">n</span><span class="mi">-1</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+
+<p>The tricky thing is exercise 1.16 turning this into an iterative process.</p>
+<h3>1.2.5</h3>
+<p>Euclidean algorithm, also known as "a banger".</p>
+<p><strong>Lamé’s Theorem:</strong> If Euclid’s Algorithm requires $k$
+ steps to compute the $\textrm{GCD}$ of some pair, then the smaller number in the pair must be greater than or equal to the $k^{th}$
+ Fibonacci number.</p>
+<blockquote>
+<p>[43] This
+theorem was proved in 1845 by Gabriel Lamé, a French mathematician and
+engineer known chiefly for his contributions to mathematical physics. To prove
+the theorem, we consider pairs ${(a_k, b_k)}$, where ${a_k \ge b_k}$, 
+for which Euclid's Algorithm terminates in $k$ steps. The proof
+is based on the claim that, if ${(a_{k+1}, b_{k+1})} \to {(a_k, b_k)} \to {(a_{k-1}, b_{k-1})}$ 
+are three successive pairs 
+in the reduction process, then we must have $b_{k+1} \ge b_k + b_{k-1}$. 
+To verify the claim, consider that a reduction step is defined by applying the 
+transformation ${a_{k-1} = b_k}$, ${b_{k-1} =}$ remainder of $a_k$ 
+divided by $b_k$. The second equation means that $a_k = {qb_k} + {b_{k-1}}$ 
+for some positive integer $q$. And since $q$ must be at least 1 we have 
+$a_k = {qb_k} + b_{k-1} \ge b_k + b_{k-1}$. But in the previous reduction 
+step we have $b_{k+1} = a_k$. Therefore, $b_{k+1} = a_k \ge b_k + b_{k-1}$.
+This verifies the claim. Now we can prove the theorem by induction on $k$, 
+the number of steps that the algorithm requires to terminate. The result is true for 
+${k = 1}$, since this merely requires that $b$ be at least as large as ${\text{Fib}(1) = 1}$. 
+Now, assume that the result is true for all integers less than or equal
+to $k$ and establish the result for ${k + 1}$. 
+Let ${(a_{k+1}, b_{k+1})} \to {(a_k, b_k)} \to {(a_{k-1}, b_{k-1})}$ 
+be successive pairs in the reduction 
+process. By our induction hypotheses, we have $b_{k-1} \ge {\text{Fib}(k - 1)}$ 
+and $b_k \ge {\text{Fib}(k)}$. Thus, applying the claim we just proved together with 
+the definition of the Fibonacci numbers gives 
+$b_{k+1} \ge b_k + b_{k-1} \ge {\text{Fib}(k)} + {\text{Fib}(k-1)} = {\text{Fib}(k+1)}$, 
+which completes the proof of Lamé's Theorem.</p>
+<p>[44] If d
+ is a divisor of n
+, then so is n/d
+. But d
+ and n/d
+ cannot both be greater than n⎯⎯√
+.</p>
+</blockquote>
+<h3>1.2.6</h3>
+<p><strong>Fermat's Little Theorem.</strong> If $n$ is a prime number and $a$ is any positive integer 
+less than $n,$ then $a^n\equiv a\textrm{ mod }n.$</p>
+<p>Other algorithms worth implementing might be writing the digits of the decimal form of $1/a$ 
+in base $b$. IIRC period of repetition is equal to $b^n \textrm{ mod }a.$ For example,
+$10^n\textrm{ mod }7$ takes on six values, so $7^{-1}=0.\overline{142857}$ has period six.
+Compare that to $10^n\textrm{ mod }11$ which only ever takes on values $1,10$. So $11^{-1}=0.\overline{09}$ has period two.</p>
+<p>Another algorithm is the extended Euclidean algorithm, which actually finds the integers such that 
+$ax+by=\textrm{gcd}(a,b).$ I've needed this a few times in Advent of Code problems.</p>
+<p>It's tempting to mention continued fractions here, but they get their time in the limelight
+in the next chapter.</p>
+<h3>Appendices!</h3>
+<h4>An aside on other asymptotic relations</h4>
+<ul>
+<li>First off, let's avoid the temptation to go Bourbaki style and get too into the weeds with definitions and equivalences and all that. It would be a colossal waste of time. Wikipedia does this a little bit. We want to just get the intention of the definitions and maybe a little bit of the formality.</li>
+<li>Another book, "The Algorithm Design Manual" by Skiena, first defines $O(n)$ and $\Omega(n).$ For simplicity's sake we just care about the limit $n\to \infty$ and consider only positive functions $R(n).$</li>
+</ul>
+<p><strong>Definition of $O(f(n))$:</strong> We write that $R(n)$ is $O(f(n))$ as $n\to \infty$ if
+$$\exists_{c,N}:\forall_{n\gt N}\;\; R(n)\leq c \cdot f(n)$$
+$R(n)=O(f(n))$ is a statement that the growth rate of $f(n)$ times a constant is an upper bound on $R(n)$ for sufficiently large $n.$</p>
+<p><strong>Definition of $\Omega(f(n))$:</strong> We write that $R(n)$ is $\Omega(f(n))$ as $n\to\infty$ if
+$$\exists_{c,N}:\forall_{n\gt N}\;\; 0 \leq c \cdot f(n) \leq R(n)$$
+$R(n)=\Omega(f(n))$ is a statement that the growth rate of $f(n)$ times a constant is a lower bound on $R(n)$ for sufficiently large $n.$</p>
+<p>Once we have those two definitions, something is $\Theta(f(n))$ if it is both $O(f(n))$ and $\Omega(f(n)).$</p>
+<p><strong>Definition of $f(n)\gg g(n)$:</strong> $f(n)\gg g(n)$ as $n\to a$ if $\lim_{n\to a} \frac{g(n)}{f(n)}=0.$ This definition gives:
+$$n!\gg 2^n \gg n^3\gg n^2\gg n\log n\gg n\gg \log n \gg 1$$</p>
+<p><strong>Definition of $f(n)\sim g(n)$:</strong> $f(n)\sim g(n)$ as $n\to a$ if $\lim_{n\to a} \frac{g(n)}{f(n)}=1.$</p>
+<h4>An aside on asymptotic series</h4>
+<p>I have to write this because it's a physicist's bread and butter! For example, Stirling's formula is an asymptotic series, and in quantum field theories Feynman diagrams are used to calculate terms in an asymptotic series.</p>
+<p>An asymptotic series is defined as follows. Note that this is an abuse of notation, and that <em>we never actually carry out the infinite sum</em>.</p>
+<p><strong>Definition of $\sum_{i=1}^\infty f_i(n) \sim g(n)$:</strong> We write $\sum_{i=1}^\infty f_i(n) \sim g(n)$ as $n\to a$ if:</p>
+<ul>
+<li>$f_1(n)\sim g(n)$ as $n\to a$</li>
+<li>The remainder is asymptotic to $f_2$: $g(n)-f_1(n)\sim f_2(n)$ as $n\to a$</li>
+<li>That remainder is asymptotic to $f_3$: $g(n)-f_1(n)-f_2(n)\sim f_3(n)$, and so on $(\textrm{as }n\to a).$ </li>
+</ul>
+<p>For example, Stirling's formula can be written using this abuse of notation as:
+$$\log(n!)\sim n\log(n)-n+\frac{1}{2}\log(2\pi n) + \sum_{k=2}^\infty \frac{(-1)^k B_k}{k(k-1)n^{k-1}}$$
+The coefficients $B_k$ grow so rapidly that for any fixed $n$, the infinite sum doesn't converge! In fact we really mean to have an 
+asymptotic relation. Another way of writing this is that for any fixed $M$ and as $n\to\infty:$
+$$\log(n!)=n\log(n)-n+\frac{1}{2}\log(2\pi n) + \sum_{k=2}^M \frac{(-1)^k B_k}{k(k-1)n^{k-1}} + O\left(\frac{1}{n^M}\right)$$</p>
+<p>There's another simpler example of asymptotic series that I really like. Say that you're stuck on a desert island and you have to compute $f(0.1)$, where $f$ is a transcendental function defined by the integral
+$$f(a)=\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x.$$
+Well, let's use a series expansion and totally ignore issues of convergence and real analysis:</p>
+<p>$$\begin{align*}
+\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x &= \int_0^\infty e^{-x/a}\sum_{n=0}^\infty (-1)^n x^n \mathrm{d}x \\
+&= \sum_{n=0}^\infty \int_0^\infty (-1)^n e^{-x/a} x^n \mathrm{d}x \\
+&= \sum_{n=0}^\infty (-1)^n n!a^{n+1} \tag{integrate by parts}\\
+\end{align*}$$</p>
+<p>This infinite sum has a radius of convergence of zero! However if we plug in $a=0.1$ and keep the first few terms, we get
+$$f(0.1)\approx 0.1 - 0.01 + 0.002 - 0.0006 + 0.00024=0.09164$$
+compared to the true value of $f(0.1)=0.0915633\ldots$</p>
+<p>Really what we've proven is that
+$$\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x \sim \sum_{n=0}^\infty (-1)^n n!a^{n+1} \tag{as $a\to 0$}$$</p>
+<p>TLDR this is the simplest example of coming up with an asymptotic series (as $a\to 0$) for a crazy integral.</p>
+<p>I learned this from Bender and Orszag's "Advanced Mathematical Methods for Scientists and Engineers: Asymptotic Methods and Perturbation Theory". The title is a mouthful, and it comes across a lot better in video format. Carl Bender writes a lot of these equations with a smile on his face, because $\sum_{n-1}^\infty (-1)^n n!$ is an absurd sum and is kind of a joke! To a physicist or applied mathematician, what we mean by the infinite sum is really $f(1)$ where $f$ is the transcendental function defined above.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LYNOGk3ZjFM?si=ulaELbRC-a_tg0VM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 <h3>Exercises</h3>
 <h4>Exercise 1.9</h4>
 <p>Each of the following two procedures defines a method for adding two positive integers in terms of the procedures inc, which increments its argument by 1, and dec, which decrements its argument by 1.</p>

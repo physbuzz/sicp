@@ -357,8 +357,10 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </ul>
 <h3>1.1.1-1.1.3</h3>
 <ul>
-<li><strong>Definition:</strong> <em>Primitive expressions</em> are the simplest entities the language is concerned with.</li>
+<li><strong><em>Primitive expressions</em></strong> are the simplest entities the language is concerned with (numerals, built-in operators, names).</li>
+<li>Lisp uses prefix notation.</li>
 <li>Prefix notation is used. The operator is the leftmost element and can take an arbitrary number of elements, for example <code>(+ 1 2 3 4)</code> evaluated to 10. </li>
+<li>A <strong><em>combination</em></strong> is an expression with the leftmost element the operator and the operations to the right operands.</li>
 <li>REPL = "read-eval-print loop"</li>
 <li>Pretty printing is defined such that each operator with a deeper nesting starts at a deeper level of indentation. For example</li>
 </ul>
@@ -381,12 +383,38 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>1.4</h3>
 <p>The syntax to define a procedure is
 <code>(define (square x) (* x x))</code></p>
+<p>Note that the fact that we're allowed to evaluate a sequence of expressions here is relegated to a footnote!!</p>
+<blockquote>
+<p>[14] More generally, the body of the procedure can be a sequence of expressions. In this case, the interpreter evaluates each expression in the sequence in turn and returns the value of the final expression as the value of the procedure application. </p>
+</blockquote>
+<p>So, the authors aren't going to give us any more warning, they're just going to start throwing stuff like the following at us without explanation. </p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">hello-world</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Hello &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;World&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;!&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Supposedly this can also be handled with the <code>begin</code> keyword. eg.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">begin</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Hello &quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;World&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">begin</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Goodbye &quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;World&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">newline</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>One way to think of this is that <code>define</code> contains an implicit <code>begin</code>.</p>
 <h3>1.5</h3>
 <p>For chapters 1 and 2 we can use the substitution model, but in chapter 3 we'll need to deal with mutable data and will need a more complicated model.</p>
 <p>Models define the "meaning" of procedure application. They're generally ways to think about procedures, rather than being ways that the interpreter actually works.</p>
-<p>Applicative ordering vs. normal ordering. 
-<em>Normal-order evaluation</em> is when the interpreter fully expands and then reduces the expression.
-<em>Applicative-order evaluation</em> is when the interpreter evaluates the arguments needed for the immediate expression and then applies them.</p>
+<p>Applicative ordering vs. normal ordering. </p>
+<p><em>Normal-order evaluation</em> is when the interpreter fully expands and then reduces the expression.</p>
+<p><em>Applicative-order evaluation</em> is when the interpreter evaluates the arguments needed for the immediate expression and then applies them.</p>
 <h3>1.6</h3>
 <p>New special form <code>cond</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
@@ -408,16 +436,59 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <span class="w">      </span><span class="n">x</span><span class="p">))</span>
 </code></pre></div>
 
-<p>The format for <code>if</code> statements is 
-<code>(if predicate consequent alternative)</code></p>
+<ul>
+<li><code>(if predicate consequent alternative)</code> is a <em>special form</em> which evaluates <code>predicate</code> and then evaluates <code>consequent</code> if <code>predicate</code> is true or <code>alternative</code> if <code>predicate is</code> false. This breaks the strict rule of applicative order evaluation, which might lead you to believe that all three terms are evaluated.</li>
+</ul>
 <p>There's also <code>and</code>, <code>or</code>, <code>not</code>, </p>
-<h3>More Notes</h3>
-<p>Bound variable, free variable, variable scope, captured variable (changing from free to bound)</p>
-<h3>Aside on Mathematica:</h3>
-<p><code>(+ 1 2 3 4)</code> is represented in mathematica as <code>Add[1,2,3,4]</code>. in Mathematica, this expression gets substituted with <code>10</code> immediately, but say we have another expression <code>expression = add[1,2,3,4]</code> (lowercase "A"). Then in fact <code>expression[[0]]</code> returns <code>add</code>, <code>expression[[1]]</code> returns <code>1</code>, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through <code>Head[expression]</code> which returns <code>add</code>).</p>
-<p>One example is that "it is meaningless to speak of the value of <code>(+ x 1)</code>". In Mathematica <code>add[x,1]</code> is perfectly meaningful even if add and x have no definitions! It is <code>add[x,1]</code>!</p>
-<p>To translate <code>(define (square x) (* x x))</code> to Mathematica, we'd do something like 
-<code>Set[square,Function[x,Times[x,x]]]</code> which I think is a bit different because <code>Function[x,x*x]</code> can be regarded as a lambda. Functions can also be defined via replacement rules and pattern matching, but that's a whole different ball game which is a core aspect of Wolfram language but we can ignore.</p>
+<h3>1.7</h3>
+<p>This breaks the strict rule of applicative order evaluation, which might lead you to believe that <code>bool a b</code> are all evaluated.</p>
+<p>We asked something here: if we removed the ability of the <code>if</code> to evaluate only one argument at a time so that we had to evaluate all arguments, would we end up at a non- Turing complete language? In our discussion we brought up the fixed point combinator and this seems to desire some conversation about lambda calculus, which we're not discussing right now. Might be nice to read <a href="https://writings.stephenwolfram.com/2020/12/combinators-and-the-story-of-computation/">Combinators and the story of computation</a>, but let's get through this book and think about theoretical comp sci later!</p>
+<h3>1.8</h3>
+<p>Bound variable, free variable, variable scope, captured variable (changing from free to bound), lexical scoping.</p>
+<blockquote>
+<p>Lexical scoping dictates that free variables in a procedure are taken to refer to bindings made by enclosing procedure definitions; that is, they are looked up in the environment in which the procedure was defined. We will see how this works in detail in chapter 3 when we study environments and the detailed behavior of the interpreter.</p>
+</blockquote>
+<h3>Aside on Mathematica/WL</h3>
+<p>It's illustrative to compare Wolfram Language (WL)'s under-the-hood behavior to Scheme. Note that because this is "under the hood", 
+this isn't a good introduction to WL! Also note: Mathematica refers to the front-end, WL / Wolfram Language / WolframScript you can get for free (still need a license). It's sort of a Jupyter notebook vs. Python thing. Mathematica .nb files are the notebooks, wolfram language .wl files are the python files.</p>
+<p>Also, note that I'm in 2025 reading about this stuff from the 80's :P I'm sure this has all been said before and said much better, I'm just coming up with my own analogies as I go along.</p>
+<h4>Basic expressions in WL</h4>
+<p><code>(+ 1 2 3 4)</code> is represented in WL as <code>Plus[1,2,3,4]</code>. This can also be written as <code>1+2+3+4</code>, which is syntax sugar. In order to see the full form but also make sure that this expression doesn't evaluate to 10 immediately, we want to use <code>FullForm[HoldForm[...]]</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">In</span><span class="p">[]</span><span class="o">:=</span><span class="w"> </span><span class="n">FullForm</span><span class="p">[</span><span class="n">HoldForm</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="mi">3</span><span class="o">+</span><span class="mi">4</span><span class="p">]]</span>
+<span class="n">Out</span><span class="p">[]</span><span class="o">=</span><span class="w"> </span><span class="n">HoldForm</span><span class="p">[</span><span class="n">Plus</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
+</code></pre></div>
+
+<p>In Mathematica, this expression gets substituted with <code>10</code> immediately, but say we have another expression <code>expression = plus[1,2,3,4]</code> (lowercase "P"). Then in fact <code>expression[[0]]</code> returns <code>plus</code>, <code>expression[[1]]</code> returns <code>1</code>, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through <code>Head[expression]</code> which returns <code>add</code>).</p>
+<p>One example is that "it is meaningless to speak of the value of <code>(+ x 1)</code>". In Mathematica <code>plus[x,1]</code> is perfectly meaningful even if add and x have no definitions! It is <code>plus[x,1]</code>!</p>
+<h4>Defines in WL</h4>
+<p>To translate <code>(define x 5)</code> to Mathematica, it's easy: <code>Set[x,5]</code>. The syntax sugar version is <code>x=5</code>.</p>
+<p>To translate <code>(define x (display "Hi") 5)</code> to Mathematica, we'd have to do <code>SetDelayed[x,CompoundExpression[Print["Hi"],5]]</code>. 
+The syntax sugar version is <code>x:=(Print["Hi"]; 5)</code>. Here CompoundExpression is like <code>begin</code> in Scheme, it evaluates its arguments one-by-one and returns the final value. SetDelayed ensures that the righthand side isn't evaluated until <code>x</code> is called.</p>
+<p>To translate <code>(define (square x) (* x x))</code> to Mathematica, it gets a bit gnarly! I think this is really a lambda expression in Scheme, so it should be <code>Set[square,Function[x,Times[x,x]]]</code>. The syntax sugar version is <code>square = x |-&gt; x*x</code>.</p>
+<p>In Mathematica, it's more typical to use pattern matching though. The syntax sugar version is <code>f[x_] = x^2</code>, which expands to this crazy expression:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">In</span><span class="p">[]</span><span class="o">:=</span><span class="w"> </span><span class="n">FullForm</span><span class="p">[</span><span class="n">HoldForm</span><span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="nv">x_</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="o">^</span><span class="mi">2</span><span class="p">]]</span>
+<span class="n">Out</span><span class="p">[]</span><span class="o">=</span><span class="w"> </span><span class="n">HoldForm</span><span class="p">[</span><span class="n">Set</span><span class="p">[</span><span class="n">f</span><span class="p">[</span><span class="n">Pattern</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">Blank</span><span class="p">[]]],</span><span class="n">Power</span><span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="mi">2</span><span class="p">]]]</span>
+</code></pre></div>
+
+<p>It's something like: Whenever <code>f[arg]</code> is called from now on, we check if arg matches the pattern <code>Pattern[x,Blank[]]</code> (which it does, because that's the empty pattern). If it does, then <code>x</code> on the righthand side of Set gets replaced with <code>arg</code>.</p>
+<p>Well anyways, this is the cause of a huge amount of confusion, but you get an enormous amount from this! For example, here we write a complicated expression and then look at the definition using <code>?f</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">In</span><span class="p">[]</span><span class="o">:=</span><span class="w"> </span><span class="n">f</span><span class="p">[</span><span class="nv">y_</span><span class="p">]</span><span class="o">=</span><span class="n">FullSimplify</span><span class="p">[</span><span class="n">Integrate</span><span class="p">[</span><span class="n">Cos</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">^</span><span class="mi">2</span><span class="p">,{</span><span class="n">x</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">y</span><span class="p">}]];</span>
+<span class="n">In</span><span class="p">[]</span><span class="o">:=</span><span class="w"> </span><span class="o">?</span><span class="n">f</span>
+<span class="n">Out</span><span class="p">[]</span><span class="o">=</span><span class="w">  </span><span class="n">Symbol</span><span class="w">  </span>
+<span class="w">        </span><span class="nn">Global`</span><span class="n">f</span><span class="w">    </span>
+<span class="w">        </span><span class="n">f</span><span class="p">[</span><span class="nv">y_</span><span class="p">]</span><span class="o">=</span><span class="mi">1</span><span class="o">/</span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="o">+</span><span class="n">Cos</span><span class="p">[</span><span class="n">y</span><span class="p">]</span><span class="w"> </span><span class="n">Sin</span><span class="p">[</span><span class="n">y</span><span class="p">])</span>
+</code></pre></div>
+
+<p>The evaluation rules mean that the integral and simplification get evaluated symbolically before assignment. In most other languages you'd think of this as metaprogramming. The analogy with Scheme isn't totally precise, because <code>x</code> is a symbolic expression. But what I'm saying is that it's a set of definitions where this:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">FullSimplify</span>
+<span class="w">  </span><span class="p">(</span><span class="n">Integrate</span>
+<span class="w">    </span><span class="p">(</span><span class="n">Pow</span><span class="w"> </span><span class="p">(</span><span class="n">Cos</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">List</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>becomes this:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">Cos</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Sin</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+
 <h3>Exercises</h3>
 <h4>Exercise 1.1</h4>
 <p>Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.</p>

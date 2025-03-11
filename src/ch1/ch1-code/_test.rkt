@@ -1,10 +1,4 @@
 #lang sicp
 
-(define (p) (p))
 
-(define (test x y)
-  (if (= x 0)
-      0
-      y))
-
-(test 0 (p))
+(display (remainder 1234 4))
