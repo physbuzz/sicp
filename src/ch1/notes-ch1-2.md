@@ -735,6 +735,16 @@ you find?
 ##### Solution
 @src(ch1-code/ex1-24.rkt)
 
+The graph of timings looks logarithmic as expected. Note that if we make $n$ too large we'll start to run into big number arithmetic. To get measurable running times, I changed the number of checks to $600$ instead of something more reasonable like $10$ or $20.$
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="ch1-media/loglinear.svg" style="width: 50%; max-width: 800px;">
+</div>
+<!--
+Export["loglinear.svg",ListLogLinearPlot[Transpose[{Table[10^n,{n,1,8}],Mean/@{{46,43,50},{60,72,63},{98,92,95},{106,103,106},{124,129,133},{152,148,144},{176,184,184},{196,196,199}}}],AxesLabel->{"n","t (ms)"},PlotLabel->"fast-prime? log linear plot"]]
+
+ -->
+
 #### Exercise 1.25
 Alyssa P. Hacker complains that we went to a lot of extra work in writing expmod. After all, she says, since we already know how to compute exponentials, we could have simply written
 
@@ -744,6 +754,13 @@ Alyssa P. Hacker complains that we went to a lot of extra work in writing expmod
 ```
 
 Is she correct? Would this procedure serve as well for our fast prime tester? Explain.
+##### Solution
+
+We'd run into large number arithmetic, and "slow" is an understatement! The number of digits would grow ruining the time and space complexity of the algorithm. 
+
+We have $a^n$ where $a$ is of order $n$. If $n$ is $k$ digits long, then `(fast-expt a n)` is of order $kn$ digits long, which is $O(n\log(n))$ memory growth.
+
+Similarly, each multiplication will be more expensive and so we expect this to ruin the time complexity of the algorithm.
 
 #### Exercise 1.26
 Louis Reasoner is having great difficulty doing Exercise 1.24. His
@@ -772,11 +789,16 @@ rather than calling square:
  process into a $\Theta( n)$
  process.” Explain.
 
+##### Solution
+This is another emphasis of applicative order evaluation. When `exp` is even, the recursive `expmod` step is calculated twice. If those are even, then it's twice again, and so on. For example if `exp` is $2^k$ for some $k,$ then this is a binary tree of depth $k$ with $O(2^k)$ function calls. So for this case, the algorithm is linear $O(n)$ with $n=2^k.$
+
 #### Exercise 1.27
 Demonstrate that the Carmichael numbers listed in Footnote 47 really do fool
 the Fermat test. That is, write a procedure that takes an integer $n$ and tests
-whether an is congruent to $a$ modulo $n$ for every $a\lt n,$ and try your procedure
+whether $a^n$ is congruent to $a$ modulo $n$ for every $a\lt n,$ and try your procedure
 on the given Carmichael numbers.
+##### Solution
+@src(ch1-code/ex1-27.rkt)
 
 #### Exercise 1.28
 One variant of the Fermat test that cannot be fooled is called the Miller-Rabin
@@ -799,4 +821,5 @@ Miller-Rabin test with a procedure analogous to `fermat-test`. Check your
 procedure by testing various known primes and non-primes. Hint: One convenient
 way to make `expmod` signal is to have it return 0.
 
-Test
+##### Solution
+@src(ch1-code/ex1-28.rkt)

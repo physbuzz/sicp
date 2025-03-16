@@ -1,23 +1,6 @@
 #lang sicp
 
 (define (square n) (* n n))
-(define (smallest-divisor n)
-  (find-divisor n 2))
-
-(define (find-divisor n test-divisor)
-  (cond ((> (* test-divisor test-divisor) n) 
-         n)
-        ((divides? test-divisor n) 
-         test-divisor)
-        (else (find-divisor 
-               n 
-               (nextdiv test-divisor)))))
-
-(define (divides? a b)
-  (= (remainder b a) 0))
-
-(define (prime? n)
-  (= n (smallest-divisor n)))
 
 (define (expmod base exp m)
   (cond ((= exp 0) 1)
@@ -29,6 +12,7 @@
          (remainder
           (* base (expmod base (- exp 1) m))
           m))))
+
 (define (fermat-test n)
   (define (try-it a)
     (= (expmod a n n) a))
@@ -40,14 +24,8 @@
          (fast-prime? n (- times 1)))
         (else false)))
 
-
-(define (nextdiv test-divisor)
-  (if (= test-divisor 2) 
-    3 
-    (+ test-divisor 2)))
-
 (define (timed-prime-test n start-time)
-  (if (fast-prime? n 10)
+  (if (fast-prime? n 600)
     (begin 
       (display n)
       (display " : ")
@@ -63,6 +41,11 @@
       (primes-larger-than (+ n 1) (- k-primes 1))
       (primes-larger-than (+ n 1) k-primes))))
 
+(primes-larger-than 10 3)
+(primes-larger-than 100 3)
+(primes-larger-than 1000 3)
+(primes-larger-than 10000 3)
+(primes-larger-than 100000 3)
+(primes-larger-than 1000000 3)
+(primes-larger-than 10000000 3)
 (primes-larger-than 100000000 3)
-(primes-larger-than 1000000000 3)
-; (primes-larger-than 10000000000 3)

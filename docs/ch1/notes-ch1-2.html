@@ -1453,15 +1453,15 @@ proportional to the number of steps required for the computation?</p>
 <div class="code-output">
 <span>Output:</span>
 <pre>
-100000007 : 26ms
-100000037 : 23ms
-100000039 : 22ms
-1000000007 : 70ms
-1000000009 : 72ms
-1000000021 : 70ms
-10000000019 : 221ms
-10000000033 : 223ms
-10000000061 : 231ms
+100000007 : 24ms
+100000037 : 21ms
+100000039 : 21ms
+1000000007 : 66ms
+1000000009 : 68ms
+1000000021 : 66ms
+10000000019 : 209ms
+10000000033 : 212ms
+10000000061 : 208ms
 </pre>
 </div>
 </div>
@@ -1535,15 +1535,15 @@ algorithms, and how do you explain the fact that it is different from 2?</p>
 <div class="code-output">
 <span>Output:</span>
 <pre>
-100000007 : 15ms
-100000037 : 12ms
-100000039 : 12ms
-1000000007 : 35ms
-1000000009 : 35ms
-1000000021 : 36ms
-10000000019 : 114ms
-10000000033 : 111ms
-10000000061 : 110ms
+100000007 : 14ms
+100000037 : 11ms
+100000039 : 11ms
+1000000007 : 34ms
+1000000009 : 34ms
+1000000021 : 33ms
+10000000019 : 108ms
+10000000033 : 105ms
+10000000061 : 111ms
 </pre>
 </div>
 </div>
@@ -1563,23 +1563,6 @@ you find?</p>
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
 
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">smallest-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">test-divisor</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">test-divisor</span><span class="w"> </span><span class="n">test-divisor</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
-<span class="w">         </span><span class="n">n</span><span class="p">)</span>
-<span class="w">        </span><span class="p">((</span><span class="n">divides?</span><span class="w"> </span><span class="n">test-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
-<span class="w">         </span><span class="n">test-divisor</span><span class="p">)</span>
-<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span>
-<span class="w">               </span><span class="n">n</span><span class="w"> </span>
-<span class="w">               </span><span class="p">(</span><span class="n">nextdiv</span><span class="w"> </span><span class="n">test-divisor</span><span class="p">)))))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">divides?</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">prime?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">smallest-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
 
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">expmod</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
@@ -1591,6 +1574,7 @@ you find?</p>
 <span class="w">         </span><span class="p">(</span><span class="nb">remainder</span>
 <span class="w">          </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="p">(</span><span class="n">expmod</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">))</span>
 <span class="w">          </span><span class="n">m</span><span class="p">))))</span>
+
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fermat-test</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try-it</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
 <span class="w">    </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="n">expmod</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
@@ -1602,14 +1586,8 @@ you find?</p>
 <span class="w">         </span><span class="p">(</span><span class="n">fast-prime?</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
 <span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="k">false</span><span class="p">)))</span>
 
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">nextdiv</span><span class="w"> </span><span class="n">test-divisor</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">test-divisor</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span>
-<span class="w">    </span><span class="mi">3</span><span class="w"> </span>
-<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">test-divisor</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
-
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">timed-prime-test</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">start-time</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fast-prime?</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fast-prime?</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">600</span><span class="p">)</span>
 <span class="w">    </span><span class="p">(</span><span class="k">begin</span><span class="w"> </span>
 <span class="w">      </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
 <span class="w">      </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot; : &quot;</span><span class="p">)</span>
@@ -1625,24 +1603,56 @@ you find?</p>
 <span class="w">      </span><span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">k-primes</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
 <span class="w">      </span><span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">k-primes</span><span class="p">))))</span>
 
+<span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">10000</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">100000</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">1000000</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">10000000</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
 <span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">100000000</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
-<span class="p">(</span><span class="n">primes-larger-than</span><span class="w"> </span><span class="mi">1000000000</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
-<span class="c1">; (primes-larger-than 10000000000 3)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-100000007 : 7ms
-100000037 : 4ms
-100000039 : 4ms
-1000000007 : 5ms
-1000000009 : 5ms
-1000000021 : 5ms
+11 : 46ms
+13 : 44ms
+17 : 53ms
+101 : 59ms
+103 : 62ms
+107 : 62ms
+1009 : 91ms
+1013 : 93ms
+1019 : 112ms
+10007 : 113ms
+10009 : 106ms
+10037 : 106ms
+100003 : 122ms
+100019 : 125ms
+100043 : 123ms
+1000003 : 144ms
+1000033 : 150ms
+1000037 : 144ms
+10000019 : 166ms
+10000079 : 174ms
+10000103 : 173ms
+100000007 : 197ms
+100000037 : 200ms
+100000039 : 198ms
 </pre>
 </div>
 </div>
+
+<p>The graph of timings looks logarithmic as expected. Note that if we make $n$ too large we'll start to run into big number arithmetic. To get measurable running times, I changed the number of checks to $600$ instead of something more reasonable like $10$ or $20.$</p>
+<div style="text-align: center; margin: 20px 0;">
+  <img src="ch1-media/loglinear.svg" style="width: 50%; max-width: 800px;">
+</div>
+<!--
+Export["loglinear.svg",ListLogLinearPlot[Transpose[{Table[10^n,{n,1,8}],Mean/@{{46,43,50},{60,72,63},{98,92,95},{106,103,106},{124,129,133},{152,148,144},{176,184,184},{196,196,199}}}],AxesLabel->{"n","t (ms)"},PlotLabel->"fast-prime? log linear plot"]]
+
+ -->
 
 <h4>Exercise 1.25</h4>
 <p>Alyssa P. Hacker complains that we went to a lot of extra work in writing expmod. After all, she says, since we already know how to compute exponentials, we could have simply written</p>
@@ -1651,6 +1661,10 @@ you find?</p>
 </code></pre></div>
 
 <p>Is she correct? Would this procedure serve as well for our fast prime tester? Explain.</p>
+<h5>Solution</h5>
+<p>We'd run into large number arithmetic, and "slow" is an understatement! The number of digits would grow ruining the time and space complexity of the algorithm. </p>
+<p>We have $a^n$ where $a$ is of order $n$. If $n$ is $k$ digits long, then <code>(fast-expt a n)</code> is of order $kn$ digits long, which is $O(n\log(n))$ memory growth.</p>
+<p>Similarly, each multiplication will be more expensive and so we expect this to ruin the time complexity of the algorithm.</p>
 <h4>Exercise 1.26</h4>
 <p>Louis Reasoner is having great difficulty doing Exercise 1.24. His
 <code>fast-prime?</code> test seems to run more slowly than his <code>prime?</code> test. Louis calls
@@ -1675,11 +1689,80 @@ rather than calling square:</p>
 “By writing the procedure like that, you have transformed the $\Theta(\log n)$ 
  process into a $\Theta( n)$
  process.” Explain.</p>
+<h5>Solution</h5>
+<p>This is another emphasis of applicative order evaluation. When <code>exp</code> is even, the recursive <code>expmod</code> step is calculated twice. If those are even, then it's twice again, and so on. For example if <code>exp</code> is $2^k$ for some $k,$ then this is a binary tree of depth $k$ with $O(2^k)$ function calls. So for this case, the algorithm is linear $O(n)$ with $n=2^k.$</p>
 <h4>Exercise 1.27</h4>
 <p>Demonstrate that the Carmichael numbers listed in Footnote 47 really do fool
 the Fermat test. That is, write a procedure that takes an integer $n$ and tests
-whether an is congruent to $a$ modulo $n$ for every $a\lt n,$ and try your procedure
+whether $a^n$ is congruent to $a$ modulo $n$ for every $a\lt n,$ and try your procedure
 on the given Carmichael numbers.</p>
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-27.rkt">ch1-code/ex1-27.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">expmod</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">even?</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">remainder</span>
+<span class="w">          </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="p">(</span><span class="n">expmod</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">))</span>
+<span class="w">          </span><span class="n">m</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">remainder</span>
+<span class="w">          </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="p">(</span><span class="n">expmod</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">))</span>
+<span class="w">          </span><span class="n">m</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">test-all-iter</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">bool</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">test</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="n">bool</span>
+<span class="w">    </span><span class="p">(</span><span class="n">test-all-iter</span><span class="w"> </span><span class="n">n</span><span class="w"> </span>
+<span class="w">              </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span>
+<span class="w">              </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="n">bool</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="n">expmod</span><span class="w"> </span><span class="n">test</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">test</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Fermat test of &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot; : &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">test-all-iter</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="no">#t</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Testing some non-carmichael non-primes&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">231</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">1419</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">2001</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">8631</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Testing some carmichael non-primes&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">561</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">1105</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">2465</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">2821</span><span class="p">)</span>
+<span class="p">(</span><span class="n">carm-test</span><span class="w"> </span><span class="mi">6601</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Testing some non-carmichael non-primes
+Fermat test of 231 : #f
+Fermat test of 1419 : #f
+Fermat test of 2001 : #f
+Fermat test of 8631 : #f
+
+Testing some carmichael non-primes
+Fermat test of 561 : #t
+Fermat test of 1105 : #t
+Fermat test of 1729 : #t
+Fermat test of 2465 : #t
+Fermat test of 2821 : #t
+Fermat test of 6601 : #t
+</pre>
+</div>
+</div>
+
 <h4>Exercise 1.28</h4>
 <p>One variant of the Fermat test that cannot be fooled is called the Miller-Rabin
 test (Miller 1976; Rabin 1980). This starts from an alternate form of Fermat’s
@@ -1699,7 +1782,110 @@ if it discovers a nontrivial square root of 1, and use this to implement the
 Miller-Rabin test with a procedure analogous to <code>fermat-test</code>. Check your
 procedure by testing various known primes and non-primes. Hint: One convenient
 way to make <code>expmod</code> signal is to have it return 0.</p>
-<p>Test</p>
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-28.rkt">ch1-code/ex1-28.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+
+<span class="c1">; In the context of our prime test, base is `a` (the randomly chosen test)</span>
+<span class="c1">; exp is n (The potential prime), and m is also n.</span>
+<span class="c1">; Consider the piece of code:</span>
+<span class="c1">;         (remainder</span>
+<span class="c1">;          (square (expmod base (/ exp 2) m))</span>
+<span class="c1">;          m))</span>
+<span class="c1">; Normally I&#39;d want to do something like</span>
+<span class="c1">; result = (expmod base (/ exp 2) m)</span>
+<span class="c1">; if(result*result%m == 1 &amp;&amp; result !=1 &amp;&amp; result != m-1)</span>
+<span class="c1">;   return 0;</span>
+<span class="c1">; else</span>
+<span class="c1">;   return result*result%m</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">expmod-fancy</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">; Kinda silly to evaluate remainder square result twice, but whatever.</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">even-function</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">           </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="w">      </span><span class="mi">0</span>
+<span class="w">      </span><span class="c1">; if result is zero, it&#39;ll be passed through</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">result</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">)))</span><span class="w">   </span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">even?</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">even-function</span><span class="w"> </span><span class="p">(</span><span class="n">expmod-fancy</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span>
+<span class="w">         </span><span class="c1">; here, if expmod-fancy returns 0, it&#39;s passed through also.</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">remainder</span>
+<span class="w">          </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="p">(</span><span class="n">expmod-fancy</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="p">))</span>
+<span class="w">          </span><span class="n">m</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fermat-test</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try-it</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="n">expmod-fancy</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">try-it</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">random</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">miller-rabin-prime?</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">times</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nb">true</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="n">fermat-test</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">miller-rabin-prime?</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">times</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="k">false</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Miller-Rabin test of &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot; : &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">miller-rabin-prime?</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Testing some non-carmichael non-primes&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">231</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">1419</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">2001</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">8631</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Testing some carmichael non-primes&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">561</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">1105</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">1729</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">2465</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">2821</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">6601</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Testing some primes&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">1297</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">1579</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">2671</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">6199</span><span class="p">)</span>
+<span class="p">(</span><span class="n">mrtest</span><span class="w"> </span><span class="mi">7013</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Testing some non-carmichael non-primes
+Miller-Rabin test of 231 : #f
+Miller-Rabin test of 1419 : #f
+Miller-Rabin test of 2001 : #f
+Miller-Rabin test of 8631 : #f
+
+Testing some carmichael non-primes
+Miller-Rabin test of 561 : #t
+Miller-Rabin test of 1105 : #f
+Miller-Rabin test of 1729 : #f
+Miller-Rabin test of 2465 : #f
+Miller-Rabin test of 2821 : #t
+Miller-Rabin test of 6601 : #f
+
+Testing some primes
+Miller-Rabin test of 1297 : #t
+Miller-Rabin test of 1579 : #t
+Miller-Rabin test of 2671 : #t
+Miller-Rabin test of 6199 : #t
+Miller-Rabin test of 7013 : #t
+</pre>
+</div>
+</div>
     </div>
 </body>
 </html>
