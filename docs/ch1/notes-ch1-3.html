@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notes-ch1-3.md</title>
+    <!-- MathJax for LaTeX support -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']]
+            }
+        };
+    </script>
+    <style>
+        /* Pygments Syntax Highlighting */
+        pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #880000 } /* Name.Constant */
+.codehilite .nd { color: #AA22FF } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #0000FF } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #666666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #0000FF } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+        /* Basic reset and fonts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+                /* Navigation styling */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .nav span {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav .activenav {
+            background-color: #f1f8ff;
+        }
+
+        .nav .activenav a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .nav .activenav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav .inactivenav {
+            color: #959da5;
+            background-color: #f6f8fa;
+        }
+        /* Center column layout */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: #34495e;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.8rem 0 1rem;
+            color: #34495e;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        h5 {
+            font-size: 1.1rem;
+            margin: 1.2rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        /* Solution styling */
+        h5:has(+p:contains("Solution")) {
+            margin-bottom: 0;
+        }
+
+        h5:has(+p:contains("Solution")) + p {
+            font-weight: bold;
+            color: #3c8dbc;
+            border-left: 3px solid #3c8dbc;
+            padding-left: 0.8rem;
+            margin: 0.5rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* List styling */
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        .code-box {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        .code-header {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.3rem 0 0rem 0.3rem;
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+
+        .code-header a {
+            color: #6a737d;
+            text-decoration: none;
+        }
+
+        .code-header a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+        /* Standalone code blocks (triple backticks) */
+        .codehilite {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        /* When inside a code-box, remove default styling */
+        .code-box .codehilite {
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Adjust padding for code blocks inside code-box */
+        .code-box .codehilite pre {
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        /* Normal padding for standalone code blocks */
+        .codehilite pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .code-output {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            border-top: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+        .code-output span {
+            color: #de37cc;
+        }
+        
+        .code-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        }
+
+        code {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+            padding: 0.2em 0.4em;
+            background-color: #f6f8fa;
+            border-radius: 3px;
+        }
+
+        .codehilite code {
+            padding: 0;
+            background-color: transparent;
+        }
+
+        /* Links */
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Run button */
+        .run-racket {
+            display: inline-block;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.4rem 0.8rem;
+            background-color: #3c8dbc;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .run-racket:hover {
+            background-color: #367fa9;
+            text-decoration: none;
+        }
+
+        /* Make LaTeX display nicely */
+        .MathJax {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+    <span class="activenav"><a href="notes-ch1-1.html">← Previous</a></span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="inactivenav">Next →</span>
+</div>
+
+<p><a href="https://sarabander.github.io/sicp/html/1_002e3.xhtml">https://sarabander.github.io/sicp/html/1_002e3.xhtml</a></p>
+<h2>Section 1.3</h2>
+<h3>Exercises</h3>
+<h4>Exercise 1.29</h4>
+<p>Simpson's Rule is a more accurate
+method of numerical integration than the method illustrated above.  Using
+Simpson's Rule, the integral of a function $f$ between $a$ and $b$ is
+approximated as</p>
+<p>$$\frac{h}{3} \left(y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \ldots + 2y_(n-2) + 4y_(n-1) + y_n\right)$$
+where $h = (b - a)/n$, for some even integer $n$, and
+$y_k = f(a + kh)$.  (Increasing $n$ increases the
+accuracy of the approximation.)  Define a procedure that takes as arguments
+$f,$ $a,$ $b,$ and $n$ and returns the value of the integral, computed
+using Simpson's Rule.  Use your procedure to integrate <code>cube</code> between 0
+and 1 (with $n = 100$ and $n = 1000$), and compare the results to those of
+the <code>integral</code> procedure shown above.</p>
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-29.rkt">ch1-code/ex1-29.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">      </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">integral</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">dx</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-dx</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">dx</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="mf">2.0</span><span class="p">))</span><span class="w"> </span><span class="n">add-dx</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span>
+<span class="w">     </span><span class="n">dx</span><span class="p">))</span>
+
+
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">simp-integral</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">npts</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">npts</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">term-func</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mf">4.0</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-dx</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">dx</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">term-func</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="mf">2.0</span><span class="p">))</span><span class="w"> </span><span class="n">add-dx</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span>
+<span class="w">     </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="mf">6.0</span><span class="p">)</span><span class="w"> </span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">cube</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">integral</span><span class="w"> </span><span class="n">cube</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mf">0.01</span><span class="p">)</span>
+<span class="p">(</span><span class="n">integral</span><span class="w"> </span><span class="n">cube</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mf">0.001</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">simp-integral</span><span class="w"> </span><span class="n">cube</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">simp-integral</span><span class="w"> </span><span class="n">cube</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="n">simp-integral</span><span class="w"> </span><span class="n">cube</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="n">simp-integral</span><span class="w"> </span><span class="n">cube</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+0.24998750000000042
+0.249999875000001
+0.25
+0.2499999999999999
+0.24999999999999994
+0.25000000000000044
+</pre>
+</div>
+</div>
+
+<p>A quick google search shows that Simpson's rule is an exact quadrature (it gives exact results for polynomials of degree 3 or less), so this is expected.</p>
+<p>NB: the generalization of quadrature rules that give exact results for all polynomials of degree $2n-1$ is given by <a href="https://en.wikipedia.org/wiki/Gaussian_quadrature">Gaussian quadrature</a>.</p>
+<h4>Exercise 1.30</h4>
+<p>The <code>sum</code> procedure above
+generates a linear recursion.  The procedure can be rewritten so that the sum
+is performed iteratively.  Show how to do this by filling in the missing
+expressions in the following definition:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">⟨??⟩</span>
+<span class="w">        </span><span class="n">⟨??⟩</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-30.rkt">ch1-code/ex1-30.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="c1">; First, repeat the algorithm in the book</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">      </span><span class="mi">0</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">pi-sum</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">pi-term</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">pi-next</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">pi-term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">pi-next</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">pi-sum</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1000</span><span class="p">))</span>
+
+<span class="c1">; reimplementing it iteratively</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum-iter</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">        </span><span class="n">result</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">pi-sum-iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">pi-term</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">pi-next</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">sum-iter</span><span class="w"> </span><span class="n">pi-term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">pi-next</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">pi-sum-iter</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1000</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+3.139592655589783
+3.139592655589782
+</pre>
+</div>
+</div>
+
+<h4>important footnote:</h4>
+<p>The
+intent of Exercise 1.31 through Exercise 1.33 is to demonstrate the
+expressive power that is attained by using an appropriate abstraction to
+consolidate many seemingly disparate operations.  However, though accumulation
+and filtering are elegant ideas, our hands are somewhat tied in using them at
+this point since we do not yet have data structures to provide suitable means
+of combination for these abstractions.  We will return to these ideas in
+2.2.3 when we show how to use sequences as interfaces
+for combining filters and accumulators to build even more powerful
+abstractions.  We will see there how these methods really come into their own
+as a powerful and elegant approach to designing programs.</p>
+<h4>Exercise 1.31</h4>
+<ol>
+<li>
+<p>The <code>sum</code> procedure is only the simplest of a vast number of similar
+abstractions that can be captured as higher-order procedures.  Write an analogous
+procedure called <code>product</code> that returns the product of the values of a
+function at points over a given range.  Show how to define <code>factorial</code> in
+terms of <code>product</code>.  Also use <code>product</code> to compute approximations to
+$\pi$ using the formula
+$$\frac\pi4 \,=\, \frac{2\cdot 4\cdot 4\cdot 6\cdot 6\cdot 8\cdot\cdots}{3\cdot 3\cdot 5\cdot 5\cdot 7\cdot 7\cdot\cdots}.$$</p>
+</li>
+<li>
+<p>If your <code>product</code> procedure generates a recursive process, write one that
+generates an iterative process.  If it generates an iterative process, write
+one that generates a recursive process.</p>
+</li>
+</ol>
+<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-31.rkt">ch1-code/ex1-31.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="c1">; Helper functions</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">next2</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+
+<span class="c1">; product defns</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">      </span><span class="mi">1</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">product-iter</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">        </span><span class="n">result</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+
+<span class="c1">; Implement factorial and wallis product.</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fact</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fact-iter</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">product-iter</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">wallis-term</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">wallis-pi</span><span class="w"> </span><span class="n">nterms</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">wallis-term</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="n">next2</span><span class="w"> </span><span class="n">nterms</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">wallis-pi-iter</span><span class="w"> </span><span class="n">nterms</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">(</span><span class="n">product-iter</span><span class="w"> </span><span class="n">wallis-term</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="n">next2</span><span class="w"> </span><span class="n">nterms</span><span class="p">)))</span>
+
+<span class="c1">; Pretty print</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Factorial (linear recursive, then iterative)&quot;</span><span class="p">)</span><span class="w"> </span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">fact</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">fact-iter</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Wallis pi&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">wallis-pi</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+<span class="p">(</span><span class="n">wallis-pi-iter</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Factorial (linear recursive, then iterative)
+120
+120
+
+
+Wallis pi
+3.157030176455167
+3.1570301764551667
+</pre>
+</div>
+</div>
+
+<h4>Exercise 1.32</h4>
+<p><strong>1.</strong> Show that <code>sum</code> and <code>product</code> (Exercise 1.31) are both special
+cases of a still more general notion called <code>accumulate</code> that combines a
+collection of terms, using some general accumulation function:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span>
+<span class="w"> </span><span class="n">combiner</span><span class="w"> </span><span class="n">null-value</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+</code></pre></div>
+
+<p><code>Accumulate</code> takes as arguments the same term and range specifications as
+<code>sum</code> and <code>product</code>, together with a <code>combiner</code> procedure (of
+two arguments) that specifies how the current term is to be combined with the
+accumulation of the preceding terms and a <code>null-value</code> that specifies what
+base value to use when the terms run out.  Write <code>accumulate</code> and show how
+<code>sum</code> and <code>product</code> can both be defined as simple calls to
+<code>accumulate</code>.</p>
+<p><strong>2.</strong> If your <code>accumulate</code> procedure generates a recursive process, write one
+that generates an iterative process.  If it generates an iterative process,
+write one that generates a recursive process.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.33</h4>
+<p>You can obtain an even more
+general version of <code>accumulate</code> (Exercise 1.32) by introducing the
+notion of a filter on the terms to be combined.  That is, combine
+only those terms derived from values in the range that satisfy a specified
+condition.  The resulting <code>filtered-accumulate</code> abstraction takes the same
+arguments as accumulate, together with an additional predicate of one argument
+that specifies the filter.  Write <code>filtered-accumulate</code> as a procedure.
+Show how to express the following using <code>filtered-accumulate</code>:</p>
+<ol>
+<li>
+<p>the sum of the squares of the prime numbers in the interval $a$ to $b$
+(assuming that you have a <code>prime?</code> predicate already written)</p>
+</li>
+<li>
+<p>the product of all the positive integers less than $n$ that are relatively
+prime to $n$ (i.e., all positive integers $i \lt n$ such that
+$\textrm{GCD}(i, n) = 1$).</p>
+</li>
+</ol>
+<h5>Solution</h5>
+<h4>Exercise 1.34</h4>
+<p>Suppose we define the procedure</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Then we have</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">square</span><span class="p">)</span>
+<span class="mi">4</span>
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="mi">6</span>
+</code></pre></div>
+
+<p>What happens if we (perversely) ask the interpreter to evaluate the combination
+<code>(f f)</code>?  Explain.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.35</h4>
+<p>Show that the golden ratio
+$\varphi$ (1.2.2) is a fixed point of the transformation 
+$x \mapsto 1 + 1 / x$, and use this fact to compute $\varphi$ by means 
+of the <code>fixed-point</code> procedure.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.36</h4>
+<p>Modify <code>fixed-point</code> so that
+it prints the sequence of approximations it generates, using the <code>newline</code>
+and <code>display</code> primitives shown in Exercise 1.22.  Then find a
+solution to $x^x = 1000$ by finding a fixed point of $x \mapsto
+{\log(1000) / \log(x)}$.  (Use Scheme's primitive <code>log</code>
+procedure, which computes natural logarithms.)  Compare the number of steps
+this takes with and without average damping.  (Note that you cannot start
+<code>fixed-point</code> with a guess of 1, as this would cause division by
+$\log(1) = 0$.)</p>
+<h5>Solution</h5>
+<h4>Exercise 1.37</h4>
+<p><strong>1.</strong> An infinite continued fraction is an expression of the form
+$$f \,=\, {\frac{N_1}{D_1 + \frac{N_2}{D_2 + \frac{N_3}{D_3 + \dots}}}.}$$
+As an example, one can show that the infinite continued fraction expansion with
+the $N_i$ and the $D_i$ all equal to 1 produces $1 / \varphi$, where
+$\varphi$ is the golden ratio (described in 1.2.2).  One way to
+approximate an infinite continued fraction is to truncate the expansion after a
+given number of terms.  Such a truncation--a so-called k-term
+finite continued fraction--has the form
+$${\frac{N_1}{D_1 + \frac{N_2}{\ddots + \frac{N_k}{D_k}}}.}$$
+Suppose that <code>n</code> and <code>d</code> are procedures of one argument (the term
+index $i$) that return the $N_i$ and $D_i$ of the terms of the
+continued fraction.  Define a procedure <code>cont-frac</code> such that evaluating
+<code>(cont-frac n d k)</code> computes the value of the $k$-term finite continued
+fraction.  Check your procedure by approximating $1 / \varphi$ using</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">cont-frac</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span>
+<span class="w">           </span><span class="n">k</span><span class="p">)</span>
+</code></pre></div>
+
+<p>for successive values of <code>k</code>.  How large must you make <code>k</code> in order
+to get an approximation that is accurate to 4 decimal places?</p>
+<p><strong>2.</strong> If your <code>cont-frac</code> procedure generates a recursive process, write one
+that generates an iterative process.  If it generates an iterative process,
+write one that generates a recursive process.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.38</h4>
+<p>In 1737, the Swiss mathematician
+Leonhard Euler published a memoir De Fractionibus Continuis, which
+included a continued fraction expansion for $e - 2$, where $e$ is the base
+of the natural logarithms.  In this fraction, the $N_i$ are all 1, and
+the $D_i$ are successively:</p>
+<p><code>1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, ...</code></p>
+<p>Write a program that uses your <code>cont-frac</code> procedure from Exercise 1.37 
+to approximate $e$, based on Euler's expansion.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.39</h4>
+<p>A continued fraction
+representation of the tangent function was published in 1770 by the German
+mathematician J.H. Lambert:
+$${\tan x} \,=\, {\frac{x}{1 - \frac{x^2}{3 - \frac{x^2}{5 - \dots}}}\,,}$$
+where $x$ is in radians.  Define a procedure <code>(tan-cf x k)</code> that
+computes an approximation to the tangent function based on Lambert's formula.
+<code>k</code> specifies the number of terms to compute, as in Exercise 1.37.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.40</h4>
+<p>Define a procedure <code>cubic</code>
+that can be used together with the <code>newtons-method</code> procedure in
+expressions of the form</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">newtons-method</span><span class="w"> </span><span class="p">(</span><span class="n">cubic</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<p>to approximate zeros of the cubic $x^3 + ax^2 + bx + c$.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.41</h4>
+<p>Define a procedure <code>double</code>
+that takes a procedure of one argument as argument and returns a procedure that
+applies the original procedure twice.  For example, if <code>inc</code> is a
+procedure that adds 1 to its argument, then <code>(double inc)</code> should be a
+procedure that adds 2.  What value is returned by</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(((</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">double</span><span class="p">))</span><span class="w"> </span><span class="n">inc</span><span class="p">)</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4>Exercise 1.42</h4>
+<p>Let $f$ and $g$ be two
+one-argument functions.  The composition $f$ after $g$ is defined
+to be the function $x \mapsto f(g(x))$.  Define a procedure
+<code>compose</code> that implements composition.  For example, if <code>inc</code> is a
+procedure that adds 1 to its argument,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">((</span><span class="nb">compose</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="n">inc</span><span class="p">)</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="mi">49</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4>Exercise 1.43</h4>
+<p>If $f$ is a numerical function
+and $n$ is a positive integer, then we can form the $n^{\text{th}}$ repeated
+application of $f$, which is defined to be the function whose value at $x$
+is $f(f(\dots (f(x))\dots ))$.  For example, if $f$ is the
+function $x \mapsto x + 1$, then the $n^{\text{th}}$ repeated application of $f$ is
+the function $x \mapsto x + n$.  If $f$ is the operation of squaring a
+number, then the $n^{\text{th}}$ repeated application of $f$ is the function that
+raises its argument to the $2^n\text{-th}$ power.  Write a procedure that takes as
+inputs a procedure that computes $f$ and a positive integer $n$ and returns
+the procedure that computes the $n^{\text{th}}$ repeated application of $f$.  Your
+procedure should be able to be used as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">((</span><span class="n">repeated</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="mi">625</span>
+</code></pre></div>
+
+<p>Hint: You may find it convenient to use <code>compose</code> from Exercise 1.42.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.44</h4>
+<p>The idea of smoothing a
+function is an important concept in signal processing.  If $f$ is a function
+and $dx$ is some small number, then the smoothed version of $f$ is the
+function whose value at a point $x$ is the average of $f(x - dx)$, 
+$f(x)$, and $f(x + dx)$.  Write a procedure
+<code>smooth</code> that takes as input a procedure that computes $f$ and returns a
+procedure that computes the smoothed $f$.  It is sometimes valuable to
+repeatedly smooth a function (that is, smooth the smoothed function, and so on)
+to obtain the n-fold smoothed function.  Show how to generate
+the n-fold smoothed function of any given function using <code>smooth</code> and
+<code>repeated</code> from Exercise 1.43.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.45</h4>
+<p>We saw in 1.3.3
+that attempting to compute square roots by naively finding a fixed point of
+$y \mapsto x / y$ does not converge, and that this can be fixed by average
+damping.  The same method works for finding cube roots as fixed points of the
+average-damped $y \mapsto x / y^2$.  Unfortunately, the process does not
+work for fourth roots---a single average damp is not enough to make a
+fixed-point search for $y \mapsto x / y^3$ converge.  On the other hand, if
+we average damp twice (i.e., use the average damp of the average damp of 
+$y \mapsto x / y^3$) the fixed-point search does converge.  Do some experiments
+to determine how many average damps are required to compute $n^{\text{th}}$ roots as a
+fixed-point search based upon repeated average damping of 
+$y \mapsto x / y^{n-1}.$<br />
+Use this to implement a simple procedure for computing
+$n^{\text{th}}$ roots using <code>fixed-point</code>, <code>average-damp</code>, and the
+<code>repeated</code> procedure of Exercise 1.43.  Assume that any arithmetic
+operations you need are available as primitives.</p>
+<h5>Solution</h5>
+<h4>Exercise 1.46</h4>
+<p>Several of the numerical methods
+described in this chapter are instances of an extremely general computational
+strategy known as iterative improvement.  Iterative improvement says
+that, to compute something, we start with an initial guess for the answer, test
+if the guess is good enough, and otherwise improve the guess and continue the
+process using the improved guess as the new guess.  Write a procedure
+<code>iterative-improve</code> that takes two procedures as arguments: a method for
+telling whether a guess is good enough and a method for improving a guess.
+<code>Iterative-improve</code> should return as its value a procedure that takes a
+guess as argument and keeps improving the guess until it is good enough.
+Rewrite the <code>sqrt</code> procedure of 1.1.7 and the
+<code>fixed-point</code> procedure of 1.3.3 in terms of
+<code>iterative-improve</code>.</p>
+<h5>Solution</h5>
+    </div>
+</body>
+</html>
