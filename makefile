@@ -5,6 +5,9 @@
 # Python script path
 BUILD_SCRIPT = ./build.py
 
+# Default port for server
+PORT = 8000
+
 # Default target - build everything
 all:
 	$(BUILD_SCRIPT) all
@@ -17,6 +20,10 @@ html:
 racket:
 	$(BUILD_SCRIPT) racket
 
+# Run specific Racket files
+racket-files:
+	$(BUILD_SCRIPT) racket --files $(FILES)
+
 # Clean all generated files
 clean:
 	$(BUILD_SCRIPT) clean
@@ -25,31 +32,26 @@ clean:
 clean_outputs:
 	$(BUILD_SCRIPT) clean_outputs
 
-# Force rebuild
+# Force rebuild (markdown only, not Racket)
 rebuild:
 	$(BUILD_SCRIPT) rebuild
 
-# Watch for file changes and rebuild as needed
+# Watch for file changes and rebuild as needed with server
 watch:
-	$(BUILD_SCRIPT) watch
+	$(BUILD_SCRIPT) watch --port $(PORT)
 
 # Watch for file changes without initial build
 watch-only:
-	$(BUILD_SCRIPT) watch --no-initial-build
+	$(BUILD_SCRIPT) watch --no-initial-build --port $(PORT)
 
-# Help target
-help:
-	@echo "SICP Notes Build System"
-	@echo "----------------------"
-	@echo "Targets:"
-	@echo "  all          - Build everything (default)"
-	@echo "  html         - Build HTML only"
-	@echo "  racket       - Run Racket files only"
-	@echo "  clean        - Clean all generated files"
-	@echo "  clean_outputs - Clean just the output files"
-	@echo "  rebuild      - Force rebuild everything"
-	@echo "  watch        - Watch for file changes and rebuild as needed"
-	@echo "  watch-only   - Watch for changes without performing initial build"
-	@echo "  help         - Show this help message"
+# Just serve the files without watching
+serve:
+	$(BUILD_SCRIPT) serve --port $(PORT)
 
-.PHONY: all html racket clean clean_outputs rebuild watch watch-only help
+# Scan for missing Racket outputs
+scan-missing:
+	$(BUILD_SCRIPT) scan-missing
+
+# Generate all missing Racket outputs
+generate-missing:
+	$(BUILD_SCRIPT) scan-missing --generate-missing

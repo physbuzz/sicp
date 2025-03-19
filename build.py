@@ -9,6 +9,7 @@ This script:
 2. Recursively copies all files from src/ to docs/
 3. Compiles markdown files to HTML using build/md2html.py
 4. Can watch for file changes and automatically rebuild (new)
+5. Can start a development server for live preview
 """
 
 import os
@@ -32,19 +33,26 @@ def should_process_file(path):
             return False
     return True
 
-def run_racket_files(src_dir=SRC_DIR):
-    """Run all Racket files in the source directory and generate output files."""
-    print("Running Racket files and generating output files...")
-    racket_files = []
+def run_racket_files(src_dir=SRC_DIR, file_list=None):
+    """Run all Racket files in the source directory and generate output files.
 
-    # Find all Racket files
-    for root, dirs, files in os.walk(src_dir):
-        # Skip directories starting with underscore
-        dirs[:] = [d for d in dirs if not d.startswith('_')]
+    If file_list is provided, only process those specific files.
+    """
+    if file_list:
+        print(f"Running {len(file_list)} specified Racket files...")
+        racket_files = file_list
+    else:
+        print("Running all Racket files and generating output files...")
+        racket_files = []
 
-        for file in files:
-            if file.endswith('.rkt') and not file.startswith('_'):
-                racket_files.append(os.path.join(root, file))
+        # Find all Racket files
+        for root, dirs, files in os.walk(src_dir):
+            # Skip directories starting with underscore
+            dirs[:] = [d for d in dirs if not d.startswith('_')]
+
+            for file in files:
+                if file.endswith('.rkt') and not file.startswith('_'):
+                    racket_files.append(os.path.join(root, file))
 
     success_count = 0
     error_count = 0
@@ -181,39 +189,81 @@ def clean_all(out_dir=OUT_DIR, src_dir=SRC_DIR):
 
     return True
 
-def watch():
-    """Watch for file changes and rebuild as needed."""
+def watch_and_serve(no_initial_build=False, port=8000):
+    """Watch for file changes and serve the files."""
+    # Import the watch functionality
     try:
-        # Try to import the watch module
         from watch import watch_directory
-    except ImportError:
-        # If watchdog is not installed, show an error
-        try:
-            import importlib.util
-            spec = importlib.util.find_spec("watchdog")
-            if spec is None:
-                print("Error: watchdog package is not installed.")
-                print("Please install it with: pip install watchdog")
-                return False
-            else:
-                print("Error: watch.py module not found.")
-                print("Make sure watch.py is in the same directory as build.py.")
-                return False
-        except ImportError:
-            print("Error: watchdog package is not installed.")
-            print("Please install it with: pip install watchdog")
-            return False
+        watch_directory(
+            initial_build=not no_initial_build,
+            start_server=True,
+            port=port
+        )
+        return 0
+    except ImportError as e:
+        print(f"Error: {str(e)}")
+        print("Please ensure watch.py is available and watchdog is installed with: pip install watchdog")
+        return 1
 
-    # Start watching the directory
-    return watch_directory()
+def find_missing_outputs():
+    """Find and report all Racket files without outputs or with outdated outputs."""
+    print("Scanning for Racket files with missing or outdated outputs...")
+    missing_files = []
+    outdated_files = []
+
+    # Find all Racket files
+    for root, dirs, files in os.walk(SRC_DIR):
+        # Skip directories starting with underscore
+        dirs[:] = [d for d in dirs if not d.startswith('_')]
+
+        for file in files:
+            if file.endswith('.rkt') and not file.startswith('_'):
+                rkt_path = os.path.join(root, file)
+                out_path = os.path.splitext(rkt_path)[0] + ".out"
+
+                # Check if .out file exists
+                if not os.path.exists(out_path):
+                    missing_files.append(rkt_path)
+                else:
+                    # Check if .rkt file is newer than .out file
+                    rkt_mtime = os.path.getmtime(rkt_path)
+                    out_mtime = os.path.getmtime(out_path)
+                    if rkt_mtime > out_mtime:
+                        outdated_files.append(rkt_path)
+
+    if missing_files:
+        print(f"Found {len(missing_files)} Racket files without outputs:")
+        for file in missing_files[:10]:  # Show first 10 to avoid cluttering the console
+            print(f"  {file}")
+        if len(missing_files) > 10:
+            print(f"  ... and {len(missing_files) - 10} more")
+
+    if outdated_files:
+        print(f"Found {len(outdated_files)} Racket files with outdated outputs:")
+        for file in outdated_files[:10]:  # Show first 10 to avoid cluttering the console
+            print(f"  {file}")
+        if len(outdated_files) > 10:
+            print(f"  ... and {len(outdated_files) - 10} more")
+
+    if not missing_files and not outdated_files:
+        print("All Racket files have up-to-date outputs.")
+
+    return missing_files + outdated_files
 
 def main():
     parser = argparse.ArgumentParser(description='SICP Build Script')
     parser.add_argument('action', nargs='?', default='all',
-                      choices=['all', 'html', 'racket', 'clean', 'clean_outputs', 'rebuild', 'watch'],
+                      choices=['all', 'html', 'racket', 'clean', 'clean_outputs', 'rebuild',
+                               'watch', 'serve', 'scan-missing'],
                       help='Build action (default: all)')
     parser.add_argument('--no-initial-build', action='store_true',
                       help='Skip initial build when watching (only with watch action)')
+    parser.add_argument('--port', type=int, default=8000,
+                      help='Port for the development server (default: 8000)')
+    parser.add_argument('--files', nargs='+',
+                      help='Specific files to process (for racket action only)')
+    parser.add_argument('--generate-missing', action='store_true',
+                      help='Generate outputs for all missing Racket files')
     args = parser.parse_args()
 
     if args.action == 'clean_outputs':
@@ -221,22 +271,19 @@ def main():
     elif args.action == 'clean':
         clean_all()
     elif args.action == 'racket':
-        run_racket_files()
+        run_racket_files(file_list=args.files)
     elif args.action == 'html':
         process_directory()
     elif args.action == 'rebuild':
         clean_all()
-        run_racket_files()
-        process_directory()
-    elif args.action == 'watch':
-        # Import the watch functionality
-        try:
-            from watch import watch_directory
-            watch_directory(initial_build=not args.no_initial_build)
-        except ImportError as e:
-            print(f"Error: {str(e)}")
-            print("Please ensure watch.py is available and watchdog is installed with: pip install watchdog")
-            return 1
+        process_directory()  # Skip running all Racket files by default
+    elif args.action == 'scan-missing':
+        missing_files = find_missing_outputs()
+        if args.generate_missing and missing_files:
+            print("\nGenerating missing outputs...")
+            run_racket_files(file_list=missing_files)
+    elif args.action == 'watch' or args.action == 'serve':
+        return watch_and_serve(args.no_initial_build, args.port)
     else:  # 'all'
         run_racket_files()
         process_directory()

@@ -107,6 +107,7 @@ that generates an iterative process.  If it generates an iterative process,
 write one that generates a recursive process.
 
 ##### Solution
+@src(ch1-code/ex1-32.rkt)
 
 #### Exercise 1.33
 You can obtain an even more

@@ -41,3 +41,5 @@
 (newline)
 (wallis-pi 100)
 (wallis-pi-iter 100)
+
+(display "Secret message")
