@@ -1,11 +1,10 @@
 <div class="nav">
     <span class="activenav"><a href="notes-ch1-1.html">← Previous</a></span>
     <span class="activenav"><a href="../index.html">↑ Up</a></span>
-    <span class="inactivenav">Next →</span>
+    <span class="activenav"><a href="notes-ch1-3.html">Next →</a></span>
 </div>
 
-
-[https://sarabander.github.io/sicp/html/1_002e2.xhtml](https://sarabander.github.io/sicp/html/1_002e2.xhtml)
+Chapter link: [https://sarabander.github.io/sicp/html/1_002e2.xhtml](https://sarabander.github.io/sicp/html/1_002e2.xhtml)
 
 ## Section 1.2
 

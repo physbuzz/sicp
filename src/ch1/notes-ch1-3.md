@@ -1,14 +1,70 @@
-
 <div class="nav">
-    <span class="activenav"><a href="notes-ch1-1.html">← Previous</a></span>
+    <span class="activenav"><a href="notes-ch1-2.html">← Previous</a></span>
     <span class="activenav"><a href="../index.html">↑ Up</a></span>
-    <span class="inactivenav">Next →</span>
+    <span class="inactivenav"><a href="../ch2/notes-ch2-1.html">Next →</a></span>
 </div>
 
 
 [https://sarabander.github.io/sicp/html/1_002e3.xhtml](https://sarabander.github.io/sicp/html/1_002e3.xhtml)
 
 ## Section 1.3
+
+The following are equivalent:
+```rkt
+(define (plus4 x) (+ x 4))
+(define plus4 (lambda (x) (+ x 4)))
+```
+
+I find the example extremely instructive:
+
+$$f(x,y)=x(1+xy)^2+y(1-y)+(1+xy)(1-y)$$
+We probably want to only calculate $1+xy$ and $1-y$ once. So,
+```rkt
+(define (f x y)
+  (define (f-helper a b)
+    (+ (* x (square a))
+       (* y b)
+       (* a b)))
+  (f-helper (+ 1 (* x y)) 
+            (- 1 y)))
+;; =>
+(define (f x y)
+  ((lambda (a b)
+     (+ (* x (square a)) 
+        (* y b) 
+        (* a b)))
+   (+ 1 (* x y))
+   (- 1 y)))
+;; =>
+(define (f x y)
+  (let ((a (+ 1 (* x y)))
+        (b (- 1 y)))
+    (+ (* x (square a))
+       (* y b)
+       (* a b))))
+```
+In short, 
+```rkt
+(let ((⟨var₁⟩ ⟨exp₁⟩)
+      (⟨var₂⟩ ⟨exp₂⟩)
+      …
+      (⟨varₙ⟩ ⟨expₙ⟩))
+  ⟨body⟩)
+;; is alternative syntax for
+((lambda (⟨var₁⟩ … ⟨varₙ⟩)
+   ⟨body⟩)
+ ⟨exp₁⟩
+ …
+ ⟨expₙ⟩)
+```
+
+... 1.3.3 just talks about boring stuff: fixed point function, interval search, fixed point with averaging.
+
+... 1.3.4 just defines numerical stuff, `average-damp`, `newtons-method` (using numerical differentiation).
+
+
+
+
 
 ### Exercises
 
@@ -20,7 +76,7 @@ Simpson's Rule, the integral of a function $f$ between $a$ and $b$ is
 approximated as
 
 
-$$\frac{h}{3} \left(y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \ldots + 2y_(n-2) + 4y_(n-1) + y_n\right)$$
+$$\frac{h}{3} \left(y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \ldots + 2y_{n-2} + 4y_{n-1} + y_n\right)$$
 where $h = (b - a)/n$, for some even integer $n$, and
 $y_k = f(a + kh)$.  (Increasing $n$ increases the
 accuracy of the approximation.)  Define a procedure that takes as arguments
@@ -56,17 +112,17 @@ expressions in the following definition:
 @src(ch1-code/ex1-30.rkt)
 
 #### important footnote:
-The
-intent of Exercise 1.31 through Exercise 1.33 is to demonstrate the
-expressive power that is attained by using an appropriate abstraction to
-consolidate many seemingly disparate operations.  However, though accumulation
-and filtering are elegant ideas, our hands are somewhat tied in using them at
-this point since we do not yet have data structures to provide suitable means
-of combination for these abstractions.  We will return to these ideas in
-2.2.3 when we show how to use sequences as interfaces
-for combining filters and accumulators to build even more powerful
-abstractions.  We will see there how these methods really come into their own
-as a powerful and elegant approach to designing programs.
+> The
+> intent of Exercise 1.31 through Exercise 1.33 is to demonstrate the
+> expressive power that is attained by using an appropriate abstraction to
+> consolidate many seemingly disparate operations.  However, though accumulation
+> and filtering are elegant ideas, our hands are somewhat tied in using them at
+> this point since we do not yet have data structures to provide suitable means
+> of combination for these abstractions.  We will return to these ideas in
+> 2.2.3 when we show how to use sequences as interfaces
+> for combining filters and accumulators to build even more powerful
+> abstractions.  We will see there how these methods really come into their own
+> as a powerful and elegant approach to designing programs.
 
 #### Exercise 1.31
 
@@ -129,6 +185,11 @@ $\textrm{GCD}(i, n) = 1$).
 ##### Solution
 
 
+
+@src(ch1-code/ex1-33.rkt)
+1. [https://oeis.org/A081738](https://oeis.org/A081738)
+2. [https://oeis.org/A001783](https://oeis.org/A001783)
+
 #### Exercise 1.34
 Suppose we define the procedure
 
@@ -153,13 +214,24 @@ What happens if we (perversely) ask the interpreter to evaluate the combination
 
 ##### Solution
 
+We'll end up calling `(f 2)` which calls `(2 2)`, which should be a syntax error.
+
+@src(ch1-code/ex1-34.rkt)
+
 #### Exercise 1.35 
 Show that the golden ratio
 $\varphi$ (1.2.2) is a fixed point of the transformation 
-$x \mapsto 1 + 1 / x$, and use this fact to compute $\varphi$ by means 
+$x \mapsto 1 + 1 / x,$ and use this fact to compute $\varphi$ by means 
 of the `fixed-point` procedure.
 
 ##### Solution
+
+$\varphi$ is defined as the value such that $x=1+1/x,$ which is the definition of a fixed point. What matters more is if it's an attractive fixed point, 
+which can be determined by $f'(x)\lt 0.$ In fact $f'(x)=-1/x^2$ and $x\gt 0,$ so this is the case.
+
+@src(ch1-code/ex1-35.rkt)
+
+
 
 #### Exercise 1.36
  Modify `fixed-point` so that
@@ -173,6 +245,7 @@ this takes with and without average damping.  (Note that you cannot start
 $\log(1) = 0$.)
 
 ##### Solution
+@src(ch1-code/ex1-36.rkt)
 
 #### Exercise 1.37
 
@@ -204,6 +277,7 @@ write one that generates a recursive process.
 
 ##### Solution
 
+@src(ch1-code/ex1-37.rkt)
 #### Exercise 1.38
  In 1737, the Swiss mathematician
 Leonhard Euler published a memoir De Fractionibus Continuis, which
@@ -218,6 +292,7 @@ to approximate $e$, based on Euler's expansion.
 
 ##### Solution
 
+@src(ch1-code/ex1-38.rkt)
 #### Exercise 1.39
  A continued fraction
 representation of the tangent function was published in 1770 by the German
@@ -229,6 +304,7 @@ computes an approximation to the tangent function based on Lambert's formula.
 
 ##### Solution
 
+@src(ch1-code/ex1-39.rkt)
 #### Exercise 1.40
  Define a procedure `cubic`
 that can be used together with the `newtons-method` procedure in
@@ -240,6 +316,7 @@ to approximate zeros of the cubic $x^3 + ax^2 + bx + c$.
 
 ##### Solution
 
+@src(ch1-code/ex1-40.rkt)
 #### Exercise 1.41
  Define a procedure `double`
 that takes a procedure of one argument as argument and returns a procedure that
@@ -253,6 +330,7 @@ procedure that adds 2.  What value is returned by
 
 ##### Solution
 
+@src(ch1-code/ex1-41.rkt)
 #### Exercise 1.42
  Let $f$ and $g$ be two
 one-argument functions.  The composition $f$ after $g$ is defined
@@ -266,6 +344,7 @@ procedure that adds 1 to its argument,
 ```
 
 ##### Solution
+@src(ch1-code/ex1-42.rkt)
 
 #### Exercise 1.43
  If $f$ is a numerical function
@@ -288,6 +367,7 @@ procedure should be able to be used as follows:
 Hint: You may find it convenient to use `compose` from Exercise 1.42.
 
 ##### Solution
+@src(ch1-code/ex1-43.rkt)
 
 #### Exercise 1.44
  The idea of smoothing a
@@ -304,6 +384,7 @@ the n-fold smoothed function of any given function using `smooth` and
 
 ##### Solution
 
+@src(ch1-code/ex1-44.rkt)
 
 #### Exercise 1.45
  We saw in 1.3.3
@@ -325,6 +406,7 @@ operations you need are available as primitives.
 
 ##### Solution
 
+@src(ch1-code/ex1-45.rkt)
 #### Exercise 1.46
 Several of the numerical methods
 described in this chapter are instances of an extremely general computational
@@ -341,3 +423,4 @@ Rewrite the `sqrt` procedure of 1.1.7 and the
 `iterative-improve`.
 
 ##### Solution
+@src(ch1-code/ex1-46.rkt)
