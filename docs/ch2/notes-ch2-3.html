@@ -431,7 +431,31 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><a href="#section-23">Section 2.3</a></li>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-253">Exercise 2.53</a></span>
+<span><a href="#exercise-254">Exercise 2.54</a></span>
+<span><a href="#exercise-255">Exercise 2.55</a></span>
+<span><a href="#exercise-256">Exercise 2.56</a></span>
+<span><a href="#exercise-257">Exercise 2.57</a></span>
+<span><a href="#exercise-258">Exercise 2.58</a></span>
+<span><a href="#exercise-259">Exercise 2.59</a></span>
+<span><a href="#exercise-260">Exercise 2.60</a></span>
+<span><a href="#exercise-261">Exercise 2.61</a></span>
+<span><a href="#exercise-262">Exercise 2.62</a></span>
+<span><a href="#exercise-263">Exercise 2.63</a></span>
+<span><a href="#exercise-264">Exercise 2.64</a></span>
+<span><a href="#exercise-265">Exercise 2.65</a></span>
+<span><a href="#exercise-266">Exercise 2.66</a></span>
+<span><a href="#exercise-267">Exercise 2.67</a></span>
+<span><a href="#exercise-268">Exercise 2.68</a></span>
+<span><a href="#exercise-269">Exercise 2.69</a></span>
+<span><a href="#exercise-270">Exercise 2.70</a></span>
+<span><a href="#exercise-271">Exercise 2.71</a></span>
+<span><a href="#exercise-272">Exercise 2.72</a></span>
+</span>)
+</div></li>
 </ul>
 </ul>
 </ul>
@@ -439,6 +463,305 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2 id="section-23">Section 2.3</h2>
 <h3 id="introduction">Introduction</h3>
 <h3 id="exercises">Exercises</h3>
+<h5>Solution</h5>
+<h4 id="exercise-253">Exercise 2.53</h4>
+<p>What would the interpreter print
+in response to evaluating each of the following expressions?</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">a</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">b</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">c</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">george</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x1</span><span class="w"> </span><span class="ss">x2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y1</span><span class="w"> </span><span class="ss">y2</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x1</span><span class="w"> </span><span class="ss">x2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y1</span><span class="w"> </span><span class="ss">y2</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">a</span><span class="w"> </span><span class="ss">short</span><span class="w"> </span><span class="ss">list</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">memq</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">red</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">red</span><span class="w"> </span><span class="ss">shoes</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">blue</span><span class="w"> </span><span class="ss">socks</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">memq</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">red</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">red</span><span class="w"> </span><span class="ss">shoes</span><span class="w"> </span><span class="ss">blue</span><span class="w"> </span><span class="ss">socks</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-254">Exercise 2.54</h4>
+<p>Two lists are said to be
+<code>equal?</code> if they contain equal elements arranged in the same order.  For
+example,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">this</span><span class="w"> </span><span class="ss">is</span><span class="w"> </span><span class="ss">a</span><span class="w"> </span><span class="ss">list</span><span class="p">)</span><span class="w"> </span>
+<span class="w">        </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">this</span><span class="w"> </span><span class="ss">is</span><span class="w"> </span><span class="ss">a</span><span class="w"> </span><span class="ss">list</span><span class="p">))</span>
+</code></pre></div>
+
+<p>is true, but</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">this</span><span class="w"> </span><span class="ss">is</span><span class="w"> </span><span class="ss">a</span><span class="w"> </span><span class="ss">list</span><span class="p">)</span><span class="w"> </span>
+<span class="w">        </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">this</span><span class="w"> </span><span class="p">(</span><span class="ss">is</span><span class="w"> </span><span class="ss">a</span><span class="p">)</span><span class="w"> </span><span class="ss">list</span><span class="p">))</span>
+</code></pre></div>
+
+<p>is false.  To be more precise, we can define <code>equal?</code>  recursively in
+terms of the basic <code>eq?</code> equality of symbols by saying that <code>a</code> and
+<code>b</code> are <code>equal?</code> if they are both symbols and the symbols are
+<code>eq?</code>, or if they are both lists such that <code>(car a)</code> is <code>equal?</code>
+to <code>(car b)</code> and <code>(cdr a)</code> is <code>equal?</code> to <code>(cdr b)</code>.  Using
+this idea, implement <code>equal?</code> as a procedure.</p>
+<h5>Solution</h5>
+<h4 id="exercise-255">Exercise 2.55</h4>
+<p>Eva Lu Ator types to the
+interpreter the expression</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="o">&#39;&#39;</span><span class="ss">abracadabra</span><span class="p">)</span>
+</code></pre></div>
+
+<p>To her surprise, the interpreter prints back <code>quote</code>.  Explain.</p>
+<h5>Solution</h5>
+<h4 id="exercise-256">Exercise 2.56</h4>
+<p>Show how to extend the basic
+differentiator to handle more kinds of expressions.  For instance, implement
+the differentiation rule</p>
+<p>$${d(u^{\kern0.1ex n}) \over dx} \,=\, {nu^{\kern0.1ex n-1} \, {du \over dx}}  $$</p>
+<p>by adding a new clause to the <code>deriv</code> program and defining appropriate
+procedures <code>exponentiation?</code>, <code>base</code>, <code>exponent</code>, and
+<code>make-exponentiation</code>.  (You may use the symbol <code>**</code> to denote
+exponentiation.)  Build in the rules that anything raised to the power 0 is 1
+and anything raised to the power 1 is the thing itself.</p>
+<h5>Solution</h5>
+<h4 id="exercise-257">Exercise 2.57</h4>
+<p>Extend the differentiation
+program to handle sums and products of arbitrary numbers of (two or more)
+terms.  Then the last example above could be expressed as</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">deriv</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">*</span><span class="w"> </span><span class="ss">x</span><span class="w"> </span><span class="ss">y</span><span class="w"> </span><span class="p">(</span><span class="ss">+</span><span class="w"> </span><span class="ss">x</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Try to do this by changing only the representation for sums and products,
+without changing the <code>deriv</code> procedure at all.  For example, the
+<code>addend</code> of a sum would be the first term, and the <code>augend</code> would be
+the sum of the rest of the terms.</p>
+<h5>Solution</h5>
+<h4 id="exercise-258">Exercise 2.58</h4>
+<p>Suppose we want to modify the
+differentiation program so that it works with ordinary mathematical notation,
+in which <code>+</code> and <code>*</code> are infix rather than prefix operators.  Since
+the differentiation program is defined in terms of abstract data, we can modify
+it to work with different representations of expressions solely by changing the
+predicates, selectors, and constructors that define the representation of the
+algebraic expressions on which the differentiator is to operate.</p>
+<p><strong>1.</strong> Show how to do this in order to differentiate algebraic expressions presented
+in infix form, such as <code>(x + (3 * (x + (y + 2))))</code>.  To simplify the task,
+assume that <code>+</code> and <code>*</code> always take two arguments and that
+expressions are fully parenthesized.</p>
+<p><strong>2.</strong> The problem becomes substantially harder if we allow standard algebraic
+notation, such as <code>(x + 3 * (x + y + 2))</code>, which drops unnecessary
+parentheses and assumes that multiplication is done before addition.  Can you
+design appropriate predicates, selectors, and constructors for this notation
+such that our derivative program still works?</p>
+<h5>Solution</h5>
+<h4 id="exercise-259">Exercise 2.59</h4>
+<p>Implement the <code>union-set</code>
+operation for the unordered-list representation of sets.</p>
+<h5>Solution</h5>
+<h4 id="exercise-260">Exercise 2.60</h4>
+<p>We specified that a set would be
+represented as a list with no duplicates.  Now suppose we allow duplicates.
+For instance, the set ${{1, 2, 3}$} could be represented as the list <code>(2 3 2 1
+3 2 2)</code>.  Design procedures <code>element-of-set?</code>, <code>adjoin-set</code>,
+<code>union-set</code>, and <code>intersection-set</code> that operate on this
+representation.  How does the efficiency of each compare with the corresponding
+procedure for the non-duplicate representation?  Are there applications for
+which you would use this representation in preference to the non-duplicate one?</p>
+<h5>Solution</h5>
+<h4 id="exercise-261">Exercise 2.61</h4>
+<p>Give an implementation of
+<code>adjoin-set</code> using the ordered representation.  By analogy with
+<code>element-of-set?</code> show how to take advantage of the ordering to produce a
+procedure that requires on the average about half as many steps as with the
+unordered representation.</p>
+<h5>Solution</h5>
+<h4 id="exercise-262">Exercise 2.62</h4>
+<p>Give a ${\Theta(n)$}
+implementation of <code>union-set</code> for sets represented as ordered lists.</p>
+<h5>Solution</h5>
+<h4 id="exercise-263">Exercise 2.63</h4>
+<p>Each of the following two
+procedures converts a binary tree to a list.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">tree-&gt;list-1</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">      </span><span class="o">&#39;</span><span class="p">()</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span>
+<span class="w">       </span><span class="p">(</span><span class="n">tree-&gt;list-1</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">left-branch</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">             </span><span class="p">(</span><span class="n">tree-&gt;list-1</span><span class="w"> </span>
+<span class="w">              </span><span class="p">(</span><span class="n">right-branch</span><span class="w"> </span><span class="n">tree</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">tree-&gt;list-2</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">copy-to-list</span><span class="w"> </span><span class="n">tree</span><span class="w"> </span><span class="n">result-list</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">        </span><span class="n">result-list</span>
+<span class="w">        </span><span class="p">(</span><span class="n">copy-to-list</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="n">left-branch</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="n">copy-to-list</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="n">right-branch</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">                </span><span class="n">result-list</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">copy-to-list</span><span class="w"> </span><span class="n">tree</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
+</code></pre></div>
+
+<p><strong>1.</strong> Do the two procedures produce the same result for every tree?  If not, how do
+the results differ?  What lists do the two procedures produce for the trees in
+Figure 2.16?</p>
+<p><strong>2.</strong> Do the two procedures have the same order of growth in the number of steps
+required to convert a balanced tree with $n$ elements to a list?  If not,
+which one grows more slowly?</p>
+<h5>Solution</h5>
+<h4 id="exercise-264">Exercise 2.64</h4>
+<p>The following procedure
+<code>list-&gt;tree</code> converts an ordered list to a balanced binary tree.  The
+helper procedure <code>partial-tree</code> takes as arguments an integer $n$ and
+list of at least $n$ elements and constructs a balanced tree containing the
+first $n$ elements of the list.  The result returned by <code>partial-tree</code>
+is a pair (formed with <code>cons</code>) whose <code>car</code> is the constructed tree
+and whose <code>cdr</code> is the list of elements not included in the tree.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">list-&gt;tree</span><span class="w"> </span><span class="n">elements</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="n">partial-tree</span><span class="w"> </span>
+<span class="w">        </span><span class="n">elements</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="n">elements</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">partial-tree</span><span class="w"> </span><span class="n">elts</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()</span><span class="w"> </span><span class="n">elts</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">left-size</span><span class="w"> </span>
+<span class="w">             </span><span class="p">(</span><span class="nb">quotient</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">left-result</span><span class="w"> </span>
+<span class="w">               </span><span class="p">(</span><span class="n">partial-tree</span><span class="w"> </span>
+<span class="w">                </span><span class="n">elts</span><span class="w"> </span><span class="n">left-size</span><span class="p">)))</span>
+<span class="w">          </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">left-tree</span><span class="w"> </span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">left-result</span><span class="p">))</span>
+<span class="w">                </span><span class="p">(</span><span class="n">non-left-elts</span><span class="w"> </span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">left-result</span><span class="p">))</span>
+<span class="w">                </span><span class="p">(</span><span class="n">right-size</span><span class="w"> </span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">left-size</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="w">            </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">this-entry</span><span class="w"> </span>
+<span class="w">                   </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">non-left-elts</span><span class="p">))</span>
+<span class="w">                  </span><span class="p">(</span><span class="n">right-result</span><span class="w"> </span>
+<span class="w">                   </span><span class="p">(</span><span class="n">partial-tree</span><span class="w"> </span>
+<span class="w">                    </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">non-left-elts</span><span class="p">)</span>
+<span class="w">                    </span><span class="n">right-size</span><span class="p">)))</span>
+<span class="w">              </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">right-tree</span><span class="w"> </span>
+<span class="w">                     </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">right-result</span><span class="p">))</span>
+<span class="w">                    </span><span class="p">(</span><span class="n">remaining-elts</span><span class="w"> </span>
+<span class="w">                     </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">right-result</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">make-tree</span><span class="w"> </span><span class="n">this-entry</span><span class="w"> </span>
+<span class="w">                                 </span><span class="n">left-tree</span><span class="w"> </span>
+<span class="w">                                 </span><span class="n">right-tree</span><span class="p">)</span>
+<span class="w">                      </span><span class="n">remaining-elts</span><span class="p">))))))))</span>
+</code></pre></div>
+
+<p><strong>1.</strong> Write a short paragraph explaining as clearly as you can how
+<code>partial-tree</code> works.  Draw the tree produced by <code>list-&gt;tree</code> for
+the list <code>(1 3 5 7 9 11)</code>.</p>
+<p><strong>2.</strong> What is the order of growth in the number of steps required by
+<code>list-&gt;tree</code> to convert a list of $n$ elements?</p>
+<h5>Solution</h5>
+<h4 id="exercise-265">Exercise 2.65</h4>
+<p>Use the results of Exercise 2.63 
+and Exercise 2.64 to give ${\Theta(n)$} implementations of
+<code>union-set</code> and <code>intersection-set</code> for sets implemented as (balanced)
+binary trees.</p>
+<h5>Solution</h5>
+<h4 id="exercise-266">Exercise 2.66</h4>
+<p>Implement the <code>lookup</code>
+procedure for the case where the set of records is structured as a binary tree,
+ordered by the numerical values of the keys.</p>
+<h5>Solution</h5>
+<h4 id="exercise-267">Exercise 2.67</h4>
+<p>Define an encoding tree and a
+sample message:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">sample-tree</span>
+<span class="w">  </span><span class="p">(</span><span class="n">make-code-tree</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="n">make-leaf</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">A</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">   </span><span class="p">(</span><span class="n">make-code-tree</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-leaf</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">B</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-code-tree</span><span class="w"> </span>
+<span class="w">     </span><span class="p">(</span><span class="n">make-leaf</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">D</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="n">make-leaf</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">C</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">sample-message</span><span class="w"> </span>
+<span class="w">  </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Use the <code>decode</code> procedure to decode the message, and give the result.</p>
+<h5>Solution</h5>
+<h4 id="exercise-268">Exercise 2.68</h4>
+<p>The <code>encode</code> procedure takes
+as arguments a message and a tree and produces the list of bits that gives the
+encoded message.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">encode</span><span class="w"> </span><span class="n">message</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">message</span><span class="p">)</span>
+<span class="w">      </span><span class="o">&#39;</span><span class="p">()</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span>
+<span class="w">       </span><span class="p">(</span><span class="n">encode-symbol</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                      </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="n">encode</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="n">tree</span><span class="p">))))</span>
+</code></pre></div>
+
+<p><code>Encode-symbol</code> is a procedure, which you must write, that returns the
+list of bits that encodes a given symbol according to a given tree.  You should
+design <code>encode-symbol</code> so that it signals an error if the symbol is not in
+the tree at all.  Test your procedure by encoding the result you obtained in
+Exercise 2.67 with the sample tree and seeing whether it is the same as
+the original sample message.</p>
+<h5>Solution</h5>
+<h4 id="exercise-269">Exercise 2.69</h4>
+<p>The following procedure takes as
+its argument a list of symbol-frequency pairs (where no symbol appears in more
+than one pair) and generates a Huffman encoding tree according to the Huffman
+algorithm.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">generate-huffman-tree</span><span class="w"> </span><span class="n">pairs</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">successive-merge</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="n">make-leaf-set</span><span class="w"> </span><span class="n">pairs</span><span class="p">)))</span>
+</code></pre></div>
+
+<p><code>Make-leaf-set</code> is the procedure given above that transforms the list of
+pairs into an ordered set of leaves.  <code>Successive-merge</code> is the procedure
+you must write, using <code>make-code-tree</code> to successively merge the
+smallest-weight elements of the set until there is only one element left, which
+is the desired Huffman tree.  (This procedure is slightly tricky, but not
+really complicated.  If you find yourself designing a complex procedure, then
+you are almost certainly doing something wrong.  You can take significant
+advantage of the fact that we are using an ordered set representation.)</p>
+<h5>Solution</h5>
+<h4 id="exercise-270">Exercise 2.70</h4>
+<p>The following eight-symbol
+alphabet with as@-so@-ci@-ated relative frequencies was designed to efficiently
+encode the lyr@-ics of 1950s rock songs.  (Note that the <code>symbols'' of an</code>alphabet'' need not be individual letters.)</p>
+<p>@example</p>
+<p>A    2    NA  16
+BOOM 1    SHA  3
+GET  2    YIP  9
+JOB  2    WAH  1</p>
+<p>Use <code>generate-huffman-tree</code> (Exercise 2.69) to generate a
+corresponding Huffman tree, and use <code>encode</code> (Exercise 2.68) to
+encode the following message:</p>
+<p>@example
+Get a job
+Sha na na na na na na na na</p>
+<p>Get a job
+Sha na na na na na na na na</p>
+<p>Wah yip yip yip yip 
+yip yip yip yip yip
+Sha boom</p>
+<p>How many bits are required for the encoding?  What is the smallest number of
+bits that would be needed to encode this song if we used a fixed-length code
+for the eight-symbol alphabet?</p>
+<h5>Solution</h5>
+<h4 id="exercise-271">Exercise 2.71</h4>
+<p>Suppose we have a Huffman tree
+for an alphabet of $n$ symbols, and that the relative frequencies of the
+symbols are ${1, 2, 4, \dots, 2^{n-1}$}.  Sketch the tree for ${n=5$}; for
+${n=10$}.  In such a tree (for general $n$) how many bits are required to
+encode the most frequent symbol?  The least frequent symbol?</p>
+<h5>Solution</h5>
+<h4 id="exercise-272">Exercise 2.72</h4>
+<p>Consider the encoding procedure
+that you designed in Exercise 2.68.  What is the order of growth in the
+number of steps needed to encode a symbol?  Be sure to include the number of
+steps needed to search the symbol list at each node encountered.  To answer
+this question in general is difficult.  Consider the special case where the
+relative frequencies of the $n$ symbols are as described in Exercise 2.71, 
+and give the order of growth (as a function of $n$) of the number of
+steps needed to encode the most frequent and least frequent symbols in the
+alphabet.</p>
+<h5>Solution</h5>
     </div>
 </body>
 </html>

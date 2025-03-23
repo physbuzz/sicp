@@ -431,7 +431,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><a href="#section-24">Section 2.4</a></li>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-273">Exercise 2.73</a></span>
+<span><a href="#exercise-274">Exercise 2.74</a></span>
+<span><a href="#exercise-275">Exercise 2.75</a></span>
+<span><a href="#exercise-276">Exercise 2.76</a></span>
+</span>)
+</div></li>
 </ul>
 </ul>
 </ul>
@@ -439,6 +447,116 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2 id="section-24">Section 2.4</h2>
 <h3 id="introduction">Introduction</h3>
 <h3 id="exercises">Exercises</h3>
+<h5>Solution</h5>
+<h4 id="exercise-273">Exercise 2.73</h4>
+<p>2.3.2 described a
+program that performs symbolic differentiation:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">deriv</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="n">var</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">number?</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="n">variable?</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">same-variable?</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="n">var</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="n">sum?</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">make-sum</span><span class="w"> </span><span class="p">(</span><span class="n">deriv</span><span class="w"> </span><span class="p">(</span><span class="n">addend</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="n">var</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">(</span><span class="n">deriv</span><span class="w"> </span><span class="p">(</span><span class="n">augend</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="n">var</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">((</span><span class="n">product?</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">make-sum</span>
+<span class="w">           </span><span class="p">(</span><span class="n">make-product</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="n">multiplier</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="n">deriv</span><span class="w"> </span><span class="p">(</span><span class="n">multiplicand</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="n">var</span><span class="p">))</span>
+<span class="w">           </span><span class="p">(</span><span class="n">make-product</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="n">deriv</span><span class="w"> </span><span class="p">(</span><span class="n">multiplier</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="n">var</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="n">multiplicand</span><span class="w"> </span><span class="nb">exp</span><span class="p">))))</span>
+<span class="w">        </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">more</span><span class="w"> </span><span class="n">rules</span><span class="w"> </span><span class="n">can</span><span class="w"> </span><span class="n">be</span><span class="w"> </span><span class="n">added</span><span class="w"> </span><span class="n">here</span><span class="p">}</span><span class="n">⟩</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;unknown expression type:</span>
+<span class="s2">                      DERIV&quot;</span><span class="w"> </span><span class="nb">exp</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>We can regard this program as performing a dispatch on the type of the
+expression to be differentiated.  In this situation the <code>`type tag'' of the
+datum is the algebraic operator symbol (such as</code>+<code>) and the operation
+being performed is</code>deriv`.  We can transform this program into
+data-directed style by rewriting the basic derivative procedure as</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">deriv</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="n">var</span><span class="p">)</span>
+<span class="w">   </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">number?</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">         </span><span class="p">((</span><span class="n">variable?</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span>
+<span class="w">           </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">same-variable?</span><span class="w"> </span><span class="nb">exp</span><span class="w"> </span><span class="n">var</span><span class="p">)</span><span class="w"> </span>
+<span class="w">               </span><span class="mi">1</span><span class="w"> </span>
+<span class="w">               </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">((</span><span class="n">get</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">deriv</span><span class="w"> </span><span class="p">(</span><span class="n">operator</span><span class="w"> </span><span class="nb">exp</span><span class="p">))</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="n">operands</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                </span><span class="n">var</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">operator</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="nb">exp</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">operands</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nb">exp</span><span class="p">))</span>
+</code></pre></div>
+
+<p><strong>1.</strong> Explain what was done above.  Why can't we assimilate the predicates
+<code>number?</code> and <code>variable?</code> into the data-directed dispatch?</p>
+<p><strong>2.</strong> Write the procedures for derivatives of sums and products, and the auxiliary
+code required to install them in the table used by the program above.</p>
+<p><strong>3.</strong> Choose any additional differentiation rule that you like, such as the one for
+exponents (Exercise 2.56), and install it in this data-directed
+system.</p>
+<p><strong>4.</strong> In this simple algebraic manipulator the type of an expression is the algebraic
+operator that binds it together.  Suppose, however, we indexed the procedures
+in the opposite way, so that the dispatch line in <code>deriv</code> looked like</p>
+<div class="codehilite"><pre><span></span><code><span class="p">((</span><span class="n">get</span><span class="w"> </span><span class="p">(</span><span class="n">operator</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">deriv</span><span class="p">)</span><span class="w"> </span>
+<span class="w"> </span><span class="p">(</span><span class="n">operands</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="n">var</span><span class="p">)</span>
+</code></pre></div>
+
+<p>What corresponding changes to the derivative system are required?</p>
+<h5>Solution</h5>
+<h4 id="exercise-274">Exercise 2.74</h4>
+<p>Insatiable Enterprises, Inc., is
+a highly decentralized conglomerate company consisting of a large number of
+independent divisions located all over the world.  The company's computer
+facilities have just been interconnected by means of a clever
+network-interfacing scheme that makes the entire network appear to any user to
+be a single computer.  Insatiable's president, in her first attempt to exploit
+the ability of the network to extract administrative information from division
+files, is dismayed to discover that, although all the division files have been
+implemented as data structures in Scheme, the particular data structure used
+varies from division to division.  A meeting of division managers is hastily
+called to search for a strategy to integrate the files that will satisfy
+headquarters' needs while preserving the existing autonomy of the divisions.</p>
+<p>Show how such a strategy can be implemented with data-directed programming.  As
+an example, suppose that each division's personnel records consist of a single
+file, which contains a set of records keyed on employees' names.  The structure
+of the set varies from division to division.  Furthermore, each employee's
+record is itself a set (structured differently from division to division) that
+contains information keyed under identifiers such as <code>address</code> and
+<code>salary</code>.  In particular:</p>
+<p><strong>1.</strong> Implement for headquarters a <code>get-record</code> procedure that retrieves a
+specified employee's record from a specified personnel file.  The procedure
+should be applicable to any division's file.  Explain how the individual
+divisions' files should be structured.  In particular, what type information
+must be supplied?</p>
+<p><strong>2.</strong> Implement for headquarters a <code>get-salary</code> procedure that returns the
+salary information from a given employee's record from any division's personnel
+file.  How should the record be structured in order to make this operation
+work?</p>
+<p><strong>3.</strong> Implement for headquarters a <code>find-employee-record</code> procedure.  This
+should search all the divisions' files for the record of a given employee and
+return the record.  Assume that this procedure takes as arguments an employee's
+name and a list of all the divisions' files.</p>
+<p><strong>4.</strong> When Insatiable takes over a new company, what changes must be made in order to
+incorporate the new personnel information into the central system?</p>
+<h5>Solution</h5>
+<h4 id="exercise-275">Exercise 2.75</h4>
+<p>Implement the constructor
+<code>make-from-mag-ang</code> in mes@-sage-pass@-ing style.  This procedure should be
+analogous to the <code>make-from-real-imag</code> procedure given above.</p>
+<h5>Solution</h5>
+<h4 id="exercise-276">Exercise 2.76</h4>
+<p>As a large system with generic
+operations evolves, new types of data objects or new operations may be needed.
+For each of the three strategies---generic operations with explicit dispatch,
+data-directed style, and message-passing-style---describe the changes that
+must be made to a system in order to add new types or new operations.  Which
+organization would be most appropriate for a system in which new types must
+often be added?  Which would be most appropriate for a system in which new
+operations must often be added?</p>
+<h5>Solution</h5>
     </div>
 </body>
 </html>

@@ -560,6 +560,17 @@ the <code>integral</code> procedure shown above.</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+0.24998750000000042
+0.249999875000001
+0.25
+0.2499999999999999
+0.24999999999999994
+0.25000000000000044
+</pre>
+</div>
 </div>
 
 <p>A quick google search shows that Simpson's rule is an exact quadrature (it gives exact results for polynomials of degree 3 or less), so this is expected.</p>
@@ -618,6 +629,13 @@ expressions in the following definition:</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+3.139592655589783
+3.139592655589782
+</pre>
+</div>
 </div>
 
 <h4 id="important-footnote">important footnote:</h4>
@@ -701,6 +719,19 @@ one that generates a recursive process.</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Factorial (linear recursive, then iterative)
+120
+120
+
+
+Wallis pi
+3.157030176455167
+3.1570301764551667
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-132">Exercise 1.32</h4>
@@ -772,6 +803,13 @@ write one that generates a recursive process.</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+3.1414971639472093
+3.1414971639472147
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-133">Exercise 1.33</h4>
@@ -856,6 +894,13 @@ $\textrm{GCD}(i, n) = 1$).</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+0, 4, 13, 13, 38, 38, 87, 87, 87, 87
+1, 1, 2, 3, 24, 5, 720, 105, 2240, 189
+</pre>
+</div>
 </div>
 <ol>
 <li><a href="https://oeis.org/A081738">https://oeis.org/A081738</a></li>
@@ -890,6 +935,18 @@ $\textrm{GCD}(i, n) = 1$).</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+
+Error (exit code 1):
+application: not a procedure;
+ expected a procedure that can be applied to arguments
+  given: 2
+  context...:
+   body of "/home/dkmoore/sicp/src/ch1/ch1-code/ex1-34.rkt"
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-135">Exercise 1.35</h4>
@@ -923,6 +980,13 @@ which happens whenever $|f'(x)|\lt 1.$ Since $f'(x)=-1/x^2$ and $\varphi\gt 1,$ 
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1.6180327868852458
+1.618033988749895
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-136">Exercise 1.36</h4>
@@ -966,6 +1030,13 @@ $\log(1) = 0$.)</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Step 30 = 4.555506470667713
+Step 9 = 4.555548906156018
+</pre>
+</div>
 </div>
 
 <p>I was confused on the let syntax; inside <code>(define (try ...) ...)</code> these two are equivalent:</p>
@@ -1061,6 +1132,16 @@ write one that generates a recursive process.</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+8/13
+8/13
+n required for an accuracy of 5e-5 is 11
+0.6180339887498
+0.6180555555555556
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-138">Exercise 1.38</h4>
@@ -1101,6 +1182,13 @@ to approximate $e$, based on Euler's expansion.</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+11 terms: 0.7182818352059925
+Exact   : 0.71828182845904
+</pre>
+</div>
 </div>
 <h4 id="exercise-139">Exercise 1.39</h4>
 <p>A continued fraction
@@ -1157,6 +1245,20 @@ computes an approximation to the tangent function based on Lambert's formula.
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+tan(0.1) = 0.10033467208545054... (exact)
+tan(0.1) = 0.10033467208545055
+
+tan(1.0) = 1.557407724654902... (exact)
+tan(1.0) = 1.557407722401769
+
+tan(1.55) = 48.07848247921896... (exact)
+tan(1.55) = 48.07807712807702
+
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-140">Exercise 1.40</h4>
@@ -1204,6 +1306,13 @@ expressions of the form</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+5.246551364558889
+5.2465513645585649... (exact)
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-141">Exercise 1.41</h4>
@@ -1230,6 +1339,13 @@ procedure that adds 2.  What value is returned by</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+3
+21
+</pre>
+</div>
 </div>
 
 <p>We see that the expression in question causes sixteen function applications (so it prints out 21). Evaluating step by step:</p>
@@ -1263,6 +1379,12 @@ procedure that adds 1 to its argument,</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+49
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-143">Exercise 1.43</h4>
@@ -1299,6 +1421,13 @@ procedure should be able to be used as follows:</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+625
+51
+</pre>
+</div>
 </div>
 
 <h4 id="exercise-144">Exercise 1.44</h4>
@@ -1334,6 +1463,14 @@ the n-fold smoothed function of any given function using <code>smooth</code> and
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+0.03333333333333333
+0.06419753086419754
+0.9999999999999999
+</pre>
+</div>
 </div>
 
 <p>As an example, I smooth the $|x|$ function. As we round off the jagged point at x=0, the evaluation of smoothed abs rises. 
@@ -1404,6 +1541,18 @@ operations you need are available as primitives.</p>
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1.4142135623746899
+1.259923236422975
+1.189207115002721
+1.1486967244204176
+1.1224645830339175
+1.1040904628970067
+1.0905020457630394
+</pre>
+</div>
 </div>
 
 <p>Compare to the exact values:</p>
@@ -1464,6 +1613,13 @@ Rewrite the <code>sqrt</code> procedure of 1.1.7 and the
 </code></pre></div>
 
 
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1.4142135623746899
+0.7390547907469174
+</pre>
+</div>
 </div>
 
 <p>One interesting thought: <code>iterative-improve</code> feels to me like it's very poorly written. It works, but a well-written lightning-fast implementation would exploit tail recursion. 

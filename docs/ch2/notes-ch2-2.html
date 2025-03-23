@@ -431,7 +431,47 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><a href="#section-22">Section 2.2</a></li>
 <ul>
 <li><a href="#introduction">Introduction</a></li>
-<li><a href="#exercises">Exercises</a></li>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-217">Exercise 2.17</a></span>
+<span><a href="#exercise-218">Exercise 2.18</a></span>
+<span><a href="#exercise-219">Exercise 2.19</a></span>
+<span><a href="#exercise-220">Exercise 2.20</a></span>
+<span><a href="#exercise-221">Exercise 2.21</a></span>
+<span><a href="#exercise-222">Exercise 2.22</a></span>
+<span><a href="#exercise-223">Exercise 2.23</a></span>
+<span><a href="#exercise-224">Exercise 2.24</a></span>
+<span><a href="#exercise-225">Exercise 2.25</a></span>
+<span><a href="#exercise-226">Exercise 2.26</a></span>
+<span><a href="#exercise-227">Exercise 2.27</a></span>
+<span><a href="#exercise-228">Exercise 2.28</a></span>
+<span><a href="#exercise-229">Exercise 2.29</a></span>
+<span><a href="#exercise-230">Exercise 2.30</a></span>
+<span><a href="#exercise-231">Exercise 2.31</a></span>
+<span><a href="#exercise-232">Exercise 2.32</a></span>
+<span><a href="#exercise-233">Exercise 2.33</a></span>
+<span><a href="#exercise-234">Exercise 2.34</a></span>
+<span><a href="#exercise-235">Exercise 2.35</a></span>
+<span><a href="#exercise-236">Exercise 2.36</a></span>
+<span><a href="#exercise-237">Exercise 2.37</a></span>
+<span><a href="#exercise-238">Exercise 2.38</a></span>
+<span><a href="#exercise-239">Exercise 2.39</a></span>
+<span><a href="#exercise-240">Exercise 2.40</a></span>
+<span><a href="#exercise-241">Exercise 2.41</a></span>
+<span><a href="#exercise-242">Exercise 2.42</a></span>
+<span><a href="#exercise-243">Exercise 2.43</a></span>
+<span><a href="#exercise-244">Exercise 2.44</a></span>
+<span><a href="#exercise-245">Exercise 2.45</a></span>
+<span><a href="#exercise-246">Exercise 2.46</a></span>
+<span><a href="#exercise-247">Exercise 2.47</a></span>
+<span><a href="#exercise-248">Exercise 2.48</a></span>
+<span><a href="#exercise-249">Exercise 2.49</a></span>
+<span><a href="#exercise-250">Exercise 2.50</a></span>
+<span><a href="#exercise-251">Exercise 2.51</a></span>
+<span><a href="#exercise-252">Exercise 2.52</a></span>
+</span>)
+</div></li>
 </ul>
 </ul>
 </ul>
@@ -439,6 +479,659 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h2 id="section-22">Section 2.2</h2>
 <h3 id="introduction">Introduction</h3>
 <h3 id="exercises">Exercises</h3>
+<h5>Solution</h5>
+<h4 id="exercise-217">Exercise 2.17</h4>
+<p>Define a procedure
+<code>last-pair</code> that returns the list that contains only the last element of a
+given (nonempty) list:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">last-pair</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">23</span><span class="w"> </span><span class="mi">72</span><span class="w"> </span><span class="mi">149</span><span class="w"> </span><span class="mi">34</span><span class="p">))</span>
+<span class="p">(</span><span class="mi">34</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-218">Exercise 2.18</h4>
+<p>Define a procedure <code>reverse</code>
+that takes a list as argument and returns a list of the same elements in
+reverse order:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">reverse</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="mi">16</span><span class="w"> </span><span class="mi">25</span><span class="p">))</span>
+<span class="p">(</span><span class="mi">25</span><span class="w"> </span><span class="mi">16</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-219">Exercise 2.19</h4>
+<p>Consider the change-counting
+program of 1.2.2.  It would be nice to be able to easily change
+the currency used by the program, so that we could compute the number of ways
+to change a British pound, for example.  As the program is written, the
+knowledge of the currency is distributed partly into the procedure
+<code>first-denomination</code> and partly into the procedure <code>count-change</code>
+(which knows that there are five kinds of U.S. coins).  It would be nicer to be
+able to supply a list of coins to be used for making change.</p>
+<p>We want to rewrite the procedure <code>cc</code> so that its second argument is a
+list of the values of the coins to use rather than an integer specifying which
+coins to use.  We could then have lists that defined each kind of currency:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">us-coins</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="mi">25</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">uk-coins</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="mi">50</span><span class="w"> </span><span class="mi">20</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mf">0.5</span><span class="p">))</span>
+</code></pre></div>
+
+<p>We could then call <code>cc</code> as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">cc</span><span class="w"> </span><span class="mi">100</span><span class="w"> </span><span class="n">us-coins</span><span class="p">)</span>
+<span class="mi">292</span>
+</code></pre></div>
+
+<p>To do this will require changing the program <code>cc</code> somewhat.  It will still
+have the same form, but it will access its second argument differently, as
+follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">cc</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="n">coin-values</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">amount</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">             </span><span class="p">(</span><span class="n">no-more?</span><span class="w"> </span><span class="n">coin-values</span><span class="p">))</span><span class="w"> </span>
+<span class="w">         </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">cc</span><span class="w"> </span>
+<span class="w">             </span><span class="n">amount</span>
+<span class="w">             </span><span class="p">(</span><span class="n">except-first-denomination</span><span class="w"> </span>
+<span class="w">              </span><span class="n">coin-values</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="n">cc</span><span class="w"> </span>
+<span class="w">             </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">amount</span>
+<span class="w">                </span><span class="p">(</span><span class="n">first-denomination</span><span class="w"> </span>
+<span class="w">                 </span><span class="n">coin-values</span><span class="p">))</span>
+<span class="w">             </span><span class="n">coin-values</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>Define the procedures <code>first-denomination</code>,
+<code>except-first-denomination</code> and <code>no-more?</code> in terms of primitive
+operations on list structures.  Does the order of the list <code>coin-values</code>
+affect the answer produced by <code>cc</code>?  Why or why not?</p>
+<h5>Solution</h5>
+<h4 id="exercise-220">Exercise 2.20</h4>
+<p>The procedures <code>+</code>,
+<code>*</code>, and <code>list</code> take arbitrary numbers of arguments. One way to
+define such procedures is to use <code>define</code> with dotted-tail notation.<br />
+In a procedure definition, a parameter list that has a dot before
+the last parameter name indicates that, when the procedure is called, the
+initial parameters (if any) will have as values the initial arguments, as
+usual, but the final parameter's value will be a list of any
+remaining arguments.  For instance, given the definition</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>the procedure <code>f</code> can be called with two or more arguments.  If we
+evaluate</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div>
+
+<p>then in the body of <code>f</code>, <code>x</code> will be 1, <code>y</code> will be 2, and
+<code>z</code> will be the list <code>(3 4 5 6)</code>.  Given the definition</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">w</span><span class="p">)</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>the procedure <code>g</code> can be called with zero or more arguments.  If we
+evaluate</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div>
+
+<p>then in the body of <code>g</code>, <code>w</code> will be the list <code>(1 2 3 4 5
+6)</code>.</p>
+<p>Use this notation to write a procedure <code>same-parity</code> that takes one or
+more integers and returns a list of all the arguments that have the same
+even-odd parity as the first argument.  For example,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">same-parity</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">same-parity</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-221">Exercise 2.21</h4>
+<p>The procedure <code>square-list</code>
+takes a list of numbers as argument and returns a list of the squares of those
+numbers.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">square-list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">9</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Here are two different definitions of <code>square-list</code>.  Complete both of
+them by filling in the missing expressions:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square-list</span><span class="w"> </span><span class="n">items</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">items</span><span class="p">)</span>
+<span class="w">      </span><span class="n">nil</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square-list</span><span class="w"> </span><span class="n">items</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-222">Exercise 2.22</h4>
+<p>Louis Reasoner tries to rewrite
+the first <code>square-list</code> procedure of Exercise 2.21 so that it
+evolves an iterative process:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square-list</span><span class="w"> </span><span class="n">items</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">things</span><span class="w"> </span><span class="n">answer</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">things</span><span class="p">)</span>
+<span class="w">        </span><span class="n">answer</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">things</span><span class="p">)</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">things</span><span class="p">))</span>
+<span class="w">                    </span><span class="n">answer</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="n">nil</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Unfortunately, defining <code>square-list</code> this way produces the answer list in
+the reverse order of the one desired.  Why?</p>
+<p>Louis then tries to fix his bug by interchanging the arguments to <code>cons</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square-list</span><span class="w"> </span><span class="n">items</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">things</span><span class="w"> </span><span class="n">answer</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">things</span><span class="p">)</span>
+<span class="w">        </span><span class="n">answer</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">things</span><span class="p">)</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">answer</span>
+<span class="w">                    </span><span class="p">(</span><span class="n">square</span><span class="w"> </span>
+<span class="w">                     </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">things</span><span class="p">))))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">items</span><span class="w"> </span><span class="n">nil</span><span class="p">))</span>
+</code></pre></div>
+
+<p>This doesn't work either.  Explain.</p>
+<h5>Solution</h5>
+<h4 id="exercise-223">Exercise 2.23</h4>
+<p>The procedure <code>for-each</code> is
+similar to <code>map</code>.  It takes as arguments a procedure and a list of
+elements.  However, rather than forming a list of the results, <code>for-each</code>
+just applies the procedure to each of the elements in turn, from left to right.
+The values returned by applying the procedure to the elements are not used at
+all---<code>for-each</code> is used with procedures that perform an action, such as
+printing.  For example,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">for-each</span><span class="w"> </span>
+<span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">57</span><span class="w"> </span><span class="mi">321</span><span class="w"> </span><span class="mi">88</span><span class="p">))</span>
+
+<span class="mi">57</span>
+<span class="mi">321</span>
+<span class="mi">88</span>
+</code></pre></div>
+
+<p>The value returned by the call to <code>for-each</code> (not illustrated above) can
+be something arbitrary, such as true.  Give an implementation of
+<code>for-each</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-224">Exercise 2.24</h4>
+<p>Suppose we evaluate the
+expression <code>(list 1 (list 2 (list 3 4)))</code>.  Give the result printed by the
+interpreter, the corresponding box-and-pointer structure, and the
+interpretation of this as a tree (as in Figure 2.6).</p>
+<h5>Solution</h5>
+<h4 id="exercise-225">Exercise 2.25</h4>
+<p>Give combinations of <code>car</code>s
+and <code>cdr</code>s that will pick 7 from each of the following lists:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span>
+<span class="p">((</span><span class="mi">7</span><span class="p">))</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="p">(</span><span class="mi">5</span><span class="w"> </span><span class="p">(</span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="p">))))))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-226">Exercise 2.26</h4>
+<p>Suppose we define <code>x</code> and
+<code>y</code> to be two lists:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">))</span>
+</code></pre></div>
+
+<p>What result is printed by the interpreter in response to evaluating each of the
+following expressions:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-227">Exercise 2.27</h4>
+<p>Modify your <code>reverse</code>
+procedure of Exercise 2.18 to produce a <code>deep-reverse</code> procedure
+that takes a list as argument and returns as its value the list with its
+elements reversed and with all sublists deep-reversed as well.  For example,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+
+<span class="n">x</span>
+<span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">reverse</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">((</span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">deep-reverse</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">((</span><span class="mi">4</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-228">Exercise 2.28</h4>
+<p>Write a procedure <code>fringe</code>
+that takes as argument a tree (represented as a list) and returns a list whose
+elements are all the leaves of the tree arranged in left-to-right order.  For
+example,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="n">fringe</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">fringe</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-229">Exercise 2.29</h4>
+<p>A binary mobile consists of two
+branches, a left branch and a right branch.  Each branch is a rod of a certain
+length, from which hangs either a weight or another binary mobile.  We can
+represent a binary mobile using compound data by constructing it from two
+branches (for example, using <code>list</code>):</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">right</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">right</span><span class="p">))</span>
+</code></pre></div>
+
+<p>A branch is constructed from a <code>length</code> (which must be a number) together
+with a <code>structure</code>, which may be either a number (representing a simple
+weight) or another mobile:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="nb">length</span><span class="w"> </span><span class="n">structure</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="nb">length</span><span class="w"> </span><span class="n">structure</span><span class="p">))</span>
+</code></pre></div>
+
+<p><strong>1.</strong> Write the corresponding selectors <code>left-branch</code> and <code>right-branch</code>,
+which return the branches of a mobile, and <code>branch-length</code> and
+<code>branch-structure</code>, which return the components of a branch.</p>
+<p><strong>2.</strong> Using your selectors, define a procedure <code>total-weight</code> that returns the
+total weight of a mobile.</p>
+<p><strong>3.</strong> A mobile is said to be balanced if the torque applied by its top-left
+branch is equal to that applied by its top-right branch (that is, if the length
+of the left rod multiplied by the weight hanging from that rod is equal to the
+corresponding product for the right side) and if each of the submobiles hanging
+off its branches is balanced. Design a predicate that tests whether a binary
+mobile is balanced.</p>
+<p><strong>4.</strong> Suppose we change the representation of mobiles so that the constructors are</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">right</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">right</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="nb">length</span><span class="w"> </span><span class="n">structure</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="nb">length</span><span class="w"> </span><span class="n">structure</span><span class="p">))</span>
+</code></pre></div>
+
+<p>How much do you need to change your programs to convert to the new
+representation?</p>
+<h5>Solution</h5>
+<h4 id="exercise-230">Exercise 2.30</h4>
+<p>Define a procedure
+<code>square-tree</code> analogous to the <code>square-list</code> procedure of
+Exercise 2.21.  That is, <code>square-tree</code> should behave as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">square-tree</span>
+<span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="p">)))</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="mi">4</span><span class="w"> </span><span class="p">(</span><span class="mi">9</span><span class="w"> </span><span class="mi">16</span><span class="p">)</span><span class="w"> </span><span class="mi">25</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">36</span><span class="w"> </span><span class="mi">49</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Define <code>square-tree</code> both directly (i.e., without using any higher-order
+procedures) and also by using <code>map</code> and recursion.</p>
+<h5>Solution</h5>
+<h4 id="exercise-231">Exercise 2.31</h4>
+<p>Abstract your answer to
+Exercise 2.30 to produce a procedure <code>tree-map</code> with the property
+that <code>square-tree</code> could be defined as</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square-tree</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="n">tree-map</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-232">Exercise 2.32</h4>
+<p>We can represent a set as a list
+of distinct elements, and we can represent the set of all subsets of the set as
+a list of lists.  For example, if the set is <code>(1 2 3)</code>, then the set of
+all subsets is <code>(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))</code>.  Complete the
+following definition of a procedure that generates the set of subsets of a set
+and give a clear explanation of why it works:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">subsets</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nb">rest</span><span class="w"> </span><span class="p">(</span><span class="n">subsets</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">s</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="nb">rest</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="nb">rest</span><span class="p">)))))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-233">Exercise 2.33</h4>
+<p>Fill in the missing expressions
+to complete the following definitions of some basic list-manipulation
+operations as accumulations:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)</span><span class="w"> </span>
+<span class="w">              </span><span class="n">nil</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">seq1</span><span class="w"> </span><span class="n">seq2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="nb">cons</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-234">Exercise 2.34</h4>
+<p>Evaluating a polynomial in $x$
+at a given value of $x$ can be formulated as an accumulation.  We evaluate
+the polynomial</p>
+<p>$${a_n x^n} + {a_{n-1} x^{n-1}} + \dots + {a_1 x} + a_0  $$</p>
+<p>using a well-known algorithm called Horner's rule, which structures
+the computation as</p>
+<p>$${(\dots (a_n x} + {a_{n-1}) x} + \dots + {a_1) x} + {a_0.}  $$</p>
+<p>In other words, we start with $a_n$, multiply by $x$, add
+$a_{n-1}$, multiply by $x$, and so on, until we reach
+$a_0$.</p>
+<p>Fill in the following template to produce a procedure that evaluates a
+polynomial using Horner's rule.  Assume that the coefficients of the polynomial
+are arranged in a sequence, from $a_0$ through $a_n$.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="n">horner-eval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">coefficient-sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">this-coeff</span><span class="w"> </span><span class="n">higher-terms</span><span class="p">)</span>
+<span class="w">     </span><span class="n">⟨??⟩</span><span class="p">)</span>
+<span class="w">   </span><span class="mi">0</span>
+<span class="w">   </span><span class="n">coefficient-sequence</span><span class="p">))</span>
+</code></pre></div>
+
+<p>For example, to compute ${1 + 3x$ + {5x^3 + x^5}} at ${x = 2$} you
+would evaluate</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">horner-eval</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-235">Exercise 2.35</h4>
+<p>Redefine <code>count-leaves</code> from
+2.2.2 as an accumulation:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">count-leaves</span><span class="w"> </span><span class="n">t</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-236">Exercise 2.36</h4>
+<p>The procedure <code>accumulate-n</code>
+is similar to <code>accumulate</code> except that it takes as its third argument a
+sequence of sequences, which are all assumed to have the same number of
+elements.  It applies the designated accumulation procedure to combine all the
+first elements of the sequences, all the second elements of the sequences, and
+so on, and returns a sequence of the results.  For instance, if <code>s</code> is a
+sequence containing four sequences, <code>((1 2 3) (4 5 6) (7 8 9) (10 11
+12)),</code> then the value of <code>(accumulate-n + 0 s)</code> should be the sequence
+<code>(22 26 30)</code>.  Fill in the missing expressions in the following definition
+of <code>accumulate-n</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="n">seqs</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">seqs</span><span class="p">))</span>
+<span class="w">      </span><span class="n">nil</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">))))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-237">Exercise 2.37</h4>
+<p>Suppose we represent vectors @b{v} = ${(v_i)$} as sequences of numbers, and
+matrices @b{m} = ${(m_{ij})$} as sequences of vectors (the rows of the
+matrix).  For example, the matrix</p>
+<p>$$\left(\matrix{    1 &amp; 2 &amp; 3 &amp; 4 \cr
+        4 &amp; 5 &amp; 6 &amp; 6 \cr
+        6 &amp; 7 &amp; 8 &amp; 9 \cr }\right)  $$</p>
+<p>is represented as the sequence <code>((1 2 3 4) (4 5 6 6) (6 7 8 9))</code>.  With
+this representation, we can use sequence operations to concisely express the
+basic matrix and vector operations.  These operations (which are described in
+any book on matrix algebra) are the following:</p>
+<p>$$\eqalign{ 
+    \text{(dot-product v w)}    &amp; \text{returns the sum}\;\Sigma_i v_i w_i; \cr
+    \text{(matrix-<em>-vector m v)}    &amp; \text{returns the vector}\;{\bf t}, \cr
+        &amp; \text{where}\; t_i = \Sigma_j m_{ij} v_j; \cr
+    \text{(matrix-</em>-matrix m n)}    &amp; \text{returns the matrix}\;{\bf p}, \cr
+        &amp; \text{where}\; p_{ij} = \Sigma_k m_{ik} n_{kj}; \cr
+    \text{(transpose m)}        &amp; \text{returns the matrix}\;{\bf n}, \cr
+        &amp; \text{where}\; n_{ij} = m_{ji}. \cr
+}  $$</p>
+<p>We can define the dot product as</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">dot-product</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">w</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">w</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>Fill in the missing expressions in the following procedures for computing the
+other matrix operations.  (The procedure <code>accumulate-n</code> is defined in
+Exercise 2.36.)</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">matrix-*-vector</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">m</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">transpose</span><span class="w"> </span><span class="n">mat</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">mat</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">matrix-*-matrix</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">cols</span><span class="w"> </span><span class="p">(</span><span class="n">transpose</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">m</span><span class="p">)))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-238">Exercise 2.38</h4>
+<p>The <code>accumulate</code> procedure
+is also known as <code>fold-right</code>, because it combines the first element of
+the sequence with the result of combining all the elements to the right.  There
+is also a <code>fold-left</code>, which is similar to <code>fold-right</code>, except that
+it combines elements working in the opposite direction:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fold-left</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="nb">rest</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="nb">rest</span><span class="p">)</span>
+<span class="w">        </span><span class="n">result</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="nb">rest</span><span class="p">))</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nb">rest</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+</code></pre></div>
+
+<p>What are the values of</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">fold-right</span><span class="w"> </span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="n">fold-left</span><span class="w">  </span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="n">fold-right</span><span class="w"> </span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="n">fold-left</span><span class="w">  </span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Give a property that <code>op</code> should satisfy to guarantee that
+<code>fold-right</code> and <code>fold-left</code> will produce the same values for any
+sequence.</p>
+<h5>Solution</h5>
+<h4 id="exercise-239">Exercise 2.39</h4>
+<p>Complete the following
+definitions of <code>reverse</code> (Exercise 2.18) in terms of
+<code>fold-right</code> and <code>fold-left</code> from Exercise 2.38:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">reverse</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fold-right</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">reverse</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fold-left</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-240">Exercise 2.40</h4>
+<p>Define a procedure
+<code>unique-pairs</code> that, given an integer $n$, generates the sequence of
+pairs ${(i, j)$} with ${1 \le j$ \lt {i \le n}}.  Use <code>unique-pairs</code>
+to simplify the definition of <code>prime-sum-pairs</code> given above.</p>
+<h5>Solution</h5>
+<h4 id="exercise-241">Exercise 2.41</h4>
+<p>Write a procedure to find all
+ordered triples of distinct positive integers $i$, $j$, and $k$ less than
+or equal to a given integer $n$ that sum to a given integer $s$.</p>
+<h5>Solution</h5>
+<h4 id="exercise-242">Exercise 2.42</h4>
+<p>The ``eight-queens puzzle'' asks
+how to place eight queens on a chessboard so that no queen is in check from any
+other (i.e., no two queens are in the same row, column, or diagonal).  One
+possible solution is shown in Figure 2.8.  One way to solve the puzzle is
+to work across the board, placing a queen in each column.  Once we have placed
+${k - 1$} queens, we must place the $k^{\text{th}}$ queen in a position where it does
+not check any of the queens already on the board.  We can formulate this
+approach recursively: Assume that we have already generated the sequence of all
+possible ways to place ${k - 1$} queens in the first ${k - 1$} columns of the
+board.  For each of these ways, generate an extended set of positions by
+placing a queen in each row of the $k^{\text{th}}$ column.  Now filter these, keeping
+only the positions for which the queen in the $k^{\text{th}}$ column is safe with
+respect to the other queens.  This produces the sequence of all ways to place
+$k$ queens in the first $k$ columns.  By continuing this process, we will
+produce not only one solution, but all solutions to the puzzle.</p>
+<p>@float
+@anchor{Figure 2.8}</p>
+<p>@iftex
+<img alt="Image: fig/chap2/Fig2.8c,73mm,,,.std.svg" src="/images/sicp/fig/chap2/Fig2.8c,73mm,,,.std.svg.png" />
+@caption{@strong{Figure 2.8:} A solution to the eight-queens puzzle.}</p>
+<p>We implement this solution as a procedure <code>queens</code>, which returns a
+sequence of all solutions to the problem of placing $n$ queens on an
+${n \times n$} chessboard.  <code>Queens</code> has an internal procedure
+<code>queen-cols</code> that returns the sequence of all ways to place queens in the
+first $k$ columns of the board.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">queens</span><span class="w"> </span><span class="n">board-size</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">queen-cols</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">empty-board</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">filter</span>
+<span class="w">         </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">positions</span><span class="p">)</span><span class="w"> </span>
+<span class="w">           </span><span class="p">(</span><span class="n">safe?</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">positions</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="n">flatmap</span>
+<span class="w">          </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">rest-of-queens</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">new-row</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">(</span><span class="n">adjoin-position</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">new-row</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">k</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">rest-of-queens</span><span class="p">))</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">enumerate-interval</span><span class="w"> </span>
+<span class="w">                  </span><span class="mi">1</span><span class="w"> </span>
+<span class="w">                  </span><span class="n">board-size</span><span class="p">)))</span>
+<span class="w">          </span><span class="p">(</span><span class="n">queen-cols</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">queen-cols</span><span class="w"> </span><span class="n">board-size</span><span class="p">))</span>
+</code></pre></div>
+
+<p>In this procedure <code>rest-of-queens</code> is a way to place ${k - 1$} queens in
+the first ${k - 1$} columns, and <code>new-row</code> is a proposed row in which to
+place the queen for the $k^{\text{th}}$ column.  Complete the program by implementing
+the representation for sets of board positions, including the procedure
+<code>adjoin-position</code>, which adjoins a new row-column position to a set of
+positions, and <code>empty-board</code>, which represents an empty set of positions.
+You must also write the procedure <code>safe?</code>, which determines for a set of
+positions, whether the queen in the $k^{\text{th}}$ column is safe with respect to the
+others.  (Note that we need only check whether the new queen is safe---the
+other queens are already guaranteed safe with respect to each other.)</p>
+<h5>Solution</h5>
+<h4 id="exercise-243">Exercise 2.43</h4>
+<p>Louis Reasoner is having a
+terrible time doing Exercise 2.42.  His <code>queens</code> procedure seems to
+work, but it runs extremely slowly.  (Louis never does manage to wait long
+enough for it to solve even the ${6\times6$} case.)  When Louis asks Eva Lu Ator for
+help, she points out that he has interchanged the order of the nested mappings
+in the <code>flatmap</code>, writing it as</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">flatmap</span>
+<span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">new-row</span><span class="p">)</span>
+<span class="w">   </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">rest-of-queens</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">adjoin-position</span><span class="w"> </span>
+<span class="w">           </span><span class="n">new-row</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">rest-of-queens</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">queen-cols</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="w"> </span><span class="p">(</span><span class="n">enumerate-interval</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">board-size</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Explain why this interchange makes the program run slowly.  Estimate how long
+it will take Louis's program to solve the eight-queens puzzle, assuming that
+the program in Exercise 2.42 solves the puzzle in time $T$.</p>
+<h5>Solution</h5>
+<h4 id="exercise-244">Exercise 2.44</h4>
+<p>Define the procedure
+<code>up-split</code> used by <code>corner-split</code>.  It is similar to
+<code>right-split</code>, except that it switches the roles of <code>below</code> and
+<code>beside</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-245">Exercise 2.45</h4>
+<p><code>Right-split</code> and
+<code>up-split</code> can be expressed as instances of a general splitting operation.
+Define a procedure <code>split</code> with the property that evaluating</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">right-split</span><span class="w"> </span><span class="p">(</span><span class="n">split</span><span class="w"> </span><span class="n">beside</span><span class="w"> </span><span class="n">below</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">up-split</span><span class="w"> </span><span class="p">(</span><span class="n">split</span><span class="w"> </span><span class="n">below</span><span class="w"> </span><span class="n">beside</span><span class="p">))</span>
+</code></pre></div>
+
+<p>produces procedures <code>right-split</code> and <code>up-split</code> with the same
+behaviors as the ones already defined.</p>
+<h5>Solution</h5>
+<h4 id="exercise-246">Exercise 2.46</h4>
+<p>A two-dimensional vector $\bf v$
+running from the origin to a point can be represented as a pair consisting of
+an $x$-coordinate and a $y$-coordinate.  Implement a data abstraction for
+vectors by giving a constructor <code>make-vect</code> and corresponding selectors
+<code>xcor-vect</code> and <code>ycor-vect</code>.  In terms of your selectors and
+constructor, implement procedures <code>add-vect</code>, <code>sub-vect</code>, and
+<code>scale-vect</code> that perform the operations vector addition, vector
+subtraction, and multiplying a vector by a scalar:</p>
+<p>$$\begin{eqnarray}
+    (x_1, y_1) + (x_2, y_2)  &amp;=&amp;  (x_1 + x_2, y_1 + y_2), \
+    (x_1, y_1) - (x_2, y_2)  &amp;=&amp;  (x_1 - x_2, y_1 - y_2), \
+    s \cdot (x, y)       &amp;=&amp;  (sx, sy).
+\end{eqnarray}
+$$</p>
+<h5>Solution</h5>
+<h4 id="exercise-247">Exercise 2.47</h4>
+<p>Here are two possible
+constructors for frames:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-frame</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">edge1</span><span class="w"> </span><span class="n">edge2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">edge1</span><span class="w"> </span><span class="n">edge2</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-frame</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="n">edge1</span><span class="w"> </span><span class="n">edge2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">origin</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">edge1</span><span class="w"> </span><span class="n">edge2</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>For each constructor supply the appropriate selectors to produce an
+implementation for frames.</p>
+<h5>Solution</h5>
+<h4 id="exercise-248">Exercise 2.48</h4>
+<p>A directed line segment in the
+plane can be represented as a pair of vectors---the vector running from the
+origin to the start-point of the segment, and the vector running from the
+origin to the end-point of the segment.  Use your vector representation from
+Exercise 2.46 to define a representation for segments with a constructor
+<code>make-segment</code> and selectors <code>start-segment</code> and <code>end-segment</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-249">Exercise 2.49</h4>
+<p>Use <code>segments-&gt;painter</code>
+to define the following primitive painters:</p>
+<p><strong>1.</strong> The painter that draws the outline of the designated frame.</p>
+<p><strong>2.</strong> The painter that draws an ``X'' by connecting opposite corners of the frame.</p>
+<p><strong>3.</strong> The painter that draws a diamond shape by connecting the midpoints of the sides
+of the frame.</p>
+<p><strong>4.</strong> The <code>wave</code> painter.</p>
+<h5>Solution</h5>
+<h4 id="exercise-250">Exercise 2.50</h4>
+<p>Define the transformation
+<code>flip-horiz</code>, which flips painters horizontally, and transformations that
+rotate painters counterclockwise by 180 degrees and 270 degrees.</p>
+<h5>Solution</h5>
+<h4 id="exercise-251">Exercise 2.51</h4>
+<p>Define the <code>below</code> operation
+for painters.  <code>Below</code> takes two painters as arguments.  The resulting
+painter, given a frame, draws with the first painter in the bottom of the frame
+and with the second painter in the top.  Define <code>below</code> in two different
+ways---first by writing a procedure that is analogous to the <code>beside</code>
+procedure given above, and again in terms of <code>beside</code> and suitable
+rotation operations (from Exercise 2.50).</p>
+<h5>Solution</h5>
+<h4 id="exercise-252">Exercise 2.52</h4>
+<p>Make changes to the square limit
+of <code>wave</code> shown in Figure 2.9 by working at each of the levels
+described above.  In particular:</p>
+<p><strong>1.</strong> Add some segments to the primitive <code>wave</code> painter of Exercise 2.49
+(to add a smile, for example).</p>
+<p><strong>2.</strong> Change the pattern constructed by <code>corner-split</code> (for example, by using
+only one copy of the <code>up-split</code> and <code>right-split</code> images instead of
+two).</p>
+<p><strong>3.</strong> Modify the version of <code>square-limit</code> that uses <code>square-of-four</code> so as
+to assemble the corners in a different pattern.  (For example, you might make
+the big Mr. Rogers look outward from each corner of the square.)</p>
+<h5>Solution</h5>
     </div>
 </body>
 </html>
