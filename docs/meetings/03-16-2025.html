@@ -93,6 +93,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .vm { color: #19177C } /* Name.Variable.Magic */
 .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
 
+        /* Base CSS from markdown_styles.py */
+        
         /* Basic reset and fonts */
         * {
             margin: 0;
@@ -108,7 +110,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             background-color: #f8f9fa;
         }
 
-                /* Navigation styling */
+        /* Navigation styling */
         .nav {
             display: flex;
             justify-content: space-between;
@@ -141,6 +143,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             color: #959da5;
             background-color: #f6f8fa;
         }
+        
         /* Center column layout */
         .container {
             max-width: 800px;
@@ -182,6 +185,80 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             font-size: 1.1rem;
             margin: 1.2rem 0 0.8rem;
             color: #34495e;
+        }
+
+        /* Table of Contents styling */
+        .table-of-contents {
+            margin: 0 0 0;
+            line-height: 1;
+        }
+        
+        .toc-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .toc-list li {
+            margin-bottom: 2px;
+        }
+        .toc-list ul {
+            margin-bottom: 2px;
+        }
+        
+        .exercise-list {
+            margin: 0;
+            padding-left: 0;
+            font-size: 0.95em;
+            display: inline;
+        }
+        
+        .exercise-container {
+            display: inline-block;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        
+        .toc-exercises {
+            font-style: italic;
+            color: #555;
+        }
+        
+        .exercise-list a {
+            text-decoration: none;
+            color: #2070b0;
+            margin-right: 0;
+        }
+        
+        .exercise-list a:hover {
+            text-decoration: underline;
+        }
+        
+        .exercise-list span:not(:last-child):after {
+            content: ", ";
+            color: #777;
+            margin-right: 0;
+        }
+
+        /* Blockquote styling */
+        blockquote {
+            border-left: 4px solid #dfe2e5;
+            color: #6a737d;
+            padding: 0 1rem;
+            margin: 1rem 0 1.5rem;
+            background-color: #f6f8fa;
+            border-radius: 0 3px 3px 0;
+        }
+        
+        blockquote p {
+            padding: 0.8rem 0;
+        }
+        
+        blockquote p:first-child {
+            margin-top: 0;
+        }
+        
+        blockquote p:last-child {
+            margin-bottom: 0;
         }
 
         /* Solution styling */
@@ -335,6 +412,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             overflow-x: auto;
             overflow-y: hidden;
         }
+    
     </style>
 </head>
 <body>

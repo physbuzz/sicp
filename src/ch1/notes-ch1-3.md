@@ -7,6 +7,8 @@
 
 [https://sarabander.github.io/sicp/html/1_002e3.xhtml](https://sarabander.github.io/sicp/html/1_002e3.xhtml)
 
+@toc
+
 ## Section 1.3
 
 The following are equivalent:

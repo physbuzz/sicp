@@ -2,6 +2,7 @@
 # Claude 3.7 generated file
 import sys
 import os
+import re
 import markdown
 import argparse
 from pygments.formatters import HtmlFormatter
@@ -13,10 +14,184 @@ def get_pygments_css():
     """Get the default Pygments CSS."""
     return HtmlFormatter().get_style_defs('.codehilite')
 
+class TocPreprocessor(markdown.preprocessors.Preprocessor):
+    """
+    Preprocessor to handle @toc directive in markdown content.
+    This processes the directive before conversion to HTML.
+    """
+    TOC_PATTERN = re.compile(r'@toc', re.MULTILINE)
+
+    def __init__(self, md, max_depth=4):
+        super().__init__(md)
+        self.max_depth = max_depth
+        self.toc_placeholder = '{::toc::}'
+
+    def run(self, lines):
+        # Check if @toc directive exists
+        content = '\n'.join(lines)
+        if not self.TOC_PATTERN.search(content):
+            return lines
+
+        # Replace @toc with placeholder for later processing
+        content = self.TOC_PATTERN.sub(self.toc_placeholder, content)
+        return content.split('\n')
+
+class TocPostprocessor(markdown.postprocessors.Postprocessor):
+    """
+    Postprocessor to replace TOC placeholder with generated TOC.
+    This runs after HTML conversion.
+    """
+    def __init__(self, md, max_depth=4):
+        super().__init__(md)
+        self.max_depth = max_depth
+        self.toc_placeholder = '{::toc::}'
+
+    def run(self, text):
+        if self.toc_placeholder not in text:
+            return text
+
+        # Find all headers (h1, h2, h3, h4)
+        header_pattern = re.compile(r'<h([1-4])>(.*?)<\/h\1>', re.DOTALL)
+        headers = header_pattern.findall(text)
+
+        if not headers:
+            # Remove placeholder if no headers found
+            return text.replace(self.toc_placeholder, '')
+
+        # Create a list of (level, text, id) tuples
+        toc_items = []
+        for level, content in headers:
+            level = int(level)
+            if level > self.max_depth:
+                continue
+
+            # Extract text content (remove any HTML tags)
+            header_text = re.sub(r'<.*?>', '', content)
+
+            # Create slug for anchor
+            slug = header_text.lower().strip()
+            slug = re.sub(r'[^\w\s-]', '', slug)  # Remove special chars
+            slug = re.sub(r'\s+', '-', slug)      # Replace spaces with hyphens
+
+            toc_items.append((level, header_text, slug))
+
+        # If no headers found within our max_depth, just remove the placeholder
+        if not toc_items:
+            return text.replace(self.toc_placeholder, '')
+
+        # Add id attributes to the headers in the HTML
+        modified_text = text
+        for level, header_text, slug in toc_items:
+            # Find the header and add id attribute if it doesn't already have one
+            header_to_find = f'<h{level}>{header_text}</h{level}>'
+            header_with_id = f'<h{level} id="{slug}">{header_text}</h{level}>'
+            modified_text = modified_text.replace(header_to_find, header_with_id)
+
+        # Collect exercise headings that follow "Exercises" section
+        exercise_sections = {}
+        in_exercises = False
+        current_exercise_section = None
+
+        # First pass to identify exercise sections
+        for i, (level, header_text, slug) in enumerate(toc_items):
+            # Check if this is an "Exercises" heading
+            if header_text == "Exercises" and level == 3:
+                in_exercises = True
+                current_exercise_section = slug
+                exercise_sections[current_exercise_section] = []
+            # If we're in an exercises section and hit another h3 or higher level, we're out of the section
+            elif in_exercises and level <= 3 and header_text != "Exercises":
+                in_exercises = False
+                current_exercise_section = None
+            # If we're in an exercises section, add this header to that section's list
+            elif in_exercises and current_exercise_section:
+                exercise_sections[current_exercise_section].append((level, header_text, slug))
+
+        # Build the TOC HTML
+        toc_html = ['<div class="table-of-contents">',
+                    '<h2>Directory</h2>',
+                    '<ul class="toc-list">']
+
+        current_level = 1
+        i = 0
+        while i < len(toc_items):
+            level, header_text, slug = toc_items[i]
+
+            # Handle indentation based on header level
+            if level > current_level:
+                # Open new sublists for each level difference
+                for _ in range(level - current_level):
+                    toc_html.append('<ul>')
+            elif level < current_level:
+                # Close sublists when going back up the hierarchy
+                for _ in range(current_level - level):
+                    toc_html.append('</ul>')
+
+            current_level = level
+
+            # Special handling for Exercises section
+            if header_text == "Exercises" and level == 3 and slug in exercise_sections and exercise_sections[slug]:
+                # Add the exercises heading with special styling
+                toc_html.append(f'<li><a href="#{slug}" class="toc-exercises">{header_text}</a>')
+
+                # Add the exercise items inline
+                toc_html.append('<div class="exercise-container">(')
+                toc_html.append('<span class="exercise-list">')
+
+                for _, ex_header, ex_slug in exercise_sections[slug]:
+                    toc_html.append(f'<span><a href="#{ex_slug}">{ex_header}</a></span>')
+
+                toc_html.append('</span>)')
+                toc_html.append('</div></li>')
+
+                # Skip this section's items in the main loop since we've handled them
+                i += 1
+                while (i < len(toc_items) and
+                       toc_items[i][0] > level and
+                       (i+1 == len(toc_items) or toc_items[i+1][0] > level)):
+                    i += 1
+                continue
+            else:
+                # Regular TOC entry
+                toc_html.append(f'<li><a href="#{slug}">{header_text}</a></li>')
+
+            i += 1
+
+        # Close any remaining open lists
+        for _ in range(current_level - 1):  # -1 because we don't need to close the outermost level
+            toc_html.append('</ul>')
+
+        toc_html.append('</ul>')
+        toc_html.append('</div>')
+
+        toc_html_str = '\n'.join(toc_html)
+
+        # Replace the placeholder with the generated TOC
+        modified_text = modified_text.replace(self.toc_placeholder, toc_html_str)
+
+        return modified_text
+
+class TocExtension(markdown.Extension):
+    """
+    Extension for handling table of contents via @toc directive.
+    """
+    def __init__(self, **kwargs):
+        self.config = {
+            'max_depth': [4, 'Maximum heading level to include in TOC']
+        }
+        super().__init__(**kwargs)
+
+    def extendMarkdown(self, md):
+        md.preprocessors.register(TocPreprocessor(md, self.getConfig('max_depth')), 'toc_pre', 25)
+        md.postprocessors.register(TocPostprocessor(md, self.getConfig('max_depth')), 'toc_post', 25)
+
 def get_html_template(title, html_content, pygments_css):
     """
     Generate an enhanced HTML template with improved styling
     """
+    # Import the CSS from markdown_styles
+    from markdown_styles import get_base_css
+
     return f"""<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -38,248 +213,8 @@ def get_html_template(title, html_content, pygments_css):
         /* Pygments Syntax Highlighting */
         {pygments_css}
 
-        /* Basic reset and fonts */
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            padding: 0;
-            background-color: #f8f9fa;
-        }}
-
-                /* Navigation styling */
-        .nav {{
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            padding-bottom: 0.8rem;
-            border-bottom: 1px solid #e1e4e8;
-        }}
-
-        .nav span {{
-            padding: 0.4rem 0.8rem;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }}
-
-        .nav .activenav {{
-            background-color: #f1f8ff;
-        }}
-
-        .nav .activenav a {{
-            color: #0366d6;
-            text-decoration: none;
-        }}
-
-        .nav .activenav a:hover {{
-            text-decoration: underline;
-        }}
-
-        .nav .inactivenav {{
-            color: #959da5;
-            background-color: #f6f8fa;
-        }}
-        /* Center column layout */
-        .container {{
-            max-width: 800px;
-            margin: 2rem auto;
-            background-color: white;
-            padding: 2rem 3rem;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }}
-
-        /* Typography */
-        h1 {{
-            font-size: 2.2rem;
-            margin-bottom: 1.5rem;
-            color: #2c3e50;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 0.5rem;
-        }}
-
-        h2 {{
-            font-size: 1.8rem;
-            margin: 2rem 0 1rem;
-            color: #34495e;
-        }}
-
-        h3 {{
-            font-size: 1.5rem;
-            margin: 1.8rem 0 1rem;
-            color: #34495e;
-        }}
-
-        h4 {{
-            font-size: 1.3rem;
-            margin: 1.5rem 0 0.8rem;
-            color: #34495e;
-        }}
-
-        h5 {{
-            font-size: 1.1rem;
-            margin: 1.2rem 0 0.8rem;
-            color: #34495e;
-        }}
-
-        /* Solution styling */
-        h5:has(+p:contains("Solution")) {{
-            margin-bottom: 0;
-        }}
-
-        h5:has(+p:contains("Solution")) + p {{
-            font-weight: bold;
-            color: #3c8dbc;
-            border-left: 3px solid #3c8dbc;
-            padding-left: 0.8rem;
-            margin: 0.5rem 0 1rem;
-        }}
-
-        p {{
-            margin-bottom: 1rem;
-        }}
-
-        /* List styling */
-        ul, ol {{
-            margin-bottom: 1rem;
-            padding-left: 2.5rem;
-        }}
-
-        ul li, ol li {{
-            margin-bottom: 0.5rem;
-        }}
-
-        /* Code blocks */
-        .code-box {{
-            background-color: #f6f8fa;
-            border-radius: 6px;
-            overflow: hidden;
-            margin: 1rem 0 1.5rem;
-            border: 1px solid #e1e4e8;
-        }}
-
-        .code-header {{
-            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 0.75rem;
-            color: #6a737d;
-            padding: 0.3rem 0 0rem 0.3rem;
-            border-bottom: 1px solid #e1e4e8;
-            background-color: #fafbfc;
-        }}
-
-        .code-header a {{
-            color: #6a737d;
-            text-decoration: none;
-        }}
-
-        .code-header a:hover {{
-            text-decoration: underline;
-            color: #0366d6;
-        }}
-
-        /* Standalone code blocks (triple backticks) */
-        .codehilite {{
-            background-color: #f6f8fa;
-            border-radius: 6px;
-            overflow-x: auto;
-            margin: 1rem 0 1.5rem;
-            border: 1px solid #e1e4e8;
-        }}
-
-        /* When inside a code-box, remove default styling */
-        .code-box .codehilite {{
-            margin: 0;
-            padding: 0;
-            border: none;
-            border-radius: 0;
-        }}
-
-        /* Adjust padding for code blocks inside code-box */
-        .code-box .codehilite pre {{
-            padding: 0.2rem 0 0.3rem 0.3rem;
-            overflow-x: auto;
-            margin: 0;
-        }}
-
-        /* Normal padding for standalone code blocks */
-        .codehilite pre {{
-            padding: 1rem;
-            overflow-x: auto;
-            margin: 0;
-        }}
-
-        .code-output {{
-            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 0.75rem;
-            color: #6a737d;
-            padding: 0.2rem 0 0.3rem 0.3rem;
-            border-top: 1px solid #e1e4e8;
-            background-color: #fafbfc;
-        }}
-        .code-output span {{
-            color: #de37cc;
-        }}
-        
-        .code-output pre {{
-            margin: 0;
-            white-space: pre-wrap;
-            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-        }}
-
-        code {{
-            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
-            font-size: 0.9em;
-            padding: 0.2em 0.4em;
-            background-color: #f6f8fa;
-            border-radius: 3px;
-        }}
-
-        .codehilite code {{
-            padding: 0;
-            background-color: transparent;
-        }}
-
-        /* Links */
-        a {{
-            color: #0366d6;
-            text-decoration: none;
-        }}
-
-        a:hover {{
-            text-decoration: underline;
-        }}
-
-        /* Run button */
-        .run-racket {{
-            display: inline-block;
-            margin-top: 0.5rem;
-            margin-bottom: 1rem;
-            padding: 0.4rem 0.8rem;
-            background-color: #3c8dbc;
-            color: white;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 0.85rem;
-            font-weight: 500;
-        }}
-
-        .run-racket:hover {{
-            background-color: #367fa9;
-            text-decoration: none;
-        }}
-
-        /* Make LaTeX display nicely */
-        .MathJax {{
-            overflow-x: auto;
-            overflow-y: hidden;
-        }}
+        /* Base CSS from markdown_styles.py */
+        {get_base_css()}
     </style>
 </head>
 <body>
@@ -290,7 +225,8 @@ def get_html_template(title, html_content, pygments_css):
 </html>
 """
 
-def convert_markdown_to_html(input_file, output_file=None, base_path=None, run_link=False, show_output=True):
+def convert_markdown_to_html(input_file, output_file=None, base_path=None, run_link=False,
+                           show_output=True, toc_enabled=True, toc_depth=4):
     """
     Convert a markdown file to HTML with support for code blocks and raw HTML.
 
@@ -300,6 +236,8 @@ def convert_markdown_to_html(input_file, output_file=None, base_path=None, run_l
         base_path (str, optional): Base path for source files. If None, uses input file's directory
         run_link (bool): Whether to add links to run the code in a sandbox
         show_output (bool): Whether to show output files
+        toc_enabled (bool): Whether to generate a table of contents
+        toc_depth (int): Maximum header depth to include in TOC
     """
     # If no output file specified, replace .md with .html
     if not output_file:
@@ -323,15 +261,23 @@ def convert_markdown_to_html(input_file, output_file=None, base_path=None, run_l
         sandbox_url='https://racket.run/'  # You can change this to your own sandbox URL later
     )
 
-    # Convert to HTML using Python-Markdown with our custom extension
+    # Set up extensions list
+    extensions = [
+        'fenced_code',
+        'codehilite',
+        'tables',
+        composable_extension
+    ]
+
+    # Add TOC extension if enabled
+    if toc_enabled:
+        toc_extension = TocExtension(max_depth=toc_depth)
+        extensions.append(toc_extension)
+
+    # Convert to HTML using Python-Markdown with our custom extensions
     html_content = markdown.markdown(
         md_content,
-        extensions=[
-            'fenced_code',
-            'codehilite',
-            'tables',
-            composable_extension
-        ]
+        extensions=extensions
     )
 
     # Get Pygments CSS
@@ -357,6 +303,8 @@ def main():
     parser.add_argument('-b', '--base-path', help='Base path for source files (optional)')
     parser.add_argument('-r', '--run-link', action='store_true', help='Add links to run code in a sandbox')
     parser.add_argument('--no-output', action='store_true', help='Do not include output files')
+    parser.add_argument('--no-toc', action='store_true', help='Do not generate table of contents')
+    parser.add_argument('--toc-depth', type=int, default=4, help='Max header depth to include in TOC (default: 4)')
     args = parser.parse_args()
 
     output_file = convert_markdown_to_html(
@@ -364,7 +312,9 @@ def main():
         args.output,
         args.base_path,
         args.run_link,
-        not args.no_output
+        not args.no_output,
+        not args.no_toc,
+        args.toc_depth
     )
     print(f"Converted {args.input} to {output_file}")
 

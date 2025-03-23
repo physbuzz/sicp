@@ -93,6 +93,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 .codehilite .vm { color: #19177C } /* Name.Variable.Magic */
 .codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
 
+        /* Base CSS from markdown_styles.py */
+        
         /* Basic reset and fonts */
         * {
             margin: 0;
@@ -108,7 +110,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             background-color: #f8f9fa;
         }
 
-                /* Navigation styling */
+        /* Navigation styling */
         .nav {
             display: flex;
             justify-content: space-between;
@@ -141,6 +143,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             color: #959da5;
             background-color: #f6f8fa;
         }
+        
         /* Center column layout */
         .container {
             max-width: 800px;
@@ -182,6 +185,80 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             font-size: 1.1rem;
             margin: 1.2rem 0 0.8rem;
             color: #34495e;
+        }
+
+        /* Table of Contents styling */
+        .table-of-contents {
+            margin: 0 0 0;
+            line-height: 1;
+        }
+        
+        .toc-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .toc-list li {
+            margin-bottom: 2px;
+        }
+        .toc-list ul {
+            margin-bottom: 2px;
+        }
+        
+        .exercise-list {
+            margin: 0;
+            padding-left: 0;
+            font-size: 0.95em;
+            display: inline;
+        }
+        
+        .exercise-container {
+            display: inline-block;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        
+        .toc-exercises {
+            font-style: italic;
+            color: #555;
+        }
+        
+        .exercise-list a {
+            text-decoration: none;
+            color: #2070b0;
+            margin-right: 0;
+        }
+        
+        .exercise-list a:hover {
+            text-decoration: underline;
+        }
+        
+        .exercise-list span:not(:last-child):after {
+            content: ", ";
+            color: #777;
+            margin-right: 0;
+        }
+
+        /* Blockquote styling */
+        blockquote {
+            border-left: 4px solid #dfe2e5;
+            color: #6a737d;
+            padding: 0 1rem;
+            margin: 1rem 0 1.5rem;
+            background-color: #f6f8fa;
+            border-radius: 0 3px 3px 0;
+        }
+        
+        blockquote p {
+            padding: 0.8rem 0;
+        }
+        
+        blockquote p:first-child {
+            margin-top: 0;
+        }
+        
+        blockquote p:last-child {
+            margin-bottom: 0;
         }
 
         /* Solution styling */
@@ -335,6 +412,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             overflow-x: auto;
             overflow-y: hidden;
         }
+    
     </style>
 </head>
 <body>
@@ -346,8 +424,43 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 
 <p><a href="https://sarabander.github.io/sicp/html/1_002e1.xhtml">https://sarabander.github.io/sicp/html/1_002e1.xhtml</a></p>
-<h2>Section 1.1</h2>
-<h3>Introduction</h3>
+<p><div class="table-of-contents">
+<h2>Directory</h2>
+<ul class="toc-list">
+<ul>
+<li><a href="#section-11">Section 1.1</a></li>
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#111-113">1.1.1-1.1.3</a></li>
+<li><a href="#14">1.4</a></li>
+<li><a href="#15">1.5</a></li>
+<li><a href="#16">1.6</a></li>
+<li><a href="#17">1.7</a></li>
+<li><a href="#18">1.8</a></li>
+<li><a href="#aside-on-mathematicawl">Aside on Mathematica/WL</a></li>
+<ul>
+<li><a href="#basic-expressions-in-wl">Basic expressions in WL</a></li>
+<li><a href="#defines-in-wl">Defines in WL</a></li>
+</ul>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-11">Exercise 1.1</a></span>
+<span><a href="#exercise-12">Exercise 1.2</a></span>
+<span><a href="#exercise-13">Exercise 1.3</a></span>
+<span><a href="#exercise-14">Exercise 1.4</a></span>
+<span><a href="#exercise-15">Exercise 1.5</a></span>
+<span><a href="#16">1.6</a></span>
+<span><a href="#exercise-17">Exercise 1.7</a></span>
+<span><a href="#exercise-18">Exercise 1.8</a></span>
+</span>)
+</div></li>
+</ul>
+</ul>
+</ul>
+</div></p>
+<h2 id="section-11">Section 1.1</h2>
+<h3 id="introduction">Introduction</h3>
 <ul>
 <li>Lisp, for List Processing, was invented in the late 1950s</li>
 <li>Seminal paper "Recursive Functions of Symbolic Expressions and Their Computation by Machine" (<a href="https://dl.acm.org/doi/10.1145/367177.367199">McCarthy 1960</a>)</li>
@@ -355,7 +468,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li>Common Lisp was developed in the 80's and 90's to make an industrial standard.</li>
 <li>Cool paper <a href="https://pubmed.ncbi.nlm.nih.gov/17800710/">Sussman and Wisdom 1992</a> about solar system chaos. This would be nice to compare to my own calculations where I was able to reproduce the eccentricity of <a href="https://en.wikipedia.org/wiki/Milankovitch_cycles#/media/File:MilankovitchCyclesOrbitandCores.png">this graph</a> to about 100KYRs.</li>
 </ul>
-<h3>1.1.1-1.1.3</h3>
+<h3 id="111-113">1.1.1-1.1.3</h3>
 <ul>
 <li><strong><em>Primitive expressions</em></strong> are the simplest entities the language is concerned with (numerals, built-in operators, names).</li>
 <li>Lisp uses prefix notation.</li>
@@ -380,7 +493,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li>Evaluation can be done recursively in this model, "tree accumulation" is one way to evaluate tree expressions.</li>
 <li><em>Special forms</em> are exceptions to the general evaluation rules. "define" is one of them. We deal with a very simple language -&gt; small number of special forms.</li>
 </ul>
-<h3>1.4</h3>
+<h3 id="14">1.4</h3>
 <p>The syntax to define a procedure is
 <code>(define (square x) (* x x))</code></p>
 <p>Note that the fact that we're allowed to evaluate a sequence of expressions here is relegated to a footnote!!</p>
@@ -409,13 +522,13 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </code></pre></div>
 
 <p>One way to think of this is that <code>define</code> contains an implicit <code>begin</code>.</p>
-<h3>1.5</h3>
+<h3 id="15">1.5</h3>
 <p>For chapters 1 and 2 we can use the substitution model, but in chapter 3 we'll need to deal with mutable data and will need a more complicated model.</p>
 <p>Models define the "meaning" of procedure application. They're generally ways to think about procedures, rather than being ways that the interpreter actually works.</p>
 <p>Applicative ordering vs. normal ordering. </p>
 <p><em>Normal-order evaluation</em> is when the interpreter fully expands and then reduces the expression.</p>
 <p><em>Applicative-order evaluation</em> is when the interpreter evaluates the arguments needed for the immediate expression and then applies them.</p>
-<h3>1.6</h3>
+<h3 id="16">1.6</h3>
 <p>New special form <code>cond</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
@@ -440,19 +553,19 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><code>(if predicate consequent alternative)</code> is a <em>special form</em> which evaluates <code>predicate</code> and then evaluates <code>consequent</code> if <code>predicate</code> is true or <code>alternative</code> if <code>predicate is</code> false. This breaks the strict rule of applicative order evaluation, which might lead you to believe that all three terms are evaluated.</li>
 </ul>
 <p>There's also <code>and</code>, <code>or</code>, <code>not</code>, </p>
-<h3>1.7</h3>
+<h3 id="17">1.7</h3>
 <p>This breaks the strict rule of applicative order evaluation, which might lead you to believe that <code>bool a b</code> are all evaluated.</p>
 <p>We asked something here: if we removed the ability of the <code>if</code> to evaluate only one argument at a time so that we had to evaluate all arguments, would we end up at a non- Turing complete language? In our discussion we brought up the fixed point combinator and this seems to desire some conversation about lambda calculus, which we're not discussing right now. Might be nice to read <a href="https://writings.stephenwolfram.com/2020/12/combinators-and-the-story-of-computation/">Combinators and the story of computation</a>, but let's get through this book and think about theoretical comp sci later!</p>
-<h3>1.8</h3>
+<h3 id="18">1.8</h3>
 <p>Bound variable, free variable, variable scope, captured variable (changing from free to bound), lexical scoping.</p>
 <blockquote>
 <p>Lexical scoping dictates that free variables in a procedure are taken to refer to bindings made by enclosing procedure definitions; that is, they are looked up in the environment in which the procedure was defined. We will see how this works in detail in chapter 3 when we study environments and the detailed behavior of the interpreter.</p>
 </blockquote>
-<h3>Aside on Mathematica/WL</h3>
+<h3 id="aside-on-mathematicawl">Aside on Mathematica/WL</h3>
 <p>It's illustrative to compare Wolfram Language (WL)'s under-the-hood behavior to Scheme. Note that because this is "under the hood", 
 this isn't a good introduction to WL! Also note: Mathematica refers to the front-end, WL / Wolfram Language / WolframScript you can get for free (still need a license). It's sort of a Jupyter notebook vs. Python thing. Mathematica .nb files are the notebooks, wolfram language .wl files are the python files.</p>
 <p>Also, note that I'm in 2025 reading about this stuff from the 80's :P I'm sure this has all been said before and said much better, I'm just coming up with my own analogies as I go along.</p>
-<h4>Basic expressions in WL</h4>
+<h4 id="basic-expressions-in-wl">Basic expressions in WL</h4>
 <p><code>(+ 1 2 3 4)</code> is represented in WL as <code>Plus[1,2,3,4]</code>. This can also be written as <code>1+2+3+4</code>, which is syntax sugar. In order to see the full form but also make sure that this expression doesn't evaluate to 10 immediately, we want to use <code>FullForm[HoldForm[...]]</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">In</span><span class="p">[]</span><span class="o">:=</span><span class="w"> </span><span class="n">FullForm</span><span class="p">[</span><span class="n">HoldForm</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="mi">3</span><span class="o">+</span><span class="mi">4</span><span class="p">]]</span>
 <span class="n">Out</span><span class="p">[]</span><span class="o">=</span><span class="w"> </span><span class="n">HoldForm</span><span class="p">[</span><span class="n">Plus</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
@@ -460,7 +573,7 @@ this isn't a good introduction to WL! Also note: Mathematica refers to the front
 
 <p>In Mathematica, this expression gets substituted with <code>10</code> immediately, but say we have another expression <code>expression = plus[1,2,3,4]</code> (lowercase "P"). Then in fact <code>expression[[0]]</code> returns <code>plus</code>, <code>expression[[1]]</code> returns <code>1</code>, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through <code>Head[expression]</code> which returns <code>add</code>).</p>
 <p>One example is that "it is meaningless to speak of the value of <code>(+ x 1)</code>". In Mathematica <code>plus[x,1]</code> is perfectly meaningful even if add and x have no definitions! It is <code>plus[x,1]</code>!</p>
-<h4>Defines in WL</h4>
+<h4 id="defines-in-wl">Defines in WL</h4>
 <p>To translate <code>(define x 5)</code> to Mathematica, it's easy: <code>Set[x,5]</code>. The syntax sugar version is <code>x=5</code>.</p>
 <p>To translate <code>(define x (display "Hi") 5)</code> to Mathematica, we'd have to do <code>SetDelayed[x,CompoundExpression[Print["Hi"],5]]</code>. 
 The syntax sugar version is <code>x:=(Print["Hi"]; 5)</code>. Here CompoundExpression is like <code>begin</code> in Scheme, it evaluates its arguments one-by-one and returns the final value. SetDelayed ensures that the righthand side isn't evaluated until <code>x</code> is called.</p>
@@ -489,8 +602,8 @@ The syntax sugar version is <code>x:=(Print["Hi"]; 5)</code>. Here CompoundExpre
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">Cos</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Sin</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div>
 
-<h3>Exercises</h3>
-<h4>Exercise 1.1</h4>
+<h3 id="exercises">Exercises</h3>
+<h4 id="exercise-11">Exercise 1.1</h4>
 <p>Below is a sequence of expressions. What is the result printed by the interpreter in response to each expression? Assume that the sequence is to be evaluated in the order in which it is presented.</p>
 <h5>Solution</h5>
 <div class="code-box">
@@ -546,25 +659,9 @@ The syntax sugar version is <code>x:=(Print["Hi"]; 5)</code>. Here CompoundExpre
 </code></pre></div>
 
 
-<div class="code-output">
-<span>Output:</span>
-<pre>
-10
-12
-8
-3
-6
-19
-#f
-4
-16
-6
-16
-</pre>
-</div>
 </div>
 
-<h4>Exercise 1.2</h4>
+<h4 id="exercise-12">Exercise 1.2</h4>
 <p>Translate the following expression into prefix form:
 $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <h5>Solution</h5>
@@ -582,15 +679,9 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 </code></pre></div>
 
 
-<div class="code-output">
-<span>Output:</span>
-<pre>
--37/150
-</pre>
-</div>
 </div>
 
-<h4>Exercise 1.3</h4>
+<h4 id="exercise-13">Exercise 1.3</h4>
 <p>Define a procedure that takes three numbers as arguments and returns the sum of the squares of the two larger numbers.</p>
 <h5>Solution</h5>
 <div class="code-box">
@@ -618,15 +709,9 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 </code></pre></div>
 
 
-<div class="code-output">
-<span>Output:</span>
-<pre>
-13
-</pre>
-</div>
 </div>
 
-<h4>Exercise 1.4</h4>
+<h4 id="exercise-14">Exercise 1.4</h4>
 <p>Observe that our model of evaluation allows for combinations whose operators are compound expressions. Use this observation to describe the behavior of the following procedure:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">a-plus-abs-b</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
 <span class="w">  </span><span class="p">((</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="nb">-</span><span class="p">)</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
@@ -648,16 +733,9 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 </code></pre></div>
 
 
-<div class="code-output">
-<span>Output:</span>
-<pre>
-4
-4
-</pre>
-</div>
 </div>
 
-<h4>Exercise 1.5</h4>
+<h4 id="exercise-15">Exercise 1.5</h4>
 <p>Ben Bitdiddle has invented a test to determine whether the interpreter he is faced with is using applicative-order evaluation or normal-order evaluation. He defines the following two procedures:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
 
@@ -675,7 +753,7 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <p>Using applicative order evaluation, we first evaluate both arguments. <code>0</code> evaluates to <code>0</code>, but evaluating <code>(p)</code> triggers our bomb. So our applicative order evaluator hangs or crashes. Scheme is applicative order, so we expect it to hang or crash.</p>
 <p>Normal ordering is different, we "fully expand then reduce" but as the problem points out, the word "fully expand" does not refer to the argument of the if-statement, and so we're saved from fully expanding <code>(p)</code> right off the bat. When we evaluate <code>(if (= 0 0) 0 (p))</code>, our reduce step is smart enough to only evaluate <code>0</code>, so the expression returns <code>0</code>. I'm told this is the semantics of Haskell, so we'd expect some Haskell program implementing the same idea to run just fine.</p>
 <p>This is the same reasoning as given in the answers to <a href="https://stackoverflow.com/questions/16036139/seek-for-some-explanation-on-sicp-exercise-1-5">this stackoverflow question</a>.</p>
-<h4>1.6</h4>
+<h4 id="16">1.6</h4>
 <p>Alyssa P. Hacker doesn’t see why if needs to be provided as a special form. “Why can’t I just define it as an ordinary procedure in terms of cond?” she asks. Alyssa’s friend Eva Lu Ator claims this can indeed be done, and she defines a new version of if:</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">new-if</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span>
 <span class="w">                </span><span class="n">then-clause</span><span class="w"> </span>
@@ -704,7 +782,7 @@ $$\frac{5+4+(2-(3-(6+\frac{4}{5})))}{3(6-2)(2-7)}$$</p>
 <p>The key here is not the behavior of <code>cond</code> versus <code>if</code>, but in the conditional evaluation of each of the terms following the <code>if</code> special form. </p>
 <p><code>(if cond A B)</code> evaluated B only on the condition that cond is false. </p>
 <p>But <code>(new-if cond A B)</code> will evaluate <code>cond</code>, <code>A</code>, and <code>B</code>, regardless of how <code>new-if</code> is defined (at least given what we know at this point in the text, not sure if something arises later). Since B contains a recursive function call, we immediately get infinite recursion.</p>
-<h4>Exercise 1.7</h4>
+<h4 id="exercise-17">Exercise 1.7</h4>
 <p>The <code>good-enough?</code> test used in computing square roots will not be very effective for finding the square roots of very small numbers. Also, in real computers, arithmetic operations are almost always performed with limited precision. This makes our test inadequate for very large numbers. Explain these statements, with examples showing how the test fails for small and large numbers. An alternative strategy for implementing good-enough? is to watch how guess changes from one iteration to the next and to stop when the change is a very small fraction of the guess. Design a square-root procedure that uses this kind of end test. Does this work better for small and large numbers?</p>
 <h5>Solution</h5>
 <p>If $y$ is our guess for $\sqrt{x}$, we can write $y=\sqrt{x}+\delta y$ and plug this into our stopping condition $|y^2-x|\lt \varepsilon$ to get:</p>
@@ -762,16 +840,9 @@ $$</p>
 </code></pre></div>
 
 
-<div class="code-output">
-<span>Output:</span>
-<pre>
-0.03230844833048122
-0.010000000025490743
-</pre>
-</div>
 </div>
 
-<h4>Exercise 1.8</h4>
+<h4 id="exercise-18">Exercise 1.8</h4>
 <p>Newton’s method for cube roots is based on the fact that if y
  is an approximation to the cube root of x
 , then a better approximation is given by the value
@@ -803,12 +874,6 @@ $$\frac{x/y^2+2y}{3}.$$</p>
 </code></pre></div>
 
 
-<div class="code-output">
-<span>Output:</span>
-<pre>
-1.4422497895989996
-</pre>
-</div>
 </div>
     </div>
 </body>

@@ -7,6 +7,8 @@
 
 [https://sarabander.github.io/sicp/html/1_002e1.xhtml](https://sarabander.github.io/sicp/html/1_002e1.xhtml)
 
+@toc
+
 ## Section 1.1
 
 

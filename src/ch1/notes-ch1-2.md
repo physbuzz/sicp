@@ -6,6 +6,8 @@
 
 Chapter link: [https://sarabander.github.io/sicp/html/1_002e2.xhtml](https://sarabander.github.io/sicp/html/1_002e2.xhtml)
 
+@toc
+
 ## Section 1.2
 
 ### 1.2.1-1.2.2
