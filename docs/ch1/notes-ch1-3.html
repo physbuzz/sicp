@@ -340,20 +340,68 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <body>
     <div class="container">
         <div class="nav">
-    <span class="activenav"><a href="notes-ch1-1.html">← Previous</a></span>
+    <span class="activenav"><a href="notes-ch1-2.html">← Previous</a></span>
     <span class="activenav"><a href="../index.html">↑ Up</a></span>
-    <span class="inactivenav">Next →</span>
+    <span class="inactivenav"><a href="../ch2/notes-ch2-1.html">Next →</a></span>
 </div>
 
 <p><a href="https://sarabander.github.io/sicp/html/1_002e3.xhtml">https://sarabander.github.io/sicp/html/1_002e3.xhtml</a></p>
 <h2>Section 1.3</h2>
+<p>The following are equivalent:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">plus4</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">plus4</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>I find the example extremely instructive:</p>
+<p>$$f(x,y)=x(1+xy)^2+y(1-y)+(1+xy)(1-y)$$
+We probably want to only calculate $1+xy$ and $1-y$ once. So,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f-helper</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">f-helper</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">a</span><span class="p">))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)))</span>
+<span class="w">   </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">   </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="c1">;; =&gt;</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>In short, </p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">⟨var₁⟩</span><span class="w"> </span><span class="n">⟨exp₁⟩</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">⟨var₂⟩</span><span class="w"> </span><span class="n">⟨exp₂⟩</span><span class="p">)</span>
+<span class="w">      </span><span class="n">…</span>
+<span class="w">      </span><span class="p">(</span><span class="n">⟨varₙ⟩</span><span class="w"> </span><span class="n">⟨expₙ⟩</span><span class="p">))</span>
+<span class="w">  </span><span class="n">⟨body⟩</span><span class="p">)</span>
+<span class="c1">;; is alternative syntax for</span>
+<span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">⟨var₁⟩</span><span class="w"> </span><span class="n">…</span><span class="w"> </span><span class="n">⟨varₙ⟩</span><span class="p">)</span>
+<span class="w">   </span><span class="n">⟨body⟩</span><span class="p">)</span>
+<span class="w"> </span><span class="n">⟨exp₁⟩</span>
+<span class="w"> </span><span class="n">…</span>
+<span class="w"> </span><span class="n">⟨expₙ⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>... 1.3.3 just talks about boring stuff: fixed point function, interval search, fixed point with averaging.</p>
+<p>... 1.3.4 just defines numerical stuff, <code>average-damp</code>, <code>newtons-method</code> (using numerical differentiation).</p>
 <h3>Exercises</h3>
 <h4>Exercise 1.29</h4>
 <p>Simpson's Rule is a more accurate
 method of numerical integration than the method illustrated above.  Using
 Simpson's Rule, the integral of a function $f$ between $a$ and $b$ is
 approximated as</p>
-<p>$$\frac{h}{3} \left(y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \ldots + 2y_(n-2) + 4y_(n-1) + y_n\right)$$
+<p>$$\frac{h}{3} \left(y_0 + 4y_1 + 2y_2 + 4y_3 + 2y_4 + \ldots + 2y_{n-2} + 4y_{n-1} + y_n\right)$$
 where $h = (b - a)/n$, for some even integer $n$, and
 $y_k = f(a + kh)$.  (Increasing $n$ increases the
 accuracy of the approximation.)  Define a procedure that takes as arguments
@@ -479,6 +527,7 @@ expressions in the following definition:</p>
 </div>
 
 <h4>important footnote:</h4>
+<blockquote>
 <p>The
 intent of Exercise 1.31 through Exercise 1.33 is to demonstrate the
 expressive power that is attained by using an appropriate abstraction to
@@ -490,6 +539,7 @@ of combination for these abstractions.  We will return to these ideas in
 for combining filters and accumulators to build even more powerful
 abstractions.  We will see there how these methods really come into their own
 as a powerful and elegant approach to designing programs.</p>
+</blockquote>
 <h4>Exercise 1.31</h4>
 <ol>
 <li>
@@ -554,8 +604,6 @@ one that generates a recursive process.</p>
 <span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
 <span class="p">(</span><span class="n">wallis-pi</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
 <span class="p">(</span><span class="n">wallis-pi-iter</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Secret message&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -570,7 +618,6 @@ Factorial (linear recursive, then iterative)
 Wallis pi
 3.157030176455167
 3.1570301764551667
-Secret message
 </pre>
 </div>
 </div>
@@ -599,64 +646,56 @@ write one that generates a recursive process.</p>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
 
-<span class="c1">; Helper functions</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">next2</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
 
-<span class="c1">; product defns</span>
+<span class="c1">;(accumulate</span>
+<span class="c1">; combiner null-value term a next b)</span>
+<span class="c1">;; It helps to write out sum and product in terms of accumulate first.</span>
+
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">combiner</span><span class="w"> </span><span class="n">null-value</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
-<span class="w">      </span><span class="mi">1</span>
-<span class="w">      </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
-<span class="w">         </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">product-iter</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">result</span><span class="p">)</span>
-<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
-<span class="w">        </span><span class="n">result</span>
-<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">)))))</span>
-<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">    </span><span class="n">null-value</span>
+<span class="w">    </span><span class="p">(</span><span class="n">combiner</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">combiner</span><span class="w"> </span><span class="n">null-value</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
 
-<span class="c1">; Implement factorial and wallis product.</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fact</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fact-iter</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">product-iter</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">wallis-term</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">wallis-pi</span><span class="w"> </span><span class="n">nterms</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">(</span><span class="n">product</span><span class="w"> </span><span class="n">wallis-term</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="n">next2</span><span class="w"> </span><span class="n">nterms</span><span class="p">)))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">wallis-pi-iter</span><span class="w"> </span><span class="n">nterms</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">(</span><span class="n">product-iter</span><span class="w"> </span><span class="n">wallis-term</span><span class="w"> </span><span class="mf">2.0</span><span class="w"> </span><span class="n">next2</span><span class="w"> </span><span class="n">nterms</span><span class="p">)))</span>
+<span class="c1">;; Evidently there was no reason for me to define a scoped &quot;iter&quot;</span>
+<span class="c1">;;    function earlier.</span>
+<span class="c1">;; (define (accumulate-iter combiner null-value term a next b)</span>
+<span class="c1">;;   (define (iter a result)</span>
+<span class="c1">;;     (if (&gt; a b)</span>
+<span class="c1">;;          result</span>
+<span class="c1">;;          (iter (next a) (combiner result (term a)))))</span>
+<span class="c1">;;   (iter a null-value))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate-iter</span><span class="w"> </span><span class="n">combiner</span><span class="w"> </span><span class="n">null-value</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">       </span><span class="n">null-value</span>
+<span class="w">       </span><span class="p">(</span><span class="n">accumulate-iter</span><span class="w"> </span><span class="n">combiner</span><span class="w"> </span>
+<span class="w">                       </span><span class="p">(</span><span class="n">combiner</span><span class="w"> </span><span class="n">null-value</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="w">                        </span><span class="n">term</span>
+<span class="w">                        </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">next</span>
+<span class="w">                        </span><span class="n">b</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum-iter</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate-iter</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
 
-<span class="c1">; Pretty print</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Factorial (linear recursive, then iterative)&quot;</span><span class="p">)</span><span class="w"> </span>
-<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
-<span class="p">(</span><span class="n">fact</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
-<span class="p">(</span><span class="n">fact-iter</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Wallis pi&quot;</span><span class="p">)</span>
-<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
-<span class="p">(</span><span class="n">wallis-pi</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
-<span class="p">(</span><span class="n">wallis-pi-iter</span><span class="w"> </span><span class="mi">100</span><span class="p">)</span>
-
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Secret message&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-one</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-term</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">6.0</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
+<span class="c1">; Should be pi</span>
+<span class="p">(</span><span class="nb">sqrt</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">my-term</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">add-one</span><span class="w"> </span><span class="mi">10000</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">sqrt</span><span class="w"> </span><span class="p">(</span><span class="n">sum-iter</span><span class="w"> </span><span class="n">my-term</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">add-one</span><span class="w"> </span><span class="mi">10000</span><span class="p">))</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-Factorial (linear recursive, then iterative)
-120
-120
-
-
-Wallis pi
-3.157030176455167
-3.1570301764551667
-Secret message
+3.1414971639472093
+3.1414971639472147
 </pre>
 </div>
 </div>
@@ -682,6 +721,79 @@ $\textrm{GCD}(i, n) = 1$).</p>
 </li>
 </ol>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-33.rkt">ch1-code/ex1-33.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">filtered-accumulate</span><span class="w"> </span>
+<span class="w">           </span><span class="n">combiner</span><span class="w"> </span><span class="n">filter?</span><span class="w"> </span><span class="n">null-value</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">       </span><span class="n">null-value</span>
+<span class="w">       </span><span class="p">(</span><span class="n">filtered-accumulate</span><span class="w"> </span><span class="n">combiner</span><span class="w"> </span>
+<span class="w">                            </span><span class="n">filter?</span>
+<span class="w">                            </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">filter?</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                              </span><span class="p">(</span><span class="n">combiner</span><span class="w"> </span><span class="n">null-value</span><span class="w"> </span><span class="p">(</span><span class="n">term</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="w">                              </span><span class="n">null-value</span><span class="p">)</span>
+<span class="w">                            </span><span class="n">term</span>
+<span class="w">                            </span><span class="p">(</span><span class="n">next</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">                            </span><span class="n">next</span>
+<span class="w">                            </span><span class="n">b</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">smallest-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">test-divisor</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">test-divisor</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="n">n</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="n">divides?</span><span class="w"> </span><span class="n">test-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="n">test-divisor</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span>
+<span class="w">               </span><span class="n">n</span><span class="w"> </span>
+<span class="w">               </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">test-divisor</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">divides?</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">prime?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">smallest-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">ssquare-prime</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">filtered-accumulate</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="n">prime?</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">add-one</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="n">a</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">id</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-one</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">coprime-prod</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">coprime?</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">filtered-accumulate</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="n">coprime?</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">add-one</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">print-seq</span><span class="w"> </span><span class="n">func</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="w"> </span><span class="n">a</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;, &quot;</span><span class="p">)</span>
+<span class="w">              </span><span class="p">(</span><span class="n">print-seq</span><span class="w"> </span><span class="n">func</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="n">print-seq</span><span class="w"> </span><span class="n">ssquare-prime</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">print-seq</span><span class="w"> </span><span class="n">coprime-prod</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+0, 4, 13, 13, 38, 38, 87, 87, 87, 87
+1, 1, 2, 3, 24, 5, 720, 105, 2240, 189
+</pre>
+</div>
+</div>
+<ol>
+<li><a href="https://oeis.org/A081738">https://oeis.org/A081738</a></li>
+<li><a href="https://oeis.org/A001783">https://oeis.org/A001783</a></li>
+</ol>
 <h4>Exercise 1.34</h4>
 <p>Suppose we define the procedure</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
@@ -699,12 +811,68 @@ $\textrm{GCD}(i, n) = 1$).</p>
 <p>What happens if we (perversely) ask the interpreter to evaluate the combination
 <code>(f f)</code>?  Explain.</p>
 <h5>Solution</h5>
+<p>We'll end up calling <code>(f 2)</code> which calls <code>(2 2)</code>, which should be a syntax error.</p>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-34.rkt">ch1-code/ex1-34.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">f</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+
+Error (exit code 1):
+application: not a procedure;
+ expected a procedure that can be applied to arguments
+  given: 2
+  context...:
+   body of "/home/dkmoore/sicp/src/ch1/ch1-code/ex1-34.rkt"
+</pre>
+</div>
+</div>
+
 <h4>Exercise 1.35</h4>
 <p>Show that the golden ratio
 $\varphi$ (1.2.2) is a fixed point of the transformation 
-$x \mapsto 1 + 1 / x$, and use this fact to compute $\varphi$ by means 
+$x \mapsto 1 + 1 / x,$ and use this fact to compute $\varphi$ by means 
 of the <code>fixed-point</code> procedure.</p>
 <h5>Solution</h5>
+<p>$\varphi$ is defined as the value such that $x=1+1/x,$ which is the definition of a fixed point. What matters more is if it's an attractive fixed point, 
+which can be determined by $f'(x)\lt 0.$ In fact $f'(x)=-1/x^2$ and $x\gt 0,$ so this is the case.</p>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-35.rkt">ch1-code/ex1-35.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="mf">0.00001</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">first-guess</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">))</span><span class="w"> </span>
+<span class="w">       </span><span class="n">tolerance</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">next</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
+<span class="w">          </span><span class="n">next</span>
+<span class="w">          </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">first-guess</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="mf">1.5</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1.6180327868852458
+</pre>
+</div>
+</div>
+
 <h4>Exercise 1.36</h4>
 <p>Modify <code>fixed-point</code> so that
 it prints the sequence of approximations it generates, using the <code>newline</code>
@@ -716,6 +884,34 @@ this takes with and without average damping.  (Note that you cannot start
 <code>fixed-point</code> with a guess of 1, as this would cause division by
 $\log(1) = 0$.)</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-36.rkt">ch1-code/ex1-36.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="mf">0.00001</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">first-guess</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">))</span><span class="w"> </span>
+<span class="w">       </span><span class="n">tolerance</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">next</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
+<span class="w">          </span><span class="n">next</span>
+<span class="w">          </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">first-guess</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="mf">1.5</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1.6180327868852458
+</pre>
+</div>
+</div>
+
 <h4>Exercise 1.37</h4>
 <p><strong>1.</strong> An infinite continued fraction is an expression of the form
 $$f \,=\, {\frac{N_1}{D_1 + \frac{N_2}{D_2 + \frac{N_3}{D_3 + \dots}}}.}$$
@@ -742,6 +938,21 @@ to get an approximation that is accurate to 4 decimal places?</p>
 that generates an iterative process.  If it generates an iterative process,
 write one that generates a recursive process.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-37.rkt">ch1-code/ex1-37.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
 <h4>Exercise 1.38</h4>
 <p>In 1737, the Swiss mathematician
 Leonhard Euler published a memoir De Fractionibus Continuis, which
@@ -752,6 +963,21 @@ the $D_i$ are successively:</p>
 <p>Write a program that uses your <code>cont-frac</code> procedure from Exercise 1.37 
 to approximate $e$, based on Euler's expansion.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-38.rkt">ch1-code/ex1-38.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
 <h4>Exercise 1.39</h4>
 <p>A continued fraction
 representation of the tangent function was published in 1770 by the German
@@ -761,6 +987,21 @@ where $x$ is in radians.  Define a procedure <code>(tan-cf x k)</code> that
 computes an approximation to the tangent function based on Lambert's formula.
 <code>k</code> specifies the number of terms to compute, as in Exercise 1.37.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-39.rkt">ch1-code/ex1-39.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
 <h4>Exercise 1.40</h4>
 <p>Define a procedure <code>cubic</code>
 that can be used together with the <code>newtons-method</code> procedure in
@@ -770,6 +1011,21 @@ expressions of the form</p>
 
 <p>to approximate zeros of the cubic $x^3 + ax^2 + bx + c$.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-40.rkt">ch1-code/ex1-40.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
 <h4>Exercise 1.41</h4>
 <p>Define a procedure <code>double</code>
 that takes a procedure of one argument as argument and returns a procedure that
@@ -780,6 +1036,21 @@ procedure that adds 2.  What value is returned by</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-41.rkt">ch1-code/ex1-41.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
 <h4>Exercise 1.42</h4>
 <p>Let $f$ and $g$ be two
 one-argument functions.  The composition $f$ after $g$ is defined
@@ -791,6 +1062,22 @@ procedure that adds 1 to its argument,</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-42.rkt">ch1-code/ex1-42.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
+
 <h4>Exercise 1.43</h4>
 <p>If $f$ is a numerical function
 and $n$ is a positive integer, then we can form the $n^{\text{th}}$ repeated
@@ -809,6 +1096,22 @@ procedure should be able to be used as follows:</p>
 
 <p>Hint: You may find it convenient to use <code>compose</code> from Exercise 1.42.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-43.rkt">ch1-code/ex1-43.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
+
 <h4>Exercise 1.44</h4>
 <p>The idea of smoothing a
 function is an important concept in signal processing.  If $f$ is a function
@@ -822,6 +1125,22 @@ to obtain the n-fold smoothed function.  Show how to generate
 the n-fold smoothed function of any given function using <code>smooth</code> and
 <code>repeated</code> from Exercise 1.43.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-44.rkt">ch1-code/ex1-44.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
+
 <h4>Exercise 1.45</h4>
 <p>We saw in 1.3.3
 that attempting to compute square roots by naively finding a fixed point of
@@ -840,6 +1159,21 @@ $n^{\text{th}}$ roots using <code>fixed-point</code>, <code>average-damp</code>,
 <code>repeated</code> procedure of Exercise 1.43.  Assume that any arithmetic
 operations you need are available as primitives.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-45.rkt">ch1-code/ex1-45.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
 <h4>Exercise 1.46</h4>
 <p>Several of the numerical methods
 described in this chapter are instances of an extremely general computational
@@ -855,6 +1189,21 @@ Rewrite the <code>sqrt</code> procedure of 1.1.7 and the
 <code>fixed-point</code> procedure of 1.3.3 in terms of
 <code>iterative-improve</code>.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="ch1-code/ex1-46.rkt">ch1-code/ex1-46.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+:3
+</pre>
+</div>
+</div>
     </div>
 </body>
 </html>
