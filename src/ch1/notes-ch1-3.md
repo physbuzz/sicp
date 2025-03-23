@@ -227,11 +227,9 @@ of the `fixed-point` procedure.
 ##### Solution
 
 $\varphi$ is defined as the value such that $x=1+1/x,$ which is the definition of a fixed point. What matters more is if it's an attractive fixed point, 
-which can be determined by $f'(x)\lt 0.$ In fact $f'(x)=-1/x^2$ and $x\gt 0,$ so this is the case.
+which happens whenever $|f'(x)|\lt 1.$ Since $f'(x)=-1/x^2$ and $\varphi\gt 1,$ $\varphi$ is an attractive fixed point.
 
 @src(ch1-code/ex1-35.rkt)
-
-
 
 #### Exercise 1.36
  Modify `fixed-point` so that
@@ -245,7 +243,26 @@ this takes with and without average damping.  (Note that you cannot start
 $\log(1) = 0$.)
 
 ##### Solution
+
+Without averaging, getting 1 part in $10^4$ accuracy takes 30 function evaluations (starting at 1.5). With averaging, 9 steps.
+
 @src(ch1-code/ex1-36.rkt)
+
+I was confused on the let syntax; inside `(define (try ...) ...)` these two are equivalent:
+
+```rkt
+ (define (try guess)
+   (let ((next (f guess)))
+     (if (close-enough? guess next)
+         next
+         (try next))))
+ (define (try guess)
+   ((lambda (next) 
+      (if (close-enough? guess next)
+      next
+      (try next)))
+    (f guess)))
+```
 
 #### Exercise 1.37
 
@@ -277,7 +294,12 @@ write one that generates a recursive process.
 
 ##### Solution
 
+I find that building the continued fraction from the deepest nesting outwards leads naturally to an iterative algorithm, and going from the top level to the deepest nesting naturally leads to a linear iterative recursive algorithm.
+
+I get that we need 11 levels (so that the deepest calls are to `(d 11)` and `(n 11)`) in order to get four digits of accuracy, however [Solving SICP](https://gitlab.com/Lockywolf/chibi-sicp/-/blob/master/index.pdf?ref_type=heads) gets that we need 14 layers, they're probably just not being as precise.
+
 @src(ch1-code/ex1-37.rkt)
+
 #### Exercise 1.38
  In 1737, the Swiss mathematician
 Leonhard Euler published a memoir De Fractionibus Continuis, which
@@ -303,10 +325,12 @@ computes an approximation to the tangent function based on Lambert's formula.
 `k` specifies the number of terms to compute, as in Exercise 1.37.
 
 ##### Solution
+6 terms gives us a very accurate result for a range of angle arguments:
 
 @src(ch1-code/ex1-39.rkt)
+
 #### Exercise 1.40
- Define a procedure `cubic`
+Define a procedure `cubic`
 that can be used together with the `newtons-method` procedure in
 expressions of the form
 ```rkt
@@ -317,6 +341,7 @@ to approximate zeros of the cubic $x^3 + ax^2 + bx + c$.
 ##### Solution
 
 @src(ch1-code/ex1-40.rkt)
+
 #### Exercise 1.41
  Define a procedure `double`
 that takes a procedure of one argument as argument and returns a procedure that
@@ -331,8 +356,20 @@ procedure that adds 2.  What value is returned by
 ##### Solution
 
 @src(ch1-code/ex1-41.rkt)
+
+We see that the expression in question causes sixteen function applications (so it prints out 21). Evaluating step by step:
+
+```rkt
+(double double) is (lambda (x) (double (double x)))
+(double (lambda (x) (double (double x))))
+(lambda (y) ((lambda (x) (double (double x))) ((lambda (x) (double (double x))) y))) which is
+(lambda (y) ((lambda (x) (double (double x))) (double (double y)))) which is
+(lambda (y) (double (double (double (double y)))))
+```
+Which leads to $16=2^4$ function applications. Easy.
+
 #### Exercise 1.42
- Let $f$ and $g$ be two
+Let $f$ and $g$ be two
 one-argument functions.  The composition $f$ after $g$ is defined
 to be the function $x \mapsto f(g(x))$.  Define a procedure
 `compose` that implements composition.  For example, if `inc` is a
@@ -386,6 +423,9 @@ the n-fold smoothed function of any given function using `smooth` and
 
 @src(ch1-code/ex1-44.rkt)
 
+As an example, I smooth the $|x|$ function. As we round off the jagged point at x=0, the evaluation of smoothed abs rises. 
+If we evaluate smoothed abs far away from zero, its value won't change.
+
 #### Exercise 1.45
  We saw in 1.3.3
 that attempting to compute square roots by naively finding a fixed point of
@@ -406,7 +446,20 @@ operations you need are available as primitives.
 
 ##### Solution
 
+I admit I skipped the experimentation step. I conjecture that we need $\left\lfloor \frac{n}{2} \right\rfloor$ average-damps. I haven't tested if we need less than this, but this appears to work.
+
 @src(ch1-code/ex1-45.rkt)
+
+Compare to the exact values:
+```
+1.414213562373095048...
+1.259921049894873164...
+1.189207115002721066...
+1.148698354997035006...
+1.122462048309372981...
+1.104089513673812337...
+1.090507732665257659...
+```
 #### Exercise 1.46
 Several of the numerical methods
 described in this chapter are instances of an extremely general computational
@@ -423,4 +476,11 @@ Rewrite the `sqrt` procedure of 1.1.7 and the
 `iterative-improve`.
 
 ##### Solution
+
+
 @src(ch1-code/ex1-46.rkt)
+
+One interesting thought: `iterative-improve` feels to me like it's very poorly written. It works, but a well-written lightning-fast implementation would exploit tail recursion. 
+Is there a tail recursion optimization here? I'm wondering if tail recursion is trivial here.
+
+I don't think that our evaluation model is advanced enough to answer that question. I'm also too lazy to check by timing this code. 

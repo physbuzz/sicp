@@ -15,7 +15,7 @@ import socketserver
 from pathlib import Path
 
 # Default configuration
-DEFAULT_PORT = 8000
+DEFAULT_PORT = 8001
 DEFAULT_DIRECTORY = "docs"
 
 class SICPHTTPRequestHandler(http.server.SimpleHTTPRequestHandler):

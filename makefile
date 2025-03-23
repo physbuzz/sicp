@@ -6,7 +6,7 @@
 BUILD_SCRIPT = ./build.py
 
 # Default port for server
-PORT = 8000
+PORT = 8001
 
 # Default target - build everything
 all:

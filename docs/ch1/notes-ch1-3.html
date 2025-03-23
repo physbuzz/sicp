@@ -832,7 +832,7 @@ application: not a procedure;
  expected a procedure that can be applied to arguments
   given: 2
   context...:
-   body of "/home/dkmoore/sicp/src/ch1/ch1-code/ex1-34.rkt"
+   body of "/home/physbuzz/sicp/src/ch1/ch1-code/ex1-34.rkt"
 </pre>
 </div>
 </div>
@@ -844,7 +844,7 @@ $x \mapsto 1 + 1 / x,$ and use this fact to compute $\varphi$ by means
 of the <code>fixed-point</code> procedure.</p>
 <h5>Solution</h5>
 <p>$\varphi$ is defined as the value such that $x=1+1/x,$ which is the definition of a fixed point. What matters more is if it's an attractive fixed point, 
-which can be determined by $f'(x)\lt 0.$ In fact $f'(x)=-1/x^2$ and $x\gt 0,$ so this is the case.</p>
+which happens whenever $|f'(x)|\lt 1.$ Since $f'(x)=-1/x^2$ and $\varphi\gt 1,$ $\varphi$ is an attractive fixed point.</p>
 <div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-35.rkt">ch1-code/ex1-35.rkt</a></div>
 
@@ -861,7 +861,10 @@ which can be determined by $f'(x)\lt 0.$ In fact $f'(x)=-1/x^2$ and $x\gt 0,$ so
 <span class="w">          </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="p">))))</span>
 <span class="w">  </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">first-guess</span><span class="p">))</span>
 
+<span class="c1">;; Fixed point calculation</span>
 <span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="mf">1.5</span><span class="p">)</span>
+<span class="c1">;; Exact value</span>
+<span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">(</span><span class="nb">sqrt</span><span class="w"> </span><span class="mf">5.0</span><span class="p">))</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
 </code></pre></div>
 
 
@@ -869,6 +872,7 @@ which can be determined by $f'(x)\lt 0.$ In fact $f'(x)=-1/x^2$ and $x\gt 0,$ so
 <span>Output:</span>
 <pre>
 1.6180327868852458
+1.618033988749895
 </pre>
 </div>
 </div>
@@ -884,33 +888,58 @@ this takes with and without average damping.  (Note that you cannot start
 <code>fixed-point</code> with a guess of 1, as this would cause division by
 $\log(1) = 0$.)</p>
 <h5>Solution</h5>
+<p>Without averaging, getting 1 part in $10^4$ accuracy takes 30 function evaluations (starting at 1.5). With averaging, 9 steps.</p>
 <div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-36.rkt">ch1-code/ex1-36.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="mf">0.00001</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">)</span>
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">first-guess</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span>
 <span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">))</span><span class="w"> </span>
 <span class="w">       </span><span class="n">tolerance</span><span class="p">))</span>
-<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">disp</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Step &quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot; = &quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
 <span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">next</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
 <span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
-<span class="w">          </span><span class="n">next</span>
-<span class="w">          </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="p">))))</span>
-<span class="w">  </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">first-guess</span><span class="p">))</span>
+<span class="w">          </span><span class="p">(</span><span class="n">disp</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">first-guess</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-f</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">log</span><span class="w"> </span><span class="mi">1000</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">log</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
 
-<span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="mf">1.5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="n">my-f</span><span class="w"> </span><span class="mf">1.5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">my-f</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="mf">1.5</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-1.6180327868852458
+Step 30 = 4.555506470667713
+Step 9 = 4.555548906156018
 </pre>
 </div>
 </div>
+
+<p>I was confused on the let syntax; inside <code>(define (try ...) ...)</code> these two are equivalent:</p>
+<div class="codehilite"><pre><span></span><code><span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">   </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">next</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+<span class="w">     </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
+<span class="w">         </span><span class="n">next</span>
+<span class="w">         </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="p">))))</span>
+<span class="w"> </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">   </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">next</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
+<span class="w">      </span><span class="n">next</span>
+<span class="w">      </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+</code></pre></div>
 
 <h4>Exercise 1.37</h4>
 <p><strong>1.</strong> An infinite continued fraction is an expression of the form
@@ -938,21 +967,71 @@ to get an approximation that is accurate to 4 decimal places?</p>
 that generates an iterative process.  If it generates an iterative process,
 write one that generates a recursive process.</p>
 <h5>Solution</h5>
+<p>I find that building the continued fraction from the deepest nesting outwards leads naturally to an iterative algorithm, and going from the top level to the deepest nesting naturally leads to a linear iterative recursive algorithm.</p>
+<p>I get that we need 11 levels (so that the deepest calls are to <code>(d 11)</code> and <code>(n 11)</code>) in order to get four digits of accuracy, however <a href="https://gitlab.com/Lockywolf/chibi-sicp/-/blob/master/index.pdf?ref_type=heads">Solving SICP</a> gets that we need 14 layers, they're probably just not being as precise.</p>
 <div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-37.rkt">ch1-code/ex1-37.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+
+<span class="c1">; Iterative loop for calculating continued fractions: start at the bottom</span>
+<span class="c1">; value1 = (/ ( n k) (d k))</span>
+<span class="c1">; value2 = (/ ( n (- k 1)) (+ (d (- k 1)) value1))</span>
+<span class="c1">; value3 = (/ ( n (- k 2)) (+ (d (- k 2)) value2))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">cont-frac</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">bottom-up</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="n">val</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="n">val</span>
+<span class="w">      </span><span class="p">(</span><span class="n">bottom-up</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span><span class="w"> </span><span class="n">val</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">bottom-up</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c1">; (/ (n 1) (+ (d 1) (terms 2 k)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">cont-frac-recursive</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">top-down</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="n">kprime</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">top-down</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">top-down</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+
+
+<span class="p">(</span><span class="n">cont-frac</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="n">cont-frac-recursive</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="mf">0.00005</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">n-accuracy</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">exact</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">exact</span><span class="p">))</span><span class="w"> </span><span class="n">tolerance</span><span class="p">)</span>
+<span class="w">    </span><span class="n">n</span>
+<span class="w">    </span><span class="p">(</span><span class="n">n-accuracy</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">exact</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">n-accuracy</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">cont-frac</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">k</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nb">sqrt</span><span class="w"> </span><span class="mf">5.0</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">    </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;n required for an accuracy of &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">tolerance</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot; is &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="mf">0.6180339887498</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">cont-frac</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+8/13
+8/13
+n required for an accuracy of 5e-5 is 11
+0.6180339887498
+0.6180555555555556
 </pre>
 </div>
 </div>
+
 <h4>Exercise 1.38</h4>
 <p>In 1737, the Swiss mathematician
 Leonhard Euler published a memoir De Fractionibus Continuis, which
@@ -967,14 +1046,35 @@ to approximate $e$, based on Euler's expansion.</p>
 <div class="code-header"><a href="ch1-code/ex1-38.rkt">ch1-code/ex1-38.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">cont-frac</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">bottom-up</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="n">val</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="n">val</span>
+<span class="w">      </span><span class="p">(</span><span class="n">bottom-up</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span><span class="w"> </span><span class="n">val</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">bottom-up</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+
+<span class="c1">; `1, 2, 1, 1, 4, 1, 1, 6, 1, 1, 8, ...`</span>
+<span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">d</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="w"> </span>
+<span class="w">             </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">m</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span>
+<span class="w">             </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span>
+<span class="w">               </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;11 terms: &quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">cont-frac</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="mi">11</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Exact   : 0.71828182845904&quot;</span><span class="p">))</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+11 terms: 0.7182818352059925
+Exact   : 0.71828182845904
 </pre>
 </div>
 </div>
@@ -987,21 +1087,68 @@ where $x$ is in radians.  Define a procedure <code>(tan-cf x k)</code> that
 computes an approximation to the tangent function based on Lambert's formula.
 <code>k</code> specifies the number of terms to compute, as in Exercise 1.37.</p>
 <h5>Solution</h5>
+<p>6 terms gives us a very accurate result for a range of angle arguments:</p>
 <div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-39.rkt">ch1-code/ex1-39.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+
+
+<span class="c1">;; (define (cont-frac-recursive n d k)</span>
+<span class="c1">;;   (define (top-down kprime)</span>
+<span class="c1">;;     (if (= kprime k)</span>
+<span class="c1">;;       (/ (n kprime) (d kprime))</span>
+<span class="c1">;;       (/ (n kprime) (+ (d kprime) (top-down (+ kprime 1))))))</span>
+<span class="c1">;;   (top-down 1))</span>
+<span class="c1">;; (define (tan x k)</span>
+<span class="c1">;;   (define (top-down kprime xpow)</span>
+<span class="c1">;;     (if (= kprime k)</span>
+<span class="c1">;;       (/ xpow (- (* kprime 2) 1))</span>
+<span class="c1">;;       (/ xpow (- (- (* kprime 2) 1) (top-down (+ kprime 1) (* xpow x))))))</span>
+<span class="c1">;;   (top-down 1 x))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">tan</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">x2</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">top-down</span><span class="w"> </span><span class="n">kprime</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">top-down</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">kprime</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">top-down</span><span class="w"> </span><span class="mi">2</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;tan(0.1) = 0.10033467208545054... (exact)&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;tan(0.1) = &quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">tan</span><span class="w"> </span><span class="mf">0.1</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;tan(1.0) = 1.557407724654902... (exact)&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;tan(1.0) = &quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">tan</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;tan(1.55) = 48.07848247921896... (exact)&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;tan(1.55) = &quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">tan</span><span class="w"> </span><span class="mf">1.55</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+tan(0.1) = 0.10033467208545054... (exact)
+tan(0.1) = 0.10033467208545055
+
+tan(1.0) = 1.557407724654902... (exact)
+tan(1.0) = 1.557407722401769
+
+tan(1.55) = 48.07848247921896... (exact)
+tan(1.55) = 48.07807712807702
+
 </pre>
 </div>
 </div>
+
 <h4>Exercise 1.40</h4>
 <p>Define a procedure <code>cubic</code>
 that can be used together with the <code>newtons-method</code> procedure in
@@ -1015,17 +1162,47 @@ expressions of the form</p>
 <div class="code-header"><a href="ch1-code/ex1-40.rkt">ch1-code/ex1-40.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">first-guess</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">))</span><span class="w"> </span>
+<span class="w">       </span><span class="n">tolerance</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">next</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
+<span class="w">          </span><span class="n">next</span>
+<span class="w">          </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">first-guess</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="mf">0.00001</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">deriv</span><span class="w"> </span><span class="n">g</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">dx</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">       </span><span class="n">dx</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">newton-transform</span><span class="w"> </span><span class="n">g</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">            </span><span class="p">((</span><span class="n">deriv</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">newtons-method</span><span class="w"> </span><span class="n">g</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="p">(</span><span class="n">newton-transform</span><span class="w"> </span><span class="n">g</span><span class="p">)</span>
+<span class="w">               </span><span class="n">guess</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">cubic</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">c</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="n">newtons-method</span><span class="w"> </span><span class="p">(</span><span class="n">cubic</span><span class="w"> </span><span class="mi">-6</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span><span class="mf">5.0</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;5.2465513645585649... (exact)&quot;</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+5.246551364558889
+5.2465513645585649... (exact)
 </pre>
 </div>
 </div>
+
 <h4>Exercise 1.41</h4>
 <p>Define a procedure <code>double</code>
 that takes a procedure of one argument as argument and returns a procedure that
@@ -1040,17 +1217,34 @@ procedure that adds 2.  What value is returned by</p>
 <div class="code-header"><a href="ch1-code/ex1-41.rkt">ch1-code/ex1-41.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+
+<span class="p">((</span><span class="n">double</span><span class="w"> </span><span class="n">inc</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+
+<span class="p">(((</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">double</span><span class="p">))</span><span class="w"> </span><span class="n">inc</span><span class="p">)</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+3
+21
 </pre>
 </div>
 </div>
+
+<p>We see that the expression in question causes sixteen function applications (so it prints out 21). Evaluating step by step:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">double</span><span class="p">)</span><span class="w"> </span><span class="n">is</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">is</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span><span class="w"> </span><span class="n">which</span><span class="w"> </span><span class="n">is</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="p">(</span><span class="n">double</span><span class="w"> </span><span class="n">y</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>Which leads to $16=2^4$ function applications. Easy.</p>
 <h4>Exercise 1.42</h4>
 <p>Let $f$ and $g$ be two
 one-argument functions.  The composition $f$ after $g$ is defined
@@ -1066,14 +1260,17 @@ procedure that adds 1 to its argument,</p>
 <div class="code-header"><a href="ch1-code/ex1-42.rkt">ch1-code/ex1-42.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">compose</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">((</span><span class="nb">compose</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="n">inc</span><span class="p">)</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+49
 </pre>
 </div>
 </div>
@@ -1100,14 +1297,23 @@ procedure should be able to be used as follows:</p>
 <div class="code-header"><a href="ch1-code/ex1-43.rkt">ch1-code/ex1-43.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">compose</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">repeated</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">f</span>
+<span class="w">   </span><span class="p">(</span><span class="nb">compose</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">repeated</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="p">((</span><span class="n">repeated</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">((</span><span class="n">repeated</span><span class="w"> </span><span class="n">inc</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+625
+51
 </pre>
 </div>
 </div>
@@ -1129,18 +1335,34 @@ the n-fold smoothed function of any given function using <code>smooth</code> and
 <div class="code-header"><a href="ch1-code/ex1-44.rkt">ch1-code/ex1-44.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">compose</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">repeated</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">f</span>
+<span class="w">   </span><span class="p">(</span><span class="nb">compose</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">repeated</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">dx</span><span class="w"> </span><span class="mf">0.05</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">smooth</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">dx</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">dx</span><span class="p">)))</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span>
+
+<span class="p">((</span><span class="n">smooth</span><span class="w"> </span><span class="nb">abs</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(((</span><span class="n">repeated</span><span class="w"> </span><span class="n">smooth</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="nb">abs</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="p">(((</span><span class="n">repeated</span><span class="w"> </span><span class="n">smooth</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="nb">abs</span><span class="p">)</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+0.03333333333333333
+0.06419753086419754
+0.9999999999999999
 </pre>
 </div>
 </div>
 
+<p>As an example, I smooth the $|x|$ function. As we round off the jagged point at x=0, the evaluation of smoothed abs rises. 
+If we evaluate smoothed abs far away from zero, its value won't change.</p>
 <h4>Exercise 1.45</h4>
 <p>We saw in 1.3.3
 that attempting to compute square roots by naively finding a fixed point of
@@ -1159,21 +1381,78 @@ $n^{\text{th}}$ roots using <code>fixed-point</code>, <code>average-damp</code>,
 <code>repeated</code> procedure of Exercise 1.43.  Assume that any arithmetic
 operations you need are available as primitives.</p>
 <h5>Solution</h5>
+<p>I admit I skipped the experimentation step. I conjecture that we need $\left\lfloor \frac{n}{2} \right\rfloor$ average-damps. I haven't tested if we need less than this, but this appears to work.</p>
 <div class="code-box">
 <div class="code-header"><a href="ch1-code/ex1-45.rkt">ch1-code/ex1-45.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="mf">0.00001</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="mf">2.0</span><span class="p">))</span>
+
+<span class="c1">;; Conjecture, to find the nth root we need (floor (/ n 2)) damping steps</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">average-damp</span><span class="w"> </span><span class="n">f</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">compose</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">repeated</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">    </span><span class="n">f</span>
+<span class="w">   </span><span class="p">(</span><span class="nb">compose</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">repeated</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">first-guess</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">))</span>
+<span class="w">       </span><span class="n">tolerance</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">guess</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">next</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">close-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">next</span><span class="p">)</span>
+<span class="w">          </span><span class="n">next</span>
+<span class="w">          </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">next</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">first-guess</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">pow</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">exp</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="nb">log</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">nth-root</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span>
+<span class="w">         </span><span class="p">((</span><span class="n">repeated</span><span class="w"> </span><span class="n">average-damp</span><span class="w"> </span><span class="p">(</span><span class="nb">floor</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">pow</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="w">         </span><span class="mf">1.0</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">nth-root</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nth-root</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nth-root</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nth-root</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nth-root</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nth-root</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+<span class="p">(</span><span class="n">nth-root</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+1.4142135623746899
+1.259923236422975
+1.189207115002721
+1.1486967244204176
+1.1224645830339175
+1.1040904628970067
+1.0905020457630394
 </pre>
 </div>
 </div>
+
+<p>Compare to the exact values:</p>
+<div class="codehilite"><pre><span></span><code><span class="mf">1.414213562373095048...</span>
+<span class="mf">1.259921049894873164...</span>
+<span class="mf">1.189207115002721066...</span>
+<span class="mf">1.148698354997035006...</span>
+<span class="mf">1.122462048309372981...</span>
+<span class="mf">1.104089513673812337...</span>
+<span class="mf">1.090507732665257659...</span>
+</code></pre></div>
+
 <h4>Exercise 1.46</h4>
 <p>Several of the numerical methods
 described in this chapter are instances of an extremely general computational
@@ -1193,17 +1472,47 @@ Rewrite the <code>sqrt</code> procedure of 1.1.7 and the
 <div class="code-header"><a href="ch1-code/ex1-46.rkt">ch1-code/ex1-46.rkt</a></div>
 
 <div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
-<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;:3&quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="mf">2.0</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iterative-improve</span><span class="w"> </span><span class="n">good-enough?</span><span class="w"> </span><span class="n">improve</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">guess</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">guess2</span><span class="w"> </span><span class="p">(</span><span class="n">improve</span><span class="w"> </span><span class="n">guess</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">good-enough?</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">guess2</span><span class="p">)</span>
+<span class="w">    </span><span class="n">guess2</span>
+<span class="w">    </span><span class="p">((</span><span class="n">iterative-improve</span><span class="w"> </span><span class="n">good-enough?</span><span class="w"> </span><span class="n">improve</span><span class="p">)</span><span class="w"> </span><span class="n">guess2</span><span class="p">)</span>
+<span class="w">      </span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tolerance</span><span class="w"> </span><span class="mf">0.0001</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-close-enough?</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">))</span>
+<span class="w">     </span><span class="n">tolerance</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">iterative-improve</span><span class="w"> </span>
+<span class="w">     </span><span class="n">my-close-enough?</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">guess</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">average</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">guess</span><span class="p">))))</span><span class="w"> </span><span class="mf">1.0</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">first-guess</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">iterative-improve</span><span class="w"> </span><span class="n">my-close-enough?</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="n">first-guess</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">my-sqrt</span><span class="w"> </span><span class="mf">2.0</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">fixed-point</span><span class="w"> </span><span class="nb">cos</span><span class="w"> </span><span class="mf">1.0</span><span class="p">)</span>
 </code></pre></div>
 
 
 <div class="code-output">
 <span>Output:</span>
 <pre>
-:3
+1.4142135623746899
+0.7390547907469174
 </pre>
 </div>
 </div>
+
+<p>One interesting thought: <code>iterative-improve</code> feels to me like it's very poorly written. It works, but a well-written lightning-fast implementation would exploit tail recursion. 
+Is there a tail recursion optimization here? I'm wondering if tail recursion is trivial here.</p>
+<p>I don't think that our evaluation model is advanced enough to answer that question. I'm also too lazy to check by timing this code. </p>
     </div>
 </body>
 </html>

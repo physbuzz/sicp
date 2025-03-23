@@ -11,4 +11,7 @@
           (try next))))
   (try first-guess))
 
+;; Fixed point calculation
 (fixed-point (lambda (x) (+ 1 (/ 1.0 x))) 1.5)
+;; Exact value
+(/ (+ 1.0 (sqrt 5.0)) 2.0)
