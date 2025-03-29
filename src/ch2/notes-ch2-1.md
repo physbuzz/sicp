@@ -14,9 +14,10 @@
 
 ### Introduction
 
-### Exercises
+Test
 
-##### Solution
+
+### Exercises 
 
 #### Exercise 2.1
 
@@ -27,6 +28,8 @@ positive, both the numerator and denominator are positive, and if the rational
 number is negative, only the numerator is negative.
 
 ##### Solution
+
+@src(code/ex2-1.rkt)
 
 #### Exercise 2.2
 
@@ -55,6 +58,8 @@ endpoints).  To try your procedures, you'll need a way to print points:
 
 ##### Solution
 
+@src(code/ex2-2.rkt)
+
 #### Exercise 2.3
 
 Implement a representation for
@@ -67,6 +72,11 @@ using either representation?
 
 ##### Solution
 
+Super tedious! I guess this is the 1980's version of "implement these getter functions" -.-
+
+I was tempted to implement a type system (integer switch to choose rect1 or rect2 based on the int) but I think this implementation captures the spirit of the problem.
+
+@src(code/ex2-3.rkt)
 #### Exercise 2.4
 
 Here is an alternative procedural
@@ -86,16 +96,28 @@ works, make use of the substitution model of 1.1.5.)
 
 ##### Solution
 
+First, let's check how car works:
+```rkt
+(car (cons x y))
+((lambda (m) (m x y)) (lambda (p q) p))
+((lambda (p q) p) x y) 
+x
+```
+So the corresponding definition of `cdr` will just have `(lambda (p q) q)` instead.
+
+@src(code/ex2-4.rkt)
+
 #### Exercise 2.5
 
 Show that we can represent pairs of
 nonnegative integers using only numbers and arithmetic operations if we
-represent the pair $a$ and $b$ as the integer that is the product ${2^a 3^b$}.
+represent the pair $a$ and $b$ as the integer that is the product ${2^a 3^b}$.
 Give the corresponding definitions of the procedures `cons`,
 `car`, and `cdr`.
 
 ##### Solution
 
+@src(code/ex2-5.rkt)
 #### Exercise 2.6
 
 In case representing pairs as
@@ -121,6 +143,42 @@ repeated application of `add-1`).
 
 ##### Solution
 
+How topical! The video ["What is PLUS times PLUS?"](https://www.youtube.com/watch?v=RcVA8Nj6HEo) just came out.
+
+**1:**
+
+```rkt
+;; (define zero (lambda (f) (lambda (x) x)))
+;; (define (add-1 n) (lambda (f) (lambda (x) (f ((n f) x)))))
+(add-1 zero)
+(lambda (f) (lambda (x) (f (((lambda (g) (lambda (y) y)) f) x))))
+(lambda (f) (lambda (x) (f ((lambda (y) y) x))))
+(lambda (f) (lambda (x) (f x)))
+```
+
+**2:**
+
+```rkt
+;; (define one (lambda (f) (lambda (x) (f x))))
+;; (define (add-1 n) (lambda (f) (lambda (x) (f ((n f) x)))))
+(add-1 one)
+(lambda (f) (lambda (x) (f (((lambda (g) (lambda (y) (g y))) f) x))))
+(lambda (f) (lambda (x) (f ((lambda (y) (f y)) x))))
+(lambda (f) (lambda (x) (f (f x))))
+```
+
+**addition:**
+```rkt
+(define (church-add a b)
+    (lambda (f) (lambda (x) ((a f) ((b f) x)))))
+```
+
+**Testing:** Yooo it works first try, nice.
+
+To future-me/future-readers: the idea behind church-add is to first unwrap `a` and `b` so that they're simple functions that apply `f` some number of times, then apply both to `x`. 
+
+@src(code/ex2-6.rkt)
+
 #### Exercise 2.7
 
 Alyssa's program is incomplete
@@ -135,6 +193,11 @@ Define selectors `upper-bound` and `lower-bound` to complete the
 implementation.
 
 ##### Solution
+```rkt
+(define (make-interval a b) (cons a b))
+(Define (lower-bound int) (car int))
+(Define (upper-bound int) (cdr int))
+```
 
 #### Exercise 2.8
 
@@ -144,6 +207,16 @@ a corresponding subtraction procedure, called `sub-interval`.
 
 ##### Solution
 
+Write our two intervals as $A$ and $B$. The lower bound should be
+$$\mathrm{inf}_{x\in A, y\in B}(x-y)=A_{\textrm{min}}-B_{\textrm{max}}$$
+The upper bound should be
+$$\mathrm{sup}_{x\in A, y\in B}(x-y)=A_{\textrm{max}}-B_{\textrm{min}}$$
+
+```rkt
+(define (sub-interval A B)
+  (make-interval (- (lower-bound A) (upper-bound B)) 
+                 (- (upper-bound A) (lower-bound B))))
+```
 #### Exercise 2.9
 
 The width of an interval
@@ -157,6 +230,16 @@ a function only of the widths of the intervals being added (or subtracted).
 Give examples to show that this is not true for multiplication or division.
 
 ##### Solution
+
+Addition:
+
+Subtraction:
+<div>$$\begin{align*}
+\textrm{Width}_{A-B} &=
+\mathrm{sup}_{x\in A, y\in B}(x-y)-\mathrm{inf}_{x\in A, y\in B}(x-y)\\
+&=A_{\textrm{max}}-B_{\textrm{min}} - (A_{\textrm{min}}-B_{\textrm{max}})\\
+&=\textrm{Width}_A+\textrm{Width}_B
+\end{align*}$$</div>
 
 #### Exercise 2.10
 

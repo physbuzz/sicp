@@ -458,8 +458,8 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div></p>
 <h2 id="section-21">Section 2.1</h2>
 <h3 id="introduction">Introduction</h3>
+<p>Test</p>
 <h3 id="exercises">Exercises</h3>
-<h5>Solution</h5>
 <h4 id="exercise-21">Exercise 2.1</h4>
 <p>Define a better version of
 <code>make-rat</code> that handles both positive and negative arguments.
@@ -467,6 +467,35 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 positive, both the numerator and denominator are positive, and if the rational
 number is negative, only the numerator is negative.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-1.rkt">code/ex2-1.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">d</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">g</span><span class="w"> </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="n">g</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span>
+<span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">-15</span><span class="p">)</span>
+<span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="mi">-10</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span>
+<span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="mi">-10</span><span class="w"> </span><span class="mi">-15</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(2 . 3)
+(-2 . 3)
+(-2 . 3)
+(2 . 3)
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-22">Exercise 2.2</h4>
 <p>Consider the problem of
 representing line segments in a plane.  Each segment is represented as a pair
@@ -490,6 +519,45 @@ endpoints).  To try your procedures, you'll need a way to print points:</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-2.rkt">code/ex2-2.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">print-point</span><span class="w"> </span><span class="n">p</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;(&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="n">p</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="n">p</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;)&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-segment</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">start-segment</span><span class="w"> </span><span class="n">seg</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">seg</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">end-segment</span><span class="w"> </span><span class="n">seg</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">seg</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="n">pt</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">pt</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="n">pt</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">pt</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">midpoint-segment</span><span class="w"> </span><span class="n">seg</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">x1</span><span class="w"> </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="p">(</span><span class="n">start-segment</span><span class="w"> </span><span class="n">seg</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">y1</span><span class="w"> </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="p">(</span><span class="n">start-segment</span><span class="w"> </span><span class="n">seg</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">x2</span><span class="w"> </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="p">(</span><span class="n">end-segment</span><span class="w"> </span><span class="n">seg</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">y2</span><span class="w"> </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="p">(</span><span class="n">end-segment</span><span class="w"> </span><span class="n">seg</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x1</span><span class="w"> </span><span class="n">x2</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="n">y2</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="n">print-point</span><span class="w"> </span><span class="p">(</span><span class="n">midpoint-segment</span><span class="w"> </span><span class="p">(</span><span class="n">make-segment</span><span class="w"> </span>
+<span class="w">                                  </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                                  </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">3</span><span class="p">))))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+
+(3/2,3/2)
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-23">Exercise 2.3</h4>
 <p>Implement a representation for
 rectangles in a plane.  (Hint: You may want to make use of Exercise 2.2.)
@@ -499,6 +567,69 @@ representation for rectangles.  Can you design your system with suitable
 abstraction barriers, so that the same perimeter and area procedures will work
 using either representation?</p>
 <h5>Solution</h5>
+<p>Super tedious! I guess this is the 1980's version of "implement these getter functions" -.-</p>
+<p>I was tempted to implement a type system (integer switch to choose rect1 or rect2 based on the int) but I think this implementation captures the spirit of the problem.</p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-3.rkt">code/ex2-3.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="n">pt</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">pt</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="n">pt</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">pt</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">print-point</span><span class="w"> </span><span class="n">p</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;(&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;)&quot;</span><span class="p">))</span>
+
+<span class="c1">;; One representation</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-rect1</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="n">widthheight</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">pos</span><span class="w"> </span><span class="n">widthheight</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rect-width1</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">rect</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rect-height1</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">rect</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rect-perimeter1</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">rect-width1</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">rect-height1</span><span class="w"> </span><span class="n">rect</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rect-area1</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">rect-width1</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">rect-height1</span><span class="w"> </span><span class="n">rect</span><span class="p">)))</span>
+
+<span class="c1">;;Second representation using &quot;top-left&quot; and &quot;bottom-right&quot;</span>
+<span class="c1">;;constraint: tl.x&lt;br.x, tl.y&lt;br.y</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-rect2</span><span class="w"> </span><span class="n">tl</span><span class="w"> </span><span class="n">br</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">tl</span><span class="w"> </span><span class="n">br</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rect-width2</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">rect</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">x-point</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">rect</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rect-height2</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">rect</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">y-point</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">rect</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rect-perimeter2</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">rect-width2</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">rect-height2</span><span class="w"> </span><span class="n">rect</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rect-area2</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">rect-width2</span><span class="w"> </span><span class="n">rect</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">rect-height2</span><span class="w"> </span><span class="n">rect</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Representation 1 (perimeter, height):&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">r1</span><span class="w"> </span><span class="p">(</span><span class="n">make-rect1</span><span class="w"> </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">rect-perimeter1</span><span class="w"> </span><span class="n">r1</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;, &quot;</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">rect-area1</span><span class="w"> </span><span class="n">r1</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Representation 2 (perimeter, height):&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">r2</span><span class="w"> </span><span class="p">(</span><span class="n">make-rect2</span><span class="w"> </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-point</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">rect-perimeter2</span><span class="w"> </span><span class="n">r2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;, &quot;</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">rect-area2</span><span class="w"> </span><span class="n">r2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Representation 1 (perimeter, height):
+8, 4
+Representation 2 (perimeter, height):
+8, 4
+</pre>
+</div>
+</div>
 <h4 id="exercise-24">Exercise 2.4</h4>
 <p>Here is an alternative procedural
 representation of pairs.  For this representation, verify that <code>(car (cons
@@ -513,13 +644,78 @@ x y))</code> yields <code>x</code> for any objects <code>x</code> and <code>y</c
 <p>What is the corresponding definition of <code>cdr</code>? (Hint: To verify that this
 works, make use of the substitution model of 1.1.5.)</p>
 <h5>Solution</h5>
+<p>First, let's check how car works:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="n">p</span><span class="p">))</span>
+<span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span>
+<span class="n">x</span>
+</code></pre></div>
+
+<p>So the corresponding definition of <code>cdr</code> will just have <code>(lambda (p q) q)</code> instead.</p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-4.rkt">code/ex2-4.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">z</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="n">p</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">z</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="n">q</span><span class="p">)</span><span class="w"> </span><span class="n">q</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">arg</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">arg</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">arg</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1
+2
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-25">Exercise 2.5</h4>
 <p>Show that we can represent pairs of
 nonnegative integers using only numbers and arithmetic operations if we
-represent the pair $a$ and $b$ as the integer that is the product ${2^a 3^b$}.
+represent the pair $a$ and $b$ as the integer that is the product ${2^a 3^b}$.
 Give the corresponding definitions of the procedures <code>cons</code>,
 <code>car</code>, and <code>cdr</code>.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-5.rkt">code/ex2-5.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">pow</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">pow</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+
+<span class="c1">;; Find how many powers of two the number has</span>
+<span class="c1">;; Might be fun to optimize once I know more scheme.</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">npowers</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">npowers-iter</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">product</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="n">npowers-iter</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="n">base</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">      </span><span class="n">k</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">npowers-iter</span><span class="w"> </span><span class="n">base</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">pow</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">pow</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">b</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">npowers</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">npowers</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">arg</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">13</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;2^a 3^b is: &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;a is: &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">arg</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;b is: &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">arg</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+2^a 3^b is: 1632586752
+a is: 10
+b is: 13
+</pre>
+</div>
+</div>
 <h4 id="exercise-26">Exercise 2.6</h4>
 <p>In case representing pairs as
 procedures wasn't mind-boggling enough, consider that, in a language that can
@@ -539,6 +735,71 @@ Alonzo Church, the logician who invented the λ-calculus.</p>
 a direct definition of the addition procedure <code>+</code> (not in terms of
 repeated application of <code>add-1</code>).</p>
 <h5>Solution</h5>
+<p>How topical! The video <a href="https://www.youtube.com/watch?v=RcVA8Nj6HEo">"What is PLUS times PLUS?"</a> just came out.</p>
+<p><strong>1:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;; (define zero (lambda (f) (lambda (x) x)))</span>
+<span class="c1">;; (define (add-1 n) (lambda (f) (lambda (x) (f ((n f) x)))))</span>
+<span class="p">(</span><span class="n">add-1</span><span class="w"> </span><span class="n">zero</span><span class="p">)</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+</code></pre></div>
+
+<p><strong>2:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;; (define one (lambda (f) (lambda (x) (f x))))</span>
+<span class="c1">;; (define (add-1 n) (lambda (f) (lambda (x) (f ((n f) x)))))</span>
+<span class="p">(</span><span class="n">add-1</span><span class="w"> </span><span class="n">one</span><span class="p">)</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+</code></pre></div>
+
+<p><strong>addition:</strong></p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">church-add</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">b</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p><strong>Testing:</strong> Yooo it works first try, nice.</p>
+<p>To future-me/future-readers: the idea behind church-add is to first unwrap <code>a</code> and <code>b</code> so that they're simple functions that apply <code>f</code> some number of times, then apply both to <code>x</code>. </p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-6.rkt">code/ex2-6.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-1</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">((</span><span class="n">n</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">church-add</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">b</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">inc</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">church-convert</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="n">inc</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;zero = &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">church-convert</span><span class="w"> </span><span class="n">zero</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;one = &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">church-convert</span><span class="w"> </span><span class="n">one</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;two = &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">church-convert</span><span class="w"> </span><span class="n">two</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;one + zero = &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">church-convert</span><span class="w"> </span><span class="p">(</span><span class="n">church-add</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">zero</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;one + one = &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">church-convert</span><span class="w"> </span><span class="p">(</span><span class="n">church-add</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">one</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;one + two = &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">church-convert</span><span class="w"> </span><span class="p">(</span><span class="n">church-add</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">two</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;two + two = &quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">church-convert</span><span class="w"> </span><span class="p">(</span><span class="n">church-add</span><span class="w"> </span><span class="n">two</span><span class="w"> </span><span class="n">two</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+zero = 0
+one = 1
+two = 2
+one + zero = 1
+one + one = 2
+one + two = 3
+two + two = 4
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-27">Exercise 2.7</h4>
 <p>Alyssa's program is incomplete
 because she has not specified the implementation of the interval abstraction.
@@ -549,11 +810,25 @@ Here is a definition of the interval constructor:</p>
 <p>Define selectors <code>upper-bound</code> and <code>lower-bound</code> to complete the
 implementation.</p>
 <h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="n">Define</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+<span class="p">(</span><span class="n">Define</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+</code></pre></div>
+
 <h4 id="exercise-28">Exercise 2.8</h4>
 <p>Using reasoning analogous to
 Alyssa's, describe how the difference of two intervals may be computed.  Define
 a corresponding subtraction procedure, called <code>sub-interval</code>.</p>
 <h5>Solution</h5>
+<p>Write our two intervals as $A$ and $B$. The lower bound should be
+$$\mathrm{inf}<em>{x\in A, y\in B}(x-y)=A</em>{\textrm{min}}-B_{\textrm{max}}$$
+The upper bound should be
+$$\mathrm{sup}<em>{x\in A, y\in B}(x-y)=A</em>{\textrm{max}}-B_{\textrm{min}}$$</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub-interval</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">B</span><span class="p">))</span><span class="w"> </span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">B</span><span class="p">))))</span>
+</code></pre></div>
+
 <h4 id="exercise-29">Exercise 2.9</h4>
 <p>The width of an interval
 is half of the difference between its upper and lower bounds.  The width is a
@@ -565,6 +840,15 @@ intervals.  Show that the width of the sum (or difference) of two intervals is
 a function only of the widths of the intervals being added (or subtracted).
 Give examples to show that this is not true for multiplication or division.</p>
 <h5>Solution</h5>
+<p>Addition:</p>
+<p>Subtraction:</p>
+<div>$$\begin{align*}
+\textrm{Width}_{A-B} &=
+\mathrm{sup}_{x\in A, y\in B}(x-y)-\mathrm{inf}_{x\in A, y\in B}(x-y)\\
+&=A_{\textrm{max}}-B_{\textrm{min}} - (A_{\textrm{min}}-B_{\textrm{max}})\\
+&=\textrm{Width}_A+\textrm{Width}_B
+\end{align*}$$</div>
+
 <h4 id="exercise-210">Exercise 2.10</h4>
 <p>Ben Bitdiddle, an expert systems
 programmer, looks over Alyssa's shoulder and comments that it is not clear what
