@@ -458,7 +458,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div></p>
 <h2 id="section-21">Section 2.1</h2>
 <h3 id="introduction">Introduction</h3>
-<p>Test</p>
 <h3 id="exercises">Exercises</h3>
 <h4 id="exercise-21">Exercise 2.1</h4>
 <p>Define a better version of
@@ -568,7 +567,7 @@ abstraction barriers, so that the same perimeter and area procedures will work
 using either representation?</p>
 <h5>Solution</h5>
 <p>Super tedious! I guess this is the 1980's version of "implement these getter functions" -.-</p>
-<p>I was tempted to implement a type system (integer switch to choose rect1 or rect2 based on the int) but I think this implementation captures the spirit of the problem.</p>
+<p>I was tempted to implement a programmatic way to switch between rect1 or rect2 based on a flag passed in, but I think that's overengineering the problem.</p>
 <div class="code-box">
 <div class="code-header"><a href="code/ex2-3.rkt">code/ex2-3.rkt</a></div>
 
@@ -630,6 +629,7 @@ Representation 2 (perimeter, height):
 </pre>
 </div>
 </div>
+
 <h4 id="exercise-24">Exercise 2.4</h4>
 <p>Here is an alternative procedural
 representation of pairs.  For this representation, verify that <code>(car (cons
@@ -760,7 +760,7 @@ repeated application of <code>add-1</code>).</p>
 </code></pre></div>
 
 <p><strong>Testing:</strong> Yooo it works first try, nice.</p>
-<p>To future-me/future-readers: the idea behind church-add is to first unwrap <code>a</code> and <code>b</code> so that they're simple functions that apply <code>f</code> some number of times, then apply both to <code>x</code>. </p>
+<p>To future-me/future-readers: the idea behind <code>church-add</code> is to first unwrap <code>a</code> and <code>b</code> so that they're simple functions that apply <code>f</code> some number of times, then apply both to <code>x</code>. </p>
 <div class="code-box">
 <div class="code-header"><a href="code/ex2-6.rkt">code/ex2-6.rkt</a></div>
 
@@ -811,8 +811,8 @@ Here is a definition of the interval constructor:</p>
 implementation.</p>
 <h5>Solution</h5>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
-<span class="p">(</span><span class="n">Define</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
-<span class="p">(</span><span class="n">Define</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
 </code></pre></div>
 
 <h4 id="exercise-28">Exercise 2.8</h4>
@@ -820,10 +820,11 @@ implementation.</p>
 Alyssa's, describe how the difference of two intervals may be computed.  Define
 a corresponding subtraction procedure, called <code>sub-interval</code>.</p>
 <h5>Solution</h5>
-<p>Write our two intervals as $A$ and $B$. The lower bound should be
-$$\mathrm{inf}<em>{x\in A, y\in B}(x-y)=A</em>{\textrm{min}}-B_{\textrm{max}}$$
-The upper bound should be
-$$\mathrm{sup}<em>{x\in A, y\in B}(x-y)=A</em>{\textrm{max}}-B_{\textrm{min}}$$</p>
+<p>Write our two intervals as $A$ and $B$. The lower bound should be</p>
+<div>$$\mathrm{inf}_{x\in A, y\in B}(x-y)=A_{\textrm{min}}-B_{\textrm{max}}$$</div>
+<p>The upper bound should be</p>
+<div>$$\mathrm{sup}_{x\in A, y\in B}(x-y)=A_{\textrm{max}}-B_{\textrm{min}}$$</div>
+
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub-interval</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">B</span><span class="p">))</span><span class="w"> </span>
 <span class="w">                 </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">B</span><span class="p">))))</span>
@@ -840,8 +841,15 @@ intervals.  Show that the width of the sum (or difference) of two intervals is
 a function only of the widths of the intervals being added (or subtracted).
 Give examples to show that this is not true for multiplication or division.</p>
 <h5>Solution</h5>
-<p>Addition:</p>
-<p>Subtraction:</p>
+<p><strong>Addition:</strong></p>
+<div>$$\begin{align*}
+\textrm{Width}_{A+B} &=
+\mathrm{sup}_{x\in A, y\in B}(x+y)-\mathrm{inf}_{x\in A, y\in B}(x+y)\\
+&=A_{\textrm{max}}+B_{\textrm{max}} - (A_{\textrm{min}}+B_{\textrm{min}})\\
+&=\textrm{Width}_A+\textrm{Width}_B
+\end{align*}$$</div>
+
+<p><strong>Subtraction:</strong></p>
 <div>$$\begin{align*}
 \textrm{Width}_{A-B} &=
 \mathrm{sup}_{x\in A, y\in B}(x-y)-\mathrm{inf}_{x\in A, y\in B}(x-y)\\
@@ -849,44 +857,239 @@ Give examples to show that this is not true for multiplication or division.</p>
 &=\textrm{Width}_A+\textrm{Width}_B
 \end{align*}$$</div>
 
+<p><strong>Counterexamples:</strong></p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-9.rkt">code/ex2-9.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub-interval</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">B</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">B</span><span class="p">))</span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">B</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">p1</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">p2</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">p3</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">p4</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">min</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="n">p4</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">(</span><span class="nb">max</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="n">p4</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">div-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">mul-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">width-interval</span><span class="w"> </span><span class="n">int</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">disp-interval</span><span class="w"> </span><span class="n">int</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;, &quot;</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;]&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">disp-interval-op</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="n">func</span><span class="w"> </span><span class="n">character</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">i1</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">i2</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">d</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">disp-interval</span><span class="w"> </span><span class="n">i1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">character</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">disp-interval</span><span class="w"> </span><span class="n">i2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot; = &quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">disp-interval</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="n">i2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Multiplication of two width 2 intervals result in a width 3 interval:&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-interval-op</span><span class="w"> </span><span class="mf">-0.5</span><span class="w"> </span><span class="mf">1.5</span><span class="w"> </span><span class="mf">-1.5</span><span class="w"> </span><span class="mf">0.5</span><span class="w"> </span><span class="n">mul-interval</span><span class="w"> </span><span class="s2">&quot; * &quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Multiplication of two width 2 intervals result in a width 4 interval:&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-interval-op</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">mul-interval</span><span class="w"> </span><span class="s2">&quot; * &quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Division of two width 1 intervals creates a tiny interval:&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-interval-op</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">11</span><span class="w"> </span><span class="n">div-interval</span><span class="w"> </span><span class="s2">&quot; / &quot;</span><span class="p">)</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Division of two width 1 intervals creates a huge interval:&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-interval-op</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mf">0.1</span><span class="w"> </span><span class="mf">1.1</span><span class="w"> </span><span class="n">div-interval</span><span class="w"> </span><span class="s2">&quot; / &quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Multiplication of two width 2 intervals result in a width 3 interval:
+[-0.5, 1.5] * [-1.5, 0.5] = [-2.25, 0.75]
+Multiplication of two width 2 intervals result in a width 4 interval:
+[0, 2] * [0, 2] = [0, 4]
+Division of two width 1 intervals creates a tiny interval:
+[2, 3] / [10, 11] = [0.18181818181818182, 0.30000000000000004]
+Division of two width 1 intervals creates a huge interval:
+[2, 3] / [0.1, 1.1] = [1.8181818181818181, 30.0]
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-210">Exercise 2.10</h4>
 <p>Ben Bitdiddle, an expert systems
 programmer, looks over Alyssa's shoulder and comments that it is not clear what
 it means to divide by an interval that spans zero.  Modify Alyssa's code to
 check for this condition and to signal an error if it occurs.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-10.rkt">code/ex2-10.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">p1</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">p2</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">p3</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">p4</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">min</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="n">p4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">max</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="n">p4</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">contains?</span><span class="w"> </span><span class="n">interval</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;=</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">interval</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">interval</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">div-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="n">contains?</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">mul-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">                                     </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mf">1.0</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;div-interval called with interval containing zero&quot;</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">disp-interval</span><span class="w"> </span><span class="n">int</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;[&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;, &quot;</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;]&quot;</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">disp-interval-op</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">d</span><span class="w"> </span><span class="n">func</span><span class="w"> </span><span class="n">character</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">i1</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">i2</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">d</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">disp-interval</span><span class="w"> </span><span class="n">i1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">character</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">disp-interval</span><span class="w"> </span><span class="n">i2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot; = &quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">disp-interval</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="w"> </span><span class="n">i1</span><span class="w"> </span><span class="n">i2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Division by an interval containing zero:&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-interval-op</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mf">1.1</span><span class="w"> </span><span class="n">div-interval</span><span class="w"> </span><span class="s2">&quot; / &quot;</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Division by an interval containing zero:
+[2, 3] / [-1, 1.1] = 
+Error (exit code 1):
+div-interval called with interval containing zero
+  context...:
+   /home/dkmoore/sicp/src/ch2/code/ex2-10.rkt:22:0: disp-interval-op
+   body of "/home/dkmoore/sicp/src/ch2/code/ex2-10.rkt"
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-211">Exercise 2.11</h4>
 <p>In passing, Ben also cryptically
 comments: <code>`By testing the signs of the endpoints of the intervals, it is
 possible to break</code>mul-interval` into nine cases, only one of which
 requires more than two multiplications.''  Rewrite this procedure using Ben's
 suggestion.</p>
-<p>After debugging her program, Alyssa shows it to a potential user, who complains
-that her program solves the wrong problem.  He wants a program that can deal
-with numbers represented as a center value and an additive tolerance; for
-example, he wants to work with intervals such as 3.5 $\pm$ 0.15 rather than
-[3.35, 3.65].  Alyssa returns to her desk and fixes this problem by supplying
-an alternate constructor and alternate selectors:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-center-width</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">w</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">w</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">w</span><span class="p">)))</span>
+<h5>Solution</h5>
+<p>So, let's see. The goal here is to reduce the number of multiplications down from 4. We have four numbers $x_\ell,x_u,y_\ell,y_u.$ If we go case-by-case whether each number is greater than or equal to zero, we don't have sixteen cases because we also have to enforce $x_\ell\lt x_u$. I guess it's easier to list this out by cases.</p>
+<ul>
+<li>case <code>1111</code>: The positive case <code>1111</code> is easy:</li>
+</ul>
+<div>$$x*y=[x_\ell y_\ell,x_u y_u]$$</div>
 
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">center</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span>
-<span class="w">        </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">i</span><span class="p">))</span><span class="w"> </span>
-<span class="w">     </span><span class="mi">2</span><span class="p">))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="n">i</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span>
-<span class="w">        </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">i</span><span class="p">))</span><span class="w"> </span>
-<span class="w">     </span><span class="mi">2</span><span class="p">))</span>
+<ul>
+<li>
+<p>case <code>1101</code>: If all numbers are positive except $y_\ell$ (case <code>1101</code>) the lower bound is $x_u y_\ell:$ $x*y=[x_u y_\ell,x_u y_u]$</p>
+</li>
+<li>
+<p>case <code>0111</code>: By symmetry, if all numbers are positive except $x_\ell,$ then $x*y=[x_u y_\ell,x_u y_u]$</p>
+</li>
+</ul>
+<p>Anyways, proceeding in this way we get the list of sixteen cases:</p>
+<div class="codehilite"><pre><span></span><code>x_lower&gt;=0? x_upper&gt;=0? y_lower&gt;=0? y_upper&gt;=0? 
+1111 - [x_lower*y_lower, x_upper*y_upper]
+1110 - disallowed
+1101 - [x_upper*y_lower, x_upper*y_upper]
+1100 - [x_upper*y_lower, x_lower*y_upper]
+1011 - disallowed
+1010 - disallowed
+1001 - disallowed
+1000 - disallowed
+0111 - [x_lower*y_upper, x_upper*y_upper]
+0110 - disallowed
+0101 - [min(x_lower*y_upper, x_upper*y_lower), max(x_lower*y_lower,x_upper*y_upper)]
+0100 - [x_upper*y_lower, x_lower*y_lower]
+0011 - [x_lower*y_upper, x_upper*y_lower]
+0010 - disallowed
+0001 - [x_lower*y_upper, x_lower*y_lower]
+0000 - [x_upper*y_upper, x_lower*y_lower]
 </code></pre></div>
 
-<p>Unfortunately, most of Alyssa's users are engineers.  Real engineering
-situations usually involve measurements with only a small uncertainty, measured
-as the ratio of the width of the interval to the midpoint of the interval.
-Engineers usually specify percentage tolerances on the parameters of devices,
-as in the resistor specifications given earlier.</p>
-<h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-11.rkt">code/ex2-11.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">int</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-interval-new</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="n">bool</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">bool</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">xl</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">xu</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">yl</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">yu</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">switch</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+<span class="w">               </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+<span class="w">               </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="n">yl</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+<span class="w">               </span><span class="p">(</span><span class="n">bin</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="n">yu</span><span class="w"> </span><span class="mi">0</span><span class="p">)))))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">15</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yl</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yu</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">13</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yl</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yu</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">12</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yl</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yu</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yu</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yu</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yl</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yl</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yu</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yl</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yu</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yl</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yu</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yl</span><span class="p">)))</span>
+<span class="w">        </span><span class="c1">;; special comparison case</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">switch</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w">  </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">min</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yu</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yl</span><span class="p">))</span>
+<span class="w">                                          </span><span class="p">(</span><span class="nb">max</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xl</span><span class="w"> </span><span class="n">yl</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">xu</span><span class="w"> </span><span class="n">yu</span><span class="p">))))</span>
+<span class="w">            </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;invalid interval&quot;</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">p1</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">p2</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">p3</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">p4</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">min</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="n">p4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">max</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="n">p4</span><span class="p">))))</span>
+
+<span class="c1">;;Testing code</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">myrandom</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="n">nsteps</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">lower</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">upper</span><span class="w"> </span><span class="n">lower</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">random</span><span class="w"> </span><span class="n">nsteps</span><span class="p">)</span><span class="w"> </span><span class="n">nsteps</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">random-interval</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="n">myrandom</span><span class="w"> </span><span class="mi">-10</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10000</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="n">myrandom</span><span class="w"> </span><span class="mi">-10</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">10000</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">random-interval</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">interval-equal?</span><span class="w"> </span><span class="n">int1</span><span class="w"> </span><span class="n">int2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">int2</span><span class="p">))</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">int2</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">test-mul-interval</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="no">#t</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">random-interval</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="n">random-interval</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">interval-equal?</span><span class="w"> </span><span class="p">(</span><span class="n">mul-interval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">mul-interval-new</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">test-mul-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">        </span><span class="no">#f</span><span class="p">))))</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Testing new code for 10000 cases. All intervals equal?&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">test-mul-interval</span><span class="w"> </span><span class="mi">10000</span><span class="p">)</span><span class="w"> </span><span class="s2">&quot;true&quot;</span><span class="w"> </span><span class="s2">&quot;false&quot;</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Testing new code for 10000 cases. All intervals equal?
+true
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-212">Exercise 2.12</h4>
 <p>Define a constructor
 <code>make-center-percent</code> that takes a center and a percentage tolerance and
@@ -894,44 +1097,39 @@ produces the desired interval.  You must also define a selector <code>percent</c
 that produces the percentage tolerance for a given interval.  The <code>center</code>
 selector is the same as the one shown above.</p>
 <h5>Solution</h5>
+<p>I'm going to opt to keep my tolerances as pure fractions (no multiplication by 100 to get a pure percent). I find it easiest to first write the percent function:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">center</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">upper-bound</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">lower-bound</span><span class="w"> </span><span class="n">i</span><span class="p">))</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">percent</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="p">(</span><span class="n">width</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">center</span><span class="w"> </span><span class="n">i</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>Then, <code>(make-center-percent x p)</code> should be defined as the interval $i$ with</p>
+<div>$$\frac{i_\ell+i_u}{2}=x,\qquad \frac{i_u-i_\ell}{i_u+i_\ell}=p$$</div>
+<p>Which has the solution</p>
+<div>$$i_\ell=x-px,\qquad i_u=x+px$$</div>
+<p>which we should have known but it's nice to write it out in full!</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-percent-center</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">p</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">p</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">p</span><span class="p">))))</span>
+</code></pre></div>
+
 <h4 id="exercise-213">Exercise 2.13</h4>
 <p>Show that under the assumption of
 small percentage tolerances there is a simple formula for the approximate
 percentage tolerance of the product of two intervals in terms of the tolerances
 of the factors.  You may simplify the problem by assuming that all numbers are
 positive.</p>
-<p>After considerable work, Alyssa P. Hacker delivers her finished system.
-Several years later, after she has forgotten all about it, she gets a frenzied
-call from an irate user, Lem E. Tweakit.  It seems that Lem has noticed that
-the formula for parallel resistors can be written in two algebraically
-equivalent ways:</p>
-<p>$${R_1 R_2 \over R_1 + R_2}  $$</p>
-<p>and</p>
-<p>$${{1 \over 1 / R_1 + 1 / R_2}.}  $$</p>
-<p>He has written the following two programs, each of which computes the
-parallel-resistors formula differently:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">par1</span><span class="w"> </span><span class="n">r1</span><span class="w"> </span><span class="n">r2</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="n">div-interval</span><span class="w"> </span>
-<span class="w">   </span><span class="p">(</span><span class="n">mul-interval</span><span class="w"> </span><span class="n">r1</span><span class="w"> </span><span class="n">r2</span><span class="p">)</span>
-<span class="w">   </span><span class="p">(</span><span class="n">add-interval</span><span class="w"> </span><span class="n">r1</span><span class="w"> </span><span class="n">r2</span><span class="p">)))</span>
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">par2</span><span class="w"> </span><span class="n">r1</span><span class="w"> </span><span class="n">r2</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">one</span><span class="w"> </span><span class="p">(</span><span class="n">make-interval</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
-<span class="w">    </span><span class="p">(</span><span class="n">div-interval</span><span class="w"> </span>
-<span class="w">     </span><span class="n">one</span>
-<span class="w">     </span><span class="p">(</span><span class="n">add-interval</span><span class="w"> </span>
-<span class="w">      </span><span class="p">(</span><span class="n">div-interval</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">r1</span><span class="p">)</span><span class="w"> </span>
-<span class="w">      </span><span class="p">(</span><span class="n">div-interval</span><span class="w"> </span><span class="n">one</span><span class="w"> </span><span class="n">r2</span><span class="p">)))))</span>
-</code></pre></div>
-
-<p>Lem complains that Alyssa's program gives different answers for the two ways of
-computing. This is a serious complaint.</p>
 <h5>Solution</h5>
+<div>$$\begin{align*}
+(a+\Delta a)(b+\Delta b)&=ab+b\Delta a+a\Delta b+\Delta a\Delta b\\
+&\approx ab+b\Delta a+a\Delta b\\
+&=ab\left(1+\frac{\Delta a}{a}+\frac{\Delta b}{b}\right)
+\end{align*}$$</div>
+<p>So the percent tolerances add.</p>
 <h4 id="exercise-214">Exercise 2.14</h4>
 <p>Demonstrate that Lem is right.
 Investigate the behavior of the system on a variety of arithmetic
 expressions. Make some intervals $A$ and $B$, and use them in computing the
-expressions ${A / A$} and ${A / B$}.  You will get the most insight by
+expressions $A / A$ and $A / B$.  You will get the most insight by
 using intervals whose width is a small percentage of the center value. Examine
 the results of the computation in center-percent form (see Exercise 2.12).</p>
 <h5>Solution</h5>
@@ -941,7 +1139,8 @@ also noticed the different intervals computed by different but algebraically
 equivalent expressions. She says that a formula to compute with intervals using
 Alyssa's system will produce tighter error bounds if it can be written in such
 a form that no variable that represents an uncertain number is repeated.  Thus,
-she says, <code>par2</code> is a <code>`better'' program for parallel resistances than</code>par1`.  Is she right?  Why?</p>
+she says, <code>par2</code> is a better program for parallel resistances than
+<code>par1</code>.  Is she right?  Why?</p>
 <h5>Solution</h5>
 <h4 id="exercise-216">Exercise 2.16</h4>
 <p>Explain, in general, why

@@ -14,8 +14,6 @@
 
 ### Introduction
 
-Test
-
 
 ### Exercises 
 
@@ -74,9 +72,10 @@ using either representation?
 
 Super tedious! I guess this is the 1980's version of "implement these getter functions" -.-
 
-I was tempted to implement a type system (integer switch to choose rect1 or rect2 based on the int) but I think this implementation captures the spirit of the problem.
+I was tempted to implement a programmatic way to switch between rect1 or rect2 based on a flag passed in, but I think that's overengineering the problem.
 
 @src(code/ex2-3.rkt)
+
 #### Exercise 2.4
 
 Here is an alternative procedural
@@ -175,7 +174,7 @@ How topical! The video ["What is PLUS times PLUS?"](https://www.youtube.com/watc
 
 **Testing:** Yooo it works first try, nice.
 
-To future-me/future-readers: the idea behind church-add is to first unwrap `a` and `b` so that they're simple functions that apply `f` some number of times, then apply both to `x`. 
+To future-me/future-readers: the idea behind `church-add` is to first unwrap `a` and `b` so that they're simple functions that apply `f` some number of times, then apply both to `x`. 
 
 @src(code/ex2-6.rkt)
 
@@ -195,8 +194,8 @@ implementation.
 ##### Solution
 ```rkt
 (define (make-interval a b) (cons a b))
-(Define (lower-bound int) (car int))
-(Define (upper-bound int) (cdr int))
+(define (lower-bound int) (car int))
+(define (upper-bound int) (cdr int))
 ```
 
 #### Exercise 2.8
@@ -208,15 +207,16 @@ a corresponding subtraction procedure, called `sub-interval`.
 ##### Solution
 
 Write our two intervals as $A$ and $B$. The lower bound should be
-$$\mathrm{inf}_{x\in A, y\in B}(x-y)=A_{\textrm{min}}-B_{\textrm{max}}$$
+<div>$$\mathrm{inf}_{x\in A, y\in B}(x-y)=A_{\textrm{min}}-B_{\textrm{max}}$$</div>
 The upper bound should be
-$$\mathrm{sup}_{x\in A, y\in B}(x-y)=A_{\textrm{max}}-B_{\textrm{min}}$$
+<div>$$\mathrm{sup}_{x\in A, y\in B}(x-y)=A_{\textrm{max}}-B_{\textrm{min}}$$</div>
 
 ```rkt
 (define (sub-interval A B)
   (make-interval (- (lower-bound A) (upper-bound B)) 
                  (- (upper-bound A) (lower-bound B))))
 ```
+
 #### Exercise 2.9
 
 The width of an interval
@@ -231,15 +231,24 @@ Give examples to show that this is not true for multiplication or division.
 
 ##### Solution
 
-Addition:
+**Addition:**
+<div>$$\begin{align*}
+\textrm{Width}_{A+B} &=
+\mathrm{sup}_{x\in A, y\in B}(x+y)-\mathrm{inf}_{x\in A, y\in B}(x+y)\\
+&=A_{\textrm{max}}+B_{\textrm{max}} - (A_{\textrm{min}}+B_{\textrm{min}})\\
+&=\textrm{Width}_A+\textrm{Width}_B
+\end{align*}$$</div>
 
-Subtraction:
+**Subtraction:**
 <div>$$\begin{align*}
 \textrm{Width}_{A-B} &=
 \mathrm{sup}_{x\in A, y\in B}(x-y)-\mathrm{inf}_{x\in A, y\in B}(x-y)\\
 &=A_{\textrm{max}}-B_{\textrm{min}} - (A_{\textrm{min}}-B_{\textrm{max}})\\
 &=\textrm{Width}_A+\textrm{Width}_B
 \end{align*}$$</div>
+
+**Counterexamples:**
+@src(code/ex2-9.rkt)
 
 #### Exercise 2.10
 
@@ -250,6 +259,8 @@ check for this condition and to signal an error if it occurs.
 
 ##### Solution
 
+@src(code/ex2-10.rkt)
+
 #### Exercise 2.11
 
 In passing, Ben also cryptically
@@ -258,35 +269,39 @@ possible to break `mul-interval` into nine cases, only one of which
 requires more than two multiplications.''  Rewrite this procedure using Ben's
 suggestion.
 
-After debugging her program, Alyssa shows it to a potential user, who complains
-that her program solves the wrong problem.  He wants a program that can deal
-with numbers represented as a center value and an additive tolerance; for
-example, he wants to work with intervals such as 3.5 $\pm$ 0.15 rather than
-[3.35, 3.65].  Alyssa returns to her desk and fixes this problem by supplying
-an alternate constructor and alternate selectors:
+##### Solution
+So, let's see. The goal here is to reduce the number of multiplications down from 4. We have four numbers $x_\ell,x_u,y_\ell,y_u.$ If we go case-by-case whether each number is greater than or equal to zero, we don't have sixteen cases because we also have to enforce $x_\ell\lt x_u$. I guess it's easier to list this out by cases.
 
-```rkt
-(define (make-center-width c w)
-  (make-interval (- c w) (+ c w)))
+- case `1111`: The positive case `1111` is easy:
+<div>$$x*y=[x_\ell y_\ell,x_u y_u]$$</div>
 
-(define (center i)
-  (/ (+ (lower-bound i) 
-        (upper-bound i)) 
-     2))
+- case `1101`: If all numbers are positive except $y_\ell$ (case `1101`) the lower bound is $x_u y_\ell:$ $x*y=[x_u y_\ell,x_u y_u]$
 
-(define (width i)
-  (/ (- (upper-bound i) 
-        (lower-bound i)) 
-     2))
+- case `0111`: By symmetry, if all numbers are positive except $x_\ell,$ then $x*y=[x_u y_\ell,x_u y_u]$
+
+Anyways, proceeding in this way we get the list of sixteen cases:
+
+```txt
+x_lower>=0? x_upper>=0? y_lower>=0? y_upper>=0? 
+1111 - [x_lower*y_lower, x_upper*y_upper]
+1110 - disallowed
+1101 - [x_upper*y_lower, x_upper*y_upper]
+1100 - [x_upper*y_lower, x_lower*y_upper]
+1011 - disallowed
+1010 - disallowed
+1001 - disallowed
+1000 - disallowed
+0111 - [x_lower*y_upper, x_upper*y_upper]
+0110 - disallowed
+0101 - [min(x_lower*y_upper, x_upper*y_lower), max(x_lower*y_lower,x_upper*y_upper)]
+0100 - [x_upper*y_lower, x_lower*y_lower]
+0011 - [x_lower*y_upper, x_upper*y_lower]
+0010 - disallowed
+0001 - [x_lower*y_upper, x_lower*y_lower]
+0000 - [x_upper*y_upper, x_lower*y_lower]
 ```
 
-Unfortunately, most of Alyssa's users are engineers.  Real engineering
-situations usually involve measurements with only a small uncertainty, measured
-as the ratio of the width of the interval to the midpoint of the interval.
-Engineers usually specify percentage tolerances on the parameters of devices,
-as in the resistor specifications given earlier.
-
-##### Solution
+@src(code/ex2-11.rkt)
 
 #### Exercise 2.12
 
@@ -297,7 +312,23 @@ that produces the percentage tolerance for a given interval.  The `center`
 selector is the same as the one shown above.
 
 ##### Solution
+I'm going to opt to keep my tolerances as pure fractions (no multiplication by 100 to get a pure percent). I find it easiest to first write the percent function:
 
+```rkt
+(define (center i) (/ (+ (lower-bound i) (upper-bound i)) 2))
+(define (width i) (/ (- (upper-bound i) (lower-bound i)) 2))
+(define (percent i) (/ (width i) (center i)))
+```
+
+Then, `(make-center-percent x p)` should be defined as the interval $i$ with
+<div>$$\frac{i_\ell+i_u}{2}=x,\qquad \frac{i_u-i_\ell}{i_u+i_\ell}=p$$</div>
+Which has the solution
+<div>$$i_\ell=x-px,\qquad i_u=x+px$$</div>
+which we should have known but it's nice to write it out in full!
+```rkt
+(define (make-percent-center x p)
+    (make-interval (- x (* x p)) (+ x (* x p))))
+```
 #### Exercise 2.13
 
 Show that under the assumption of
@@ -306,48 +337,20 @@ percentage tolerance of the product of two intervals in terms of the tolerances
 of the factors.  You may simplify the problem by assuming that all numbers are
 positive.
 
-After considerable work, Alyssa P. Hacker delivers her finished system.
-Several years later, after she has forgotten all about it, she gets a frenzied
-call from an irate user, Lem E. Tweakit.  It seems that Lem has noticed that
-the formula for parallel resistors can be written in two algebraically
-equivalent ways:
-
-$${R_1 R_2 \over R_1 + R_2}  $$
-
-
-and
-
-$${{1 \over 1 / R_1 + 1 / R_2}.}  $$
-
-He has written the following two programs, each of which computes the
-parallel-resistors formula differently:
-
-```rkt
-(define (par1 r1 r2)
-  (div-interval 
-   (mul-interval r1 r2)
-   (add-interval r1 r2)))
-
-(define (par2 r1 r2)
-  (let ((one (make-interval 1 1)))
-    (div-interval 
-     one
-     (add-interval 
-      (div-interval one r1) 
-      (div-interval one r2)))))
-```
-
-Lem complains that Alyssa's program gives different answers for the two ways of
-computing. This is a serious complaint.
-
 ##### Solution
+<div>$$\begin{align*}
+(a+\Delta a)(b+\Delta b)&=ab+b\Delta a+a\Delta b+\Delta a\Delta b\\
+&\approx ab+b\Delta a+a\Delta b\\
+&=ab\left(1+\frac{\Delta a}{a}+\frac{\Delta b}{b}\right)
+\end{align*}$$</div>
+So the percent tolerances add.
 
 #### Exercise 2.14
 
 Demonstrate that Lem is right.
 Investigate the behavior of the system on a variety of arithmetic
 expressions. Make some intervals $A$ and $B$, and use them in computing the
-expressions ${A / A$} and ${A / B$}.  You will get the most insight by
+expressions $A / A$ and $A / B$.  You will get the most insight by
 using intervals whose width is a small percentage of the center value. Examine
 the results of the computation in center-percent form (see Exercise 2.12).
 
@@ -360,7 +363,7 @@ also noticed the different intervals computed by different but algebraically
 equivalent expressions. She says that a formula to compute with intervals using
 Alyssa's system will produce tighter error bounds if it can be written in such
 a form that no variable that represents an uncertain number is repeated.  Thus,
-she says, `par2` is a ``better'' program for parallel resistances than
+she says, `par2` is a better program for parallel resistances than
 `par1`.  Is she right?  Why?
 
 ##### Solution
