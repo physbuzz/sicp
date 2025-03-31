@@ -1,15 +1,8 @@
 #!/usr/bin/env python3
 # Claude 3.7 generated
 """
-SICP Build Script
-
-Replaces the Makefile with a more reliable Python-based build system.
-This script:
-1. Runs Racket files that don't begin with underscore (_)
-2. Recursively copies all files from src/ to docs/
-3. Compiles markdown files to HTML using build/md2html.py
-4. Can watch for file changes and automatically rebuild (new)
-5. Can start a development server for live preview
+SICP Build Script - Improved Version
+Replaces the Makefile with a Python-based build system.
 """
 
 import os
@@ -25,44 +18,43 @@ OUT_DIR = "docs"
 MD2HTML = "build/md2html.py"
 
 def should_process_file(path):
-    """Check if a file should be processed (not starting with underscore)."""
+    """Check if a file should be processed (not starting with underscore or dot)."""
+    basename = os.path.basename(path)
+    if basename.startswith('.') or basename.startswith('_'):
+        return False
+
     path_parts = Path(path).parts
-    # Skip any file or directory that starts with underscore
     for part in path_parts:
-        if part.startswith('_'):
+        if part.startswith('_') or part.startswith('.'):
             return False
+
     return True
 
 def run_racket_files(src_dir=SRC_DIR, file_list=None):
-    """Run all Racket files in the source directory and generate output files.
-
-    If file_list is provided, only process those specific files.
-    """
+    """Run all Racket files in the source directory and generate output files."""
     if file_list:
         print(f"Running {len(file_list)} specified Racket files...")
         racket_files = file_list
     else:
-        print("Running all Racket files and generating output files...")
         racket_files = []
-
-        # Find all Racket files
         for root, dirs, files in os.walk(src_dir):
-            # Skip directories starting with underscore
-            dirs[:] = [d for d in dirs if not d.startswith('_')]
-
+            dirs[:] = [d for d in dirs if not d.startswith('_') and not d.startswith('.')]
             for file in files:
-                if file.endswith('.rkt') and not file.startswith('_'):
+                if file.endswith('.rkt') and not file.startswith('_') and not file.startswith('.'):
                     racket_files.append(os.path.join(root, file))
+        print(f"Running {len(racket_files)} Racket files...")
 
     success_count = 0
     error_count = 0
 
-    # Run each Racket file
     for racket_file in racket_files:
         print(f"Running {racket_file}...")
         out_file = os.path.splitext(racket_file)[0] + ".out"
 
         try:
+            # Create the output directory if it doesn't exist
+            os.makedirs(os.path.dirname(out_file), exist_ok=True)
+
             result = subprocess.run(
                 ['racket', racket_file],
                 capture_output=True,
@@ -72,17 +64,22 @@ def run_racket_files(src_dir=SRC_DIR, file_list=None):
 
             # Write output to file
             with open(out_file, 'w', encoding='utf-8') as f:
+                f.write(result.stdout)
                 if result.returncode != 0:
-                    f.write(result.stdout)
                     f.write(f"\nError (exit code {result.returncode}):\n{result.stderr}")
                     print(f"  Error running {racket_file}")
                     error_count += 1
                 else:
-                    f.write(result.stdout)
                     success_count += 1
         except Exception as e:
-            print(f"  Error: {str(e)}")
+            print(f"  Error processing {racket_file}: {str(e)}")
             error_count += 1
+            # Create an error output file to prevent repeated failures
+            try:
+                with open(out_file, 'w', encoding='utf-8') as f:
+                    f.write(f"Error running {os.path.basename(racket_file)}:\n{str(e)}")
+            except:
+                pass
 
     print(f"\nProcessed {len(racket_files)} Racket files")
     print(f"  Success: {success_count}")
@@ -101,12 +98,13 @@ def build_html(src_path, out_path):
     try:
         subprocess.run(
             ['python3', MD2HTML, src_path, '-o', out_path, '-b', base_path],
-            check=True
+            check=True,
+            capture_output=True
         )
         print(f"  Successfully converted {src_path}")
         return True
-    except subprocess.CalledProcessError:
-        print(f"  Error converting {src_path}")
+    except subprocess.CalledProcessError as e:
+        print(f"  Error converting {src_path}: {e.stderr.decode('utf-8')}")
         return False
 
 def process_directory(src_dir=SRC_DIR, out_dir=OUT_DIR):
@@ -124,14 +122,14 @@ def process_directory(src_dir=SRC_DIR, out_dir=OUT_DIR):
 
     # Walk through the source directory
     for root, dirs, files in os.walk(src_dir):
-        # Skip directories starting with underscore
-        dirs[:] = [d for d in dirs if not d.startswith('_')]
+        # Skip directories starting with underscore or dot
+        dirs[:] = [d for d in dirs if not d.startswith('_') and not d.startswith('.')]
 
         # Process each file
         for file in files:
             src_path = os.path.join(root, file)
 
-            # Skip files in directories starting with underscore or files starting with underscore
+            # Skip files in directories starting with underscore/dot or files starting with underscore/dot
             if not should_process_file(src_path):
                 file_counts['skipped'] += 1
                 continue
@@ -148,8 +146,8 @@ def process_directory(src_dir=SRC_DIR, out_dir=OUT_DIR):
                 out_html_path = os.path.splitext(out_path)[0] + '.html'
                 build_html(src_path, out_html_path)
                 file_counts['markdown'] += 1
-            # Copy all other files
-            elif not file.endswith('.out'):  # Skip .out files, they'll be generated again
+            # Copy all other files (except .out files, which are generated)
+            elif not file.endswith('.out'):
                 print(f"Copying {src_path} to {out_path}")
                 shutil.copy2(src_path, out_path)
                 file_counts['copied'] += 1
@@ -157,7 +155,7 @@ def process_directory(src_dir=SRC_DIR, out_dir=OUT_DIR):
     print(f"\nProcessed files:")
     print(f"  Built {file_counts['markdown']} markdown files")
     print(f"  Copied {file_counts['copied']} files")
-    print(f"  Skipped {file_counts['skipped']} files (underscore prefix)")
+    print(f"  Skipped {file_counts['skipped']} files (underscore/dot prefix)")
 
     return file_counts
 
@@ -183,6 +181,9 @@ def clean_all(out_dir=OUT_DIR, src_dir=SRC_DIR):
     if os.path.exists(out_dir):
         shutil.rmtree(out_dir)
         print(f"Removed output directory: {out_dir}")
+        # Recreate the directory to avoid issues
+        os.makedirs(out_dir, exist_ok=True)
+        print(f"Created empty output directory: {out_dir}")
 
     # Clean .out files
     clean_outputs(src_dir)
@@ -191,7 +192,6 @@ def clean_all(out_dir=OUT_DIR, src_dir=SRC_DIR):
 
 def watch_and_serve(no_initial_build=False, port=8000):
     """Watch for file changes and serve the files."""
-    # Import the watch functionality
     try:
         from watch import watch_directory
         watch_directory(
@@ -207,17 +207,13 @@ def watch_and_serve(no_initial_build=False, port=8000):
 
 def find_missing_outputs():
     """Find and report all Racket files without outputs or with outdated outputs."""
-    print("Scanning for Racket files with missing or outdated outputs...")
     missing_files = []
     outdated_files = []
 
-    # Find all Racket files
     for root, dirs, files in os.walk(SRC_DIR):
-        # Skip directories starting with underscore
-        dirs[:] = [d for d in dirs if not d.startswith('_')]
-
+        dirs[:] = [d for d in dirs if not d.startswith('_') and not d.startswith('.')]
         for file in files:
-            if file.endswith('.rkt') and not file.startswith('_'):
+            if file.endswith('.rkt') and not file.startswith('_') and not file.startswith('.'):
                 rkt_path = os.path.join(root, file)
                 out_path = os.path.splitext(rkt_path)[0] + ".out"
 
@@ -275,8 +271,12 @@ def main():
     elif args.action == 'html':
         process_directory()
     elif args.action == 'rebuild':
+        print("Performing full rebuild...")
         clean_all()
-        process_directory()  # Skip running all Racket files by default
+        print("\nRunning all Racket files...")
+        run_racket_files()  # Run all Racket files first
+        print("\nProcessing all files...")
+        process_directory()  # Then process all files
     elif args.action == 'scan-missing':
         missing_files = find_missing_outputs()
         if args.generate_missing and missing_files:

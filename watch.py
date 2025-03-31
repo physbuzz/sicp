@@ -1,19 +1,9 @@
 #!/usr/bin/env python3
+
 """
-Claude 3.7 generated
-SICP Watch Module - Improved Version
-
-This module provides functionality to watch for file changes and trigger
-appropriate rebuild actions. It uses the watchdog library to monitor
-file system events and responds based on file types.
-
-Key features:
-1. Monitors the src/ directory for changes
-2. Rebuilds only what's necessary based on file type:
-   - .rkt files: Runs the specific Racket file, updates .out, rebuilds only relevant HTML
-   - .md files: Rebuilds specific markdown file to HTML
-   - composable_markdown.py/md2html.py: Rebuilds all markdown files
-3. Runs a development server for live preview
+Generated using Claude 3.7
+SICP Watch Module - Fixed Version
+Watch for file changes and trigger appropriate rebuilds.
 """
 
 import os
@@ -21,6 +11,7 @@ import sys
 import time
 import shutil
 import subprocess
+import signal
 from pathlib import Path
 try:
     from watchdog.observers import Observer
@@ -30,7 +21,7 @@ except ImportError:
     print("Please install it with: pip install watchdog")
     sys.exit(1)
 
-# Import build script functions (assuming build.py is in the same directory)
+# Import build script functions
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build
 
@@ -72,18 +63,9 @@ class ChangeHandler(FileSystemEventHandler):
         rkt_mtime = os.path.getmtime(rkt_file)
         out_mtime = os.path.getmtime(out_file)
 
-        time_diff = rkt_mtime - out_mtime
-
-        # If .rkt file is more recent (with a small buffer), rebuild
-        if time_diff > 0:
-            # Get human-readable times for logging
-            from datetime import datetime
-            rkt_time = datetime.fromtimestamp(rkt_mtime).strftime('%Y-%m-%d %H:%M:%S')
-            out_time = datetime.fromtimestamp(out_mtime).strftime('%Y-%m-%d %H:%M:%S')
-
+        if rkt_mtime > out_mtime:
             if self.verbose:
                 print(f"Racket file {os.path.basename(rkt_file)} is newer than its output, rebuilding...")
-                print(f"  Source: {rkt_time} vs Output: {out_time}")
             return True
 
         return False
@@ -96,15 +78,11 @@ class ChangeHandler(FileSystemEventHandler):
         # Get the file path
         file_path = event.src_path
 
-        # Skip files that start with underscore or are in a directory starting with underscore
+        # Skip files that are not processable or in wrong directory
         if not build.should_process_file(file_path):
             return
-
-        # Skip files in the docs directory and hidden files
-        if '/docs/' in file_path or '\\docs\\' in file_path or os.path.basename(file_path).startswith('.'):
+        if '/docs/' in file_path or '\\docs\\' in file_path:
             return
-
-        # Skip .out files - we'll handle them specially
         if file_path.endswith('.out'):
             return
 
@@ -156,19 +134,18 @@ class ChangeHandler(FileSystemEventHandler):
             else:
                 other_files.append(file_path)
 
-        # Process build system files first (they require full rebuild)
+        # Process build system files first
         if build_system_files:
             if self.verbose:
                 print("Build system files changed. Rebuilding all markdown files...")
-            # We only need to rebuild markdown files
             self._rebuild_all_markdown()
         else:
-            # Process Racket files FIRST
+            # Process Racket files first
             if rkt_files:
                 for rkt_file in rkt_files:
                     self._handle_racket_change(rkt_file)
 
-            # THEN process markdown files (after Racket outputs are generated)
+            # Then process markdown files
             if md_files:
                 for md_file in md_files:
                     self._handle_markdown_change(md_file)
@@ -197,6 +174,10 @@ class ChangeHandler(FileSystemEventHandler):
 
         # Run the Racket file
         try:
+            # Create output directory if it doesn't exist
+            out_file = os.path.splitext(file_path)[0] + ".out"
+            os.makedirs(os.path.dirname(out_file), exist_ok=True)
+
             result = subprocess.run(
                 ['racket', file_path],
                 capture_output=True,
@@ -205,18 +186,16 @@ class ChangeHandler(FileSystemEventHandler):
             )
 
             # Write output to .out file
-            out_file = os.path.splitext(file_path)[0] + ".out"
             with open(out_file, 'w', encoding='utf-8') as f:
+                f.write(result.stdout)
                 if result.returncode != 0:
-                    f.write(result.stdout)
                     f.write(f"\nError (exit code {result.returncode}):\n{result.stderr}")
                     print(f"  Error running {os.path.basename(file_path)}")
                 else:
-                    f.write(result.stdout)
                     if self.verbose:
                         print(f"  Successfully ran {os.path.basename(file_path)}")
 
-            # Rather than rebuilding all markdown, let's find which ones reference this file
+            # Find which markdown files reference this file
             self._update_dependent_markdown(file_path)
 
             # Copy the updated Racket file and its output to docs
@@ -225,6 +204,13 @@ class ChangeHandler(FileSystemEventHandler):
 
         except Exception as e:
             print(f"  Error: {str(e)}")
+            # Create an error output file
+            try:
+                out_file = os.path.splitext(file_path)[0] + ".out"
+                with open(out_file, 'w', encoding='utf-8') as f:
+                    f.write(f"Error running {os.path.basename(file_path)}:\n{str(e)}")
+            except:
+                pass
 
     def _handle_markdown_change(self, file_path):
         """Handle changes to markdown files."""
@@ -255,8 +241,8 @@ class ChangeHandler(FileSystemEventHandler):
 
     def _copy_file_to_docs(self, file_path):
         """Copy a file from src to docs directory."""
-        # Skip .out files unless explicitly requested
-        if file_path.endswith('.out'):
+        # Skip dotfiles and files with underscore prefix
+        if not build.should_process_file(file_path):
             return
 
         try:
@@ -279,14 +265,13 @@ class ChangeHandler(FileSystemEventHandler):
 
         # Find all markdown files
         for root, dirs, files in os.walk(build.SRC_DIR):
-            # Skip directories starting with underscore
-            dirs[:] = [d for d in dirs if not d.startswith('_')]
+            # Skip directories starting with underscore or dot
+            dirs[:] = [d for d in dirs if not (d.startswith('_') or d.startswith('.'))]
 
             for file in files:
-                if file.endswith('.md') and not file.startswith('_'):
+                if file.endswith('.md') and build.should_process_file(os.path.join(root, file)):
                     file_path = os.path.join(root, file)
-                    if build.should_process_file(file_path):
-                        markdown_files.append(file_path)
+                    markdown_files.append(file_path)
 
         # Build each markdown file
         for md_file in markdown_files:
@@ -300,43 +285,48 @@ class ChangeHandler(FileSystemEventHandler):
 
         # Find all markdown files
         for root, dirs, files in os.walk(build.SRC_DIR):
-            # Skip directories starting with underscore
-            dirs[:] = [d for d in dirs if not d.startswith('_')]
+            # Skip directories starting with underscore or dot
+            dirs[:] = [d for d in dirs if not (d.startswith('_') or d.startswith('.'))]
 
             for file in files:
-                if file.endswith('.md') and not file.startswith('_'):
+                if file.endswith('.md') and build.should_process_file(os.path.join(root, file)):
                     md_path = os.path.join(root, file)
-                    if build.should_process_file(md_path):
-                        # Check if this markdown file references the Racket file
-                        try:
-                            with open(md_path, 'r', encoding='utf-8') as f:
-                                content = f.read()
 
-                            # Check various ways a markdown file might reference the Racket file
-                            if (rkt_basename in content or
-                                rkt_rel_path in content or
-                                os.path.splitext(rkt_basename)[0] in content):
+                    # Check if this markdown file references the Racket file
+                    try:
+                        with open(md_path, 'r', encoding='utf-8') as f:
+                            content = f.read()
+
+                        # Check various ways a markdown file might reference the Racket file
+                        rkt_name_no_ext = os.path.splitext(rkt_basename)[0]
+                        patterns = [
+                            rkt_basename,              # Direct filename
+                            rkt_rel_path,              # Relative path
+                            rkt_name_no_ext,           # Filename without extension
+                            f"@src({rkt_basename})",   # @src directive with filename
+                            f"@src({rkt_rel_path})",   # @src directive with path
+                            f"@src({rkt_name_no_ext})" # @src directive with name
+                        ]
+
+                        for pattern in patterns:
+                            if pattern in content:
                                 markdown_files.append(md_path)
-                        except Exception:
-                            # If we can't read the file, skip it
-                            pass
+                                break
+                    except Exception:
+                        # Skip if we can't read the file
+                        pass
 
         if self.verbose and markdown_files:
             print(f"Found {len(markdown_files)} markdown files referencing {rkt_basename}")
 
-        # If we couldn't find any specific files, but the rkt file is in a chapter directory,
-        # rebuild markdown files in that directory
+        # If we couldn't find any specific files, rebuild markdown files in the Racket file's directory
         if not markdown_files:
             rkt_dir = os.path.dirname(rkt_file)
             for root, dirs, files in os.walk(rkt_dir):
-                # Skip directories starting with underscore
-                dirs[:] = [d for d in dirs if not d.startswith('_')]
-
+                dirs[:] = [d for d in dirs if not (d.startswith('_') or d.startswith('.'))]
                 for file in files:
-                    if file.endswith('.md') and not file.startswith('_'):
-                        md_path = os.path.join(root, file)
-                        if build.should_process_file(md_path):
-                            markdown_files.append(md_path)
+                    if file.endswith('.md') and build.should_process_file(os.path.join(root, file)):
+                        markdown_files.append(os.path.join(root, file))
 
         # Build each relevant markdown file
         for md_file in markdown_files:
@@ -347,13 +337,10 @@ def find_missing_outputs(src_dir=build.SRC_DIR):
     """Find Racket files that don't have corresponding .out files."""
     missing_outputs = []
 
-    # Find all Racket files
     for root, dirs, files in os.walk(src_dir):
-        # Skip directories starting with underscore
-        dirs[:] = [d for d in dirs if not d.startswith('_')]
-
+        dirs[:] = [d for d in dirs if not (d.startswith('_') or d.startswith('.'))]
         for file in files:
-            if file.endswith('.rkt') and not file.startswith('_'):
+            if file.endswith('.rkt') and build.should_process_file(os.path.join(root, file)):
                 rkt_path = os.path.join(root, file)
                 out_path = os.path.splitext(rkt_path)[0] + ".out"
 
@@ -364,74 +351,6 @@ def find_missing_outputs(src_dir=build.SRC_DIR):
 
     return missing_outputs
 
-def generate_required_outputs(src_dir=build.SRC_DIR, html_dir=build.OUT_DIR):
-    """Find and generate outputs for Racket files that are referenced by HTML files."""
-    print("Checking for HTML files with missing or outdated Racket outputs...")
-    generated_count = 0
-    required_files = set()
-
-    # First, find all HTML files
-    for root, dirs, files in os.walk(html_dir):
-        # Skip directories starting with underscore
-        dirs[:] = [d for d in dirs if not d.startswith('_')]
-
-        for file in files:
-            if file.endswith('.html'):
-                html_path = os.path.join(root, file)
-
-                # Read the HTML file
-                try:
-                    with open(html_path, 'r', encoding='utf-8') as f:
-                        content = f.read()
-
-                    # Look for references to .rkt files
-                    import re
-                    rkt_refs = re.findall(r'(?:src|href)=["\']([^"\']+\.rkt)["\']', content)
-
-                    # Map to src paths
-                    for rkt_ref in rkt_refs:
-                        html_dir_path = os.path.dirname(html_path)
-                        rkt_path_in_html = os.path.normpath(os.path.join(html_dir_path, rkt_ref))
-
-                        # Convert from html path to src path
-                        if rkt_path_in_html.startswith(html_dir):
-                            rel_path = os.path.relpath(rkt_path_in_html, html_dir)
-                            rkt_path_in_src = os.path.join(src_dir, rel_path)
-                            required_files.add(rkt_path_in_src)
-                except Exception:
-                    # If we can't read the file, skip it
-                    pass
-
-    # Find files that need rebuilding (missing .out or outdated)
-    needs_rebuild = []
-    for rkt_path in required_files:
-        out_path = os.path.splitext(rkt_path)[0] + ".out"
-        needs_rebuild_flag = False
-
-        # Check if .out is missing
-        if not os.path.exists(out_path) and os.path.exists(rkt_path):
-            needs_rebuild_flag = True
-        # Check if .out is outdated
-        elif os.path.exists(rkt_path) and os.path.exists(out_path):
-            rkt_mtime = os.path.getmtime(rkt_path)
-            out_mtime = os.path.getmtime(out_path)
-            if rkt_mtime > out_mtime:
-                needs_rebuild_flag = True
-
-        if needs_rebuild_flag:
-            needs_rebuild.append(rkt_path)
-
-    # Generate the missing or outdated outputs
-    if needs_rebuild:
-        print(f"Found {len(needs_rebuild)} Racket files referenced in HTML that need rebuilding.")
-        print("Generating required outputs...")
-        build.run_racket_files(file_list=needs_rebuild)
-        generated_count = len(needs_rebuild)
-    else:
-        print("All required Racket outputs are up to date.")
-
-    return generated_count
-
 def find_racket_references(src_dir=build.SRC_DIR):
     """Find Racket files referenced in markdown files that need to be built or rebuilt."""
     needs_building = set()
@@ -440,11 +359,10 @@ def find_racket_references(src_dir=build.SRC_DIR):
 
     # Find all markdown files
     for root, dirs, files in os.walk(src_dir):
-        # Skip directories starting with underscore
-        dirs[:] = [d for d in dirs if not d.startswith('_')]
+        dirs[:] = [d for d in dirs if not (d.startswith('_') or d.startswith('.'))]
 
         for file in files:
-            if file.endswith('.md') and not file.startswith('_'):
+            if file.endswith('.md') and build.should_process_file(os.path.join(root, file)):
                 md_path = os.path.join(root, file)
 
                 # Read the markdown file
@@ -452,7 +370,7 @@ def find_racket_references(src_dir=build.SRC_DIR):
                     with open(md_path, 'r', encoding='utf-8') as f:
                         content = f.read()
 
-                    # Look for references to .rkt files - both in markdown links and code includes
+                    # Look for references to .rkt files
                     import re
 
                     # Markdown link syntax: [text](file.rkt)
@@ -464,11 +382,14 @@ def find_racket_references(src_dir=build.SRC_DIR):
                     # Include syntax: <!--include: file.rkt-->
                     include_refs = re.findall(r'<!--\s*include:\s*(.*?\.rkt)\s*-->', content)
 
+                    # @src directive: @src(file.rkt)
+                    src_directives = re.findall(r'@src\((.*?\.rkt)\)', content)
+
                     # Also look for just the filename mentioned
                     file_mentions = re.findall(r'(?:^|\s|\()([\w\-]+\.rkt)(?:\s|$|\))', content)
 
                     # Combine all references
-                    all_refs = md_links + html_links + include_refs + file_mentions
+                    all_refs = md_links + html_links + include_refs + src_directives + file_mentions
 
                     # Process each reference
                     for rkt_ref in all_refs:
@@ -492,32 +413,22 @@ def find_racket_references(src_dir=build.SRC_DIR):
                         # Add to all references for logging
                         all_references.add(rkt_path)
 
-                        # Check if the Racket file exists
+                        # Check if the Racket file exists and needs rebuilding
                         if os.path.exists(rkt_path) and rkt_path.endswith('.rkt'):
-                            # Check if it needs rebuilding
                             out_path = os.path.splitext(rkt_path)[0] + ".out"
 
                             # Add to list if:
                             # 1. .out file doesn't exist, or
                             # 2. .rkt file is newer than .out file
-                            rebuild_needed = False
                             if not os.path.exists(out_path):
-                                print(f"Found reference to {rkt_path} with missing .out file")
-                                rebuild_needed = True
+                                needs_building.add(rkt_path)
                             elif os.path.exists(out_path):
                                 rkt_mtime = os.path.getmtime(rkt_path)
                                 out_mtime = os.path.getmtime(out_path)
-                                time_diff = rkt_mtime - out_mtime
-                                if time_diff > 0:
-                                    print(f"Found reference to {rkt_path} with outdated .out file ({time_diff:.2f} seconds older)")
-                                    rebuild_needed = True
-
-                            if rebuild_needed:
-                                needs_building.add(rkt_path)
-                except Exception as e:
-                    # If we can't read the file, skip it
-                    print(f"Error reading {md_path}: {str(e)}")
-                    pass
+                                if rkt_mtime > out_mtime:
+                                    needs_building.add(rkt_path)
+                except Exception:
+                    pass  # Skip files we can't read
 
     print(f"Found {len(all_references)} Racket references in markdown files")
     print(f"Of those, {len(needs_building)} need to be built or rebuilt")
@@ -528,17 +439,15 @@ def find_outdated_outputs(src_dir=build.SRC_DIR):
     """Find Racket files whose outputs are older than the source files."""
     outdated_files = []
 
-    # Find all Racket files
     for root, dirs, files in os.walk(src_dir):
-        # Skip directories starting with underscore
-        dirs[:] = [d for d in dirs if not d.startswith('_')]
+        dirs[:] = [d for d in dirs if not (d.startswith('_') or d.startswith('.'))]
 
         for file in files:
-            if file.endswith('.rkt') and not file.startswith('_'):
+            if file.endswith('.rkt') and build.should_process_file(os.path.join(root, file)):
                 rkt_path = os.path.join(root, file)
                 out_path = os.path.splitext(rkt_path)[0] + ".out"
 
-                # Skip if output doesn't exist (these are handled by find_missing_outputs)
+                # Skip if output doesn't exist
                 if not os.path.exists(out_path):
                     continue
 
@@ -546,19 +455,28 @@ def find_outdated_outputs(src_dir=build.SRC_DIR):
                 rkt_mtime = os.path.getmtime(rkt_path)
                 out_mtime = os.path.getmtime(out_path)
 
-                # Use a small buffer (1 second) to account for file system timestamp precision
-                if rkt_mtime > out_mtime + 1:
-                    # Get human-readable times for logging
-                    from datetime import datetime
-                    rkt_time = datetime.fromtimestamp(rkt_mtime).strftime('%Y-%m-%d %H:%M:%S')
-                    out_time = datetime.fromtimestamp(out_mtime).strftime('%Y-%m-%d %H:%M:%S')
-                    print(f"Outdated output for {rkt_path}: {rkt_time} vs {out_time}")
+                if rkt_mtime > out_mtime:
+                    print(f"Outdated output for {rkt_path}")
                     outdated_files.append(rkt_path)
 
     return outdated_files
+
+def clean_zombie_processes():
+    """Try to clean up any zombie or lingering Python processes."""
+    if sys.platform != 'win32' and server is not None:
+        try:
+            # Send SIGTERM to any Python processes using server ports
+            server.cleanup_ports()
+        except Exception as e:
+            print(f"Error cleaning up processes: {str(e)}")
+
 def watch_directory(src_dir=build.SRC_DIR, out_dir=build.OUT_DIR, verbose=True, initial_build=True,
                    start_server=True, port=8000):
     """Watch the source directory for changes and rebuild as needed."""
+
+    # Try to clean up any lingering processes first
+    if server is not None:
+        clean_zombie_processes()
 
     # Track what we need to clean up
     server_thread = None
@@ -568,41 +486,22 @@ def watch_directory(src_dir=build.SRC_DIR, out_dir=build.OUT_DIR, verbose=True, 
         if initial_build:
             print("Performing initial build...")
 
-            # First, scan for all Racket files that need rebuilding
-            print("\n==== Finding Racket Files Missing Outputs ====")
+            # Find all Racket files that need rebuilding
+            print("\n==== Finding Racket Files Needing Updates ====")
             missing_outputs = find_missing_outputs(src_dir)
-            if missing_outputs:
-                print(f"Found {len(missing_outputs)} Racket files without .out files")
-                for path in missing_outputs[:5]:  # Show first 5
-                    print(f"  {path}")
-                if len(missing_outputs) > 5:
-                    print(f"  ... and {len(missing_outputs) - 5} more")
-
-            # Check for outdated Racket files
-            print("\n==== Finding Outdated Racket Outputs ====")
             outdated_outputs = find_outdated_outputs(src_dir)
-            if outdated_outputs:
-                print(f"Found {len(outdated_outputs)} Racket files with outdated outputs")
-                for path in outdated_outputs[:5]:  # Show first 5
-                    print(f"  {path}")
-                if len(outdated_outputs) > 5:
-                    print(f"  ... and {len(outdated_outputs) - 5} more")
-
-            # FIRST: Generate .out files for Racket files referenced in HTML or markdown
-            # This ensures they exist before building markdown files
-            print("\n==== Checking for Required Racket Files ====")
             required_files = find_racket_references(src_dir)
 
             # Combine all files that need processing
             all_needed_files = list(set(required_files + missing_outputs + outdated_outputs))
 
             if all_needed_files:
-                print(f"\n==== Processing {len(all_needed_files)} Required Racket Files ====")
+                print(f"\n==== Processing {len(all_needed_files)} Racket Files ====")
                 build.run_racket_files(file_list=all_needed_files)
             else:
                 print("No Racket files need processing.")
 
-            # SECOND: Build the markdown files
+            # Build the markdown files
             print("\n==== Building Markdown Files ====")
             build.process_directory()
 
@@ -633,7 +532,7 @@ def watch_directory(src_dir=build.SRC_DIR, out_dir=build.OUT_DIR, verbose=True, 
             event_handler._process_batch()
 
     except KeyboardInterrupt:
-        print("\n🛑 Stopping watcher and server...")
+        print("\nStopping watcher and server...")
         # Stop the observer
         if 'observer' in locals():
             observer.stop()
