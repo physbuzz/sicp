@@ -11,7 +11,12 @@
 
 ## Section 2.2
 
-### Introduction
+### Experiments with lists and nil
+
+@src(code/ch2-2-experiments.rkt)
+
+### Experiments with binary trees
+- Note to self: do some enumeration of binary trees here! It'll be fun!
 
 ### Exercises
 
@@ -30,6 +35,8 @@ given (nonempty) list:
 
 ##### Solution
 
+@src(code/ex2-17.rkt)
+
 #### Exercise 2.18
 
 Define a procedure `reverse`
@@ -42,6 +49,12 @@ reverse order:
 ```
 
 ##### Solution
+
+@src(code/ex2-18.rkt)
+
+> “What else are lists,” you reply, your eyes flashing, “But alternatives?”
+
+https://aphyr.com/posts/340-reversing-the-technical-interview
 
 #### Exercise 2.19
 
@@ -102,6 +115,8 @@ operations on list structures.  Does the order of the list `coin-values`
 affect the answer produced by `cc`?  Why or why not?
 
 ##### Solution
+@src(code/ex2-19.rkt)
+Pretty simple definitions, and we've demonstrated that the order doesn't matter.
 
 #### Exercise 2.20
 
@@ -115,7 +130,7 @@ usual, but the final parameter's value will be a list of any
 remaining arguments.  For instance, given the definition
 
 ```rkt
-(define (f x y . z) ⟨@var{body}⟩)
+(define (f x y . z) ⟨body⟩)
 ```
 
 
@@ -131,7 +146,7 @@ then in the body of `f`, `x` will be 1, `y` will be 2, and
 `z` will be the list `(3 4 5 6)`.  Given the definition
 
 ```rkt
-(define (g . w) ⟨@var{body}⟩)
+(define (g . w) ⟨body⟩)
 ```
 
 
@@ -160,6 +175,8 @@ even-odd parity as the first argument.  For example,
 
 ##### Solution
 
+@src(code/ex2-20.rkt)
+
 #### Exercise 2.21
 
 The procedure `square-list`
@@ -185,6 +202,8 @@ them by filling in the missing expressions:
 ```
 
 ##### Solution
+
+@src(code/ex2-21.rkt)
 
 #### Exercise 2.22
 
@@ -224,6 +243,19 @@ This doesn't work either.  Explain.
 
 ##### Solution
 
+This doesn't work, because it's a depth-first list! 
+```rkt
+;; We want this:
+(cons 1 (cons 4 (cons 9 (cons 16 nil))))
+;; We get this:
+(cons (cons (cons (cons nil 1) 4) 9) 16)
+```
+
+I solved this in 2.22 by doing the first method and adding a reverse, which is another O(n) operation but it's only called once, so the entire method is still only O(n).
+
+Checking:
+@src(code/ex2-22.rkt)
+
 #### Exercise 2.23
 
 The procedure `for-each` is
@@ -250,6 +282,8 @@ be something arbitrary, such as true.  Give an implementation of
 
 ##### Solution
 
+@src(code/ex2-23.rkt)
+
 #### Exercise 2.24
 
 Suppose we evaluate the
@@ -258,6 +292,15 @@ interpreter, the corresponding box-and-pointer structure, and the
 interpretation of this as a tree (as in Figure 2.6).
 
 ##### Solution
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="media/ex2-24.svg" style="width: 70%; max-width: 800px;" alt="It's the answer to the question. David gets an A+">
+</div>
+To view this as a tree, tilt your head 45 degrees.
+
+This should print out `(1 (2 (3 4)))`?
+
+@src(code/ex2-24.rkt)
 
 #### Exercise 2.25
 
@@ -271,6 +314,10 @@ and `cdr`s that will pick 7 from each of the following lists:
 ```
 
 ##### Solution
+
+Got it right in one try btw, B)
+
+@src(code/ex2-25.rkt)
 
 #### Exercise 2.26
 
@@ -292,6 +339,21 @@ following expressions:
 ```
 
 ##### Solution
+
+Expected answer:
+```rkt
+(1 2 3 4 5 6)
+((1 2 3) . (4 5 6))
+((1 2 3) (4 5 6))
+```
+
+@src(code/ex2-26.rkt)
+
+Ok, dang I got the middle list wrong! That does make sense though, the structure is
+
+`(c (c 1 (c 2 (c 3 nil))) (c 4 (c 5 (c 6 nil))))`
+
+which is a list with a list as its first element, and the list 4,5,6 as the rest of it.
 
 #### Exercise 2.27
 

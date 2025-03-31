@@ -356,6 +356,10 @@ the results of the computation in center-percent form (see Exercise 2.12).
 
 ##### Solution
 
+@src(code/ex2-14.rkt)
+
+This makes sense, the percent errors add (under the small error approximation).
+
 #### Exercise 2.15
 
 Eva Lu Ator, another user, has
@@ -367,6 +371,25 @@ she says, `par2` is a better program for parallel resistances than
 `par1`.  Is she right?  Why?
 
 ##### Solution
+**Alyssa's Conjecture:** Among algebraically equivalent expressions 
+the one that minimizes the error of the result interval is the one in which 
+no variable that represents an uncertain number is repeated, if such a form exists.
+
+**My statement:** Every operation involving two intervals of width greater than zero adds to the error, so those are the things we want to minimize.
+
+**Question:** is there a expression such that making a variable occur only once adds to the total number of interval operations?
+
+- Polynomials are out. Let's count `(pow A 3)` as the symbol `A` occurring multiple times.
+- The only expressions we can form are binary trees, the way to minimize the number of nontrivial interval operations **is** to ensure each symbol only occurs once, if that's possible. If we have 4 variables and 4 nontrivial leaf nodes, we'll have 3 nontrivial interval combinations. (Evaluating nodes of the tree: Every operation takes in two intervals and returns 1, so the number of nontrivial intervals can only decrease by one)
+- The question now is, is minimizing the number of nontrivial interval combinations the way to go?!
+
+- "Any operation between two intervals will increase errors" - I can prove this.
+- "The binary tree with the smallest number of nontrivial intervals as leaf nodes minimizes the number of nontrivial interval operations." - I can also prove this
+- The problem is + and * increase the errors by different amounts, so if I reduce the total number of operations, but introduce a * to the wrong spot, what if this blows up the error? So my concern is really about allowed transformations on the binary tree and the interplay between + and * (or -, or /). For example in this code snippet to evaluate $A/B + C/B,$ we reduce the number of divisions, but don't reduce the error.
+
+@src(code/ex2-15.rkt)
+
+I'm going to leave this problem here. It's probably true, I'm just having trouble proving it.
 
 #### Exercise 2.16
 
@@ -376,6 +399,45 @@ an interval-arithmetic package that does not have this shortcoming, or is this
 task impossible?  (Warning: This problem is very difficult.)
 
 ##### Solution
+Consider the context of problem 2.15, where we care about the expression $ab/(a+b)$.
+
+- The gold standard is to model each number as a random variable, possibly with a joint probability distribution $P(a,b)$. Then you ask what is the probability distribution 
+$$P\left(\frac{ab}{a+b}\right)=P\left(\frac{1}{\frac{1}{a}+\frac{1}{b}}\right)$$
+This can be done through monte carlo, or bootstrap and jackknife, or through linear error propagation, there's a ton of methods.
+
+- Another simpler heuristic would be to treat our expression as a function:
+```rkt
+;; equivalent definitions
+(define (f a b) (/ (* a b) (+ a b)))
+(define (f a b) (/ 1 (+ (/ 1 a) (/ 1 b))))
+```
+and then the new interval would have bounds
+```rkt
+(let ((al (lower-bound A))
+      (au (upper-bound A))
+      (bl (lower-bound B))
+      (bu (upper-bound B)))
+  (let ((x1 (f al bl))
+        (x2 (f al bu))
+        (x3 (f au bl))
+        (x4 (f au bu)))
+    (make-interval (min x1 x2 x3 x4)
+                   (max x1 x2 x3 x4))))
+```
+In many cases the result will be the smallest interval possible. But we could have pathological cases with non-monotonic functions (the extreme cases can lie in the middle of the interval instead of the endpoints; so maybe "convex" is the word I'm searching for). 
+
+So anyways this is just a discussion of the possible approaches, we're not going to actually implement all this stuff.
+
+
+
+
+
+
+
+
+
+
+
 
 
 
