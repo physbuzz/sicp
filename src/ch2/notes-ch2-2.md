@@ -15,6 +15,26 @@
 
 @src(code/ch2-2-experiments.rkt)
 
+### Other stuff I should know:
+
+atom?
+
+number?
+
+```
+
+; 'symb
+; ; (list symb)
+; '(symb)
+; (map (lambda (x) (list x)) (list 1 2 3 4))
+
+;; Some discussion leading into symbolics/undefined symbol f.
+(define lst (list 1 2 3 4))
+(map (lambda (x) ('f x)) lst)
+(list (quote (f 1)) (quote (f 2)) (quote (f 3)) (quote (f 4)))
+(map (lambda (x) `(f ,x)) lst)
+```
+
 ### Experiments with binary trees
 - Note to self: do some enumeration of binary trees here! It'll be fun!
 
@@ -353,7 +373,7 @@ Ok, dang I got the middle list wrong! That does make sense though, the structure
 
 `(c (c 1 (c 2 (c 3 nil))) (c 4 (c 5 (c 6 nil))))`
 
-which is a list with a list as its first element, and the list 4,5,6 as the rest of it.
+which is a list with a list as its first element, and the elements 4,5,6 as the rest of it.
 
 #### Exercise 2.27
 
@@ -378,6 +398,8 @@ x
 
 ##### Solution
 
+@src(code/ex2-27.rkt)
+
 #### Exercise 2.28
 
 Write a procedure `fringe`
@@ -397,6 +419,9 @@ example,
 ```
 
 ##### Solution
+Very straightforward as a recursive procedure using append.
+The fringe of a list is the fringe of the elements of the list appended in order.
+@src(code/ex2-28.rkt)
 
 #### Exercise 2.29
 
@@ -447,9 +472,17 @@ mobile is balanced.
 How much do you need to change your programs to convert to the new
 representation?
 
-
-
 ##### Solution
+
+@src(code/ex2-29.rkt)
+
+For part 4, we just need to change the functions with car and cdr in them. Pretty trivial.
+```rkt
+(define (left-branch mobile) (car mobile))
+(define (right-branch mobile) (cdr mobile))
+(define (branch-length branch) (car branch))
+(define (branch-mobile branch) (cdr branch))
+```
 
 #### Exercise 2.30
 
@@ -470,6 +503,8 @@ procedures) and also by using `map` and recursion.
 
 ##### Solution
 
+@src(code/ex2-30.rkt)
+
 #### Exercise 2.31
 
 Abstract your answer to
@@ -482,6 +517,8 @@ that `square-tree` could be defined as
 ```
 
 ##### Solution
+
+@src(code/ex2-31.rkt)
 
 #### Exercise 2.32
 
@@ -502,6 +539,11 @@ and give a clear explanation of why it works:
 
 ##### Solution
 
+When we call `append rest (...)`, `rest` is the list of sets where we don't 
+take the current element (`car s`), and we want to fill in (...) with the list of sets where we do take the current element. We achieve this with a lambda.
+
+@src(code/ex2-32.rkt)
+
 #### Exercise 2.33
 
 Fill in the missing expressions
@@ -521,6 +563,8 @@ operations as accumulations:
 ```
 
 ##### Solution
+
+@src(code/ex2-33.rkt)
 
 #### Exercise 2.34
 
@@ -555,7 +599,7 @@ are arranged in a sequence, from $a_0$ through $a_n$.
    coefficient-sequence))
 ```
 
-For example, to compute ${1 + 3x$ + {5x^3 + x^5}} at ${x = 2$} you
+For example, to compute ${1 + 3x + {5x^3 + x^5}}$ at ${x = 2}$ you
 would evaluate
 
 ```rkt
@@ -563,6 +607,7 @@ would evaluate
 ```
 
 ##### Solution
+@src(code/ex2-34.rkt)
 
 #### Exercise 2.35
 
@@ -575,6 +620,8 @@ Redefine `count-leaves` from
 ```
 
 ##### Solution
+
+@src(code/ex2-35.rkt)
 
 #### Exercise 2.36
 
@@ -598,11 +645,11 @@ of `accumulate-n`:
 ```
 
 ##### Solution
-
+@src(code/ex2-36.rkt)
 #### Exercise 2.37
 
-Suppose we represent vectors @b{v} = ${(v_i)$} as sequences of numbers, and
-matrices @b{m} = ${(m_{ij})$} as sequences of vectors (the rows of the
+Suppose we represent vectors $\mathbf v = (v_i)$ as sequences of numbers, and
+matrices $\mathbf m=(m_{ij})$ as sequences of vectors (the rows of the
 matrix).  For example, the matrix
 
 $$\left(\matrix{	1 & 2 & 3 & 4 \cr
@@ -615,15 +662,15 @@ this representation, we can use sequence operations to concisely express the
 basic matrix and vector operations.  These operations (which are described in
 any book on matrix algebra) are the following:
 
-$$\eqalign{ 
-	\text{(dot-product v w)} 	& \text{returns the sum}\;\Sigma_i v_i w_i; \cr
-	\text{(matrix-*-vector m v)} 	& \text{returns the vector}\;{\bf t}, \cr
-		& \text{where}\; t_i = \Sigma_j m_{ij} v_j; \cr
-	\text{(matrix-*-matrix m n)} 	& \text{returns the matrix}\;{\bf p}, \cr
-		& \text{where}\; p_{ij} = \Sigma_k m_{ik} n_{kj}; \cr
-	\text{(transpose m)} 		& \text{returns the matrix}\;{\bf n}, \cr
-		& \text{where}\; n_{ij} = m_{ji}. \cr
-}  $$
+<div>$$\begin{align*}
+	\text{(dot-product v w)} 	&\quad \text{returns the sum}\;\Sigma_i v_i w_i; \cr
+	\text{(matrix-*-vector m v)} 	&\quad \text{returns the vector}\;{\bf t}, \cr
+		&\quad \text{where}\; t_i = \Sigma_j m_{ij} v_j; \cr
+	\text{(matrix-*-matrix m n)} 	&\quad \text{returns the matrix}\;{\bf p}, \cr
+		&\quad \text{where}\; p_{ij} = \Sigma_k m_{ik} n_{kj}; \cr
+	\text{(transpose m)} 		&\quad \text{returns the matrix}\;{\bf n}, \cr
+		&\quad \text{where}\; n_{ij} = m_{ji}. \cr
+\end{align*}$$</div>
 
 We can define the dot product as
 
@@ -649,6 +696,8 @@ Exercise 2.36.)
 ```
 
 ##### Solution
+
+@src(code/ex2-37.rkt)
 
 #### Exercise 2.38
 
@@ -682,6 +731,40 @@ Give a property that `op` should satisfy to guarantee that
 sequence.
 
 ##### Solution
+```rkt
+(fold-right / 1 (list 1 2 3))
+  (/ 3 1)
+  (/ 2 3)
+  (/ 1 2/3)
+  =3/2
+(fold-left  / 1 (list 1 2 3))
+  (/ 1 1)
+  (/ 1 2)
+  (/ 1/2 3)
+  =1/6
+(fold-right list nil (list 1 2 3))
+  (list 3 nil)
+  (list 2 (list 3 nil))
+  = (list 1 (list 2 (list 3 nil)))
+(fold-left  list nil (list 1 2 3))
+  (list nil 1 )
+  (list (list nil 1) 2)
+  =(list (list (list nil 1) 2) 3)
+```
+@src(code/ex2-38.rkt)
+
+We want associativity. In lispy form:
+`(op (op a b) c) == (op a (op b c))`
+
+I'm not going to write up a totally formal proof, but we can consider the following two statements and do induction on n.
+```
+(fold-right op i (list a1 a2 ... an))
+=(op a1 (fold-right op i (list a2 ... an))
+
+(fold-left op i (list a1 a2 ... an))
+=(iter i (list a1 a2 ... an))
+=(iter (op i a1) (list a2 ... an))
+```
 
 #### Exercise 2.39
 

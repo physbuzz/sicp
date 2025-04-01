@@ -431,6 +431,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><a href="#section-22">Section 2.2</a></li>
 <ul>
 <li><a href="#experiments-with-lists-and-nil">Experiments with lists and nil</a></li>
+<li><a href="#other-stuff-i-should-know">Other stuff I should know:</a></li>
 <li><a href="#experiments-with-binary-trees">Experiments with binary trees</a></li>
 <li><a href="#exercises" class="toc-exercises">Exercises</a>
 <div class="exercise-container">(
@@ -523,6 +524,21 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </pre>
 </div>
 </div>
+
+<h3 id="other-stuff-i-should-know">Other stuff I should know:</h3>
+<p>atom?</p>
+<p>number?</p>
+<div class="codehilite"><pre><span></span><code>; &#39;symb
+; ; (list symb)
+; &#39;(symb)
+; (map (lambda (x) (list x)) (list 1 2 3 4))
+
+;; Some discussion leading into symbolics/undefined symbol f.
+(define lst (list 1 2 3 4))
+(map (lambda (x) (&#39;f x)) lst)
+(list (quote (f 1)) (quote (f 2)) (quote (f 3)) (quote (f 4)))
+(map (lambda (x) `(f ,x)) lst)
+</code></pre></div>
 
 <h3 id="experiments-with-binary-trees">Experiments with binary trees</h3>
 <ul>
@@ -1087,7 +1103,7 @@ following expressions:</p>
 
 <p>Ok, dang I got the middle list wrong! That does make sense though, the structure is</p>
 <p><code>(c (c 1 (c 2 (c 3 nil))) (c 4 (c 5 (c 6 nil))))</code></p>
-<p>which is a list with a list as its first element, and the list 4,5,6 as the rest of it.</p>
+<p>which is a list with a list as its first element, and the elements 4,5,6 as the rest of it.</p>
 <h4 id="exercise-227">Exercise 2.27</h4>
 <p>Modify your <code>reverse</code>
 procedure of Exercise 2.18 to produce a <code>deep-reverse</code> procedure
@@ -1107,6 +1123,35 @@ elements reversed and with all sublists deep-reversed as well.  For example,</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-27.rkt">code/ex2-27.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">deep-reverse</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">reverse-help</span><span class="w"> </span><span class="n">lst</span><span class="w"> </span><span class="n">ret</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="n">ret</span><span class="w"> </span>
+<span class="w">     </span><span class="p">(</span><span class="n">reverse-help</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span>
+<span class="w">           </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">deep-reverse</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span><span class="w"> </span><span class="n">ret</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span><span class="w"> </span>
+<span class="w">    </span><span class="n">lst</span>
+<span class="w">    </span><span class="p">(</span><span class="n">reverse-help</span><span class="w"> </span><span class="n">lst</span><span class="w"> </span><span class="n">nil</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="n">deep-reverse</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+((4 3) (2 1))
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-228">Exercise 2.28</h4>
 <p>Write a procedure <code>fringe</code>
 that takes as argument a tree (represented as a list) and returns a list whose
@@ -1123,6 +1168,69 @@ example,</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<p>Very straightforward as a recursive procedure using append.
+The fringe of a list is the fringe of the elements of the list appended in order.</p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-28.rkt">code/ex2-28.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+
+<span class="c1">;;Way too complicated!</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">append-at</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">listify</span><span class="w"> </span><span class="n">arg</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="n">arg</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">arg</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">lst</span><span class="p">)))</span><span class="w"> </span><span class="n">lst</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="p">(</span><span class="n">listify</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">append-at</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">))))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fringe</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">append-at</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">fringe</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span>
+<span class="w">    </span><span class="n">lst</span><span class="p">))</span>
+
+<span class="c1">;;Solution from Solving SICP</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fringe2</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fringe-iter</span><span class="w"> </span><span class="n">tree</span><span class="w"> </span><span class="n">accumulator</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">          </span><span class="p">((</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">accumulator</span>
+<span class="w">          </span><span class="p">(</span><span class="n">fringe-iter</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">fringe-iter</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fringe-iter</span><span class="w"> </span><span class="n">tree</span><span class="w"> </span><span class="n">nil</span><span class="p">))</span>
+
+<span class="c1">;;Yet simpler solution from https://billthelizard.blogspot.com/2011/02/sicp-228-flattening-nested-lists.html</span>
+<span class="c1">;; The way I was trying to use map for fringe-v1 made things more complicated.</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fringe3</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="p">(</span><span class="n">fringe</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span>
+<span class="w">                  </span><span class="p">(</span><span class="n">fringe</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">tree</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="n">fringe</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">(</span><span class="n">fringe2</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">(</span><span class="n">fringe3</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">(</span><span class="n">fringe</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="n">fringe2</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="n">fringe3</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(1 2 3 4)
+(1 2 3 4)
+(1 2 3 4)
+(1 2 3 4 1 2 3 4)
+(1 2 3 4 1 2 3 4)
+(1 2 3 4 1 2 3 4)
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-229">Exercise 2.29</h4>
 <p>A binary mobile consists of two
 branches, a left branch and a right branch.  Each branch is a rod of a certain
@@ -1162,6 +1270,100 @@ mobile is balanced.</p>
 <p>How much do you need to change your programs to convert to the new
 representation?</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-29.rkt">code/ex2-29.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="c1">;; part 1</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">right</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">left</span><span class="w"> </span><span class="n">right</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">left-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">mobile</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">right-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">mobile</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="nb">length</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="nb">length</span><span class="w"> </span><span class="n">mobile</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">branch-length</span><span class="w"> </span><span class="n">branch</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">branch</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="n">branch</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">branch</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">branch-leaf?</span><span class="w"> </span><span class="n">branch</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="n">branch</span><span class="p">))))</span>
+
+<span class="c1">;; part 2</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">total-weight</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">total-weight</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">left-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">       </span><span class="p">(</span><span class="n">total-weight</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">right-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">))))</span>
+<span class="w">    </span><span class="n">mobile</span><span class="p">))</span>
+
+
+<span class="c1">;; part 3</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">torque</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">left</span><span class="w">  </span><span class="p">(</span><span class="n">left-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">right</span><span class="w"> </span><span class="p">(</span><span class="n">right-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">branch-length</span><span class="w"> </span><span class="n">left</span><span class="p">)</span><span class="w"> </span>
+<span class="w">          </span><span class="p">(</span><span class="n">total-weight</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="n">left</span><span class="p">)))</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="n">branch-length</span><span class="w"> </span><span class="n">right</span><span class="p">)</span><span class="w"> </span>
+<span class="w">          </span><span class="p">(</span><span class="n">total-weight</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="n">right</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">echo</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="n">torque</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">left-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">right-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">))))</span>
+<span class="w">    </span><span class="no">#t</span><span class="p">))</span>
+
+<span class="c1">;; total weight 5</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x1</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+<span class="c1">;; total weight 4</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x2</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="c1">;; total weight 8</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x3</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">x2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">x2</span><span class="p">)))</span>
+<span class="c1">;; total weight 20</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x4</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">16</span><span class="p">)))</span>
+<span class="c1">;; Total weight 13</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x5</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="n">x1</span><span class="p">)</span><span class="w"> </span><span class="c1">;; torque 20</span>
+<span class="w">             </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="m">20/8</span><span class="w"> </span><span class="n">x3</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x6</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span>
+<span class="w">            </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">x4</span><span class="p">)</span><span class="w"> </span><span class="c1">;; torque of 40</span>
+<span class="w">            </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="m">40/13</span><span class="w"> </span><span class="n">x5</span><span class="p">)))</span><span class="w"> </span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">y1</span><span class="w"> </span><span class="p">(</span><span class="n">make-mobile</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">make-branch</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">10</span><span class="p">)))</span>
+
+<span class="c1">;; All the x&#39;s should be balanced</span>
+<span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="n">x1</span><span class="p">)</span>
+<span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="n">x2</span><span class="p">)</span>
+<span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="n">x3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="n">x4</span><span class="p">)</span>
+<span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="n">x5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="n">x6</span><span class="p">)</span>
+<span class="c1">;; And y isn&#39;t.</span>
+<span class="p">(</span><span class="n">balanced?</span><span class="w"> </span><span class="n">y1</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+#t
+#t
+#t
+#t
+#t
+#t
+#f
+</pre>
+</div>
+</div>
+
+<p>For part 4, we just need to change the functions with car and cdr in them. Pretty trivial.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">left-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">mobile</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">right-branch</span><span class="w"> </span><span class="n">mobile</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">mobile</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">branch-length</span><span class="w"> </span><span class="n">branch</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">branch</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">branch-mobile</span><span class="w"> </span><span class="n">branch</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">branch</span><span class="p">))</span>
+</code></pre></div>
+
 <h4 id="exercise-230">Exercise 2.30</h4>
 <p>Define a procedure
 <code>square-tree</code> analogous to the <code>square-list</code> procedure of
@@ -1176,6 +1378,42 @@ Exercise 2.21.  That is, <code>square-tree</code> should behave as follows:</p>
 <p>Define <code>square-tree</code> both directly (i.e., without using any higher-order
 procedures) and also by using <code>map</code> and recursion.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-30.rkt">code/ex2-30.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square-tree</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">square-tree</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span><span class="w"> </span>
+<span class="w">                    </span><span class="p">(</span><span class="n">square-tree</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">tree</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square-tree-map</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">square-tree-map</span><span class="w"> </span><span class="n">tree</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">examp</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">11</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="mi">13</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">square-tree</span><span class="w"> </span><span class="n">examp</span><span class="p">)</span>
+<span class="p">(</span><span class="n">square-tree-map</span><span class="w"> </span><span class="n">examp</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(1 4 ((9 16 25) (49 64 81) ((100 121))) (144 169))
+(1 4 ((9 16 25) (49 64 81) ((100 121))) (144 169))
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-231">Exercise 2.31</h4>
 <p>Abstract your answer to
 Exercise 2.30 to produce a procedure <code>tree-map</code> with the property
@@ -1185,6 +1423,44 @@ that <code>square-tree</code> could be defined as</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-31.rkt">code/ex2-31.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">tree-map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w">  </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">tree2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">tree-map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">tree2</span><span class="p">))</span><span class="w"> </span>
+<span class="w">         </span><span class="n">tree</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square-tree</span><span class="w"> </span><span class="n">tree</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="n">tree-map</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="n">tree</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">examp</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">11</span><span class="p">)))</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">12</span><span class="w"> </span><span class="mi">13</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">square-tree</span><span class="w"> </span><span class="n">examp</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;More advanced thingy: &quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="c1">;; Cool example showing more advanced stuff (symbol literal!)</span>
+<span class="p">(</span><span class="n">tree-map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="o">`</span><span class="p">(</span><span class="ss">f</span><span class="w"> </span><span class="o">,</span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="n">examp</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(1 4 ((9 16 25) (49 64 81) ((100 121))) (144 169))
+More advanced thingy: 
+((f 1) (f 2) (((f 3) (f 4) (f 5)) ((f 7) (f 8) (f 9)) (((f 10) (f 11)))) ((f 12) (f 13)))
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-232">Exercise 2.32</h4>
 <p>We can represent a set as a list
 of distinct elements, and we can represent the set of all subsets of the set as
@@ -1200,6 +1476,32 @@ and give a clear explanation of why it works:</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<p>When we call <code>append rest (...)</code>, <code>rest</code> is the list of sets where we don't 
+take the current element (<code>car s</code>), and we want to fill in (...) with the list of sets where we do take the current element. We achieve this with a lambda.</p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-32.rkt">code/ex2-32.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">subsets</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="nb">rest</span><span class="w"> </span><span class="p">(</span><span class="n">subsets</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">s</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="nb">rest</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span>
+<span class="w">                        </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">lst</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                          </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">s</span><span class="p">))</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span>
+<span class="w">                        </span><span class="nb">rest</span><span class="p">)))))</span>
+<span class="p">(</span><span class="n">subsets</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(() (3) (2) (2 3) (1) (1 3) (1 2) (1 2 3))
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-233">Exercise 2.33</h4>
 <p>Fill in the missing expressions
 to complete the following definitions of some basic list-manipulation
@@ -1216,6 +1518,48 @@ operations as accumulations:</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-33.rkt">code/ex2-33.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="c1">;; Copied/useful defns</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">echo</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+
+<span class="c1">;; Problem</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">                </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">              </span><span class="n">nil</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">seq1</span><span class="w"> </span><span class="n">seq2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="nb">cons</span><span class="w"> </span><span class="n">seq2</span><span class="w"> </span><span class="n">seq1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">square</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">8</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">8</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(1 4 9 16)
+(1 2 3 4 5 6 7 8)
+8
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-234">Exercise 2.34</h4>
 <p>Evaluating a polynomial in $x$
 at a given value of $x$ can be formulated as an accumulation.  We evaluate
@@ -1239,12 +1583,44 @@ are arranged in a sequence, from $a_0$ through $a_n$.</p>
 <span class="w">   </span><span class="n">coefficient-sequence</span><span class="p">))</span>
 </code></pre></div>
 
-<p>For example, to compute ${1 + 3x$ + {5x^3 + x^5}} at ${x = 2$} you
+<p>For example, to compute ${1 + 3x + {5x^3 + x^5}}$ at ${x = 2}$ you
 would evaluate</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">horner-eval</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-34.rkt">code/ex2-34.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span><span class="w"> </span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">horner-eval</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">coefficient-sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">this-coeff</span><span class="w"> </span><span class="n">higher-terms</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">this-coeff</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">higher-terms</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="w">   </span><span class="mi">0</span>
+<span class="w">   </span><span class="n">coefficient-sequence</span><span class="p">))</span>
+
+<span class="c1">; For example, to compute ${1 + 3x$ + {5x^3 + x^5}} at ${x = 2$} you</span>
+
+<span class="p">(</span><span class="n">horner-eval</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+79
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-235">Exercise 2.35</h4>
 <p>Redefine <code>count-leaves</code> from
 2.2.2 as an accumulation:</p>
@@ -1253,6 +1629,41 @@ would evaluate</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-35.rkt">code/ex2-35.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+
+<span class="c1">;; The first two empty slots just implement a summation</span>
+<span class="c1">;; The last empty slot is just the tree</span>
+<span class="c1">;; The third slot is the complicated thing.</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">count-leaves</span><span class="w"> </span><span class="n">t</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">count-leaves</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="n">t</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">count-leaves</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+16
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-236">Exercise 2.36</h4>
 <p>The procedure <code>accumulate-n</code>
 is similar to <code>accumulate</code> except that it takes as its third argument a
@@ -1272,9 +1683,39 @@ of <code>accumulate-n</code>:</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-36.rkt">code/ex2-36.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="n">seqs</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">seqs</span><span class="p">))</span>
+<span class="w">      </span><span class="n">nil</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">car</span><span class="w"> </span><span class="n">seqs</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">cdr</span><span class="w"> </span><span class="n">seqs</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">9</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">11</span><span class="w"> </span><span class="mi">12</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(22 26 30)
+</pre>
+</div>
+</div>
 <h4 id="exercise-237">Exercise 2.37</h4>
-<p>Suppose we represent vectors @b{v} = ${(v_i)$} as sequences of numbers, and
-matrices @b{m} = ${(m_{ij})$} as sequences of vectors (the rows of the
+<p>Suppose we represent vectors $\mathbf v = (v_i)$ as sequences of numbers, and
+matrices $\mathbf m=(m_{ij})$ as sequences of vectors (the rows of the
 matrix).  For example, the matrix</p>
 <p>$$\left(\matrix{    1 &amp; 2 &amp; 3 &amp; 4 \cr
         4 &amp; 5 &amp; 6 &amp; 6 \cr
@@ -1283,15 +1724,16 @@ matrix).  For example, the matrix</p>
 this representation, we can use sequence operations to concisely express the
 basic matrix and vector operations.  These operations (which are described in
 any book on matrix algebra) are the following:</p>
-<p>$$\eqalign{ 
-    \text{(dot-product v w)}    &amp; \text{returns the sum}\;\Sigma_i v_i w_i; \cr
-    \text{(matrix-<em>-vector m v)}    &amp; \text{returns the vector}\;{\bf t}, \cr
-        &amp; \text{where}\; t_i = \Sigma_j m_{ij} v_j; \cr
-    \text{(matrix-</em>-matrix m n)}    &amp; \text{returns the matrix}\;{\bf p}, \cr
-        &amp; \text{where}\; p_{ij} = \Sigma_k m_{ik} n_{kj}; \cr
-    \text{(transpose m)}        &amp; \text{returns the matrix}\;{\bf n}, \cr
-        &amp; \text{where}\; n_{ij} = m_{ji}. \cr
-}  $$</p>
+<div>$$\begin{align*}
+    \text{(dot-product v w)}    &\quad \text{returns the sum}\;\Sigma_i v_i w_i; \cr
+    \text{(matrix-*-vector m v)}    &\quad \text{returns the vector}\;{\bf t}, \cr
+        &\quad \text{where}\; t_i = \Sigma_j m_{ij} v_j; \cr
+    \text{(matrix-*-matrix m n)}    &\quad \text{returns the matrix}\;{\bf p}, \cr
+        &\quad \text{where}\; p_{ij} = \Sigma_k m_{ik} n_{kj}; \cr
+    \text{(transpose m)}        &\quad \text{returns the matrix}\;{\bf n}, \cr
+        &\quad \text{where}\; n_{ij} = m_{ji}. \cr
+\end{align*}$$</div>
+
 <p>We can define the dot product as</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">dot-product</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">w</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">w</span><span class="p">)))</span>
@@ -1312,6 +1754,85 @@ Exercise 2.36.)</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-37.rkt">code/ex2-37.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="n">seqs</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">seqs</span><span class="p">))</span>
+<span class="w">      </span><span class="n">nil</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">car</span><span class="w"> </span><span class="n">seqs</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="k">init</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">cdr</span><span class="w"> </span><span class="n">seqs</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">dot-product</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">w</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">w</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">matrix-*-vector</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">v</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">dot-product</span><span class="w"> </span><span class="n">row</span><span class="w"> </span><span class="n">v</span><span class="p">))</span><span class="w"> </span><span class="n">m</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">transpose</span><span class="w"> </span><span class="n">mat</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate-n</span><span class="w"> </span><span class="nb">cons</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="n">mat</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">matrix-*-matrix</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">cols</span><span class="w"> </span><span class="p">(</span><span class="n">transpose</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">row</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">matrix-*-vector</span><span class="w"> </span><span class="n">cols</span><span class="w"> </span><span class="n">row</span><span class="p">))</span><span class="w"> </span><span class="n">m</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">disp-vec</span><span class="w"> </span><span class="n">vec</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">vec</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">disp-mat</span><span class="w"> </span><span class="n">mat</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="n">disp-vec</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">mat</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">mat</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="n">disp-mat</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">mat</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">mymat</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">6</span><span class="p">)</span>
+<span class="w">                    </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">7</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">9</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">mymat2</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                     </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span>
+<span class="w">                     </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                     </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Matrix A&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-mat</span><span class="w"> </span><span class="n">mymat</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;After transpose:&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-mat</span><span class="w"> </span><span class="p">(</span><span class="n">transpose</span><span class="w"> </span><span class="n">mymat</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Matrix B&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-mat</span><span class="w"> </span><span class="n">mymat2</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;Matrix A*B:&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">disp-mat</span><span class="w"> </span><span class="p">(</span><span class="n">matrix-*-matrix</span><span class="w"> </span><span class="n">mymat</span><span class="w"> </span><span class="n">mymat2</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Matrix A
+(1 2 3 4)
+(4 5 6 6)
+(6 7 8 9)
+After transpose:
+(1 4 6)
+(2 5 7)
+(3 6 8)
+(4 6 9)
+Matrix B
+(1 0 -1 1 1)
+(3 0 -1 1 -1)
+(0 0 1 0 1)
+(1 0 -1 0 1)
+Matrix A*B:
+(11 0 -4 3 6)
+(25 0 -9 9 11)
+(36 0 -14 13 16)
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-238">Exercise 2.38</h4>
 <p>The <code>accumulate</code> procedure
 is also known as <code>fold-right</code>, because it combines the first element of
@@ -1338,6 +1859,76 @@ it combines elements working in the opposite direction:</p>
 <code>fold-right</code> and <code>fold-left</code> will produce the same values for any
 sequence.</p>
 <h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">fold-right</span><span class="w"> </span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="m">2/3</span><span class="p">)</span>
+<span class="w">  </span><span class="n">=3/2</span>
+<span class="p">(</span><span class="n">fold-left</span><span class="w">  </span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="m">1/2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">  </span><span class="n">=1/6</span>
+<span class="p">(</span><span class="n">fold-right</span><span class="w"> </span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">nil</span><span class="p">))</span>
+<span class="w">  </span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">nil</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">fold-left</span><span class="w">  </span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">  </span><span class="nb">=</span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-38.rkt">code/ex2-38.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">fold-right</span><span class="w"> </span><span class="n">accumulate</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fold-left</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="nb">rest</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="nb">rest</span><span class="p">)</span>
+<span class="w">        </span><span class="n">result</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="nb">rest</span><span class="p">))</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nb">rest</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">fold-right</span><span class="w"> </span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="n">fold-left</span><span class="w">  </span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="n">fold-right</span><span class="w"> </span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="p">(</span><span class="n">fold-left</span><span class="w">  </span><span class="nb">list</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+3/2
+1/6
+(1 (2 (3 ())))
+(((() 1) 2) 3)
+</pre>
+</div>
+</div>
+
+<p>We want associativity. In lispy form:
+<code>(op (op a b) c) == (op a (op b c))</code></p>
+<p>I'm not going to write up a totally formal proof, but we can consider the following two statements and do induction on n.</p>
+<div class="codehilite"><pre><span></span><code>(fold-right op i (list a1 a2 ... an))
+=(op a1 (fold-right op i (list a2 ... an))
+
+(fold-left op i (list a1 a2 ... an))
+=(iter i (list a1 a2 ... an))
+=(iter (op i a1) (list a2 ... an))
+</code></pre></div>
+
 <h4 id="exercise-239">Exercise 2.39</h4>
 <p>Complete the following
 definitions of <code>reverse</code> (Exercise 2.18) in terms of
