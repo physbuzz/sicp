@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index.md</title>
+    <title>bonus-notes.md</title>
     <!-- MathJax for LaTeX support -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -417,35 +417,105 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </head>
 <body>
     <div class="container">
-        <h1>SICP Reading Group</h1>
-<h2>Book club Notes</h2>
+        <p>Just some things I'm planning on writing. I've decided:</p>
+<h2>- Most of these things will be written as standalone articles, I'll probably upload em to my site as "SICP bonus chapters and ramblings" or something.</h2>
+<h1>David's Ramblings</h1>
 <ul>
-<li><a href="ch1/notes-ch1-1.html">Chapter 1-1</a></li>
-<li><a href="ch1/notes-ch1-2.html">Chapter 1-2</a></li>
-<li><a href="ch1/notes-ch1-3.html">Chapter 1-3</a></li>
-<li><a href="ch2/notes-ch2-1.html">Chapter 2-1</a></li>
-<li><a href="ch2/notes-ch2-2.html">Chapter 2-2</a> &lt;-- We are here</li>
-<li><a href="ch2/notes-ch2-3.html">Chapter 2-3</a></li>
-<li><a href="ch2/notes-ch2-4.html">Chapter 2-4</a></li>
-<li><a href="ch2/notes-ch2-5.html">Chapter 2-5</a></li>
+<li>Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. </li>
+<li>The ill-fated Santa Barbara Monte Carlo machine</li>
+<li>Improving convergence</li>
+<li>Some thoughts on reversibility and quantum computing</li>
+<li>Polynomial long division + my grandpa!</li>
 </ul>
-<h2>Meetings</h2>
+<h1>1.1 Important stuff</h1>
+<p>We introduce symbols </p>
+<div class="codehilite"><pre><span></span><code><span class="nb">+</span><span class="w"> </span><span class="nb">-</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="nb">/</span><span class="w"> </span>
+<span class="nb">display</span><span class="w"> </span><span class="nb">newline</span><span class="w"> </span>
+<span class="k">if</span><span class="w"> </span><span class="k">cond</span>
+<span class="k">and</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nb">not</span>
+</code></pre></div>
+
+<p>and the concept of applicative and normal order.</p>
+<h1>1.2 Important stuff</h1>
 <ul>
-<li><a href="meetings/02-23-2025.html">Feb 23, 2025</a></li>
-<li><a href="meetings/03-02-2025.html">March 2, 2025</a></li>
-<li><a href="meetings/03-09-2025.html">March 9, 2025</a></li>
-<li><a href="meetings/03-16-2025.html">March 16, 2025</a></li>
-<li><a href="meetings/03-23-2025.html">March 23, 2025</a> (Placeholder)</li>
+<li>linear recursive, linear iterative, tail recursive. </li>
+<li>big theta notation</li>
 </ul>
-<h2>Nice Links</h2>
+<p>Important algorithms: </p>
 <ul>
-<li><a href="https://sarabander.github.io/sicp/">SICP html edition</a></li>
-<li><a href="https://www.youtube.com/playlist?list=PLE18841CABEA24090">Lectures from 1986</a></li>
-<li>Meetup link: <a href="https://www.meetup.com/code-and-coffee-long-beach">https://www.meetup.com/code-and-coffee-long-beach</a></li>
-<li>Twitch: <a href="https://www.twitch.tv/codeandcoffeelb">https://www.twitch.tv/codeandcoffeelb</a></li>
-<li>Discord: <a href="https://www.codeandcoffee.dev/">https://www.codeandcoffee.dev/</a></li>
-<li><a href="https://www.racket-lang.org/">Racket IDE</a></li>
+<li>the Euclidean <code>gcd</code> algorithm</li>
+<li>fast exp, fast expmod</li>
+<li>fib iter vs fib recursive</li>
+<li>prime test and fast prime (heuristic sketch OK)</li>
 </ul>
+<h2>Exact runtime of count-change</h2>
+<p>The solution for the number of nodes in the count-change graph 
+can be written out exactly. At the very least, we can write a big 
+500x500 matrix and write the number of nodes required as a function of $M^n$ 
+applied to some vector. Problems like this are kind of fun, so it would be 
+nice to just do this, put it in Jordan normal form. We'll end up 
+with a fifth degree polynomial, and $T(n,5)=P(n) + \cos(...)$ where the "cos" is a placeholder for a bunch of complicated but finite bounded oscillatory terms.</p>
+<h2>RSA implementation</h2>
+<p>Would be good to cover some of this</p>
+<h2>Extra number theory</h2>
+<p>We'll need lists for this, but there's good stuff involving:</p>
+<ul>
+<li>The extended GCD algorithm (finding $x,y$ given $a,b$ such that $ax+by=\textrm{gcd}(a,b)$)</li>
+<li>Chinese remainder theorem algorithm </li>
+<li>General linear diophantine equations</li>
+</ul>
+<h1>1.3 Important Stuff</h1>
+<h2>Extra number theory stuff:</h2>
+<ul>
+<li>Calculating the Euler totient function</li>
+<li>Calculating base b expansions of fractions; this isn't really talked about very much, long division feels boring but it really isn't. We <em>could</em> avoid lists here.</li>
+<li>Polynomial long division. We'd need lists for this.</li>
+</ul>
+<h2>Other special numbers</h2>
+<ul>
+<li>We emphasized the Fibonacci numbers, what about algos for the Lucas numbers?</li>
+<li>Partition function algorithm</li>
+<li>Do any cool algorithms arise from the generating functions?</li>
+<li>Pretty sure there's a catalan number algorithm in plain sight here. </li>
+<li>Negative binomial numbers. Maybe do this after the matrix stuff? There's a cool way that the square of an alternating pascal number matrix gives you the identity matrix</li>
+</ul>
+<div class="codehilite"><pre><span></span><code><span class="n">alternatingpascal</span><span class="p">[</span><span class="nv">n_</span><span class="p">]</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span>
+<span class="w">  </span><span class="n">Table</span><span class="p">[</span><span class="n">Table</span><span class="p">[</span><span class="n">If</span><span class="p">[</span><span class="n">i</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="mi">-1</span><span class="p">)</span><span class="o">^</span><span class="n">i</span><span class="w"> </span><span class="n">Binomial</span><span class="p">[</span><span class="n">j</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">],</span><span class="w"> </span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="p">{</span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">}],</span><span class="w"> </span><span class="p">{</span><span class="n">j</span><span class="p">,</span><span class="w"> </span>
+<span class="w">    </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="p">}];</span>
+<span class="n">alternatingpascal</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="err">.</span><span class="w"> </span><span class="n">alternatingpascal</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">MatrixForm</span>
+</code></pre></div>
+
+<ul>
+<li>Challenge: Ramanujan tau function. This is some memoized code using recursion that supposedly works: <a href="https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896">https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896</a>, but simple mathematica code can generate it too: <code>CoefficientList[Take[Expand[Product[(1 - x^k)^24, {k, 1, 30}]], 30],x]</code></li>
+</ul>
+<h2>Continued fraction expansion of 1/pi?</h2>
+<p>It could be cool to plot the frequency of numbers in the continued fraction expansion of pi or 1/pi, if this is "easily" done with exact arithmetic.</p>
+<h2>Numerical approximation formulas</h2>
+<p>I think there's a story to tell here starting with...</p>
+<ul>
+<li>The nested function approximation for sine. (Who came up with this first? Is there an interesting functional equation from the polynomial?) </li>
+<li>The nested function approximation for the feigenbaum function (<a href="https://writings.stephenwolfram.com/2019/07/mitchell-feigenbaum-1944-2019-4-66920160910299067185320382/">this writing by Wolfram</a> and the code used to generate <a href="https://content.wolfram.com/sites/43/2019/07/feigenbaum-function.png">this image</a> - click on the image in the article to get the code). I think it can be casted in the same form as the polynomial version: iterated function -&gt; scaled up. See also <a href="https://mathstodon.xyz/@S_Conradi">Simone Conradi's work</a>. This is the solution of the Feigenbaum-Cvitanović functional equation.</li>
+<li>Other nested functions? I think Simone Conradi also posted code involving $f(f(x))=\sin(x)$. Hell, might as well email Conradi and also Cvitanovic while I'm at it.</li>
+<li>LLMs recommended studying Schroder's equation and the Abel equation, but I don't quite understand this.</li>
+</ul>
+<h2>Improving rates of convergence</h2>
+<p>I went on a tangent during our meeting about rates of convergence, so a few things could be:
+ - How fast Newton's method converges (it's great)
+ - Newton's method in multiple variables, maybe?
+ - Successive averaging
+ - Resummation schemes</p>
+<h1>2.1</h1>
+<h2>Algorithm to Draw Church Numerals</h2>
+<p>algorithm to draw church numerals in the style of the "what is PLUS times PLUS"  video.</p>
+<h1>2.2</h1>
+<h2>Note on all of the useful library functions in SICP</h2>
+<p>It would be useful to collect all the functions. fold-left, fold-right, accumulate, yadda yadda. One of the best parts of Mathematica is giving these standard names.</p>
+<h2>Enumerations</h2>
+<p>enumerating partitions, enumerating binary trees (rather than just counting), enumerating expressions?</p>
+<h2>Crash course on symbols?</h2>
+<p>The problems here are super tedious without use of <code>'()</code> and an understanding of these things, which the book kind of glosses over.</p>
+<h2>All about n-queens and dancing links!</h2>
+<p>TBD</p>
     </div>
 </body>
 </html>

@@ -4,9 +4,9 @@
 ## Book club Notes
 - [Chapter 1-1](ch1/notes-ch1-1.html)
 - [Chapter 1-2](ch1/notes-ch1-2.html)
-- [Chapter 1-3](ch1/notes-ch1-3.html) <- We are here
+- [Chapter 1-3](ch1/notes-ch1-3.html)
 - [Chapter 2-1](ch2/notes-ch2-1.html)
-- [Chapter 2-2](ch2/notes-ch2-2.html)
+- [Chapter 2-2](ch2/notes-ch2-2.html) <-- We are here
 - [Chapter 2-3](ch2/notes-ch2-3.html)
 - [Chapter 2-4](ch2/notes-ch2-4.html)
 - [Chapter 2-5](ch2/notes-ch2-5.html)
