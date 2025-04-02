@@ -597,7 +597,6 @@ reverse order:</p>
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">reverse-n2</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="n">last-elem</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">reverse-n2</span><span class="w"> </span><span class="p">(</span><span class="n">most</span><span class="w"> </span><span class="n">lst</span><span class="p">)))))</span>
 
-<span class="c1">;; PogChamp PogBones lcolonPog</span>
 <span class="c1">;; This works and is much faster. Reversing a linked list naturally </span>
 <span class="c1">;; wants to use tail recursion!</span>
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">reverse</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span>
@@ -1943,41 +1942,209 @@ definitions of <code>reverse</code> (Exercise 2.18) in terms of
 </code></pre></div>
 
 <h5>Solution</h5>
+<p>This one always gets me. In the book's definition of fold-left, we already
+swap the order of result and <code>car rest</code>. ie, in the definition of fold-left the first op that is evaluated is <code>(op nil (first-elem))</code> whereas in fold-right 
+it's <code>(op (last-elem) nil)</code>. I always end up double-swapping. </p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-39.rkt">code/ex2-39.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">fold-right</span><span class="w"> </span><span class="n">accumulate</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fold-left</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="nb">rest</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="nb">rest</span><span class="p">)</span>
+<span class="w">        </span><span class="n">result</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="nb">rest</span><span class="p">))</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nb">rest</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">reverse1</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fold-right</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">reverse2</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fold-left</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">x</span><span class="p">))</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">reverse1</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+<span class="p">(</span><span class="n">reverse2</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">5</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(5 4 3 2 1)
+(5 4 3 2 1)
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-240">Exercise 2.40</h4>
 <p>Define a procedure
 <code>unique-pairs</code> that, given an integer $n$, generates the sequence of
-pairs ${(i, j)$} with ${1 \le j$ \lt {i \le n}}.  Use <code>unique-pairs</code>
+pairs ${(i, j)}$ with ${1 \le j \lt {i \le n}}$.  Use <code>unique-pairs</code>
 to simplify the definition of <code>prime-sum-pairs</code> given above.</p>
 <h5>Solution</h5>
+<p>The scaffolding code is a bit much, we might have to start actually including a library file! Regardless...</p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-40.rkt">code/ex2-40.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="c1">;; Solution</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">unique-pairs</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">num-list</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">ret</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="n">ret</span>
+<span class="w">      </span><span class="p">(</span><span class="n">num-list</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="n">ret</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">num-list-list</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">ret</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">      </span><span class="n">ret</span>
+<span class="w">      </span><span class="p">(</span><span class="n">num-list-list</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">ret</span><span class="w"> </span><span class="p">(</span><span class="n">num-list</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="n">nil</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">num-list-list</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">nil</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">prime-sum-pairs</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">prime-sum?</span><span class="w"> </span><span class="p">(</span><span class="n">unique-pairs</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
+
+<span class="c1">;; Library functions</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">smallest-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">test-divisor</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">&gt;</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">test-divisor</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="n">n</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="n">divides?</span><span class="w"> </span><span class="n">test-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="n">test-divisor</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">find-divisor</span><span class="w"> </span>
+<span class="w">               </span><span class="n">n</span><span class="w"> </span>
+<span class="w">               </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">test-divisor</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">divides?</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">prime?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">smallest-divisor</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">prime-sum?</span><span class="w"> </span><span class="n">pair</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">prime?</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">pair</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="n">pair</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="n">predicate</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span>
+<span class="w">                       </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w">  </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span>
+<span class="w">                       </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="n">unique-pairs</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="p">(</span><span class="n">prime-sum-pairs</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+((2 1) (3 1) (3 2) (4 1) (4 2) (4 3) (5 1) (5 2) (5 3) (5 4))
+((2 1) (3 2) (4 1) (4 3) (5 2))
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-241">Exercise 2.41</h4>
 <p>Write a procedure to find all
 ordered triples of distinct positive integers $i$, $j$, and $k$ less than
 or equal to a given integer $n$ that sum to a given integer $s$.</p>
 <h5>Solution</h5>
+<p>Should we write this a clever way?</p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-41.rkt">code/ex2-41.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+<span class="c1">;; Library functions</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">enumerate-interval</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="n">high</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="n">high</span><span class="p">)</span>
+<span class="w">      </span><span class="n">nil</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">low</span>
+<span class="w">            </span><span class="p">(</span><span class="n">enumerate-interval</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">             </span><span class="n">high</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="n">predicate</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span>
+<span class="w">                       </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w">  </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span>
+<span class="w">                       </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+
+<span class="c1">;; Solution</span>
+<span class="c1">;; My solution uses brute force when it doesn&#39;t need to (we don&#39;t need to</span>
+<span class="c1">;; generate pairs and then filter) but it&#39;s fun to use listy stuff. We&#39;ve done</span>
+<span class="c1">;; enough iteration and cons silliness.</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">tuples</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">depth</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">depth</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">    </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">depth</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="n">enumerate-interval</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">else</span><span class="w"> </span>
+<span class="w">     </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="p">(</span><span class="n">tuples</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">depth</span><span class="p">)</span><span class="w"> </span>
+<span class="w">             </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">arg</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">arg</span><span class="p">))</span><span class="w"> </span>
+<span class="w">                  </span><span class="p">(</span><span class="n">tuples</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">depth</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">tuples-sum</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="n">depth</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">t-sum?</span><span class="w"> </span><span class="n">tuple</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">tuple</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">t-sum?</span><span class="w"> </span><span class="p">(</span><span class="n">tuples</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">depth</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="n">tuples</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="p">(</span><span class="n">tuples-sum</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">8</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+((3 2 1) (4 2 1) (4 3 1) (4 3 2) (5 2 1) (5 3 1) (5 3 2) (5 4 1) (5 4 2) (5 4 3) (6 2 1) (6 3 1) (6 3 2) (6 4 1) (6 4 2) (6 4 3) (6 5 1) (6 5 2) (6 5 3) (6 5 4))
+((4 3 1) (5 2 1))
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-242">Exercise 2.42</h4>
-<p>The ``eight-queens puzzle'' asks
+<p>The eight-queens puzzle asks
 how to place eight queens on a chessboard so that no queen is in check from any
 other (i.e., no two queens are in the same row, column, or diagonal).  One
 possible solution is shown in Figure 2.8.  One way to solve the puzzle is
 to work across the board, placing a queen in each column.  Once we have placed
-${k - 1$} queens, we must place the $k^{\text{th}}$ queen in a position where it does
+${k - 1}$ queens, we must place the $k^{\text{th}}$ queen in a position where it does
 not check any of the queens already on the board.  We can formulate this
 approach recursively: Assume that we have already generated the sequence of all
-possible ways to place ${k - 1$} queens in the first ${k - 1$} columns of the
+possible ways to place ${k - 1}$ queens in the first ${k - 1}$ columns of the
 board.  For each of these ways, generate an extended set of positions by
 placing a queen in each row of the $k^{\text{th}}$ column.  Now filter these, keeping
 only the positions for which the queen in the $k^{\text{th}}$ column is safe with
 respect to the other queens.  This produces the sequence of all ways to place
 $k$ queens in the first $k$ columns.  By continuing this process, we will
 produce not only one solution, but all solutions to the puzzle.</p>
-<p>@float
-@anchor{Figure 2.8}</p>
-<p>@iftex
-<img alt="Image: fig/chap2/Fig2.8c,73mm,,,.std.svg" src="/images/sicp/fig/chap2/Fig2.8c,73mm,,,.std.svg.png" />
-@caption{@strong{Figure 2.8:} A solution to the eight-queens puzzle.}</p>
 <p>We implement this solution as a procedure <code>queens</code>, which returns a
 sequence of all solutions to the problem of placing $n$ queens on an
-${n \times n$} chessboard.  <code>Queens</code> has an internal procedure
+${n \times n}$ chessboard.  <code>Queens</code> has an internal procedure
 <code>queen-cols</code> that returns the sequence of all ways to place queens in the
 first $k$ columns of the board.</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">queens</span><span class="w"> </span><span class="n">board-size</span><span class="p">)</span>
@@ -2001,8 +2168,8 @@ first $k$ columns of the board.</p>
 <span class="w">  </span><span class="p">(</span><span class="n">queen-cols</span><span class="w"> </span><span class="n">board-size</span><span class="p">))</span>
 </code></pre></div>
 
-<p>In this procedure <code>rest-of-queens</code> is a way to place ${k - 1$} queens in
-the first ${k - 1$} columns, and <code>new-row</code> is a proposed row in which to
+<p>In this procedure <code>rest-of-queens</code> is a way to place ${k - 1}$ queens in
+the first ${k - 1}$ columns, and <code>new-row</code> is a proposed row in which to
 place the queen for the $k^{\text{th}}$ column.  Complete the program by implementing
 the representation for sets of board positions, including the procedure
 <code>adjoin-position</code>, which adjoins a new row-column position to a set of
@@ -2012,11 +2179,99 @@ positions, whether the queen in the $k^{\text{th}}$ column is safe with respect 
 others.  (Note that we need only check whether the new queen is safe---the
 other queens are already guaranteed safe with respect to each other.)</p>
 <h5>Solution</h5>
+<p>Queen is an integer from 1 to board-size. The queen <code>k</code> is safe if:</p>
+<ul>
+<li><code>queen[i]!=queen[k]</code> for all <code>i\lt k</code> (horiz check)</li>
+<li><code>abs(queen[k]-queen[i])!=abs(k-i)</code> (diagonal check)</li>
+</ul>
+<div class="code-box">
+<div class="code-header"><a href="code/ex2-42.rkt">code/ex2-42.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">flatmap</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="n">seq</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="nb">append</span><span class="w"> </span><span class="n">nil</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="n">seq</span><span class="p">)))</span><span class="w"> </span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">enumerate-interval</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="n">high</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="n">high</span><span class="p">)</span>
+<span class="w">      </span><span class="n">nil</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">low</span>
+<span class="w">            </span><span class="p">(</span><span class="n">enumerate-interval</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">low</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">             </span><span class="n">high</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="n">predicate</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span>
+<span class="w">                       </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w">  </span><span class="p">(</span><span class="nb">filter</span><span class="w"> </span><span class="n">predicate</span>
+<span class="w">                       </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">queens</span><span class="w"> </span><span class="n">board-size</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">empty-board</span><span class="w"> </span><span class="n">nil</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">last</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">last</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">echo</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">safe?</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">positions</span><span class="p">)</span>
+<span class="w">    </span><span class="c1">;(echo positions)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="nb">last</span><span class="w"> </span><span class="n">positions</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">safe-loop</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="nb">rest</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">yprime</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="nb">rest</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">        </span><span class="no">#t</span>
+<span class="w">        </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">yprime</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="n">yprime</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">i</span><span class="p">))))</span>
+<span class="w">             </span><span class="p">(</span><span class="n">safe-loop</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="nb">rest</span><span class="p">)))))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">safe-loop</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">positions</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">adjoin-position</span><span class="w"> </span><span class="n">new-row</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">rest-of-queens</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">rest-of-queens</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">new-row</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">queen-cols</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">empty-board</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">filter</span>
+<span class="w">         </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">positions</span><span class="p">)</span><span class="w"> </span>
+<span class="w">           </span><span class="p">(</span><span class="n">safe?</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="n">positions</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="n">flatmap</span>
+<span class="w">          </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">rest-of-queens</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">new-row</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">(</span><span class="n">adjoin-position</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">new-row</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">k</span><span class="w"> </span>
+<span class="w">                    </span><span class="n">rest-of-queens</span><span class="p">))</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">enumerate-interval</span><span class="w"> </span>
+<span class="w">                  </span><span class="mi">1</span><span class="w"> </span>
+<span class="w">                  </span><span class="n">board-size</span><span class="p">)))</span>
+<span class="w">          </span><span class="p">(</span><span class="n">queen-cols</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">queen-cols</span><span class="w"> </span><span class="n">board-size</span><span class="p">))</span>
+
+<span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="p">(</span><span class="n">queens</span><span class="w"> </span><span class="n">n</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="n">enumerate-interval</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>
+(1 0 0 2 10 4 40 92 352 724)
+</pre>
+</div>
+</div>
+
+<p>We can see we reproduce <a href="https://oeis.org/A000170">OEIS A000170</a>:
+$$1, 1, 0, 0, 2, 10, 4, 40, 92, 352, 724 $$</p>
 <h4 id="exercise-243">Exercise 2.43</h4>
 <p>Louis Reasoner is having a
 terrible time doing Exercise 2.42.  His <code>queens</code> procedure seems to
 work, but it runs extremely slowly.  (Louis never does manage to wait long
-enough for it to solve even the ${6\times6$} case.)  When Louis asks Eva Lu Ator for
+enough for it to solve even the $6\times6$ case.)  When Louis asks Eva Lu Ator for
 help, she points out that he has interchanged the order of the nested mappings
 in the <code>flatmap</code>, writing it as</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">flatmap</span>
@@ -2032,6 +2287,18 @@ in the <code>flatmap</code>, writing it as</p>
 it will take Louis's program to solve the eight-queens puzzle, assuming that
 the program in Exercise 2.42 solves the puzzle in time $T$.</p>
 <h5>Solution</h5>
+<p>In our substitution model, 
+when we evaluate <code>(flatmap f interval)</code>, we end up with one evaluation of <code>f</code> for each 
+element. But each time we evaluate the lambda, 
+we begin a new evaluation of <code>(queen-cols (- k 1))</code>. So this is a branching recursive
+call, with a branch factor equal to the board size! </p>
+<p>If the original method has complexity $O(n!)$, then we can estimate Louis's version to take $8^8/8!\approx 416$ times as long as the fast method.</p>
+<p>I wrote some timing and plotting code in <a href="code/nqueens.txt">code/nqueens.rkt</a>, outputs at <a href="code/nqueens-timing.csv">code/nqueens-timing.csv</a> and plotting code at <a href="code/nqueens-plot.wl">code/nqueens-plot.wl</a>, but the <a href="media/nqueens-plot.svg">resulting plot</a> isn't convincing. The timings $T_n^{fast}/n!$ for n=1 through n=9 are:</p>
+<p><code>Tfast[n]/n!={1.,0.5,0.166667,0.0833333,0.0666667,0.0444444,0.0246032,0.0143601,0.00846836}</code></p>
+<p>suggesting that the algorithm isn't well-described by an $n!$ curve for small n.</p>
+<p>The timings $T_n^{slow}/n^n$ hint that they're leveling off to a constant around $0.06 \mu s,$ which is promising that I got it right. So, using Louis's method it would take 2hrs 40 minutes to do $n=10$ and about 80 hours to do $n=11.$ I think I'll pass on verifying that, but I'm pretty convinced that those are good estimates :)</p>
+<p><code>Tslow[n]/n^n={1., 0.25, 0.0740741, 0.0546875, 0.04992, 0.137731, 0.0567997, \
+0.0575211, 0.0614966}</code></p>
 <h4 id="exercise-244">Exercise 2.44</h4>
 <p>Define the procedure
 <code>up-split</code> used by <code>corner-split</code>.  It is similar to

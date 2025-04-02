@@ -9,7 +9,6 @@
 (define (reverse-n2 lst)
   (if (null? lst) nil (cons (last-elem lst) (reverse-n2 (most lst)))))
 
-;; PogChamp PogBones lcolonPog
 ;; This works and is much faster. Reversing a linked list naturally 
 ;; wants to use tail recursion!
 (define (reverse lst)

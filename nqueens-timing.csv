@@ -1,0 +1,9 @@
+n,nqueens_time_microsec,nqueens_slow_time_microsec
+1,1,1
+2,1,1
+3,1,2
+4,2,13
+5,7,157
+6,30,6596
+7,135,48195
+8,531,959935

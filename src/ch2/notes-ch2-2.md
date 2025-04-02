@@ -784,14 +784,23 @@ definitions of `reverse` (Exercise 2.18) in terms of
 
 ##### Solution
 
+This one always gets me. In the book's definition of fold-left, we already
+swap the order of result and `car rest`. ie, in the definition of fold-left the first op that is evaluated is `(op nil (first-elem))` whereas in fold-right 
+it's `(op (last-elem) nil)`. I always end up double-swapping. 
+
+@src(code/ex2-39.rkt)
+
 #### Exercise 2.40
 
 Define a procedure
 `unique-pairs` that, given an integer $n$, generates the sequence of
-pairs ${(i, j)$} with ${1 \le j$ \lt {i \le n}}.  Use `unique-pairs`
+pairs ${(i, j)}$ with ${1 \le j \lt {i \le n}}$.  Use `unique-pairs`
 to simplify the definition of `prime-sum-pairs` given above.
 
 ##### Solution
+The scaffolding code is a bit much, we might have to start actually including a library file! Regardless...
+
+@src(code/ex2-40.rkt)
 
 #### Exercise 2.41
 
@@ -800,18 +809,20 @@ ordered triples of distinct positive integers $i$, $j$, and $k$ less than
 or equal to a given integer $n$ that sum to a given integer $s$.
 
 ##### Solution
+Should we write this a clever way?
+@src(code/ex2-41.rkt)
 
 #### Exercise 2.42
 
-The ``eight-queens puzzle'' asks
+The eight-queens puzzle asks
 how to place eight queens on a chessboard so that no queen is in check from any
 other (i.e., no two queens are in the same row, column, or diagonal).  One
 possible solution is shown in Figure 2.8.  One way to solve the puzzle is
 to work across the board, placing a queen in each column.  Once we have placed
-${k - 1$} queens, we must place the $k^{\text{th}}$ queen in a position where it does
+${k - 1}$ queens, we must place the $k^{\text{th}}$ queen in a position where it does
 not check any of the queens already on the board.  We can formulate this
 approach recursively: Assume that we have already generated the sequence of all
-possible ways to place ${k - 1$} queens in the first ${k - 1$} columns of the
+possible ways to place ${k - 1}$ queens in the first ${k - 1}$ columns of the
 board.  For each of these ways, generate an extended set of positions by
 placing a queen in each row of the $k^{\text{th}}$ column.  Now filter these, keeping
 only the positions for which the queen in the $k^{\text{th}}$ column is safe with
@@ -819,18 +830,9 @@ respect to the other queens.  This produces the sequence of all ways to place
 $k$ queens in the first $k$ columns.  By continuing this process, we will
 produce not only one solution, but all solutions to the puzzle.
 
-@float
-@anchor{Figure 2.8}
-
-@iftex
-![Image: fig/chap2/Fig2.8c,73mm,,,.std.svg](/images/sicp/fig/chap2/Fig2.8c,73mm,,,.std.svg.png)
-@caption{@strong{Figure 2.8:} A solution to the eight-queens puzzle.}
-
-
-
 We implement this solution as a procedure `queens`, which returns a
 sequence of all solutions to the problem of placing $n$ queens on an
-${n \times n$} chessboard.  `Queens` has an internal procedure
+${n \times n}$ chessboard.  `Queens` has an internal procedure
 `queen-cols` that returns the sequence of all ways to place queens in the
 first $k$ columns of the board.
 
@@ -856,8 +858,8 @@ first $k$ columns of the board.
   (queen-cols board-size))
 ```
 
-In this procedure `rest-of-queens` is a way to place ${k - 1$} queens in
-the first ${k - 1$} columns, and `new-row` is a proposed row in which to
+In this procedure `rest-of-queens` is a way to place ${k - 1}$ queens in
+the first ${k - 1}$ columns, and `new-row` is a proposed row in which to
 place the queen for the $k^{\text{th}}$ column.  Complete the program by implementing
 the representation for sets of board positions, including the procedure
 `adjoin-position`, which adjoins a new row-column position to a set of
@@ -868,13 +870,23 @@ others.  (Note that we need only check whether the new queen is safe---the
 other queens are already guaranteed safe with respect to each other.)
 
 ##### Solution
+Queen is an integer from 1 to board-size. The queen `k` is safe if:
+
+ - `queen[i]!=queen[k]` for all `i\lt k` (horiz check)
+ - `abs(queen[k]-queen[i])!=abs(k-i)` (diagonal check)
+
+@src(code/ex2-42.rkt)
+
+We can see we reproduce [OEIS A000170](https://oeis.org/A000170):
+$$1, 1, 0, 0, 2, 10, 4, 40, 92, 352, 724 $$
+
 
 #### Exercise 2.43
 
 Louis Reasoner is having a
 terrible time doing Exercise 2.42.  His `queens` procedure seems to
 work, but it runs extremely slowly.  (Louis never does manage to wait long
-enough for it to solve even the ${6\times6$} case.)  When Louis asks Eva Lu Ator for
+enough for it to solve even the $6\times6$ case.)  When Louis asks Eva Lu Ator for
 help, she points out that he has interchanged the order of the nested mappings
 in the `flatmap`, writing it as
 
@@ -893,6 +905,25 @@ it will take Louis's program to solve the eight-queens puzzle, assuming that
 the program in Exercise 2.42 solves the puzzle in time $T$.
 
 ##### Solution
+
+In our substitution model, 
+when we evaluate `(flatmap f interval)`, we end up with one evaluation of `f` for each 
+element. But each time we evaluate the lambda, 
+we begin a new evaluation of `(queen-cols (- k 1))`. So this is a branching recursive
+call, with a branch factor equal to the board size! 
+
+If the original method has complexity $O(n!)$, then we can estimate Louis's version to take $8^8/8!\approx 416$ times as long as the fast method.
+
+I wrote some timing and plotting code in [code/nqueens.rkt](code/nqueens.txt), outputs at [code/nqueens-timing.csv](code/nqueens-timing.csv) and plotting code at [code/nqueens-plot.wl](code/nqueens-plot.wl), but the [resulting plot](media/nqueens-plot.svg) isn't convincing. The timings $T_n^{fast}/n!$ for n=1 through n=9 are:
+
+`Tfast[n]/n!={1.,0.5,0.166667,0.0833333,0.0666667,0.0444444,0.0246032,0.0143601,0.00846836}`
+
+suggesting that the algorithm isn't well-described by an $n!$ curve for small n.
+
+The timings $T_n^{slow}/n^n$ hint that they're leveling off to a constant around $0.06 \mu s,$ which is promising that I got it right. So, using Louis's method it would take 2hrs 40 minutes to do $n=10$ and about 80 hours to do $n=11.$ I think I'll pass on verifying that, but I'm pretty convinced that those are good estimates :)
+
+`Tslow[n]/n^n={1., 0.25, 0.0740741, 0.0546875, 0.04992, 0.137731, 0.0567997, \
+0.0575211, 0.0614966}`
 
 #### Exercise 2.44
 
