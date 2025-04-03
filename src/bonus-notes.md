@@ -37,6 +37,7 @@ Important algorithms:
 - fast exp, fast expmod
 - fib iter vs fib recursive
 - prime test and fast prime (heuristic sketch OK)
+- `remainder`
 
 ## Exact runtime of count-change
 The solution for the number of nodes in the count-change graph 

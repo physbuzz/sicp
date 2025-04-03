@@ -9,6 +9,10 @@
 
 @toc
 
+
+
+
+
 ## Section 1.1
 
 
@@ -26,6 +30,7 @@
 - Lisp uses prefix notation.
 - Prefix notation is used. The operator is the leftmost element and can take an arbitrary number of elements, for example `(+ 1 2 3 4)` evaluated to 10. 
 - A ***combination*** is an expression with the leftmost element the operator and the operations to the right operands.
+
 - REPL = "read-eval-print loop"
 - Pretty printing is defined such that each operator with a deeper nesting starts at a deeper level of indentation. For example
 ```rkt
@@ -125,15 +130,60 @@ Bound variable, free variable, variable scope, captured variable (changing from 
 
 > Lexical scoping dictates that free variables in a procedure are taken to refer to bindings made by enclosing procedure definitions; that is, they are looked up in the environment in which the procedure was defined. We will see how this works in detail in chapter 3 when we study environments and the detailed behavior of the interpreter.
 
+## Meeting 02-23-2025
+### Useful links from before the meeting:
+- [SICP full book in html from MIT](https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/index.html)
+- sarabander [git repo](https://github.com/sarabander/sicp) / [github io](https://sarabander.github.io/sicp/)
+- [MIT OCW](https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005/)
+- [Lectures from 1986](https://www.youtube.com/playlist?list=PLE18841CABEA24090)
 
-### Aside on Mathematica/WL
+### Introductory Notes
+- Recommended to use the [Racket IDE](https://www.racket-lang.org/) which has an SICP package. [Racket docs](https://docs.racket-lang.org/)
+- "It's R4RS Scheme with some oddball features"
+- Start programs in Racket with `#lang sicp` ([instructions for installing sicp package](https://docs.racket-lang.org/sicp-manual/Installation.html)).
+- We can compare practice problem solutions, we'll probably just discuss this over Discord or text rather than organizing anything in particular.
+- The secret to handling parentheses in lisp: Use an editor, you don't have to do it manually!
+- parinfer https://shaunlebron.github.io/parinfer/ is great
+- Fun note: KICAD uses S-expressions as a file format
+
+### Discussion
+- Late in chapter 3, they introduce a better execution model
+- By having a mutable environment, you invalidate the substitution model.
+
+### For next time:
+- Do section 1.1, it's probably enough material to discuss
+- We can discuss up to section 1.2, depending on how far we get
+
+### Other Links
+- https://sourceacademy.org/playground this source academy site is actually a great resource. it presents the text with runnable examples. in several languages! JS, Scheme, Python, Java?, C?
+- https://journal.stuffwithstuff.com/2013/07/18/javascript-isnt-scheme/
+- https://sicp.sourceacademy.org/sicpjs.pdf
+- This is an interesting doc on running tech study groups: https://www.industriallogic.com/papers/khdraft.pdf
+
+## Meeting 03-02-2025
+
+### Meeting Notes
+- I overlooked the definition of a "combination" 
+- The operator in a combination is also an expression which has to be evaluated
+- "Short circuit evaluation" of special forms, this becomes the basis of macros later on!
+- "Symbols" and "function composition" have specific meanings that will be referred to later
+- "Lisp form" has a technical meaning, but for this chapter we've just defined "special form". 
+- [Curry–Howard correspondence](https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence) mentioned.
+- `let` (Discussed later in the book) is very similar to scoped defines. It works a little differently, but it does work with lexical scoping.
+- [Combinators and the story of computation](https://writings.stephenwolfram.com/2020/12/combinators-and-the-story-of-computation/) - now's the time to read this!
+
+### For next time
+- Finish 1.2
+
+
+## Appendix on Mathematica/WL
 
 It's illustrative to compare Wolfram Language (WL)'s under-the-hood behavior to Scheme. Note that because this is "under the hood", 
 this isn't a good introduction to WL! Also note: Mathematica refers to the front-end, WL / Wolfram Language / WolframScript you can get for free (still need a license). It's sort of a Jupyter notebook vs. Python thing. Mathematica .nb files are the notebooks, wolfram language .wl files are the python files.
 
 Also, note that I'm in 2025 reading about this stuff from the 80's :P I'm sure this has all been said before and said much better, I'm just coming up with my own analogies as I go along.
 
-#### Basic expressions in WL
+### Basic expressions in WL
 
 `(+ 1 2 3 4)` is represented in WL as `Plus[1,2,3,4]`. This can also be written as `1+2+3+4`, which is syntax sugar. In order to see the full form but also make sure that this expression doesn't evaluate to 10 immediately, we want to use `FullForm[HoldForm[...]]`:
 
@@ -146,7 +196,7 @@ In Mathematica, this expression gets substituted with `10` immediately, but say 
 
 One example is that "it is meaningless to speak of the value of `(+ x 1)`". In Mathematica `plus[x,1]` is perfectly meaningful even if add and x have no definitions! It is `plus[x,1]`!
 
-#### Defines in WL
+### Defines in WL
 
 To translate `(define x 5)` to Mathematica, it's easy: `Set[x,5]`. The syntax sugar version is `x=5`.
 

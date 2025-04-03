@@ -437,11 +437,24 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><a href="#16">1.6</a></li>
 <li><a href="#17">1.7</a></li>
 <li><a href="#18">1.8</a></li>
-<li><a href="#aside-on-mathematicawl">Aside on Mathematica/WL</a></li>
+</ul>
+<li><a href="#meeting-02-23-2025">Meeting 02-23-2025</a></li>
+<ul>
+<li><a href="#useful-links-from-before-the-meeting">Useful links from before the meeting:</a></li>
+<li><a href="#introductory-notes">Introductory Notes</a></li>
+<li><a href="#discussion">Discussion</a></li>
+<li><a href="#for-next-time">For next time:</a></li>
+<li><a href="#other-links">Other Links</a></li>
+</ul>
+<li><a href="#meeting-03-02-2025">Meeting 03-02-2025</a></li>
+<ul>
+<li><a href="#meeting-notes">Meeting Notes</a></li>
+<li><a href="#for-next-time">For next time</a></li>
+</ul>
+<li><a href="#appendix-on-mathematicawl">Appendix on Mathematica/WL</a></li>
 <ul>
 <li><a href="#basic-expressions-in-wl">Basic expressions in WL</a></li>
 <li><a href="#defines-in-wl">Defines in WL</a></li>
-</ul>
 <li><a href="#exercises" class="toc-exercises">Exercises</a>
 <div class="exercise-container">(
 <span class="exercise-list">
@@ -473,8 +486,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><strong><em>Primitive expressions</em></strong> are the simplest entities the language is concerned with (numerals, built-in operators, names).</li>
 <li>Lisp uses prefix notation.</li>
 <li>Prefix notation is used. The operator is the leftmost element and can take an arbitrary number of elements, for example <code>(+ 1 2 3 4)</code> evaluated to 10. </li>
-<li>A <strong><em>combination</em></strong> is an expression with the leftmost element the operator and the operations to the right operands.</li>
-<li>REPL = "read-eval-print loop"</li>
+<li>
+<p>A <strong><em>combination</em></strong> is an expression with the leftmost element the operator and the operations to the right operands.</p>
+</li>
+<li>
+<p>REPL = "read-eval-print loop"</p>
+</li>
 <li>Pretty printing is defined such that each operator with a deeper nesting starts at a deeper level of indentation. For example</li>
 </ul>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">5</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">7</span><span class="p">)</span><span class="w"> </span><span class="mi">6</span><span class="p">))</span>
@@ -561,11 +578,62 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <blockquote>
 <p>Lexical scoping dictates that free variables in a procedure are taken to refer to bindings made by enclosing procedure definitions; that is, they are looked up in the environment in which the procedure was defined. We will see how this works in detail in chapter 3 when we study environments and the detailed behavior of the interpreter.</p>
 </blockquote>
-<h3 id="aside-on-mathematicawl">Aside on Mathematica/WL</h3>
+<h2 id="meeting-02-23-2025">Meeting 02-23-2025</h2>
+<h3 id="useful-links-from-before-the-meeting">Useful links from before the meeting:</h3>
+<ul>
+<li><a href="https://mitp-content-server.mit.edu/books/content/sectbyfn/books_pres_0/6515/sicp.zip/index.html">SICP full book in html from MIT</a></li>
+<li>sarabander <a href="https://github.com/sarabander/sicp">git repo</a> / <a href="https://sarabander.github.io/sicp/">github io</a></li>
+<li><a href="https://ocw.mit.edu/courses/6-001-structure-and-interpretation-of-computer-programs-spring-2005/">MIT OCW</a></li>
+<li><a href="https://www.youtube.com/playlist?list=PLE18841CABEA24090">Lectures from 1986</a></li>
+</ul>
+<h3 id="introductory-notes">Introductory Notes</h3>
+<ul>
+<li>Recommended to use the <a href="https://www.racket-lang.org/">Racket IDE</a> which has an SICP package. <a href="https://docs.racket-lang.org/">Racket docs</a></li>
+<li>"It's R4RS Scheme with some oddball features"</li>
+<li>Start programs in Racket with <code>#lang sicp</code> (<a href="https://docs.racket-lang.org/sicp-manual/Installation.html">instructions for installing sicp package</a>).</li>
+<li>We can compare practice problem solutions, we'll probably just discuss this over Discord or text rather than organizing anything in particular.</li>
+<li>The secret to handling parentheses in lisp: Use an editor, you don't have to do it manually!</li>
+<li>parinfer https://shaunlebron.github.io/parinfer/ is great</li>
+<li>Fun note: KICAD uses S-expressions as a file format</li>
+</ul>
+<h3 id="discussion">Discussion</h3>
+<ul>
+<li>Late in chapter 3, they introduce a better execution model</li>
+<li>By having a mutable environment, you invalidate the substitution model.</li>
+</ul>
+<h3 id="for-next-time">For next time:</h3>
+<ul>
+<li>Do section 1.1, it's probably enough material to discuss</li>
+<li>We can discuss up to section 1.2, depending on how far we get</li>
+</ul>
+<h3 id="other-links">Other Links</h3>
+<ul>
+<li>https://sourceacademy.org/playground this source academy site is actually a great resource. it presents the text with runnable examples. in several languages! JS, Scheme, Python, Java?, C?</li>
+<li>https://journal.stuffwithstuff.com/2013/07/18/javascript-isnt-scheme/</li>
+<li>https://sicp.sourceacademy.org/sicpjs.pdf</li>
+<li>This is an interesting doc on running tech study groups: https://www.industriallogic.com/papers/khdraft.pdf</li>
+</ul>
+<h2 id="meeting-03-02-2025">Meeting 03-02-2025</h2>
+<h3 id="meeting-notes">Meeting Notes</h3>
+<ul>
+<li>I overlooked the definition of a "combination" </li>
+<li>The operator in a combination is also an expression which has to be evaluated</li>
+<li>"Short circuit evaluation" of special forms, this becomes the basis of macros later on!</li>
+<li>"Symbols" and "function composition" have specific meanings that will be referred to later</li>
+<li>"Lisp form" has a technical meaning, but for this chapter we've just defined "special form". </li>
+<li><a href="https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence">Curry–Howard correspondence</a> mentioned.</li>
+<li><code>let</code> (Discussed later in the book) is very similar to scoped defines. It works a little differently, but it does work with lexical scoping.</li>
+<li><a href="https://writings.stephenwolfram.com/2020/12/combinators-and-the-story-of-computation/">Combinators and the story of computation</a> - now's the time to read this!</li>
+</ul>
+<h3 id="for-next-time">For next time</h3>
+<ul>
+<li>Finish 1.2</li>
+</ul>
+<h2 id="appendix-on-mathematicawl">Appendix on Mathematica/WL</h2>
 <p>It's illustrative to compare Wolfram Language (WL)'s under-the-hood behavior to Scheme. Note that because this is "under the hood", 
 this isn't a good introduction to WL! Also note: Mathematica refers to the front-end, WL / Wolfram Language / WolframScript you can get for free (still need a license). It's sort of a Jupyter notebook vs. Python thing. Mathematica .nb files are the notebooks, wolfram language .wl files are the python files.</p>
 <p>Also, note that I'm in 2025 reading about this stuff from the 80's :P I'm sure this has all been said before and said much better, I'm just coming up with my own analogies as I go along.</p>
-<h4 id="basic-expressions-in-wl">Basic expressions in WL</h4>
+<h3 id="basic-expressions-in-wl">Basic expressions in WL</h3>
 <p><code>(+ 1 2 3 4)</code> is represented in WL as <code>Plus[1,2,3,4]</code>. This can also be written as <code>1+2+3+4</code>, which is syntax sugar. In order to see the full form but also make sure that this expression doesn't evaluate to 10 immediately, we want to use <code>FullForm[HoldForm[...]]</code>:</p>
 <div class="codehilite"><pre><span></span><code><span class="n">In</span><span class="p">[]</span><span class="o">:=</span><span class="w"> </span><span class="n">FullForm</span><span class="p">[</span><span class="n">HoldForm</span><span class="p">[</span><span class="mi">1</span><span class="o">+</span><span class="mi">2</span><span class="o">+</span><span class="mi">3</span><span class="o">+</span><span class="mi">4</span><span class="p">]]</span>
 <span class="n">Out</span><span class="p">[]</span><span class="o">=</span><span class="w"> </span><span class="n">HoldForm</span><span class="p">[</span><span class="n">Plus</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]]</span>
@@ -573,7 +641,7 @@ this isn't a good introduction to WL! Also note: Mathematica refers to the front
 
 <p>In Mathematica, this expression gets substituted with <code>10</code> immediately, but say we have another expression <code>expression = plus[1,2,3,4]</code> (lowercase "P"). Then in fact <code>expression[[0]]</code> returns <code>plus</code>, <code>expression[[1]]</code> returns <code>1</code>, and so on (2,3,4). So this is identical to lisp, where the operator is called the head in Mathematica (and can be retrieved through <code>Head[expression]</code> which returns <code>add</code>).</p>
 <p>One example is that "it is meaningless to speak of the value of <code>(+ x 1)</code>". In Mathematica <code>plus[x,1]</code> is perfectly meaningful even if add and x have no definitions! It is <code>plus[x,1]</code>!</p>
-<h4 id="defines-in-wl">Defines in WL</h4>
+<h3 id="defines-in-wl">Defines in WL</h3>
 <p>To translate <code>(define x 5)</code> to Mathematica, it's easy: <code>Set[x,5]</code>. The syntax sugar version is <code>x=5</code>.</p>
 <p>To translate <code>(define x (display "Hi") 5)</code> to Mathematica, we'd have to do <code>SetDelayed[x,CompoundExpression[Print["Hi"],5]]</code>. 
 The syntax sugar version is <code>x:=(Print["Hi"]; 5)</code>. Here CompoundExpression is like <code>begin</code> in Scheme, it evaluates its arguments one-by-one and returns the final value. SetDelayed ensures that the righthand side isn't evaluated until <code>x</code> is called.</p>

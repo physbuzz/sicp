@@ -422,8 +422,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <h3>Statement</h3>
 <p>What does Lisp stand for? REPL? What are prefix/postfix/infix? What is a "combination" in Lisp?</p>
 <h3>Answer</h3>
-<p>Lisp = "List Processing". REPL = Read-Eval-Print-Loop. Prefix = <code>(+ a b)</code>. Postfix might look something like <code>(a b +)</code>. Infix would be <code>(a + b)</code>.</p>
-<p>A combination is term in parentheses of the form <code>(a b c ...)</code> where <code>a</code> is the operator and <code>b c ...</code> are the operands.</p>
+<p>Lisp = "List Processing". REPL = Read-Eval-Print-Loop. Prefix = <code>(+ a b)</code>. Postfix might look something like <code>(a b +)</code>. Infix would be <code>(a + b)</code>. A combination is term in parentheses of the form <code>(a b c ...)</code> where <code>a</code> is the operator and <code>b c ...</code> are the operands.</p>
 <h2>Question</h2>
 <h3>Statement</h3>
 <p>How do you define a named constant in Lisp? A named function?</p>
@@ -454,7 +453,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </code></pre></div>
 
 <h3>Answer</h3>
-<p>The substitution model is just obtained by evaluating function arguments and then substituting the definitions of the smallest sub-expressions that can be evaluated. </p>
+<p>The substitution model is just obtained by evaluating function arguments (applicative order) and then substituting the definitions of thesub-expressions that can be evaluated. </p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
 <span class="p">(</span><span class="n">sum-of-squares</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
 <span class="p">(</span><span class="n">sum-of-squares</span><span class="w"> </span><span class="mi">6</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
@@ -526,6 +525,15 @@ This breaks the strict rule of applicative order evaluation, which might lead yo
 
 <h2>Question</h2>
 <h3>Statement</h3>
+<p>What does the statement mean that $f(n)$ is $\Theta(g(n))$?</p>
+<p>What about $f(n)=O(g(n))$? $f(n)=\Omega(g(n))$?</p>
+<h3>Answer</h3>
+<p>Technically we must write "As $n\to \infty$" but this is usually omitted.
+It means that there exists constants <span>$c_1,c_2$</span> such that for some $N$ and all $n\gt N,$ </p>
+<p>$$c_1 g(n)\leq f(n)\leq c_2 g(n).$$</p>
+<p>The other two notations aren't used in SICP. big O is an upper bound $f(n)\leq c_2 g(n),$ big Omega is a lower bound $c_1 g(n)\leq f(n).$ So big Theta is a both lower and upper bound.</p>
+<h2>Question</h2>
+<h3>Statement</h3>
 <p>What are the $\Theta(n)$ time and space requirements for the linear recursive factorial algorithm? For the linear iterative factorial algorithm?</p>
 <h3>Answer</h3>
 <p>The linear recursive version is $\Theta(n)$ time and space.</p>
@@ -538,19 +546,138 @@ This breaks the strict rule of applicative order evaluation, which might lead yo
 <p>The tree-recursive Fibonacci algorithm takes $\Theta(\varphi^n)$ steps and $\Theta(n)$ space.</p>
 <h2>Question</h2>
 <h3>Statement</h3>
+<p>Write the recursive <code>fast-exp</code> algorithm to compute $a^n$ in $\Theta(\log(n))$ steps.</p>
 <h3>Answer</h3>
 <h2>Question</h2>
 <h3>Statement</h3>
+<p>Write the recursive <code>fast-expmod</code> algorithm to compute $a^n\textrm{ mod }m$ in $\Theta(\log(n))$ steps.</p>
 <h3>Answer</h3>
 <h2>Question</h2>
 <h3>Statement</h3>
+<p>Write the iterative (tail-recursive) <code>fast-exp</code> algorithm to compute $a^n$ in $\Theta(\log(n))$ steps.</p>
 <h3>Answer</h3>
 <h2>Question</h2>
 <h3>Statement</h3>
+<p>Write the iterative (tail-recursive) <code>fast-expmod</code> algorithm to compute $a^n\textrm{ mod }m$ in $\Theta(\log(n))$ steps.</p>
 <h3>Answer</h3>
 <h2>Question</h2>
 <h3>Statement</h3>
+<p>Write the <code>gcd</code> algorithm.</p>
 <h3>Answer</h3>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>Outline the <code>prime?</code> and <code>fast-prime?</code> algorithms.</p>
+<h3>Answer</h3>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What's Fermat's little theorem?</p>
+<h3>Answer</h3>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What's the Chinese remainder theorem?</p>
+<h3>Answer</h3>
+<h1>Chapter 1.3</h1>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What are the two equivalent ways to define a function, one with a lambda and one without?</p>
+<h3>Answer</h3>
+<p>We can do things the following two ways:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">func</span><span class="w"> </span><span class="n">argument</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">function</span><span class="w"> </span><span class="n">definition</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">func</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">argument</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">function</span><span class="w"> </span><span class="n">definition</span><span class="p">)))</span>
+</code></pre></div>
+
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What are the use cases for the <code>let</code> keyword? How do you use <code>let</code> with only one variable (get the parentheses right)?</p>
+<h3>Answer</h3>
+<p>Let is useful for defining local variables with helpful names. It's also useful for making sure that a local variable is only evaluated once and then substituted multiple places, rather than being evaluated multiple times. </p>
+<p>While it's equivalent to a lambda, in the corresponding lambda expression the variable definitions come after the function body, whereas for readability it's better if the variable definitions come before the function body.</p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What is the definition of <code>let</code> in terms of lambdas?</p>
+<h3>Answer</h3>
+<div class="codehilite"><pre><span></span><code><span class="c1">;; This let</span>
+<span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">v1</span><span class="w"> </span><span class="n">arg1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">v2</span><span class="w"> </span><span class="n">arg2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">function-body</span><span class="p">))</span>
+<span class="c1">;; is equivalent to:</span>
+<span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">function-body</span><span class="p">))</span><span class="w"> </span><span class="n">arg1</span><span class="w"> </span><span class="n">arg2</span><span class="p">)</span>
+</code></pre></div>
+
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>Give an example of a closure in a returned function (in the broad functional programming sense, not the sense used in SICP).</p>
+<h3>Answer</h3>
+<p>Here we return a function which multiplies by the desired value:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">multiply-by</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">m</span><span class="p">)))</span>
+</code></pre></div>
+
+<h1>Chapter 2.1</h1>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What does <code>cons</code> do? How do you access the elements of a <code>cons</code>?
+How do you check if something is an object created by <code>cons</code>?</p>
+<h3>Answer</h3>
+<p><code>(cons x y)</code> constructs a pair. To get the first element <code>x</code> we do <code>(car z)</code>,
+to get the second element we do <code>(cdr z)</code>.</p>
+<p>To check if something is a pair, use the special form <code>pair?</code></p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What do the functions <code>cadr</code> and <code>caddr</code> do?</p>
+<h3>Answer</h3>
+<p><code>(cadr x)</code> does <code>(car (cdr x))</code>. <code>(caddr x)</code> does <code>(car (cdr (cdr x)))</code>.</p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What are the Church numeral definitions of <code>zero</code> and <code>add-one</code>?</p>
+<h3>Answer</h3>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">zero</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-1</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">((</span><span class="n">n</span><span class="w"> </span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">)))))</span>
+</code></pre></div>
+
+<h1>Chapter 2.2</h1>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What is the definition of a sequence in terms of <code>cons</code> and <code>nil</code>? How do you construct a sequence? In Scheme?</p>
+<h3>Answer</h3>
+<p>You can construct a sequence with the list keyword. (Why not just call them lists??)</p>
+<p><code>(list 1 2 3)</code> is equivalent to <code>(cons 1 (cons 2 (cons 3 nil)))</code>.</p>
+<p>This is also usually just written <code>'(1 2 3)</code>. "nil" is an SICP-ism and can also be written as <code>'()</code>. </p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>How do we write an empty sequence? How do we test for an empty sequence?</p>
+<h3>Answer</h3>
+<p>An empty sequence is <code>nil</code>, or <code>(list)</code>, or <code>'()</code>.</p>
+<p>We test for an empty sequence using the built-in <code>null?</code></p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>How do we find the first, second, third, or nth elements of a sequence? 
+How do we find the length of a sequence? </p>
+<h3>Answer</h3>
+<p>In SICP, we use <code>car</code>, <code>cadr</code>, <code>caddr</code> for the first,second, and third elements. <code>(length seq)</code> is a primitive to get the length, and <code>(list-ref seq n)</code> gets the nth element.</p>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What is the form of the <code>map</code> special form?</p>
+<h3>Answer</h3>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What are the essential differences in <code>fold-right</code> (AKA <code>accumulate</code>) and <code>fold-left</code>?</p>
+<h3>Answer</h3>
+<p>The essential difference is that <code>fold-right</code> starts applying the operations from the right of the list and is linear recursive.</p>
+<p><code>fold-left</code> starts applying the operations from the left of the list and is linear iterative.</p>
+<p>They give the same result if the binary operation is associative.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">; definitions</span>
+</code></pre></div>
+
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What are the definitions and usefulness of <code>accumulate</code>, <code>flatmap</code>, <code>fold-left</code>, <code>filter</code>?</p>
+<h3>Answer</h3>
+<h2>Question</h2>
+<h3>Statement</h3>
+<p>What is dotted tail notation and how can it be used to write functions with arbitrary numbers of arguments?</p>
+<h3>Answer</h3>
+<h2>TODO</h2>
+<p>Enumerate leaves and count leaves of a tree</p>
+<p>Matrix operations</p>
 <h2>Question</h2>
 <h3>Statement</h3>
 <h3>Answer</h3>

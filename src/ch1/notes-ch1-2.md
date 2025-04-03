@@ -115,6 +115,7 @@ $ax+by=\textrm{gcd}(a,b).$ I've needed this a few times in Advent of Code proble
 It's tempting to mention continued fractions here, but they get their time in the limelight
 in the next chapter.
 
+
 ### Appendices!
 
 #### An aside on other asymptotic relations
@@ -174,7 +175,26 @@ I learned this from Bender and Orszag's "Advanced Mathematical Methods for Scien
 
 <iframe width="560" height="315" src="https://www.youtube.com/embed/LYNOGk3ZjFM?si=ulaELbRC-a_tg0VM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
+### Meeting 03-09-2025
+*No official meeting today, this was just a problem session.*
 
+We spent a lot of time on exercise 1.14. 
+
+- Note: Try integer exponentiation via repeated squaring -> Overshoot and divide.
+- Somewhere it came up that because this is a particularly simple programming language, how about using C macros to implement LISP? Lol.
+- 1.14, it's easier to think think about if we had coin sizes of 64, 32, 16, ... Maybe not relevant but it's a cool thing to consider anyways.
+
+### Meeting 03-16-2025
+- There was some mention of "recursive processes vs. recursive procedures". To me I didn't read it as emphasizing process vs procedure, I read it as emphasizing that a recursive procedure was one thing, but talking about something that's linear recursive is a statement about its big-O (or rather big Theta).
+- It was mentioned that oftentimes big O is more important and easier to prove. I personally really like algorithms where big O fails to capture the interesting aspects of the algorithm. For example:
+   - IIRC SAT solvers all have worst case exponential running time (need to fact check this), but you can still write very interesting very fast SAT solver algorithms.
+   - Worst case running time might be infinite. ie writing a program to prove that a class of programs halts: can't be done in general, but there's still interesting things to do. 
+   - Worst case is bad, but the constant can be pushed down so low that it doesn't matter. You know, if something requires $c 2^n$ operations but $c=10^{-9},$ then we still have a useful (and quite fast) algorithm for small $n$.
+
+#### For next time
+Read section 1.3
+
+I'll try to do all the practice problems. No worries if someone doesn't do em.
 
 
 
