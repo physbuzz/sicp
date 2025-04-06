@@ -417,62 +417,211 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </head>
 <body>
     <div class="container">
-        <p>Just some things I'm planning on writing. I've decided:</p>
-<h2>- Most of these things will be written as standalone articles, I'll probably upload em to my site as "SICP bonus chapters and ramblings" or something.</h2>
-<h1>David's Ramblings</h1>
+        <p><div class="table-of-contents">
+<h2>Directory</h2>
+<ul class="toc-list">
+<li><a href="#symbols-and-sicp-library-functions">Symbols and SICP Library Functions</a></li>
 <ul>
-<li>Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. </li>
-<li>The ill-fated Santa Barbara Monte Carlo machine</li>
-<li>Improving convergence</li>
-<li>Some thoughts on reversibility and quantum computing</li>
-<li>Polynomial long division + my grandpa!</li>
+<li><a href="#symbols-and-special-forms">Symbols and Special Forms</a></li>
 </ul>
-<h1>1.1 Important stuff</h1>
-<p>We introduce symbols </p>
+<li><a href="#asymptotic-approximations-and-some-notes-on-theta-omega-o">Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$.</a></li>
+<ul>
+<li><a href="#useful-definitions">Useful definitions</a></li>
+<li><a href="#using-asymptotics-to-solve-recurrence-relations">Using asymptotics to solve recurrence relations.</a></li>
+<li><a href="#an-aside-on-asymptotic-series-and-stirlings-approximation">An aside on asymptotic series and Stirling's approximation</a></li>
+<li><a href="#another-application-of-asymptotic-series">Another application of asymptotic series</a></li>
+<li><a href="#other-resources-and-summary">Other Resources and Summary</a></li>
+</ul>
+<li><a href="#the-ill-fated-santa-barbara-monte-carlo-machine">The ill-fated Santa Barbara Monte Carlo machine</a></li>
+<li><a href="#exact-runtime-of-count-change">Exact runtime of count-change</a></li>
+<li><a href="#rsa-implementation">RSA implementation</a></li>
+<li><a href="#linear-diophantine-equations">Linear diophantine equations</a></li>
+<li><a href="#bonus-number-theory-euler-totient-base-b-expansions-of-fractions">Bonus number theory (Euler totient, base b expansions of fractions)</a></li>
+<li><a href="#bonus-special-numbers-lucas-catalan-partition-numbers-negative-binomial">Bonus special numbers (Lucas, Catalan, partition numbers, "negative binomial")</a></li>
+<li><a href="#numerical-approximation-formulas">Numerical approximation formulas</a></li>
+<li><a href="#improving-rates-of-convergence">Improving rates of convergence</a></li>
+<li><a href="#ramanujan-tau-function">Ramanujan tau function</a></li>
+<li><a href="#continued-fraction-expansion-of-pi">Continued fraction expansion of pi</a></li>
+<li><a href="#reversibility-and-quantum-computing">Reversibility and Quantum Computing</a></li>
+<li><a href="#drawing-church-numerals">Drawing Church numerals</a></li>
+<li><a href="#enumerating-binary-trees-and-arithmetic-expressions">Enumerating binary trees and arithmetic expressions</a></li>
+<li><a href="#n-queens-and-dancing-links">n queens and dancing links</a></li>
+<li><a href="#story-about-polynomial-long-division-my-grandpa">Story about polynomial long division + my grandpa</a></li>
+</ul>
+</div> </p>
+<h1 id="symbols-and-sicp-library-functions">Symbols and SICP Library Functions</h1>
+<h2 id="symbols-and-special-forms">Symbols and Special Forms</h2>
+<p><strong>Chapter 1.1:</strong></p>
 <div class="codehilite"><pre><span></span><code><span class="nb">+</span><span class="w"> </span><span class="nb">-</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="nb">/</span><span class="w"> </span>
 <span class="nb">display</span><span class="w"> </span><span class="nb">newline</span><span class="w"> </span>
 <span class="k">if</span><span class="w"> </span><span class="k">cond</span>
 <span class="k">and</span><span class="w"> </span><span class="k">or</span><span class="w"> </span><span class="nb">not</span>
 </code></pre></div>
 
-<p>and the concept of applicative and normal order.</p>
-<h1>1.2 Important stuff</h1>
+<p><strong>Chapter 1.2:</strong> </p>
+<div class="codehilite"><pre><span></span><code><span class="nb">remainder</span>
+<span class="nb">display</span>
+<span class="p">(</span><span class="n">runtime</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>Chapter 1.3:</strong> </p>
+<div class="codehilite"><pre><span></span><code><span class="k">lambda</span>
+<span class="k">let</span>
+<span class="nb">error</span>
+</code></pre></div>
+
+<p><strong>Chapter 2.1:</strong> </p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cons</span>
+<span class="nb">car</span><span class="o">,</span><span class="w"> </span><span class="nb">cdr</span>
+<span class="nb">pair?</span>
+</code></pre></div>
+
+<p><strong>Chapter 2.2:</strong> </p>
+<div class="codehilite"><pre><span></span><code><span class="n">nil</span><span class="w"> </span><span class="c1">; More commonly &#39;() or (list)</span>
+<span class="nb">list</span>
+<span class="nb">list-ref</span><span class="o">,</span><span class="w"> </span><span class="nb">length</span>
+<span class="nb">cadr</span><span class="o">,</span><span class="w"> </span><span class="nb">caddr</span>
+<span class="nb">append</span>
+<span class="nb">map</span>
+</code></pre></div>
+
+<h1 id="asymptotic-approximations-and-some-notes-on-theta-omega-o">Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$.</h1>
+<p>As we're reading <a href="">SICP</a>, the book covers the notation $\Theta(f(n))$ and makes use of it, but I think
+it deserves a bit more context and grounding in mathematical methods! Comp sci books don't (in my opinion)
+do a good job of selling asymptotic methods, but in fact they're powerful applied mathematical methods.
+So I wanted to write this to provide some cool examples from physics as well as list some bonus resources. </p>
+<h2 id="useful-definitions">Useful definitions</h2>
+<p>To start out, assuming you've read section 1.2 in SICP, you know the definition of $\Theta(f(n))$. To 
+write it more succinctly using quantifiers $\exists$ and $\forall$:</p>
+<p><strong>Definition.</strong> For positive functions $f(n)$ and $R(n)$, we write that $R(n)$ is $\Theta(f(n))$ as $n\to\infty$ if:
+$$\exists_{c_1,c_2,N}:\forall_{n\gt N}\;\; 0 \leq c_1 f(n) \leq R(n)\leq c_2 f(n)$$</p>
+<p>That's fine and all, but a more typical approach is found in <em>The Algorithm Design Manual</em> by Skiena. We first define $O(n)$ and $\Omega(n),$ and define $\Theta(n)$ in terms of them.</p>
+<p><strong>Definition.</strong> We write that $R(n)$ is $O(f(n))$ as $n\to \infty$ if
+$$\exists_{c,N}:\forall_{n\gt N}\;\; R(n)\leq c \cdot f(n)$$
+$R(n)=O(f(n))$ is a statement that the growth rate of $R(n)$ is bounded above by $f(n)$ times a constant, for sufficiently large $n.$</p>
+<p><strong>Definition.</strong> We write that $R(n)$ is $\Omega(f(n))$ as $n\to\infty$ if
+$$\exists_{c,N}:\forall_{n\gt N}\;\; 0 \leq c \cdot f(n) \leq R(n)$$
+$R(n)=\Omega(f(n))$ is a statement that the growth rate of $R(n)$ is bounded below by $f(n)$ times a constant, for sufficiently large $n.$</p>
+<p>These two statements can also be written $R(n)=O(f(n))$ and $R(n)=\Omega(f(n)).$ With those two definitions, we then say that $R(n)=\Theta(f(n))$ if $R(n)=\Omega(f(n))$ and $R(n)=O(f(n)).$ </p>
+<p>This is great, and now there's another super useful notation. This is introduced in <em>Concrete Mathematics</em> by Graham, Knuth, and Patashnik as $f(n)\succ g(n),$ but I know it with the notation used in Skiena, $f(n)\gg g(n).$ This is read out loud as "$f(n)$ dominates $g(n)$." The symbol used in Concrete Mathematics is $\succ$ or <code>\succ</code>, so I suppose you could also read this as 
+"$f(n)$ succeeds $g(n)$" as a mnemonic for the LaTeX, if you prefer that symbol. Anyways, its definition...</p>
+<p><strong>Definition.</strong> We write $f(n)\gg g(n)$ as $n\to a$ if $\lim_{n\to a} \frac{g(n)}{f(n)}=0.$ This definition gives:
+$$n!\gg 2^n \gg n^3\gg n^2\gg n\log n\gg n\gg \log n \gg 1$$</p>
+<p>Finally, the most useful tool of all is $\sim,$ which is used when the ratio of two functions doesn't approach zero or infinity, but approaches $1$ instead. "$\sim$" is read as "is asymptotic to."</p>
+<p><strong>Definition.</strong> $f(n)\sim g(n)$ as $n\to a$ if $\lim_{n\to a} \frac{g(n)}{f(n)}=1.$</p>
+<p>Before we get too far afield, let's use this to solve a problem from SICP.</p>
+<h2 id="using-asymptotics-to-solve-recurrence-relations">Using asymptotics to solve recurrence relations.</h2>
+<p>I found that for exercise <strong>1.14</strong> we end up really wishing we had a bigger asymptotics toolbelt!</p>
+<p>For my solution of the exercise, I dealt with a function $T(a,n)$ representing the 
+number of nodes needed to evaluate the relevant function. We end up with a series of recurrence relations:</p>
+<div>$$\begin{align*}
+T(a,1)&=T(a-1,1)+2\\
+T(a,2)&=T(a,1)+T(a-5,2)+1\\
+T(a,3)&=T(a,2)+T(a-10,3)+1\\
+T(a,4)&=T(a,3)+T(a-25,4)+1\\
+T(a,5)&=T(a,4)+T(a-50,5)+1
+\end{align*}$$</div>
+
+<p>Okay, let's start by solving this exactly. I'll admit my recurrence relation solving skills aren't great, but $T(a,1)$ is easy,
+we have $T(a,1)=2a+C^{(1)}$ where $C^{(1)}=T(1,0)$. We note that $T(a,1)=\Theta(a)$, and that $T(a,1)\sim 2a$ as $a\to\infty.$ Theta gives
+us the order, and $\sim$ gives us the constant out front.</p>
+<p>Next, $T(a,2)=T(a-5,2)+2a+C^{(1)}+1.$ This is tougher, but it has general solution:</p>
+<div>$$T(a,2)=\frac{a^2+(6+C^{(1)})a}{5}+C^{(2)}_{a\textrm{ mod }5}$$ </div>
+<p>where the $C^{(2)}_{a\textrm{ mod }5}$ are determined by the base cases, just like $C^{(1)}$ was determined by the initial conditions,
+of which we need five.  </p>
+<p>The big takeaways are $T(a,2)=\Theta(a^2)$ and $T(a,2)\sim a^2/5.$</p>
+<p>Okay, we can guess that we should really just look at the leading / dominant terms. Then we need to solve the equation:
+$$T(a,3)=T(a-10,3)+T(a,2)+1$$ </p>
+<p>Every time $a$ increases by $10,$ we add a term of magnitude asymptotic to $a^2/5.$ So performing the same trick more explicitly...</p>
+<div>$$\begin{align*}
+T(a,3)=(T(a,2)+1)+(T(a-10,2)+1)+\ldots +T(a\textrm{ mod } 5,3)
+\end{align*}$$</div>
+
+<p>How about $T(a,3)$ and $T(a,4)$? Well, at this point it's 
+good to take a step back. We really don't need the exact solutions. Instead, we see that $T(a,1)=\Theta(a)$, 
+$T(a,2)=\Theta(a^2)$, and so we would like to justify $T(a,3)=\Theta(a^3)$ all the way up to 
+$T(a,5)=\Theta(a^5).$ </p>
+<h2 id="an-aside-on-asymptotic-series-and-stirlings-approximation">An aside on asymptotic series and Stirling's approximation</h2>
+<p>The notion of the Stirling approximation also came up in conversation, and that's a good thing because the asymptotics
+learned so far allow us to tackle some weird aspects of it. Stirling's approximation can be written as:</p>
+<p>$$\log(n!)=n\log(n)-n+\frac{1}{2}\log(2\pi n) + \sum_{k=2}^M \frac{(-1)^k B_k}{k(k-1)n^{k-1}} + O\left(\frac{1}{n^M}\right)$$</p>
+<p>This formula has two awkward aspects compared to the power series and Taylor expansions we're usually familiar with:
+1. In a Taylor series we have good reason to choose $x^k$ as our basis functions
+and we're guaranteed that a Taylor series of an analytic function is unique. But how do we justify expanding $\log(n!)$
+in terms of $n\log(n)$? How unique is this series?
+2. If we look at the coefficients $B_k,$ the Bernoulli numbers, we find that they grow very quickly. If we try to take
+$M\to\infty$ then this sum doesn't converge for any finite $n$! What gives?</p>
+<p>An asymptotic series is defined as follows. Note that writing the upper limit of the sum as infinity is an abuse of notation---<em>we never actually carry out the infinite sum</em>.</p>
+<p><strong>Definition.</strong> We write $\sum_{i=1}^\infty f_i(n) \sim g(n)$ as $n\to a$ if:</p>
 <ul>
-<li>linear recursive, linear iterative, tail recursive. </li>
-<li>big theta notation</li>
+<li>$f_1(n)\sim g(n)$ as $n\to a$</li>
+<li>The remainder is asymptotic to $f_2$: $g(n)-f_1(n)\sim f_2(n)$ as $n\to a$</li>
+<li>That remainder is asymptotic to $f_3$: $g(n)-f_1(n)-f_2(n)\sim f_3(n)$, and so on $(\textrm{as }n\to a).$ </li>
 </ul>
-<p>Important algorithms: </p>
+<p>With these definitions, we can get a whole theory of asymptotic series along with uniqueness guarantees, such as those in 
+Bender and Orszag's <em>Advanced Mathematical Methods for Scientists and Engineers</em>.</p>
+<h2 id="another-application-of-asymptotic-series">Another application of asymptotic series</h2>
+<p>Stirling's approximation is kind of bougie as the kids say. Too rich for my blood. 
+There's another simpler example of asymptotic series that I really like. </p>
+<p>Say that you're stuck on a desert island with only sand and the integral</p>
+<p>$$f(a)=\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x.$$</p>
+<p>You have to compute $f(0.1),$ how do you do it?
+Well, let's use a series expansion and totally ignore issues of convergence and real analysis:</p>
+<div>$$\begin{align*}
+\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x &= \int_0^\infty e^{-x/a}\sum_{n=0}^\infty (-1)^n x^n \mathrm{d}x \\
+&= \sum_{n=0}^\infty \int_0^\infty (-1)^n e^{-x/a} x^n \mathrm{d}x \\
+&= \sum_{n=0}^\infty (-1)^n n!a^{n+1} \tag{integrate by parts}\\
+\end{align*}$$</div>
+<p>This infinite sum has a radius of convergence of zero! However if we plug in $a=0.1$ and keep the first few terms, we get
+$$f(0.1)\approx 0.1 - 0.01 + 0.002 - 0.0006 + 0.00024=0.09164$$
+compare this to the true value of $f(0.1)=0.0915633\ldots,$ it's a pretty good approximation!</p>
+<p>Really what we've shown is that as an asymptotic series,
+$$\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x \sim \sum_{n=0}^\infty (-1)^n n!a^{n+1} \tag{as $a\to 0$}$$</p>
+<p>Another interesting tidbit: We shouldn't have expected any analytic behavior as $a\to 0,$ because if we take $a$ negative the integral diverge.</p>
+<p>I learned this from Bender and Orszag's "Advanced Mathematical Methods for Scientists and Engineers: Asymptotic Methods and Perturbation Theory". The title is a mouthful, and it comes across a lot better in video format. Carl Bender writes a lot of these equations with a smile on his face, because $\sum_{n-1}^\infty (-1)^n n!$ is an absurd sum and is kind of a joke! To a physicist or applied mathematician, what we mean by the infinite sum is really $f(1)$ where $f$ is the perfectly well-defined transcendental function given as an integral above.</p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LYNOGk3ZjFM?si=ulaELbRC-a_tg0VM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<h2 id="other-resources-and-summary">Other Resources and Summary</h2>
+<p>Okay, so followup books are:</p>
 <ul>
-<li>the Euclidean <code>gcd</code> algorithm</li>
-<li>fast exp, fast expmod</li>
-<li>fib iter vs fib recursive</li>
-<li>prime test and fast prime (heuristic sketch OK)</li>
-<li><code>remainder</code></li>
+<li><em>The Algorithm Design Manual</em> by Skiena</li>
+<li><em>Concrete Mathematics</em> by Graham, Knuth, and Patashnik</li>
 </ul>
-<h2>Exact runtime of count-change</h2>
+<p>And then into the stuff that's more for the combinatorics and theoretical physicist peeps:</p>
+<ul>
+<li><em>Generatingfunctionology</em> by Wilf</li>
+<li><em>Advanced Mathematical Methods for Scientists and Engineers</em> by Bender and Orszag</li>
+<li><em>Analytic Combinatorics</em> by Sedgewick and Flajolet</li>
+</ul>
+<p>I know a lot of this stuff from statistical mechanics, statistical field theory, and quantum field theory. So you can imagine the reference list and topic list could explode to infinite length here. Important integrals are...</p>
+<ul>
+<li>
+<p>The formula that forms the basics of Feynman diagrams, which are terms in an asymptotic series. The fast growth rate of these
+coefficients means that the series doesn't typically converge, and so we're dealing with asymptotics.
+$$\int_{-\infty}^\infty x^{2n}e^{-x^2/2}/\sqrt{2\pi} \mathrm{d}x = (2n-1)!!$$ </p>
+</li>
+<li>
+<p>The <a href="https://en.wikipedia.org/wiki/Sommerfeld_expansion">Sommerfeld expansion</a> of Fermi-Dirac statistics (for example, the electrons in a metal at room temperature are well-described by a degenerate Fermi-Dirac gas). Note that for large $\beta$ (=low temperature), the function $\frac{1}{e^{\beta x}+1}$ looks like a step function. So we get the answer for the step function, plus a correction term when $\beta$ is less-than-infinite. A step function isn't very analytic, and so this also explains why we have an asymptotic series instead of a convergent power series.</p>
+</li>
+</ul>
+<div>$${\displaystyle \int _{-\infty }^{\infty }{\frac {H(\varepsilon )}{e^{\beta (\varepsilon -\mu )}+1}}\,\mathrm {d} \varepsilon =\int _{-\infty }^{\mu }H(\varepsilon )\,\mathrm {d} \varepsilon +{\frac {\pi ^{2}}{6}}\left({\frac {1}{\beta }}\right)^{2}H^{\prime }(\mu )+O\left({\frac {1}{\beta \mu }}\right)^{4}}$$</div>
+
+<h1 id="the-ill-fated-santa-barbara-monte-carlo-machine">The ill-fated Santa Barbara Monte Carlo machine</h1>
+<h1 id="exact-runtime-of-count-change">Exact runtime of count-change</h1>
 <p>The solution for the number of nodes in the count-change graph 
 can be written out exactly. At the very least, we can write a big 
 500x500 matrix and write the number of nodes required as a function of $M^n$ 
 applied to some vector. Problems like this are kind of fun, so it would be 
 nice to just do this, put it in Jordan normal form. We'll end up 
 with a fifth degree polynomial, and $T(n,5)=P(n) + \cos(...)$ where the "cos" is a placeholder for a bunch of complicated but finite bounded oscillatory terms.</p>
-<h2>RSA implementation</h2>
-<p>Would be good to cover some of this</p>
-<h2>Extra number theory</h2>
-<p>We'll need lists for this, but there's good stuff involving:</p>
+<h1 id="rsa-implementation">RSA implementation</h1>
+<h1 id="linear-diophantine-equations">Linear diophantine equations</h1>
 <ul>
 <li>The extended GCD algorithm (finding $x,y$ given $a,b$ such that $ax+by=\textrm{gcd}(a,b)$)</li>
 <li>Chinese remainder theorem algorithm </li>
 <li>General linear diophantine equations</li>
 </ul>
-<h1>1.3 Important Stuff</h1>
-<h2>Extra number theory stuff:</h2>
-<ul>
-<li>Calculating the Euler totient function</li>
-<li>Calculating base b expansions of fractions; this isn't really talked about very much, long division feels boring but it really isn't. We <em>could</em> avoid lists here.</li>
-<li>Polynomial long division. We'd need lists for this.</li>
-</ul>
-<h2>Other special numbers</h2>
+<h1 id="bonus-number-theory-euler-totient-base-b-expansions-of-fractions">Bonus number theory (Euler totient, base b expansions of fractions)</h1>
 <ul>
 <li>We emphasized the Fibonacci numbers, what about algos for the Lucas numbers?</li>
 <li>Partition function algorithm</li>
@@ -486,37 +635,44 @@ with a fifth degree polynomial, and $T(n,5)=P(n) + \cos(...)$ where the "cos" is
 <span class="n">alternatingpascal</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="err">.</span><span class="w"> </span><span class="n">alternatingpascal</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="w"> </span><span class="o">//</span><span class="w"> </span><span class="n">MatrixForm</span>
 </code></pre></div>
 
-<ul>
-<li>Challenge: Ramanujan tau function. This is some memoized code using recursion that supposedly works: <a href="https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896">https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896</a>, but simple mathematica code can generate it too: <code>CoefficientList[Take[Expand[Product[(1 - x^k)^24, {k, 1, 30}]], 30],x]</code></li>
-</ul>
-<h2>Continued fraction expansion of 1/pi?</h2>
-<p>It could be cool to plot the frequency of numbers in the continued fraction expansion of pi or 1/pi, if this is "easily" done with exact arithmetic.</p>
-<h2>Numerical approximation formulas</h2>
-<p>I think there's a story to tell here starting with...</p>
+<h1 id="bonus-special-numbers-lucas-catalan-partition-numbers-negative-binomial">Bonus special numbers (Lucas, Catalan, partition numbers, "negative binomial")</h1>
+<h1 id="numerical-approximation-formulas">Numerical approximation formulas</h1>
+<p>(iterated polynomial gives sine, other iterated special polynomials give special things too)
+I think there's a story to tell here starting with...</p>
 <ul>
 <li>The nested function approximation for sine. (Who came up with this first? Is there an interesting functional equation from the polynomial?) </li>
 <li>The nested function approximation for the feigenbaum function (<a href="https://writings.stephenwolfram.com/2019/07/mitchell-feigenbaum-1944-2019-4-66920160910299067185320382/">this writing by Wolfram</a> and the code used to generate <a href="https://content.wolfram.com/sites/43/2019/07/feigenbaum-function.png">this image</a> - click on the image in the article to get the code). I think it can be casted in the same form as the polynomial version: iterated function -&gt; scaled up. See also <a href="https://mathstodon.xyz/@S_Conradi">Simone Conradi's work</a>. This is the solution of the Feigenbaum-Cvitanović functional equation.</li>
 <li>Other nested functions? I think Simone Conradi also posted code involving $f(f(x))=\sin(x)$. Hell, might as well email Conradi and also Cvitanovic while I'm at it.</li>
 <li>LLMs recommended studying Schroder's equation and the Abel equation, but I don't quite understand this.</li>
 </ul>
-<h2>Improving rates of convergence</h2>
+<h1 id="improving-rates-of-convergence">Improving rates of convergence</h1>
 <p>I went on a tangent during our meeting about rates of convergence, so a few things could be:
- - How fast Newton's method converges (it's great)
+ - How fast Newton's method converges (it's great). Accelerated newton
  - Newton's method in multiple variables, maybe?
  - Successive averaging
  - Resummation schemes</p>
-<h1>2.1</h1>
-<h2>Algorithm to Draw Church Numerals</h2>
+<h1 id="ramanujan-tau-function">Ramanujan tau function</h1>
+<p>✯ Challenge 1: try to compute the Ramanujan tau function. This is some memoized code using recursion that supposedly works: <a href="https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896">https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896</a>, but simple mathematica code can generate it too: <code>CoefficientList[Take[Expand[Product[(1 - x^k)^24, {k, 1, 30}]], 30],x]</code></p>
+<h1 id="continued-fraction-expansion-of-pi">Continued fraction expansion of pi</h1>
+<p>Challenge 2: Continued fraction expansion of pi or 1/pi using exact arithmetic.</p>
+<h1 id="reversibility-and-quantum-computing">Reversibility and Quantum Computing</h1>
+<h1 id="drawing-church-numerals">Drawing Church numerals</h1>
 <p>algorithm to draw church numerals in the style of the "what is PLUS times PLUS"  video.</p>
-<h1>2.2</h1>
-<h2>Note on all of the useful library functions in SICP</h2>
-<p>It would be useful to collect all the functions. fold-left, fold-right, accumulate, yadda yadda. One of the best parts of Mathematica is giving these standard names.</p>
-<h2>Enumerations</h2>
+<h1 id="enumerating-binary-trees-and-arithmetic-expressions">Enumerating binary trees and arithmetic expressions</h1>
 <p>enumerating partitions, enumerating binary trees (rather than just counting), enumerating expressions?</p>
-<h2>Crash course on symbols?</h2>
-<p>The problems here are super tedious without use of <code>'()</code> and an understanding of these things, which the book kind of glosses over.</p>
-<h2>All about n-queens and dancing links!</h2>
-<p>TBD</p>
+<h1 id="n-queens-and-dancing-links">n queens and dancing links</h1>
+<h1 id="story-about-polynomial-long-division-my-grandpa">Story about polynomial long division + my grandpa</h1>
+<div>$$\begin{align*}
+\end{align*}$$</div>
+<div>$$\begin{align*}
+\end{align*}$$</div>
+<div>$$\begin{align*}
+\end{align*}$$</div>
+<p>Well, I mentioned something about measuring asymptotics in a lab. The most famous example of this is the 
+polymer statistics of the self-avoiding walk: A long polymer in a solution tends to scrunch up, but it is not a 
+random walk because the links of a polymer are physical object and can't overlap with each other. Instead it's a self-avoiding
+walk. If the self-avoiding walk has $N$ links, then the expected end-to-end distance is $R(N)\sim N^\nu$. For the random walk
+$\nu=1/2.$ For the self-avoiding walk, $\nu$ is known as a critical exponent and </p>
     </div>
 </body>
 </html>
