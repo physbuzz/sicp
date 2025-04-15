@@ -13,9 +13,54 @@
 
 ### Introduction
 
-### Exercises
+### Note on my confusion with Wolfram Language
 
-##### Solution
+So far I have been able to identify WL expressions like `f[x,y]` 
+with LISP expressions `(f x y)`. But this nice correspondence is slightly 
+broken in this chapter. 
+
+In Mathematica, `List[Quote[a],Quote[b],Quote[c]]` is different from `Quote[List[a,b,c]]` (you could compare them using `===`).
+
+But in Scheme, it appears `(list 'a 'b 'c)` and `'(a b c)` are the same (compare with `equal?`).
+
+If we had the perfect correspondence
+
+`(f x y)` <=> `f[x,y]`
+
+Then I would assume quoting might give something like this:
+
+`'(f x y)` <=> `"f"["x","y"]` (because `"f[x,y]"` seems too boring)
+
+But in fact it seems like the correspondence is more akin to:
+
+`'(f x y)` <=> `List["f","x","y"]`.
+
+This might be the first thing that is a strict difference in convention between WL and Lisp.
+
+*Note to reader:* I'm not sure of this! Those are just my thoughts while learning.
+
+@src(code/ex2-53b.rkt)
+
+@src(code/ex2-53b.wl)
+
+Silly aside about @@:
+
+@src(code/ex2-53c.rkt)
+
+Tamwile in twitch chat says this is the equivalent in prolog:
+
+```prolog
+% Request to prolog.
+?- foo(X,Y) =.. [Head|Tail], New =.. [bar|Tail].
+% Answer of prolog
+   Head = foo, Tail = [X,Y], New = bar(X,Y).
+```
+
+### Experimenting w/ derivatives
+
+@src(code/symbolic-deriv.rkt)
+
+### Exercises
 
 #### Exercise 2.53
 
@@ -33,6 +78,8 @@ in response to evaluating each of the following expressions?
 ```
 
 ##### Solution
+
+@src(code/ex2-53.rkt)
 
 #### Exercise 2.54
 
@@ -63,10 +110,15 @@ this idea, implement `equal?` as a procedure.
 
 ##### Solution
 
+@src(code/ex2-54.rkt)
+
+This bugs me, because it will fail when comparing non-symbol lists like
+`(equal? (list 1 2 3) (list 1 2 3))`. But we're doing what the problems says
+so let's just move on.
+
 #### Exercise 2.55
 
-Eva Lu Ator types to the
-interpreter the expression
+Eva Lu Ator types to the interpreter the expression
 
 ```rkt
 (car ''abracadabra)
@@ -75,6 +127,9 @@ interpreter the expression
 To her surprise, the interpreter prints back `quote`.  Explain.
 
 ##### Solution
+We have `(quote (quote abracadabra))` in the inner expression.
+The first quote is evaluated leaving the inner expression
+`(list 'quote 'abracadabra)`. Of course the car of this is `'quote`!
 
 #### Exercise 2.56
 
@@ -93,6 +148,10 @@ and anything raised to the power 1 is the thing itself.
 
 ##### Solution
 
+Differentiation with respect to something in the exponent will be incorrect silently! (We'd need logs)
+
+@src(code/ex2-56.rkt)
+
 #### Exercise 2.57
 
 Extend the differentiation
@@ -109,6 +168,14 @@ without changing the `deriv` procedure at all.  For example, the
 the sum of the rest of the terms.
 
 ##### Solution
+
+Some stuff we're not going to handle:
+
+ - `make-sum` and `make-product` with multiple arguments and dotted tail notation,
+ - Sorting expressions. ie without too much work we could automatically simplify
+`(+ (* x 2) (* 2 y))` by sorting arguments and combining when equal.
+
+@src(code/ex2-57.rkt)
 
 #### Exercise 2.58
 
@@ -131,9 +198,16 @@ parentheses and assumes that multiplication is done before addition.  Can you
 design appropriate predicates, selectors, and constructors for this notation
 such that our derivative program still works?
 
-
-
 ##### Solution
+
+For part 1, it's easy, we just have to adjust `make-***` and `augend,addend,multiplier,multiplicand`. 
+
+@src(code/ex2-58.rkt)
+
+For part 2, we can definitely just modify the accessors to get the correct results.
+
+<!-- For part 2, One way we can easily do this is: On the top level of a list, make a list of all summands and recurse `(deriv term sym)`. If there are no sums. make a list of all products and recurse in the more complicated product rule form. -->
+
 
 #### Exercise 2.59
 
