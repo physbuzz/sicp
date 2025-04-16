@@ -38,6 +38,15 @@ number?
 ### Experiments with binary trees
 - Note to self: do some enumeration of binary trees here! It'll be fun!
 
+### Meeting April 6
+
+Note:
+
+ - wanna do problems 2.44-2.52 when I have more Racket experience
+ - What does the n-queens generating function look like? Can we resum it?
+ - Other drawing ideas: L-systems
+ - 
+
 ### Exercises
 
 ##### Solution
