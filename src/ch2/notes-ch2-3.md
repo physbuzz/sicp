@@ -206,6 +206,8 @@ For part 1, it's easy, we just have to adjust `make-***` and `augend,addend,mult
 
 For part 2, we can definitely just modify the accessors to get the correct results.
 
+@src(code/ex2-58b.rkt)
+
 <!-- For part 2, One way we can easily do this is: On the top level of a list, make a list of all summands and recurse `(deriv term sym)`. If there are no sums. make a list of all products and recurse in the more complicated product rule form. -->
 
 
@@ -216,11 +218,15 @@ operation for the unordered-list representation of sets.
 
 ##### Solution
 
+My impl reverses the order of elements, which is ugly, but whatever.
+
+@src(code/ex2-59.rkt)
+
 #### Exercise 2.60
 
 We specified that a set would be
 represented as a list with no duplicates.  Now suppose we allow duplicates.
-For instance, the set ${\{1, 2, 3\}$} could be represented as the list `(2 3 2 1
+For instance, the set $\{1, 2, 3\}$ could be represented as the list `(2 3 2 1
 3 2 2)`.  Design procedures `element-of-set?`, `adjoin-set`,
 `union-set`, and `intersection-set` that operate on this
 representation.  How does the efficiency of each compare with the corresponding
@@ -228,6 +234,8 @@ procedure for the non-duplicate representation?  Are there applications for
 which you would use this representation in preference to the non-duplicate one?
 
 ##### Solution
+
+@src(code/ex2-60.rkt)
 
 #### Exercise 2.61
 
@@ -239,12 +247,16 @@ unordered representation.
 
 ##### Solution
 
+@src(code/ex2-61.rkt)
+
 #### Exercise 2.62
 
-Give a ${\Theta(n)$}
+Give a $\Theta(n)$
 implementation of `union-set` for sets represented as ordered lists.
 
 ##### Solution
+
+@src(code/ex2-62.rkt)
 
 #### Exercise 2.63
 
@@ -283,9 +295,30 @@ Figure 2.16?
 required to convert a balanced tree with $n$ elements to a list?  If not,
 which one grows more slowly?
 
-
-
 ##### Solution
+
+An animation of these algorithms would be nice!
+
+1. They both produce the same result for every tree. The implementation below constructs
+the different trees and demonstrates this.
+2. The two procedures don't have the same order of growth. The second algorithm is $\Theta(n)$ where $n$ is the number of nodes. The issue with the first algorithm is the append operation,
+which first has to traverse a linked list before appending the second list. This sets up a bit 
+of a weird recursion. For a perfectly balanced tree, I first thought this is $\Theta(n^2)$ where
+$n$ is the number of nodes, but in fact it's $\Theta(n\log(n))$. We can set up a recursion:
+
+The time taken for a tree, $T(\text{tree})$ is the sum of...
+ - the time taken to append the left tree, $\textrm{Length}(\textrm{left-tree})$
+ - the time taken to construct the left tree, $T(\textrm{left-tree})$
+ - the time taken to construct the right tree, $T(\textrm{right-tree})$
+
+So 
+$$T(\textrm{tree})=\textrm{Length}(\textrm{left-tree})+T(\textrm{left-tree})+T(\textrm{right-tree})$$
+
+For a perfectly balanced tree of length n, this gives recursion
+$$T(n)=\frac{n}{2}+2T(\frac{n}{2})$$
+Whose solution is $T(n)=\Theta(n\log(n))$
+
+@src(code/ex2-63.rkt)
 
 #### Exercise 2.64
 
@@ -343,14 +376,41 @@ the list `(1 3 5 7 9 11)`.
 
 ##### Solution
 
+The key is that we want to be able to write this line:
+```rkt
+(cons (make-tree this-entry
+       left-tree
+       right-tree)
+ remaining-elts)
+```
+In Javascript we'd use something like `.slice()` to get the first ~n/2
+elements, the middle element, and the last ~n/2 elements. The purpose of the 
+remaining-elts list basically implements this slicing in a clever way.
+
+For question 2, we don't have any calls to things like `length` or `append` 
+in our recursion. So our growth should just be linear.
+
 #### Exercise 2.65
 
 Use the results of Exercise 2.63 
-and Exercise 2.64 to give ${\Theta(n)$} implementations of
+and Exercise 2.64 to give $\Theta(n)$ implementations of
 `union-set` and `intersection-set` for sets implemented as (balanced)
 binary trees.
 
 ##### Solution
+
+We can just combine our previous algorithms:
+
+```rkt
+(define (union-set-tree set1 set2)
+  (list->tree (union-set
+               (tree->list set1) 
+               (tree->list set2))))
+(define (intersection-set-tree set1 set2)
+  (list->tree (intersection-set 
+               (tree->list set1)
+               (tree->list set2))))
+```
 
 #### Exercise 2.66
 
@@ -359,6 +419,19 @@ procedure for the case where the set of records is structured as a binary tree,
 ordered by the numerical values of the keys.
 
 ##### Solution
+
+
+We'll assume we have the same functions like `entry, left-branch, right-branch`.
+
+```rkt
+(define (lookup given-key records)
+  (cond ((null? records) false)
+        ((= given-key (key (entry records))) (entry record))
+        ((< given-key (key (entry records)))
+         (lookup given-key (left-branch records)))
+        ((> given-key (key (entry records)))
+         (lookup given-key (key (right-branch records))))))
+```
 
 #### Exercise 2.67
 
@@ -382,6 +455,12 @@ sample message:
 Use the `decode` procedure to decode the message, and give the result.
 
 ##### Solution
+
+`(A D A B B C A)`
+
+@src(code/ex2-67.rkt)
+
+
 
 #### Exercise 2.68
 
@@ -408,6 +487,10 @@ the original sample message.
 
 ##### Solution
 
+Encoding the decoded message returns the correct thing.
+
+@src(code/ex2-68.rkt)
+
 #### Exercise 2.69
 
 The following procedure takes as
@@ -432,26 +515,31 @@ advantage of the fact that we are using an ordered set representation.)
 
 ##### Solution
 
-#### Exercise 2.70
+@src(code/ex2-69.rkt)
 
+After staring long enough, this tree is not quite the same as the one given earlier in the chapter (for example `b` is encoded as `111` instead of `100`), but that's fine.
+<div style="text-align: center; margin: 20px 0;">
+  <img src="media/ex2-69-light.svg" style="width: 70%; max-width: 800px;" alt="It's the answer to the question. David gets an A+">
+</div>
+
+#### Exercise 2.70
 The following eight-symbol
-alphabet with as@-so@-ci@-ated relative frequencies was designed to efficiently
-encode the lyr@-ics of 1950s rock songs.  (Note that the ``symbols'' of an
+alphabet with associated relative frequencies was designed to efficiently
+encode the lyrics of 1950s rock songs.  (Note that the ``symbols'' of an
 ``alphabet'' need not be individual letters.)
 
-@example
-
-A    2    NA  16
-BOOM 1    SHA  3
-GET  2    YIP  9
-JOB  2    WAH  1
-
+<table>
+  <tr><td>A</td><td>2</td><td>NA</td><td>16</td></tr>
+  <tr><td>BOOM</td><td>1</td><td>SHA</td><td>3</td></tr>
+  <tr><td>GET</td><td>2</td><td>YIP</td><td>9</td></tr>
+  <tr><td>JOB</td><td>2</td><td>WAH</td><td>1</td></tr>
+</table>
 
 Use `generate-huffman-tree` (Exercise 2.69) to generate a
 corresponding Huffman tree, and use `encode` (Exercise 2.68) to
 encode the following message:
 
-@example
+```
 Get a job
 Sha na na na na na na na na
 
@@ -461,7 +549,7 @@ Sha na na na na na na na na
 Wah yip yip yip yip 
 yip yip yip yip yip
 Sha boom
-
+```
 
 How many bits are required for the encoding?  What is the smallest number of
 bits that would be needed to encode this song if we used a fixed-length code
@@ -469,15 +557,21 @@ for the eight-symbol alphabet?
 
 ##### Solution
 
+@src(code/ex2-70.rkt)
+
 #### Exercise 2.71
 
 Suppose we have a Huffman tree
 for an alphabet of $n$ symbols, and that the relative frequencies of the
-symbols are ${1, 2, 4, \dots, 2^{n-1}$}.  Sketch the tree for ${n=5$}; for
-${n=10$}.  In such a tree (for general $n$) how many bits are required to
+symbols are $1, 2, 4, \dots, 2^{n-1}$.  Sketch the tree for $n=5$; for
+$n=10$.  In such a tree (for general $n$) how many bits are required to
 encode the most frequent symbol?  The least frequent symbol?
 
 ##### Solution
+In my implementation it's a left-heavy tree, $2^{n-1}$ is encoded as `1`, 
+0 (with a frequency of $2^0=1$) is encoded as $0\ldots 0$. 
+
+@src(code/ex2-71.rkt)
 
 #### Exercise 2.72
 
@@ -492,6 +586,73 @@ steps needed to encode the most frequent and least frequent symbols in the
 alphabet.
 
 ##### Solution
+
+For encoding the most common symbol, it's actually going to be $\Theta(n)$
+specifically because of the element checking in the line:
+```rkt
+(element-of-list? symbol (symbols (left-branch tree)))
+```
+
+For encoding the least common symbol, I could have been fancy and sorted the symbols list during construction, so that each lookup would also be $\Theta(1)$ 
+(it would be the first symbol tested). But if I assume the symbols are in a random order, each lookup will be $\Theta(n)$. We have to do $n$ of these, so 
+in fact this is a worst case situation, and the encoding is $\Theta(n^2)$! 
+
+If we're encoding symbol $k$, on the first step we search a list of size
+$n-1$, then $n-2$, ... to $n-k$. This is 
+$$\sum_{i=1}^k (n-i) = \frac{k (2n-1-k)}{2}$$
+
+If each $k$ is weighted by $2^{n-k-1}$ (meaning, the symbol with $k=0$ 
+has frequency $2^{n-1}$) then the expectation value is...
+
+```mathematica
+In[29]:= 
+  weight[k_] = 2^(n - k - 1);
+  P[k_] = weight[k]/Sum[weight[k], {k, 0, n - 1}];
+  Sum[-(1/2) k (1 + k - 2 n) P[k], {k, 0, n - 1}] // FullSimplify
+
+Out[31]= -2 + n - ((-3 + n) n)/(2 (-1 + 2^n))
+```
+Which means that we have an expected encoding time of order $\Theta(n)$, 
+but the worst case encoding time is $\Theta(n^2)$.
+
+
+<!--
+$n$ is the number of symbols. 
+Let's look at my impl of successive-merge. 
+For the tree in exercise 2.71, `car tree-list` contains the rest of the tree
+and `cadr tree-list` contains the current leaf.
+
+```
+(define (successive-merge tree-list) 
+  (if (= 1 (length tree-list)) (car tree-list)
+    (let ((a (car tree-list)) 
+          (b (cadr tree-list)) 
+          (rest (cddr tree-list)))
+      (successive-merge (adjoin-set (make-code-tree a b) rest)))))
+```
+
+The time taken to execute successive-merge will depend on the number of 
+symbols in the list. Each time we call adjoin, we decrease the number of 
+symbols by one. In fact the very special form of the frequencies means we
+never have to worry about re-sorting the list; we expect adjoin-set to always
+append at the beginning. This is because when we adjoin frequencies (1+2), this 
+is still less than 4. Frequencies (1+2+4) is less than 8, and so on. 
+So adjoin-set is going to be O(1) in all cases.
+
+So this is easy, it's just $\Theta(n)$ to build the tree, 
+-->
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
