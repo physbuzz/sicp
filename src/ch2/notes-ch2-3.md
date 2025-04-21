@@ -11,7 +11,93 @@
 
 ## Section 2.3
 
-### Introduction
+### Meeting 04-20-2025
+
+```rkt
+#lang sicp
+;; true
+(equal? '(a b c) (list 'a 'b 'c))
+
+;; false
+(eq? '(a b c) '(a b c))
+
+;; These three are equivalent: 
+nil
+'()
+(list)
+
+;; These are ~equivalent ...?
+'(a b c)
+(quote (a b c))
+(list 'a 'b 'c)
+(list (quote a) (quote b) (quote c))
+```
+
+My solution to problem 2.54 was bad and had exceptions. Also, `symbol?` wasn't introduced until after this problem, so it really is probably not be the intended way.
+
+```rkt
+#lang sicp
+
+(define (equal? a b)
+  (or (and (symbol? a) (symbol? b) (eq? a b))
+      (and (null? a) (null? b))
+      (and (pair? a) (pair? b) 
+           (equal? (car a) (car b))
+           (equal? (cdr a) (cdr b)))))
+
+;;Some test cases:
+(equal? '(this is a list) 
+        '(this is a list))
+(equal? '(this is a list) 
+        '(this (is a) list))
+(equal? '(this (is a) list) 
+        '(this (is a) list))
+(equal? 'a '(a b c))
+
+;; Failure case! 
+(equal? (list 1 2 3) (list 1 2 3))
+```
+
+Here was Erik's solution which might be a bit better or be the intended way:
+```rkt
+(define (myequal? a b)
+  (cond ((and (null? a) (null? b)) #t)
+        ((or (null? a) (null? b)) #f)
+        ((and (not (pair? a)) (not (pair? b))) (eq? a b))
+        ((or (not (pair? a)) (not (pair? b))) #f)
+        (else
+         (and (myequal? (car a) (car b)) (myequal? (cdr a) (cdr b))))))
+```
+
+
+More conversation about eq:
+
+- "If obj1 and obj2 are both aggregate types, equal? compares its elements recursively."
+
+- https://practical-scheme.net/gauche/man/gauche-refe/Equality-and-comparison.html
+
+- https://www.gnu.org/software/guile/manual/html_node/Equality.html
+
+- https://beautifulracket.com/explainer/equality.html
+
+
+Back to the chapter:
+
+ - Autodiff and problem 2.58. I found it interesting that the shunting yard algorithm wasn't used. Animation of the shunting yard algo: https://somethingorotherwhatever.com/shunting-yard-animation/
+
+ - Guile is the GNU implementation of scheme. You could say scheme is a minimal lisp.
+
+- https://github.com/zv/SICP-guile
+
+
+ - For the proof of the optimality of huffman encoding, https://static.ias.edu/pitp/archive/2012files/Hamming_CHs1-3.pdf
+
+ - https://norvig.com/ngrams/
+
+ - https://news.ycombinator.com/item?id=13918465 - useful links in here! Some of the links are dead but can be accessed with internet archive.
+
+ - https://www.youtube.com/watch?v=ZtTqRH1uwu4
+
 
 ### Note on my confusion with Wolfram Language
 
