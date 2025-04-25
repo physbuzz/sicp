@@ -11,7 +11,109 @@
 
 ## Section 2.4
 
+
+For this section, we have to use code that we don't know how to write yet, fun times.
+
+- SICP Guile handles it here: [https://github.com/zv/SICP-guile/blob/master/sicp2.rkt#L1982](https://github.com/zv/SICP-guile/blob/master/sicp2.rkt#L1982)
+- This github repo handles it a different way: [https://mk12.github.io/sicp/exercise/2/4.html](https://mk12.github.io/sicp/exercise/2/4.html)
+- I handle `get` and `put` this way:
+
+@src(code/package-example.rkt)
+
+@src(code/package-example2.rkt)
+
+
+### Weird concern about these two packages:
+
+For `install-rectangular-package` and `install-polar-package`
+It's kind of weird that some methods are tagged with a list, 
+and other methods are tagged without a list (like `'make-from-real-imag`).
+I notice that things tagged with a list seem to be called through
+`apply-generic`, while things tagged without a list seem to be called
+through `get`. eg:
+
+```rkt
+(define (install-rectangular-package)
+  ;; internal procedures
+  (define (real-part z) (car z))
+  (define (imag-part z) (cdr z))
+  (define (make-from-real-imag x y) 
+    (cons x y))
+  (define (magnitude z)
+    (sqrt (+ (square (real-part z))
+             (square (imag-part z)))))
+  (define (angle z)
+    (atan (imag-part z) (real-part z)))
+  (define (make-from-mag-ang r a)
+    (cons (* r (cos a)) (* r (sin a))))
+  ;; interface to the rest of the system
+  (define (tag x) 
+    (attach-tag 'rectangular x))
+  (put 'real-part '(rectangular) real-part)
+  (put 'imag-part '(rectangular) imag-part)
+  (put 'magnitude '(rectangular) magnitude)
+  (put 'angle '(rectangular) angle)
+  (put 'make-from-real-imag 'rectangular
+       (lambda (x y) 
+         (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'rectangular
+       (lambda (r a) 
+         (tag (make-from-mag-ang r a))))
+  'done)
+
+(define (install-polar-package)
+  ;; internal procedures
+  (define (magnitude z) (car z))
+  (define (angle z) (cdr z))
+  (define (make-from-mag-ang r a) (cons r a))
+  (define (real-part z)
+    (* (magnitude z) (cos (angle z))))
+  (define (imag-part z)
+    (* (magnitude z) (sin (angle z))))
+  (define (make-from-real-imag x y)
+    (cons (sqrt (+ (square x) (square y)))
+          (atan y x)))
+  ;; interface to the rest of the system
+  (define (tag x) (attach-tag 'polar x))
+  (put 'real-part '(polar) real-part)
+  (put 'imag-part '(polar) imag-part)
+  (put 'magnitude '(polar) magnitude)
+  (put 'angle '(polar) angle)
+  (put 'make-from-real-imag 'polar
+       (lambda (x y) 
+         (tag (make-from-real-imag x y))))
+  (put 'make-from-mag-ang 'polar
+       (lambda (r a) 
+         (tag (make-from-mag-ang r a))))
+  'done)
+
+(define (real-part z) 
+  (apply-generic 'real-part z))
+(define (imag-part z) 
+  (apply-generic 'imag-part z))
+(define (magnitude z) 
+  (apply-generic 'magnitude z))
+(define (angle z) 
+  (apply-generic 'angle z))
+(define (make-from-real-imag x y)
+  ((get 'make-from-real-imag 
+        'rectangular) 
+   x y))
+(define (make-from-mag-ang r a)
+  ((get 'make-from-mag-ang 
+        'polar) 
+   r a))
+```
+
+
+
 ### Introduction
+
+Important functions: `put, get, apply-generic`.
+
+Mutability hasn't been covered yet, so we can't really implement `put`.
+
+
 
 ### Exercises
 
@@ -86,9 +188,38 @@ in the opposite way, so that the dispatch line in `deriv` looked like
 
 What corresponding changes to the derivative system are required?
 
-
-
 ##### Solution
+
+**Part 1:** We can't assimilate the cases where it's a number or variable, because these aren't tagged data.
+
+**Part 2 and part 3:** Note: I removed the keyword `operands` from
+the function `deriv`, as this is more consistent with the code. 
+I could have added the tag back everywhere `(let ((exp-tagged (cons '+ exp))) ...)`, but it's easier to just remove `operands`.
+
+@src(code/ex2-73.rkt)
+
+**Part 4:** We just have to switch the order of the tags,
+it's trivial, here's the diff:
+```
+0a1
+> 
+91c92
+<         (else ((get 'deriv (operator exp))
+---
+>         (else ((get (operator exp) 'deriv)
+95c96
+< (put 'deriv '+ 
+---
+> (put '+ 'deriv 
+100c101
+< (put 'deriv '* 
+---
+> (put '* 'deriv 
+109c110
+< (put 'deriv '**
+---
+> (put '** 'deriv 
+```
 
 #### Exercise 2.74
 
@@ -132,17 +263,43 @@ name and a list of all the divisions' files.
 **4.** When Insatiable takes over a new company, what changes must be made in order to
 incorporate the new personnel information into the central system?
 
-
-
 ##### Solution
+
+Kind of a weird problem, let's use 
+`(define (lookup given-key records) ...)` from exercise 2.66.
+
+1. The individual divisions' files need to have a tag to let us know what filetype we're dealing with. Then, inspired by the `lookup` function of question ch 2.66, we can use `((get 'get-record filetype) employee-name file-contents)`. This requires each division to implement and install a `get-record` function that accepts an employee name. Let's say it returns a record tagged with the division name. Let's be more precise to prepare for part 3:
+
+```rkt 
+;;Assume this returns false if no record exists.
+(define (lookup-employee employee-name file)
+  (let ((filetype (car file)) (file-contents (cdr file)))
+    ((get 'get-record filetype) employee-name file-contents)))
+```
+
+2. For get-salary, we require each department implement a `get-salary` dispatchable function. Then we call `(apply-generic 'get-salary tagged-record)`.
+3. Let's include a list of file contents. Each file is a list `(list filetype filecontents)`. 
+
+```rkt
+(define (find-employee-record employee-name tagged-files)
+  (if (null? tagged-files) #f
+    (let ((employee-record (lookup-employee employee-name (car tagged-files))))
+      (if employee-record 
+        employee-record
+        (find-employee-record employee-name (cdr tagged-files))))))
+```
+4. To incorporate changes, we need to have people implement the `'get-record` 
+and `get-salary` functions as defined earlier in the chapter.
 
 #### Exercise 2.75
 
 Implement the constructor
-`make-from-mag-ang` in mes@-sage-pass@-ing style.  This procedure should be
+`make-from-mag-ang` in message-passing style.  This procedure should be
 analogous to the `make-from-real-imag` procedure given above.
 
 ##### Solution
+
+@src(code/ex2-75.rkt)
 
 #### Exercise 2.76
 
@@ -157,5 +314,15 @@ operations must often be added?
 
 ##### Solution
 
+**Generic operations with explicit dispatch:** This works well when 
+we can be certain we don't have to add new types and operations.
 
+**Data-directed:** Works extremely well when we have lot of different types, or have
+functions that deal with arguments of many different types. So this would work best
+when we have to add a bunch of different types. 
+
+**Message-passing:** Makes adding new functions very easy. We still have the 
+flexibility to add new types quite easily, but it might not be as explicit as the 
+data directed approach. So message-passing would be preferable when 
+new operations must often be added.
 
