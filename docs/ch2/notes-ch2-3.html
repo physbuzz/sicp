@@ -670,14 +670,20 @@ in response to evaluating each of the following expressions?</p>
 <span class="c1">;; ((george))</span>
 
 <span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x1</span><span class="w"> </span><span class="ss">x2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y1</span><span class="w"> </span><span class="ss">y2</span><span class="p">)))</span>
-<span class="c1">;; (y1 y2)</span>
+<span class="c1">;; ((y1 y2)), a list with one element &#39;(y1 y2)</span>
 
 <span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x1</span><span class="w"> </span><span class="ss">x2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y1</span><span class="w"> </span><span class="ss">y2</span><span class="p">)))</span>
-<span class="c1">;; y1</span>
+<span class="c1">;; (y1 y2), the car of the previous result</span>
 
 <span class="p">(</span><span class="nb">pair?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">a</span><span class="w"> </span><span class="ss">short</span><span class="w"> </span><span class="ss">list</span><span class="p">)))</span>
+<span class="c1">;; false, (car &#39;(a short list)) is just &#39;a</span>
+
 <span class="p">(</span><span class="nb">memq</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">red</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">red</span><span class="w"> </span><span class="ss">shoes</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">blue</span><span class="w"> </span><span class="ss">socks</span><span class="p">)))</span>
+<span class="c1">;; false, &#39;red is not a member of the list, &#39;(red shoes) is.</span>
+
 <span class="p">(</span><span class="nb">memq</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">red</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">red</span><span class="w"> </span><span class="ss">shoes</span><span class="w"> </span><span class="ss">blue</span><span class="w"> </span><span class="ss">socks</span><span class="p">))</span>
+<span class="c1">;; (red shoes blue socks), the element is found so memq returns the list </span>
+<span class="c1">;; after and including &#39;red.</span>
 </code></pre></div>
 
 
@@ -1600,10 +1606,12 @@ which first has to traverse a linked list before appending the second list. This
 of a weird recursion. For a perfectly balanced tree, I first thought this is $\Theta(n^2)$ where
 $n$ is the number of nodes, but in fact it's $\Theta(n\log(n))$. We can set up a recursion:</li>
 </ol>
-<p>The time taken for a tree, $T(\text{tree})$ is the sum of...
- - the time taken to append the left tree, $\textrm{Length}(\textrm{left-tree})$
- - the time taken to construct the left tree, $T(\textrm{left-tree})$
- - the time taken to construct the right tree, $T(\textrm{right-tree})$</p>
+<p>The time taken for a tree, $T(\text{tree})$ is the sum of...</p>
+<ul>
+<li>the time taken to append the left tree, $\textrm{Length}(\textrm{left-tree})$</li>
+<li>the time taken to construct the left tree, $T(\textrm{left-tree})$</li>
+<li>the time taken to construct the right tree, $T(\textrm{right-tree})$</li>
+</ul>
 <p>So 
 $$T(\textrm{tree})=\textrm{Length}(\textrm{left-tree})+T(\textrm{left-tree})+T(\textrm{right-tree})$$</p>
 <p>For a perfectly balanced tree of length n, this gives recursion

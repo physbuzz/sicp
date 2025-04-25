@@ -307,6 +307,7 @@ of a weird recursion. For a perfectly balanced tree, I first thought this is $\T
 $n$ is the number of nodes, but in fact it's $\Theta(n\log(n))$. We can set up a recursion:
 
 The time taken for a tree, $T(\text{tree})$ is the sum of...
+
  - the time taken to append the left tree, $\textrm{Length}(\textrm{left-tree})$
  - the time taken to construct the left tree, $T(\textrm{left-tree})$
  - the time taken to construct the right tree, $T(\textrm{right-tree})$
