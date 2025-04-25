@@ -12,6 +12,7 @@
 
 ## Section 2.5
 
+Note: At the end it looks like we talk about polynomials, it might be worth skimming over some simple algorithms from Ideals, Varieties, and Algorithms and maybe implementing a simple one. 
 ### Introduction
 
 ### Exercises
