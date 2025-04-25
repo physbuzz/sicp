@@ -15,7 +15,7 @@
 For this section, we have to use code that we don't know how to write yet, fun times.
 
 - SICP Guile handles it here: [https://github.com/zv/SICP-guile/blob/master/sicp2.rkt#L1982](https://github.com/zv/SICP-guile/blob/master/sicp2.rkt#L1982)
-- This github repo handles it a different way: [https://mk12.github.io/sicp/exercise/2/4.html](https://github.com/zv/SICP-guile/blob/master/sicp2.rkt#L1982)
+- This github repo handles it a different way: [https://mk12.github.io/sicp/exercise/2/4.html](https://mk12.github.io/sicp/exercise/2/4.html)
 - I handle `get` and `put` this way:
 
 @src(code/package-example.rkt)
