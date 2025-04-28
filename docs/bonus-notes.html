@@ -486,13 +486,20 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </code></pre></div>
 
 <h1 id="asymptotic-approximations-and-some-notes-on-theta-omega-o">Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$.</h1>
-<p>As we're reading <a href="">SICP</a>, the book covers the notation $\Theta(f(n))$ and makes use of it, but I think
-it deserves a bit more context and grounding in mathematical methods! Comp sci books don't (in my opinion)
-do a good job of selling asymptotic methods, but in fact they're powerful applied mathematical methods.
-So I wanted to write this to provide some cool examples from physics as well as list some bonus resources. </p>
+<p>SICP covers the notation $\Theta(f(n)),$ but for a function $g(n)$ to be order $\Theta(f(n))$ is a 
+pretty restrictive thing. In fact there's a whole asymptotic toolkit that's useful for 
+math, computer science, and physics, and it's kind of a shame that it's not taught sooner! Actually
+if you get nothing else out of this article, it's that you should go watch Carl Bender's lecture series
+on asymptotics. </p>
+<iframe width="560" height="315" src="https://www.youtube.com/embed/LYNOGk3ZjFM?si=ulaELbRC-a_tg0VM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+<p>He gives the whole lecture series while trying to hide a smile because some of the formulas
+he writes on the board are pretty good jokes, like the diverging factorial sum we'll encounter in this article!
+I wanted to give some preview of these tools and tell you why I love them, as well as show you how they're
+useful on at least one SICP practice problem.</p>
 <h2 id="useful-definitions">Useful definitions</h2>
-<p>To start out, assuming you've read section 1.2 in SICP, you know the definition of $\Theta(f(n))$. To 
-write it more succinctly using quantifiers $\exists$ and $\forall$:</p>
+<p>To start out, assuming you've read section 1.2 in SICP, you know the definition of $\Theta(f(n)).$ To 
+write it more succinctly using quantifiers "there exists" ($\exists$) and "for all" ($\forall$):</p>
 <p><strong>Definition.</strong> For positive functions $f(n)$ and $R(n)$, we write that $R(n)$ is $\Theta(f(n))$ as $n\to\infty$ if:
 $$\exists_{c_1,c_2,N}:\forall_{n\gt N}\;\; 0 \leq c_1 f(n) \leq R(n)\leq c_2 f(n)$$</p>
 <p>That's fine and all, but a more typical approach is found in <em>The Algorithm Design Manual</em> by Skiena. We first define $O(n)$ and $\Omega(n),$ and define $\Theta(n)$ in terms of them.</p>
@@ -522,62 +529,74 @@ T(a,4)&=T(a,3)+T(a-25,4)+1\\
 T(a,5)&=T(a,4)+T(a-50,5)+1
 \end{align*}$$</div>
 
-<p>Okay, let's start by solving this exactly. I'll admit my recurrence relation solving skills aren't great, but $T(a,1)$ is easy,
-we have $T(a,1)=2a+C^{(1)}$ where $C^{(1)}=T(1,0)$. We note that $T(a,1)=\Theta(a)$, and that $T(a,1)\sim 2a$ as $a\to\infty.$ Theta gives
-us the order, and $\sim$ gives us the constant out front.</p>
-<p>Next, $T(a,2)=T(a-5,2)+2a+C^{(1)}+1.$ This is tougher, but it has general solution:</p>
-<div>$$T(a,2)=\frac{a^2+(6+C^{(1)})a}{5}+C^{(2)}_{a\textrm{ mod }5}$$ </div>
-<p>where the $C^{(2)}_{a\textrm{ mod }5}$ are determined by the base cases, just like $C^{(1)}$ was determined by the initial conditions,
-of which we need five.  </p>
-<p>The big takeaways are $T(a,2)=\Theta(a^2)$ and $T(a,2)\sim a^2/5.$</p>
-<p>Okay, we can guess that we should really just look at the leading / dominant terms. Then we need to solve the equation:
-$$T(a,3)=T(a-10,3)+T(a,2)+1$$ </p>
-<p>Every time $a$ increases by $10,$ we add a term of magnitude asymptotic to $a^2/5.$ So performing the same trick more explicitly...</p>
-<div>$$\begin{align*}
-T(a,3)=(T(a,2)+1)+(T(a-10,2)+1)+\ldots +T(a\textrm{ mod } 5,3)
-\end{align*}$$</div>
+<p>There are some base cases which we could analyze by hand: $T(0,1)$ is just some constant, $T(0,2)$, $T(1,2)$, $T(2,2)$ are just constants and so on. The big question is: What is the big Theta growth order of $T(a,5)$? </p>
+<p>I'll admit my recurrence relation solving skills are awful, but $T(a,1)$ is easy. We just apply the relation
+a bunch until we get to zero:</p>
+<p>$$T(a,1)=2a+T(0,1)$$</p>
+<p>Next, the recurrence for $T(a,2).$ This is a little bit tougher... with some elbow grease 
+(or using Wolfram Alpha or mathematica's <a href="https://reference.wolfram.com/language/ref/RSolve.html">RSolve</a>) we find that</p>
+<div>$$T(a,2)=\frac{a^2+(6+T(0,1))a}{5}+C(a\textrm{ mod }5,2),$$</div>
 
-<p>How about $T(a,3)$ and $T(a,4)$? Well, at this point it's 
-good to take a step back. We really don't need the exact solutions. Instead, we see that $T(a,1)=\Theta(a)$, 
-$T(a,2)=\Theta(a^2)$, and so we would like to justify $T(a,3)=\Theta(a^3)$ all the way up to 
-$T(a,5)=\Theta(a^5).$ </p>
+<p>where $C$ is some constant term that takes into account that we get the base cases right. 
+But the big takeaway here is that $T(a,2)=\Theta(a^2).$ </p>
+<p>With our larger asymptotics toolkit, we can also see that $$T(a,2)\sim a^2/5.$$ </p>
+<p>With a discerning eye, we can also think to write $$T(a,2)-\frac{a^2}{5}\sim \frac{6+T(0,1)}{5} a.$$</p>
+<p>Basically, asymptotics allows us to find $T$ in increasing levels of granularity! The order of growth is
+the easiest. Getting the leading factor is a tiny bit harder, and getting the subleading factor takes yet more work. </p>
+<p>If we were to solve for $T(a,3)$ exactly, we'd get another complicated polynomial and more constants, 
+but we should know by now to only look at the dominant terms. We find $T(a,3)=\Theta(a^3),$ and the 
+asymptotics of the leading term can be expressed as
+$$T(a,3)\sim \frac{1}{150} a^3.$$</p>
+<p>The point is that asymptotics gives us the tools to talk about this all formally, and then 
+it becomes clear that we don't have to solve the problem in anything but the least level of granularity. 
+$T(a,4)=\Theta(a^4),$ $T(a,5)=\Theta(a^5),$ and there we go, we've solved the problem.</p>
+<p><em>Side note:</em> Interestingly, in my book club we ran into a problem where we tried to work out the asymptotics of $T$ by evaluating the code and timing it, then looking at the slope on a log-log plot. 
+But we didn't go to a high enough $a$ to get a clear result! A detailed asymptotic analysis
+would have shown that the $a^5$ term only becomes dominant around $a\approx 300.$</p>
 <h2 id="an-aside-on-asymptotic-series-and-stirlings-approximation">An aside on asymptotic series and Stirling's approximation</h2>
-<p>The notion of the Stirling approximation also came up in conversation, and that's a good thing because the asymptotics
-learned so far allow us to tackle some weird aspects of it. Stirling's approximation can be written as:</p>
+<p>The topic of Stirling's approximation also came up in our book club's meeting. 
+That's a good thing because the asymptotics we've learned so far allows us to point out a little quirk that 
+usually isn't emphasized. Stirling's approximation can be written as:</p>
 <p>$$\log(n!)=n\log(n)-n+\frac{1}{2}\log(2\pi n) + \sum_{k=2}^M \frac{(-1)^k B_k}{k(k-1)n^{k-1}} + O\left(\frac{1}{n^M}\right)$$</p>
-<p>This formula has two awkward aspects compared to the power series and Taylor expansions we're usually familiar with:
-1. In a Taylor series we have good reason to choose $x^k$ as our basis functions
-and we're guaranteed that a Taylor series of an analytic function is unique. But how do we justify expanding $\log(n!)$
-in terms of $n\log(n)$? How unique is this series?
-2. If we look at the coefficients $B_k,$ the Bernoulli numbers, we find that they grow very quickly. If we try to take
-$M\to\infty$ then this sum doesn't converge for any finite $n$! What gives?</p>
-<p>An asymptotic series is defined as follows. Note that writing the upper limit of the sum as infinity is an abuse of notation---<em>we never actually carry out the infinite sum</em>.</p>
-<p><strong>Definition.</strong> We write $\sum_{i=1}^\infty f_i(n) \sim g(n)$ as $n\to a$ if:</p>
+<p>On first glance we might think that this looks like a Taylor series or a Laurent series, but we'd be mistaken! 
+There are two awkward aspects:
+1. In a Taylor series we have good reason to choose monomials $x^k$ as our basis functions
+and we're guaranteed that a Taylor series of an analytic function is unique. 
+But how do we justify expanding $\log(n!)$ in terms of $n\log(n)$? Once we start expanding with weird terms, 
+do we still have uniqueness?
+2. If we look at the coefficients $B_k,$ these are the Bernoulli numbers. We find that they grow very quickly.
+They grow so quickly in fact, that if we tried to take
+$M\to\infty$ the sum wouldn't converge for any finite $n.$ What gives?!</p>
+<p>The resolution of these questions arises from defining an <em>asymptotic series</em> as follows. Note that writing the upper limit of the sum as infinity is an abuse of notation---<em>we never actually carry out the infinite sum</em>.</p>
+<p><strong>Definition.</strong> We write $g(n)\sim \sum_{i=1}^\infty f_i(n)$ as $n\to a$ if:</p>
 <ul>
 <li>$f_1(n)\sim g(n)$ as $n\to a$</li>
-<li>The remainder is asymptotic to $f_2$: $g(n)-f_1(n)\sim f_2(n)$ as $n\to a$</li>
-<li>That remainder is asymptotic to $f_3$: $g(n)-f_1(n)-f_2(n)\sim f_3(n)$, and so on $(\textrm{as }n\to a).$ </li>
+<li>The remainder is asymptotic to $f_2$. That is, $$f_2(n)\sim g(n)-f_1(n)\textrm{ as }n\to a.$$</li>
+<li>That remainder is asymptotic to $f_3$. That is, $$f_3(n)\sim g(n)-f_1(n)-f_2(n)\textrm{ as }n\to a.$$ </li>
 </ul>
 <p>With these definitions, we can get a whole theory of asymptotic series along with uniqueness guarantees, such as those in 
-Bender and Orszag's <em>Advanced Mathematical Methods for Scientists and Engineers</em>.</p>
+Bender and Orszag's <em>Advanced Mathematical Methods for Scientists and Engineers</em>. This is the sense in which
+the Stirling approximation is an asymptotic series for $n!.$</p>
 <h2 id="another-application-of-asymptotic-series">Another application of asymptotic series</h2>
-<p>Stirling's approximation is kind of bougie as the kids say. Too rich for my blood. 
-There's another simpler example of asymptotic series that I really like. </p>
+<p>Stirling's approximation is too fancy for my blood, the presence of the Bernoulli numbers detracts 
+from the essence of what's going on and there's a simpler example that we can grasp completely. </p>
 <p>Say that you're stuck on a desert island with only sand and the integral</p>
-<p>$$f(a)=\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x.$$</p>
+<p>$$f(a)=\int_0^\infty \frac{e^{-x/a}}{1+x} \mathrm{d}x.$$</p>
 <p>You have to compute $f(0.1),$ how do you do it?
-Well, let's use a series expansion and totally ignore issues of convergence and real analysis:</p>
+Well, let's use a series expansion and repeated integration by parts. 
+We'll totally ignore issues of convergence and real analysis. </p>
 <div>$$\begin{align*}
-\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x &= \int_0^\infty e^{-x/a}\sum_{n=0}^\infty (-1)^n x^n \mathrm{d}x \\
+\int_0^\infty \frac{e^{-x/a}}{1+x} \mathrm{d}x &= \int_0^\infty e^{-x/a}\sum_{n=0}^\infty (-1)^n x^n \mathrm{d}x \\
 &= \sum_{n=0}^\infty \int_0^\infty (-1)^n e^{-x/a} x^n \mathrm{d}x \\
 &= \sum_{n=0}^\infty (-1)^n n!a^{n+1} \tag{integrate by parts}\\
 \end{align*}$$</div>
 <p>This infinite sum has a radius of convergence of zero! However if we plug in $a=0.1$ and keep the first few terms, we get
 $$f(0.1)\approx 0.1 - 0.01 + 0.002 - 0.0006 + 0.00024=0.09164$$
-compare this to the true value of $f(0.1)=0.0915633\ldots,$ it's a pretty good approximation!</p>
+compare this to the true value of $f(0.1)=0.0915633\ldots,$ it's a pretty good approximation! How weird is that,
+by truncating a divergent series we got a good result. In the exact same way, by truncating the Stirling expansion, we get good results. </p>
 <p>Really what we've shown is that as an asymptotic series,
 $$\int_0^\infty \frac{e^{-a x}}{1+x} \mathrm{d}x \sim \sum_{n=0}^\infty (-1)^n n!a^{n+1} \tag{as $a\to 0$}$$</p>
-<p>Another interesting tidbit: We shouldn't have expected any analytic behavior as $a\to 0,$ because if we take $a$ negative the integral diverge.</p>
+<p>Another interesting tidbit: We can't expect any Taylor expansion to exist around $a=0,$ because the integral diverges for $a&lt;0.$</p>
 <p>I learned this from Bender and Orszag's "Advanced Mathematical Methods for Scientists and Engineers: Asymptotic Methods and Perturbation Theory". The title is a mouthful, and it comes across a lot better in video format. Carl Bender writes a lot of these equations with a smile on his face, because $\sum_{n-1}^\infty (-1)^n n!$ is an absurd sum and is kind of a joke! To a physicist or applied mathematician, what we mean by the infinite sum is really $f(1)$ where $f$ is the perfectly well-defined transcendental function given as an integral above.</p>
 <iframe width="560" height="315" src="https://www.youtube.com/embed/LYNOGk3ZjFM?si=ulaELbRC-a_tg0VM" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 

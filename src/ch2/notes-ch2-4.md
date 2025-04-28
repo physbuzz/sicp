@@ -11,7 +11,13 @@
 
 ## Section 2.4
 
+### Meeting 04-20-2025
 
+- https://www.gnu.org/software/emacs/manual/html_node/elisp/Association-Lists.html
+- https://www.cs.cmu.edu/Groups/AI/util/html/cltl/clm/node108.html
+- https://en.wikipedia.org/wiki/Object-oriented_programming#History
+
+### Other
 For this section, we have to use code that we don't know how to write yet, fun times.
 
 - SICP Guile handles it here: [https://github.com/zv/SICP-guile/blob/master/sicp2.rkt#L1982](https://github.com/zv/SICP-guile/blob/master/sicp2.rkt#L1982)
