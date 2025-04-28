@@ -11,7 +11,7 @@
 
 ## Section 2.4
 
-### Meeting 04-20-2025
+### Meeting 04-27-2025
 
 - https://www.gnu.org/software/emacs/manual/html_node/elisp/Association-Lists.html
 - https://www.cs.cmu.edu/Groups/AI/util/html/cltl/clm/node108.html

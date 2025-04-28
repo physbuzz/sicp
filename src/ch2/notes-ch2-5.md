@@ -26,10 +26,10 @@ the expression `(magnitude z)` where `z` is the object shown in
 Figure 2.24.  To his surprise, instead of the answer 5 he gets an error
 message from `apply-generic`, saying there is no method for the operation
 `magnitude` on the types `(complex)`.  He shows this interaction to
-Alyssa P. Hacker, who says ``The problem is that the complex-number selectors
+Alyssa P. Hacker, who says "The problem is that the complex-number selectors
 were never defined for `complex` numbers, just for `polar` and
 `rectangular` numbers.  All you have to do to make this work is add the
-following to the `complex` package:''
+following to the `complex` package:"
 
 ```rkt
 (put 'real-part '(complex) real-part)
@@ -45,6 +45,36 @@ times is `apply-generic` invoked?  What procedure is dispatched to in each
 case?
 
 ##### Solution
+
+Okay, so we've added the `put` statements. 
+Implicitly, we must mean that we have also defined:
+
+```rkt
+(define (magnitude z)
+  (apply-generic 'magnitude z))
+```
+
+So then the sequence of calls looks like: 
+
+```rkt
+(magnitude z)
+(apply-generic 'magnitude z)
+;; This calls the following inside apply-generic:
+;;   (apply (get op type-tags) (map contents args))
+;; type-tags is just equal to 'complex, so we call magnitude again, 
+;; this time it was the magnitude scoped inside the complex package. 
+;; The argument to this function is the contents of args, so inside
+;; the structure ('complex . ('rectangular . (3 . 4))) we've stripped away the 'complex.
+(apply-generic 'magnitude ('rectangular . (3 . 4)))
+;; Inside install-rectangular-package
+(magnitude (3 . 4))
+5
+```
+
+TODO: make it clearer which packages we're inside.
+
+
+
 
 #### Exercise 2.78
 
@@ -63,6 +93,30 @@ represented simply as Scheme numbers rather than as pairs whose `car` is
 the symbol `scheme-number`.
 
 ##### Solution
+
+So, the point of this problem is that we can make these modifications
+and that's all we need to do: we need no modifications to the 
+scheme-number package.
+
+```rkt
+(define (attach-tag type-tag contents)
+  (if (equal? type-tag 'scheme-number) 
+      contents
+      (cons type-tag contents)))
+(define (type-tag datum)
+  (cond ((pair? datum) (car datum))
+        ((number? datum) 'scheme-number)
+        (else (error "Bad tagged datum: TYPE-TAG" datum))))
+(define (contents datum)
+  (cond ((pair? datum) (cdr datum))
+        ((number? datum) datum)
+        (else (error "Bad tagged datum: CONTENTS" datum))))
+```
+
+Working example:
+
+
+@src(code/ex2-78.rkt)
 
 #### Exercise 2.79
 
