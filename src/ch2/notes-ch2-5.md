@@ -71,7 +71,9 @@ So then the sequence of calls looks like:
 5
 ```
 
-@src(code/ex2-77.rkt)
+@src(code/ex2-77.rkt, collapsed)
+
+
 
 
 

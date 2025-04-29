@@ -276,6 +276,84 @@ def get_base_css():
             white-space: pre-wrap;
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
         }
+        /* --- Styles for Collapsible Code Blocks --- */
+        .collapsible-code {
+            border: none; /* Remove default border from details */
+            margin-top: 0; /* Adjust spacing if needed */
+            margin-bottom: 0; /* Adjust spacing if needed */
+        }
+
+        .code-summary {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.5rem 0.8rem; /* Adjusted padding */
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+            cursor: pointer;
+            list-style: none; /* Hide default marker */
+            display: block; /* Make it block level */
+            border-radius: 6px 6px 0 0; /* Round top corners like header */
+            position: relative; /* For positioning the marker */
+            transition: background-color 0.1s ease-in-out;
+        }
+
+        .code-summary:hover {
+            background-color: #f1f3f5; /* Slight hover effect */
+        }
+
+        /* Add custom marker */
+        .code-summary::before {
+            content: '►'; /* Collapsed marker */
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6em;
+            color: #6a737d;
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .collapsible-code[open] > .code-summary::before {
+            transform: translateY(-50%) rotate(90deg); /* Expanded marker */
+        }
+
+        .collapsible-code[open] > .code-summary {
+             border-bottom: 1px solid #e1e4e8; /* Ensure border shows when open */
+             border-radius: 6px 6px 0 0; /* Keep top rounding when open */
+        }
+
+        /* Adjust summary content positioning relative to marker */
+        .code-summary a {
+            margin-left: 1.2rem; /* Space for the marker */
+            color: #6a737d;
+            text-decoration: none;
+        }
+         .code-summary a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+
+        /* Ensure content inside details has appropriate spacing/styling */
+        .collapsible-code > .codehilite {
+            margin: 0;
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            border: none; /* Remove border from codehilite itself */
+            border-top: none; /* Remove top border */
+        }
+
+        .collapsible-code > .code-output {
+            border-radius: 0; /* No rounding needed */
+            border-top: 1px solid #e1e4e8; /* Add separator */
+        }
+
+        .collapsible-code > .run-racket {
+             margin-left: 1rem; /* Indent run button */
+             margin-bottom: 1rem; /* Add bottom margin */
+        }
+        /* --- End Collapsible Styles --- */
 
         code {
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;

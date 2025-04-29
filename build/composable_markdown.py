@@ -1,6 +1,7 @@
-# Claude 3.7 generated file
+# Claude 3.7 +Gemini generated file
 import os
 import re
+import html  # Import the html module for escaping
 from markdown.extensions import Extension
 from markdown.preprocessors import Preprocessor
 
@@ -29,7 +30,8 @@ class ComposableMarkdownPreprocessor(Preprocessor):
     RACKET_PATTERN = re.compile(r'{{% racket src="([\w\-\./]+\.rkt)" %}}')
 
     # New unified patterns
-    SRC_PATTERN = re.compile(r'@src\(([\w\-\./]+\.\w+)\)')
+    # Updated SRC_PATTERN to capture optional second argument (collapsible/collapsed)
+    SRC_PATTERN = re.compile(r'@src\(([\w\-\./]+\.\w+)(?:,\s*(\w+))?\)')
     IMPORT_PATTERN = re.compile(r'@import\(([\w\-\./]+\.md)\)')
 
     # Track imported files to prevent circular imports
@@ -57,22 +59,29 @@ class ComposableMarkdownPreprocessor(Preprocessor):
             line = lines[i]
 
             # Check for {{% racket src="file.rkt" %}} pattern (legacy)
-            match = self.RACKET_PATTERN.search(line)
-            if match:
-                file_path = match.group(1)
-                processed_lines = self._process_code_file(file_path, "racket", current_path)
+            match_legacy = self.RACKET_PATTERN.search(line)
+            # Check for @src(file.ext, arg) pattern
+            match_src = self.SRC_PATTERN.search(line)
+
+            if match_legacy:
+                file_path = match_legacy.group(1)
+                # Legacy doesn't support collapse state
+                processed_lines = self._process_code_file(file_path, "racket", current_path, collapse_state=None)
                 new_lines.extend(processed_lines)
 
-            # Check for @src(file.ext) pattern
-            elif self.SRC_PATTERN.search(line):
-                match = self.SRC_PATTERN.search(line)
-                file_path = match.group(1)
+            elif match_src:
+                file_path = match_src.group(1)
+                collapse_arg = match_src.group(2) # Capture the second argument (collapsible/collapsed or None)
+
+                # Validate collapse_arg
+                valid_collapse_states = ['collapsible', 'collapsed']
+                collapse_state = collapse_arg if collapse_arg in valid_collapse_states else None
 
                 # Determine the language based on file extension
                 ext = os.path.splitext(file_path)[1].lower()
                 lang = "racket" if ext == ".rkt" else ext[1:]  # Remove the dot
 
-                processed_lines = self._process_code_file(file_path, lang, current_path)
+                processed_lines = self._process_code_file(file_path, lang, current_path, collapse_state)
                 new_lines.extend(processed_lines)
 
             # Check for @import(file.md) pattern
@@ -91,64 +100,97 @@ class ComposableMarkdownPreprocessor(Preprocessor):
 
         return new_lines
 
-    def _process_code_file(self, file_path, language, current_dir=None):
-        """Process a code file and return lines with a code block."""
+    def _process_code_file(self, file_path, language, current_dir=None, collapse_state=None):
+        """Process a code file and return lines with a code block, potentially collapsible."""
         if current_dir and not os.path.isabs(file_path):
-            # If we're processing an imported file, resolve path relative to that file
             current_base = current_dir
         else:
             current_base = self.base_path
 
         full_path = os.path.join(current_base, file_path)
         result = []
+        error_occurred = False
 
         try:
             with open(full_path, 'r', encoding='utf-8') as f:
                 code = f.read()
+        except FileNotFoundError:
+            result.append(f"> ⚠️ Error: File not found: `{file_path}`")
+            error_occurred = True
+        except Exception as e:
+            result.append(f"> ⚠️ Error loading file: `{file_path}`: {str(e)}")
+            error_occurred = True
 
-            # Start code box
-            result.append('<div class="code-box">')
+        if error_occurred:
+            return result
 
-            # Add code header with filename and link
+        # --- Start code block generation ---
+        result.append('<div class="code-box">')
+
+        # --- Prepare inner content (code, output, run link) ---
+        inner_content = []
+
+        # Create markdown code block
+        inner_content.append(f"```{language}")
+        inner_content.extend(code.splitlines())
+        inner_content.append("```")
+
+        # Check for output file
+        output_content = []
+        if self.show_output and (language == "racket" or language == "rkt"):
+            output_path = os.path.splitext(full_path)[0] + ".out"
+            if os.path.exists(output_path):
+                with open(output_path, 'r', encoding='utf-8') as f:
+                    output = f.read()
+                # Use raw HTML for output block to ensure it's inside details if needed
+                output_content.append('<div class="code-output">')
+                output_content.append('<span>Output:</span>')
+                # Escape HTML characters in the output to prevent XSS
+                output_content.append(f'<pre>{html.escape(output)}</pre>')
+                output_content.append('</div>')
+        inner_content.extend(output_content) # Add output after code block markdown
+
+        # Add run link if configured and it's a Racket file
+        run_link_html = ""
+        if self.run_link and (language == "racket" or language == "rkt"):
+            run_url = f"{self.sandbox_url.rstrip('/')}/?code={file_path}"
+            run_link_html = f"<a href='{run_url}' class='run-racket' target='_blank'>▶ Run code</a>"
+            # Append raw HTML for the run link
+            inner_content.append(run_link_html)
+
+        # --- Wrap content based on collapse_state ---
+        if collapse_state:
+            # Use <details> and <summary>
+            open_attribute = " open" if collapse_state == 'collapsible' else ""
+            result.append(f'<details class="collapsible-code"{open_attribute}>')
+
+            # Create summary (acts like the header)
+            summary_content = "Code" # Default text
+            if self.show_filename:
+                url_path = file_path
+                summary_content = f'<a href="{url_path}">{file_path}</a>'
+            result.append(f'<summary class="code-summary">{summary_content}</summary>')
+
+            # Add the inner content (code markdown, output html, run link html)
+            result.extend(inner_content)
+
+            result.append('</details>')
+        else:
+            # Standard non-collapsible block
+            # Add code header with filename and link (if not collapsible)
             if self.show_filename:
                 url_path = file_path
                 code_header = f'<div class="code-header"><a href="{url_path}">{file_path}</a></div>'
                 result.append(code_header)
 
-            # Create markdown code block
-            result.append(f"```{language}")
-            result.extend(code.splitlines())
-            result.append("```")
+            # Add the inner content directly
+            result.extend(inner_content)
 
-            # Check for output file
-            if self.show_output and (language == "racket" or language == "rkt"):
-                output_path = os.path.splitext(full_path)[0] + ".out"
-                if os.path.exists(output_path):
-                    with open(output_path, 'r', encoding='utf-8') as f:
-                        output = f.read()
-
-                    # Add output section
-                    result.append('<div class="code-output">')
-                    result.append('<span>Output:</span>')
-                    result.append('<pre>')
-                    result.extend(output.splitlines())
-                    result.append('</pre>')
-                    result.append('</div>')
-
-            # Add run link if configured and it's a Racket file
-            if self.run_link and (language == "racket" or language == "rkt"):
-                run_url = f"{self.sandbox_url.rstrip('/')}/?code={file_path}"
-                result.append(f"<a href='{run_url}' class='run-racket' target='_blank'>▶ Run code</a>")
-
-            # Close code box - only once regardless of output
-            result.append('</div>')
-
-        except FileNotFoundError:
-            result.append(f"> ⚠️ Error: File not found: `{file_path}`")
-        except Exception as e:
-            result.append(f"> ⚠️ Error loading file: `{file_path}`: {str(e)}")
+        # Close code box
+        result.append('</div>')
 
         return result
+
 
     def _import_markdown(self, file_path, current_dir):
         """Import a markdown file and process its contents."""
@@ -184,11 +226,20 @@ class ComposableMarkdownPreprocessor(Preprocessor):
             result.extend(md_lines)
             result.append(f"<!-- End import: {file_path} -->")
 
+            # Remove file from set after processing to allow re-import in different branches
+            ComposableMarkdownPreprocessor.imported_files.remove(full_path)
+
             return result
 
         except FileNotFoundError:
+            # Remove file from set if not found, otherwise it blocks subsequent attempts
+            if full_path in ComposableMarkdownPreprocessor.imported_files:
+                 ComposableMarkdownPreprocessor.imported_files.remove(full_path)
             return [f"> ⚠️ Error: Markdown file not found: `{file_path}`"]
         except Exception as e:
+             # Remove file from set on error
+            if full_path in ComposableMarkdownPreprocessor.imported_files:
+                 ComposableMarkdownPreprocessor.imported_files.remove(full_path)
             return [f"> ⚠️ Error importing markdown file: `{file_path}`: {str(e)}"]
 
 def makeExtension(**kwargs):

@@ -364,6 +364,84 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             white-space: pre-wrap;
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
         }
+        /* --- Styles for Collapsible Code Blocks --- */
+        .collapsible-code {
+            border: none; /* Remove default border from details */
+            margin-top: 0; /* Adjust spacing if needed */
+            margin-bottom: 0; /* Adjust spacing if needed */
+        }
+
+        .code-summary {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.5rem 0.8rem; /* Adjusted padding */
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+            cursor: pointer;
+            list-style: none; /* Hide default marker */
+            display: block; /* Make it block level */
+            border-radius: 6px 6px 0 0; /* Round top corners like header */
+            position: relative; /* For positioning the marker */
+            transition: background-color 0.1s ease-in-out;
+        }
+
+        .code-summary:hover {
+            background-color: #f1f3f5; /* Slight hover effect */
+        }
+
+        /* Add custom marker */
+        .code-summary::before {
+            content: '►'; /* Collapsed marker */
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6em;
+            color: #6a737d;
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .collapsible-code[open] > .code-summary::before {
+            transform: translateY(-50%) rotate(90deg); /* Expanded marker */
+        }
+
+        .collapsible-code[open] > .code-summary {
+             border-bottom: 1px solid #e1e4e8; /* Ensure border shows when open */
+             border-radius: 6px 6px 0 0; /* Keep top rounding when open */
+        }
+
+        /* Adjust summary content positioning relative to marker */
+        .code-summary a {
+            margin-left: 1.2rem; /* Space for the marker */
+            color: #6a737d;
+            text-decoration: none;
+        }
+         .code-summary a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+
+        /* Ensure content inside details has appropriate spacing/styling */
+        .collapsible-code > .codehilite {
+            margin: 0;
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            border: none; /* Remove border from codehilite itself */
+            border-top: none; /* Remove top border */
+        }
+
+        .collapsible-code > .code-output {
+            border-radius: 0; /* No rounding needed */
+            border-top: 1px solid #e1e4e8; /* Add separator */
+        }
+
+        .collapsible-code > .run-racket {
+             margin-left: 1rem; /* Indent run button */
+             margin-bottom: 1rem; /* Add bottom margin */
+        }
+        /* --- End Collapsible Styles --- */
 
         code {
             font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
@@ -501,8 +579,7 @@ number is negative, only the numerator is negative.</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-(2 . 3)
+<pre>(2 . 3)
 (-2 . 3)
 (-2 . 3)
 (2 . 3)
@@ -566,9 +643,7 @@ endpoints).  To try your procedures, you'll need a way to print points:</p>
 <div class="code-output">
 <span>Output:</span>
 <pre>
-
-(3/2,3/2)
-</pre>
+(3/2,3/2)</pre>
 </div>
 </div>
 
@@ -636,8 +711,7 @@ using either representation?</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-Representation 1 (perimeter, height):
+<pre>Representation 1 (perimeter, height):
 8, 4
 Representation 2 (perimeter, height):
 8, 4
@@ -683,10 +757,8 @@ works, make use of the substitution model of 1.1.5.)</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-1
-2
-</pre>
+<pre>1
+2</pre>
 </div>
 </div>
 
@@ -724,8 +796,7 @@ Give the corresponding definitions of the procedures <code>cons</code>,
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-2^a 3^b is: 1632586752
+<pre>2^a 3^b is: 1632586752
 a is: 10
 b is: 13
 </pre>
@@ -803,8 +874,7 @@ repeated application of <code>add-1</code>).</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-zero = 0
+<pre>zero = 0
 one = 1
 two = 2
 one + zero = 1
@@ -929,8 +999,7 @@ Give examples to show that this is not true for multiplication or division.</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-Multiplication of two width 2 intervals result in a width 3 interval:
+<pre>Multiplication of two width 2 intervals result in a width 3 interval:
 [-0.5, 1.5] * [-1.5, 0.5] = [-2.25, 0.75]
 Multiplication of two width 2 intervals result in a width 4 interval:
 [0, 2] * [0, 2] = [0, 4]
@@ -985,14 +1054,13 @@ check for this condition and to signal an error if it occurs.</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-Division by an interval containing zero:
+<pre>Division by an interval containing zero:
 [2, 3] / [-1, 1.1] = 
 Error (exit code 1):
 div-interval called with interval containing zero
   context...:
    /home/physbuzz/sicp/src/ch2/code/ex2-10.rkt:22:0: disp-interval-op
-   body of "/home/physbuzz/sicp/src/ch2/code/ex2-10.rkt"
+   body of &quot;/home/physbuzz/sicp/src/ch2/code/ex2-10.rkt&quot;
 </pre>
 </div>
 </div>
@@ -1098,10 +1166,8 @@ suggestion.</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-Testing new code for 10000 cases. All intervals equal?
-true
-</pre>
+<pre>Testing new code for 10000 cases. All intervals equal?
+true</pre>
 </div>
 </div>
 
@@ -1202,8 +1268,7 @@ the results of the computation in center-percent form (see Exercise 2.12).</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-Division of A/A:
+<pre>Division of A/A:
 1.0(1 ± 0.050000000000000044) / 1.0(1 ± 0.050000000000000044) = 1.0050125313283207(1 ± 0.09975062344139651)
 Division of A/B:
 1.0(1 ± 0.050000000000000044) / 10.0(1 ± 0.1) = 0.10151515151515152(1 ± 0.1492537313432836)
@@ -1307,8 +1372,7 @@ no variable that represents an uncertain number is repeated, if such a form exis
 
 <div class="code-output">
 <span>Output:</span>
-<pre>
-A = 0.1(1 ± 0.8000000000000002)
+<pre>A = 0.1(1 ± 0.8000000000000002)
 B = 0.001(1 ± 0.7999999999999999)
 C = 7.0(1 ± 0.10000000000000002)
 Division of A/B+C/B:
@@ -1320,8 +1384,7 @@ And, just to confirm the issue:
 Division of (AB)/(A+B):
 0.008030803080308036(1 ± 0.9972602739726029)
 Division of 1/(1/A+1/B):
-0.0009900990099009901(1 ± 0.8)
-</pre>
+0.0009900990099009901(1 ± 0.8)</pre>
 </div>
 </div>
 
