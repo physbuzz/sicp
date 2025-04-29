@@ -71,7 +71,7 @@ So then the sequence of calls looks like:
 5
 ```
 
-TODO: make it clearer which packages we're inside.
+@src(code/ex2-77.rkt)
 
 
 
@@ -115,7 +115,6 @@ scheme-number package.
 
 Working example:
 
-
 @src(code/ex2-78.rkt)
 
 #### Exercise 2.79
@@ -127,6 +126,31 @@ numbers, rational numbers, and complex numbers.
 
 ##### Solution
 
+```rkt
+;; Inside scheme-number
+  ;; This depends how it's defined. If we define it as in 2.78, 
+  ;; then we can just compare the numbers directly.
+  (define (equ? z1 z2) 
+    (= z1 z2))
+  (put 'equ? '(scheme-number scheme-number) equ?)
+
+;; Inside rational-package
+  ;; z1a/z1b = z2a/z2b  iff z1a*z2b - z2a*z1b = 0
+  (define (equ? z1 z2)
+    (= (- (* (numer z1) (denom z2)) 
+          (* (numer z2) (denom z1)))))
+  (put 'equ? '(rational rational) equ?)
+
+;;inside complex-package
+  (define (equ? z1 z2)
+    (and (= (real-part z1) (real-part z2)) 
+         (= (imag-part z1) (imag-part z2))))
+  (put 'equ? '(complex complex) equ?)
+
+(define (equ? z1 z2)
+  (apply-generic 'equ? z1 z2))
+```
+
 #### Exercise 2.80
 
 Define a generic predicate
@@ -136,6 +160,23 @@ numbers, and complex numbers.
 
 ##### Solution
 
+```rkt
+  ;;inside scheme-number
+  (put '=zero? 'scheme-number 
+    (lambda (a) (= a 0)))
+  ;;inside rational-package
+  (put '=zero? 'rational 
+    (lambda (a) (= (numer a) 0)))
+  ;;inside complex-package
+  (put '=zero? 'complex 
+    (lambda (z) (and (= (real-part z) 0) (= (imag-part z) 0))))
+
+(define (=zero? a)
+  (apply-generic '=zero? a))
+```
+
+
+@src(code/ex2-78-85.rkt)
 #### Exercise 2.81
 
 Louis Reasoner has noticed that
@@ -172,12 +213,12 @@ and have put a procedure for exponentiation in the Scheme-number
 package but not in any other package:
 
 ```rkt
-@r{;; following added to Scheme-number package}
+;; following added to Scheme-number package
 (put 'exp 
      '(scheme-number scheme-number)
      (lambda (x y) 
        (tag (expt x y)))) 
-       @r{; using primitive `expt`}
+       ; using primitive expt
 ```
 
 
@@ -189,9 +230,64 @@ the same type, or does `apply-generic` work correctly as is?
 **3.** Modify `apply-generic` so that it doesn't try coercion if the two
 arguments have the same type.
 
-
-
 ##### Solution
+So first of all, it should be fine with no definitions. We do two extra lookups,
+which both return false to say there is no coercion from type A to type A,
+and then we give an error. But let's suppose we do this anyways.
+
+**Part 1.**
+`proc` is false, but we now find coercion functions
+`t1->t2` and `t2->t1`, but the first call to this function introduces a problem:
+```rkt
+(apply-generic op (t1->t2 a1) a2)
+```
+We apply the lookup again, proc is false, we coerce and call apply-generic again...
+so we just get an infinite recursion!
+
+**Part 2.** `apply-generic` works fine as-is. If the function isn't found 
+and assigned to proc, then there's nothing we can do, we want `t1->t2` and `t2->t1` to be false exactly as they are.
+
+**Part 3.** We really don't need this, but we could check for `eq?` among
+the two types. After we check to make sure that the length is two and 
+after we use `let` to get the two types, we check for type equality.
+
+```rkt
+(define (apply-generic op . args)
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (if (= (length args) 2)
+              (let ((type1 (car type-tags))
+                    (type2 (cadr type-tags))
+                    (a1 (car args))
+                    (a2 (cadr args)))
+                (if (eq? type1 type2) 
+                  (error "No method for these types"
+                    (list op type-tags))
+                  (let ((t1->t2
+                         (get-coercion type1
+                                       type2))
+                        (t2->t1
+                         (get-coercion type2
+                                       type1)))
+                    (cond (t1->t2
+                           (apply-generic
+                            op (t1->t2 a1) a2))
+                          (t2->t1
+                           (apply-generic
+                            op a1 (t2->t1 a2)))
+                          (else
+                           (error
+                            "No method for
+                             these types"
+                            (list
+                             op
+                             type-tags)))))))
+              (error
+               "No method for these types"
+               (list op type-tags)))))))
+```
 
 #### Exercise 2.82
 
@@ -205,6 +301,67 @@ the case where there are some suitable mixed-type operations present in the
 table that will not be tried.)
 
 ##### Solution
+Well, this is a really shoddy type conversion system! Let's implement it like 
+the book asks. But of course it won't be sufficient, say we wanted to define
+`fast-pow` from chapter 1 as `(fast-pow complex int)`. Our type conversion
+system would miss this.
+
+```rkt
+(define (coerce-all target-type args) 
+  (define (coerce-function source-type) 
+    (let ((coercion (get-coercion source-type target-type)))
+      (if coercion 
+          coercion
+          (if (eq? source-type target-type)
+            (lambda (x) x)
+            #f))))
+        
+  ;; Coerce all arguments if all type coercions exist, else return false.
+  (define (map-if-exists procs args)
+    (if (= (length procs) (length args))
+      (if (null? procs) '() 
+        (let ((coercion (car procs)) (x (car args)))
+          (if coercion
+              (let ((rest (map-if-exists (cdr procs) (cdr args))))
+                (if rest 
+                    (cons (coercion x) rest)
+                    #f))
+              #f)))
+      (error "procs and args must be the same length inside coerce-all")))
+  (let ((type-tags (map type-tag args)))
+    (let ((procs (map coerce-function type-tags)))
+      (map-if-exists procs args))))
+
+(define (apply-generic op . args)
+  (define (attempt-coercions n type-tags args)
+    ;; So long as n<=length(type-tags) try to look up a function 
+    ;; with type tags all of (list-ref type-tags n). If not, increase n by one
+    ;; and try again.
+    (if (< n (length type-tags))
+      (let ((target-type (list-ref type-tags n)))
+        (let ((proc (get op (map (lambda (x) target-type) type-tags)))
+              (args-coerced (coerce-all target-type args)))
+          (if (and proc args-coerced)
+              (apply proc (map contents args-coerced))
+            (attempt-coercions (+ n 1) type-tags args))))
+       #f))
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (if (> (length args) 1)
+            (let ((res (attempt-coercions 0 type-tags args)))
+              (if res 
+                res
+                (error
+                 "No method for these types!!!"
+                 (list op type-tags))))
+            (error
+             "No method for these types"
+             (list op type-tags)))))))
+```
+
+@src(code/ex2-82.rkt)
 
 #### Exercise 2.83
 
@@ -217,6 +374,26 @@ each type (except complex).
 
 ##### Solution
 
+We want something like this. Of course scheme-number might be just an untagged
+number, and `real` might be an untagged floating point number, so we have to assume
+`contents` takes care of that properly.
+
+```rkt
+  ;; inside scheme-number
+  (put 'raise '(scheme-number)
+    (lambda (a) ((get 'make 'rational) (contents a) 1)))
+
+  ;; inside rational package
+  (put 'raise '(rational)
+    (lambda (rat) (
+      (apply-generic 'div ((get 'make 'real) (numer rat)) 
+                          ((get 'make 'real) (denom rat))))))
+
+  ;; inside real package
+  (put 'raise '(real)
+    (lambda (r) ((get 'make 'complex) (contents real) 0) ))
+```
+
 #### Exercise 2.84
 
 Using the `raise` operation
@@ -226,8 +403,26 @@ raising, as discussed in this section.  You will need to devise a way to test
 which of two types is higher in the tower.  Do this in a manner that is
 ``compatible'' with the rest of the system and will not lead to problems in
 adding new levels to the tower.
-
 ##### Solution
+So, there's no `'real` in the system that we've built up so far, I'm going to ignore
+this, but it should work. Let's assume that we use the methods of 2.82 
+
+```rkt
+  ;; inside scheme-number
+  (put 'raise '(scheme-number)
+    (lambda (a) ((get 'make 'rational) (contents a) 1)))
+
+  ;; inside rational package
+  (put 'raise '(rational)
+    (lambda (rat) (
+      (apply-generic 'div ((get 'make 'real) (numer rat)) 
+                          ((get 'make 'real) (denom rat))))))
+
+  ;; inside real package
+  (put 'raise '(real)
+    (lambda (r) ((get 'make 'complex) (contents real) 0) ))
+```
+
 
 #### Exercise 2.85
 
