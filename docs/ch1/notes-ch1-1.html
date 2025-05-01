@@ -143,7 +143,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             color: #959da5;
             background-color: #f6f8fa;
         }
-        
+
         /* Center column layout */
         .container {
             max-width: 800px;
@@ -192,47 +192,47 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             margin: 0 0 0;
             line-height: 1;
         }
-        
+
         .toc-list {
             margin: 0;
             padding-left: 20px;
         }
-        
+
         .toc-list li {
             margin-bottom: 2px;
         }
         .toc-list ul {
             margin-bottom: 2px;
         }
-        
+
         .exercise-list {
             margin: 0;
             padding-left: 0;
             font-size: 0.95em;
             display: inline;
         }
-        
+
         .exercise-container {
             display: inline-block;
             margin-top: 2px;
             line-height: 1.2;
         }
-        
+
         .toc-exercises {
             font-style: italic;
             color: #555;
         }
-        
+
         .exercise-list a {
             text-decoration: none;
             color: #2070b0;
             margin-right: 0;
         }
-        
+
         .exercise-list a:hover {
             text-decoration: underline;
         }
-        
+
         .exercise-list span:not(:last-child):after {
             content: ", ";
             color: #777;
@@ -248,15 +248,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             background-color: #f6f8fa;
             border-radius: 0 3px 3px 0;
         }
-        
+
         blockquote p {
             padding: 0.8rem 0;
         }
-        
+
         blockquote p:first-child {
             margin-top: 0;
         }
-        
+
         blockquote p:last-child {
             margin-bottom: 0;
         }
@@ -358,7 +358,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
         .code-output span {
             color: #de37cc;
         }
-        
+
         .code-output pre {
             margin: 0;
             white-space: pre-wrap;
@@ -418,11 +418,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             color: #6a737d;
             text-decoration: none;
         }
-         .code-summary a:hover {
+        .code-summary a:hover {
             text-decoration: underline;
             color: #0366d6;
         }
 
+        /* New style for the expand hint */
+        .expand-hint {
+            font-style: italic;
+            font-size: 0.85em;
+            color: #888;
+            margin-left: 0.5rem;
+        }
 
         /* Ensure content inside details has appropriate spacing/styling */
         .collapsible-code > .codehilite {
@@ -432,9 +439,17 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             border-top: none; /* Remove top border */
         }
 
-        .collapsible-code > .code-output {
-            border-radius: 0; /* No rounding needed */
-            border-top: 1px solid #e1e4e8; /* Add separator */
+        /* Since code output is now outside the details element,
+           we need to adjust its styling */
+        .collapsible-code + .code-output {
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            margin-top: 0; /* Remove gap */
+            border-top: 1px solid #e1e4e8;
+        }
+
+        /* Ensure code output has proper border when outside details */
+        .code-box > .code-output {
+            border-top: 1px solid #e1e4e8;
         }
 
         .collapsible-code > .run-racket {

@@ -79,6 +79,11 @@
 (define (make-scheme-number n)
   ((get 'make 'scheme-number) n))
 
+(display "Output of 
+(apply-generic 'mul
+  (make-scheme-number 13)
+  (make-scheme-number 11))")(newline)
+
 (let ((a (make-scheme-number 13)) 
       (b (make-scheme-number 11)))
       (apply-generic 'mul a b))

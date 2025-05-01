@@ -1,3 +1,4 @@
+
 #lang sicp
 
 (define (square x) (* x x))
@@ -5,15 +6,19 @@
 ;; =========================== generic ops ===========================
 ;; ===================================================================
 (define operation-table '())
-(define coercion-table '()) ; Problems 2.81+
 
 (define (assoc key records)
   (cond ((null? records) #f)
         ((equal? key (caar records)) (car records))
         (else (assoc key (cdr records)))))
 
+(define (assoc-op key records)
+   (cond ((null? records) #f)
+         ((equal? key (caar records)) (car records))
+         (else (assoc-op key (cdr records)))))
+
 (define (put op type-tags proc)
-  (let ((op-list-entry (assoc op operation-table)))
+  (let ((op-list-entry (assoc-op op operation-table)))
     (if op-list-entry
         (let ((proc-list (cadr op-list-entry)))
            (let ((proc-pair-entry (assoc type-tags proc-list)))
@@ -26,37 +31,12 @@
                     operation-table)))))
 
 (define (get op type-tags)
-  (let ((op-list-entry (assoc op operation-table)))
+  (let ((op-list-entry (assoc-op op operation-table)))
     (if op-list-entry
         (let ((proc-list (cadr op-list-entry)))
           (let ((proc-pair-entry (assoc type-tags proc-list)))
             (if proc-pair-entry
                 (cdr proc-pair-entry)
-                #f)))
-        #f)))
-
-;; Type coercion stuff for ex2-81 onwards.
-
-;; Stores a procedure to convert from type1 to type2
-(define (put-coercion type1 type2 proc)
-  (let ((type1-entry (assoc type1 coercion-table)))
-    (if type1-entry
-        (let ((proc-list (cadr type1-entry)))
-          (let ((type2-entry (assoc type2 proc-list)))
-            (if type2-entry
-                (set-cdr! type2-entry proc)
-                (set-car! (cdr type1-entry)
-                          (cons (cons type2 proc) proc-list)))))
-        (set! coercion-table
-              (cons (list type1 (list (cons type2 proc))) 
-                    coercion-table)))))
-(define (get-coercion type1 type2)
-  (let ((type1-entry (assoc type1 coercion-table)))
-    (if type1-entry
-        (let ((proc-list (cadr type1-entry))) 
-          (let ((type2-entry (assoc type2 proc-list)))
-            (if type2-entry
-                (cdr type2-entry)
                 #f)))
         #f)))
 
@@ -73,70 +53,14 @@
   (cond ((pair? datum) (cdr datum))
         ((number? datum) datum)
         (else (error "Bad tagged datum: CONTENTS" datum))))
-
-
-
-
-;; Try to coerce every element of args into target-type (a single type).
-;; If a coercion fails to exist, or if the function on type (target-type
-;; target-type ...) doesn't exist, return false.
-(define (coerce-all target-type args) 
-  ;; get the function f that coerces source-type to target-type if it 
-  ;; exists, identity lambda if it's the same type, and false otherwise.
-  (define (coerce-function source-type) 
-    (let ((coercion (get-coercion source-type target-type)))
-      (if coercion 
-          coercion
-          (if (eq? source-type target-type)
-            (lambda (x) x)
-            #f))))
-        
-  ;; Coerce all arguments if all type coercions exist, else return false.
-  (define (map-if-exists procs args)
-    (if (= (length procs) (length args))
-      (if (null? procs) '() 
-        (let ((coercion (car procs)) (x (car args)))
-          (if coercion
-              (let ((rest (map-if-exists (cdr procs) (cdr args))))
-                (if rest 
-                    (cons (coercion x) rest)
-                    #f))
-              #f)))
-      (error "procs and args must be the same length inside coerce-all")))
-  (let ((type-tags (map type-tag args)))
-    (let ((procs (map coerce-function type-tags)))
-      (map-if-exists procs args))))
-
 (define (apply-generic op . args)
-  ;; Attempt the coerction to the nth type. 
-  ;; The car of the result will be false if no function and coercion exists
-  ;; If one does exist, the car will be true and the cadr will be the result.
-  (define (attempt-coercions n type-tags args)
-    ;; So long as n<=length(type-tags) try to look up a function 
-    ;; with type tags all of (list-ref type-tags n). If not, increase n by one
-    ;; and try again.
-    (if (< n (length type-tags))
-      (let ((target-type (list-ref type-tags n)))
-        (let ((proc (get op (map (lambda (x) target-type) type-tags)))
-              (args-coerced (coerce-all target-type args)))
-          (if (and proc args-coerced)
-              (list #t (apply proc (map contents args-coerced)))
-            (attempt-coercions (+ n 1) type-tags args))))
-       (list #f )))
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
           (apply proc (map contents args))
-          (if (> (length args) 1)
-            (let ((res (attempt-coercions 0 type-tags args)))
-              (if (car res)
-                (cadr res)
-                (error
-                 "No method for these types!!!"
-                 (list op type-tags))))
-            (error
-             "No method for these types"
-             (list op type-tags)))))))
+          (error
+            "No method for these types: APPLY-GENERIC"
+            (list op type-tags))))))
 
 ;; ===================================================================
 ;; ========================== Number package =========================
@@ -377,54 +301,14 @@
 (define (make-complex-from-mag-ang r a)
   ((get 'make-from-mag-ang 'complex) r a))
 
-;; Crazy test cases (test cases generated by gemini 2.5 pro)
- 
-;; ===================================================================
-;; ===================== Coercion Procedures =======================
-;; ===================================================================
-(define (scheme-number->rational n) (make-rational (contents n) 1))
-(define (scheme-number->complex n) (make-complex-from-real-imag (contents n) 0))
-(define (rational->complex r)
-  (let ((rat-val (contents r)))
-    (make-complex-from-real-imag (/ (car rat-val) (cdr rat-val)) 0)))
+(define a (make-complex-from-real-imag 3 4))
+(define b (make-complex-from-real-imag 3 4))
+(define c (make-rational 3 4))
+(define d (make-rational 6 8))
 
-;; Install the coercions
-(put-coercion 'scheme-number 'rational scheme-number->rational)
-(put-coercion 'scheme-number 'complex scheme-number->complex)
-(put-coercion 'rational 'complex rational->complex)
-(display "Coercions installed.") (newline)
-
-
-;; ===================================================================
-;; ======================== Test Variables =========================
-;; ===================================================================
-(define sn1 (make-scheme-number 5))
-(define sn2 (make-scheme-number -2))
-(define rat1 (make-rational 1 2))
-(define rat2 (make-rational 3 4))
-(define comp1 (make-complex-from-real-imag 2 3))
-(define comp2 (make-complex-from-real-imag 1 1))
-
-
-;; ===================================================================
-;; ========================== Test Suite ===========================
-;; ===================================================================
-(newline) (display "--- Testing Basic Operations ---") (newline)
-(display "Add SN+SN: ") (display (apply-generic 'add sn1 sn2)) (newline)
-(display "Add Rat+Rat: ") (display (apply-generic 'add rat1 rat2)) (newline)
-(display "Add Comp+Comp: ") (display (apply-generic 'add comp1 comp2)) (newline)
-
-(newline) (display "--- Testing Simple Coercion (2 Args) ---") (newline)
-(display "Add SN+Rat: ") (display (apply-generic 'add sn1 rat1)) (newline) ; Expect Rat (11 . 2)
-(display "Add Rat+SN: ") (display (apply-generic 'add rat1 sn1)) (newline) ; Expect Rat (11 . 2)
-(display "Add SN+Comp: ") (display (apply-generic 'add sn1 comp1)) (newline) ; Expect Comp (rect 7 . 3)
-(display "Add Comp+SN: ") (display (apply-generic 'add comp1 sn1)) (newline) ; Expect Comp (rect 7 . 3)
-(display "Add Rat+Comp: ") (display (apply-generic 'add rat1 comp2)) (newline) ; Expect Comp (rect 1.5 . 1)
-(display "Add Comp+Rat: ") (display (apply-generic 'add comp2 rat1)) (newline) ; Expect Comp (rect 1.5 . 1)
-
-(newline) (display "--- Testing Equ? with Coercion ---") (newline)
-(display "Equ? SN=Rat: ") (display (equ? (make-scheme-number 3) (make-rational 6 2))) (newline) ; Expect #t
-(display "Equ? Rat=Comp: ") (display (equ? (make-rational 3 2) (make-complex-from-real-imag 1.5 0))) (newline) ; Expect #t
-(display "Equ? SN=Comp: ") (display (equ? sn1 (make-complex-from-real-imag 5 0))) (newline) ; Expect #t
-(display "Equ? SN!=Comp: ") (display (equ? sn1 comp1)) (newline) ; Expect #f
-
+(newline) (display "Testing for 2.80") (newline)
+(display "(=zero? (make-complex-from-real-imag 3 4))") (newline)
+(=zero? a)
+(display "(=zero? (sub (make-complex-from-real-imag 3 4) 
+             (make-complex-from-real-imag 3 4)))") (newline)
+(=zero? (apply-generic 'sub a b))

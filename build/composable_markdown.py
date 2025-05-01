@@ -124,31 +124,24 @@ class ComposableMarkdownPreprocessor(Preprocessor):
         if error_occurred:
             return result
 
-        # --- Start code block generation ---
+        # --- Start code box generation ---
         result.append('<div class="code-box">')
 
-        # --- Prepare inner content (code, output, run link) ---
-        inner_content = []
-
-        # Create markdown code block
-        inner_content.append(f"```{language}")
-        inner_content.extend(code.splitlines())
-        inner_content.append("```")
-
-        # Check for output file
+        # --- Check for output file first, before any collapsible elements ---
         output_content = []
         if self.show_output and (language == "racket" or language == "rkt"):
             output_path = os.path.splitext(full_path)[0] + ".out"
             if os.path.exists(output_path):
                 with open(output_path, 'r', encoding='utf-8') as f:
                     output = f.read()
-                # Use raw HTML for output block to ensure it's inside details if needed
-                output_content.append('<div class="code-output">')
-                output_content.append('<span>Output:</span>')
-                # Escape HTML characters in the output to prevent XSS
-                output_content.append(f'<pre>{html.escape(output)}</pre>')
-                output_content.append('</div>')
-        inner_content.extend(output_content) # Add output after code block markdown
+
+        # --- Prepare inner content (code, run link) ---
+        inner_content = []
+
+        # Create markdown code block
+        inner_content.append(f"```{language}")
+        inner_content.extend(code.splitlines())
+        inner_content.append("```")
 
         # Add run link if configured and it's a Racket file
         run_link_html = ""
@@ -158,7 +151,7 @@ class ComposableMarkdownPreprocessor(Preprocessor):
             # Append raw HTML for the run link
             inner_content.append(run_link_html)
 
-        # --- Wrap content based on collapse_state ---
+        # --- Wrap code content based on collapse_state ---
         if collapse_state:
             # Use <details> and <summary>
             open_attribute = " open" if collapse_state == 'collapsible' else ""
@@ -168,10 +161,10 @@ class ComposableMarkdownPreprocessor(Preprocessor):
             summary_content = "Code" # Default text
             if self.show_filename:
                 url_path = file_path
-                summary_content = f'<a href="{url_path}">{file_path}</a>'
+                summary_content = f'<a href="{url_path}">{file_path}</a> <span class="expand-hint">(click to expand)</span>'
             result.append(f'<summary class="code-summary">{summary_content}</summary>')
 
-            # Add the inner content (code markdown, output html, run link html)
+            # Add the inner content (code markdown, run link html)
             result.extend(inner_content)
 
             result.append('</details>')
@@ -185,6 +178,19 @@ class ComposableMarkdownPreprocessor(Preprocessor):
 
             # Add the inner content directly
             result.extend(inner_content)
+
+        # Now add the output AFTER the collapsible section, so it's always visible
+        if self.show_output and (language == "racket" or language == "rkt"):
+            output_path = os.path.splitext(full_path)[0] + ".out"
+            if os.path.exists(output_path):
+                with open(output_path, 'r', encoding='utf-8') as f:
+                    output = f.read()
+                # Use raw HTML for output block to ensure it's after details if used
+                result.append('<div class="code-output">')
+                result.append('<span>Output:</span>')
+                # Escape HTML characters in the output to prevent XSS
+                result.append(f'<pre>{html.escape(output)}</pre>')
+                result.append('</div>')
 
         # Close code box
         result.append('</div>')

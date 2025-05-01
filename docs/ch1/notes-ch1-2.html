@@ -143,7 +143,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             color: #959da5;
             background-color: #f6f8fa;
         }
-        
+
         /* Center column layout */
         .container {
             max-width: 800px;
@@ -192,47 +192,47 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             margin: 0 0 0;
             line-height: 1;
         }
-        
+
         .toc-list {
             margin: 0;
             padding-left: 20px;
         }
-        
+
         .toc-list li {
             margin-bottom: 2px;
         }
         .toc-list ul {
             margin-bottom: 2px;
         }
-        
+
         .exercise-list {
             margin: 0;
             padding-left: 0;
             font-size: 0.95em;
             display: inline;
         }
-        
+
         .exercise-container {
             display: inline-block;
             margin-top: 2px;
             line-height: 1.2;
         }
-        
+
         .toc-exercises {
             font-style: italic;
             color: #555;
         }
-        
+
         .exercise-list a {
             text-decoration: none;
             color: #2070b0;
             margin-right: 0;
         }
-        
+
         .exercise-list a:hover {
             text-decoration: underline;
         }
-        
+
         .exercise-list span:not(:last-child):after {
             content: ", ";
             color: #777;
@@ -248,15 +248,15 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             background-color: #f6f8fa;
             border-radius: 0 3px 3px 0;
         }
-        
+
         blockquote p {
             padding: 0.8rem 0;
         }
-        
+
         blockquote p:first-child {
             margin-top: 0;
         }
-        
+
         blockquote p:last-child {
             margin-bottom: 0;
         }
@@ -358,7 +358,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
         .code-output span {
             color: #de37cc;
         }
-        
+
         .code-output pre {
             margin: 0;
             white-space: pre-wrap;
@@ -418,11 +418,18 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             color: #6a737d;
             text-decoration: none;
         }
-         .code-summary a:hover {
+        .code-summary a:hover {
             text-decoration: underline;
             color: #0366d6;
         }
 
+        /* New style for the expand hint */
+        .expand-hint {
+            font-style: italic;
+            font-size: 0.85em;
+            color: #888;
+            margin-left: 0.5rem;
+        }
 
         /* Ensure content inside details has appropriate spacing/styling */
         .collapsible-code > .codehilite {
@@ -432,9 +439,17 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
             border-top: none; /* Remove top border */
         }
 
-        .collapsible-code > .code-output {
-            border-radius: 0; /* No rounding needed */
-            border-top: 1px solid #e1e4e8; /* Add separator */
+        /* Since code output is now outside the details element,
+           we need to adjust its styling */
+        .collapsible-code + .code-output {
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            margin-top: 0; /* Remove gap */
+            border-top: 1px solid #e1e4e8;
+        }
+
+        /* Ensure code output has proper border when outside details */
+        .code-box > .code-output {
+            border-top: 1px solid #e1e4e8;
         }
 
         .collapsible-code > .run-racket {
@@ -1668,11 +1683,11 @@ proportional to the number of steps required for the computation?</p>
 100000037 : 23ms
 100000039 : 22ms
 1000000007 : 70ms
-1000000009 : 71ms
+1000000009 : 72ms
 1000000021 : 70ms
-10000000019 : 220ms
-10000000033 : 222ms
-10000000061 : 237ms
+10000000019 : 221ms
+10000000033 : 234ms
+10000000061 : 238ms
 </pre>
 </div>
 </div>
@@ -1745,15 +1760,15 @@ algorithms, and how do you explain the fact that it is different from 2?</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>100000007 : 15ms
+<pre>100000007 : 17ms
 100000037 : 12ms
-100000039 : 12ms
+100000039 : 11ms
 1000000007 : 36ms
 1000000009 : 36ms
 1000000021 : 35ms
-10000000019 : 111ms
-10000000033 : 114ms
-10000000061 : 111ms
+10000000019 : 110ms
+10000000033 : 116ms
+10000000061 : 110ms
 </pre>
 </div>
 </div>
@@ -1827,29 +1842,29 @@ you find?</p>
 <div class="code-output">
 <span>Output:</span>
 <pre>11 : 49ms
-13 : 46ms
-17 : 59ms
-101 : 64ms
+13 : 45ms
+17 : 57ms
+101 : 63ms
 103 : 66ms
-107 : 67ms
-1009 : 99ms
-1013 : 99ms
-1019 : 103ms
-10007 : 112ms
-10009 : 113ms
-10037 : 114ms
-100003 : 132ms
-100019 : 133ms
-100043 : 131ms
+107 : 66ms
+1009 : 98ms
+1013 : 98ms
+1019 : 102ms
+10007 : 115ms
+10009 : 109ms
+10037 : 112ms
+100003 : 130ms
+100019 : 131ms
+100043 : 130ms
 1000003 : 151ms
-1000033 : 158ms
-1000037 : 155ms
-10000019 : 176ms
-10000079 : 184ms
+1000033 : 160ms
+1000037 : 151ms
+10000019 : 177ms
+10000079 : 185ms
 10000103 : 183ms
-100000007 : 208ms
-100000037 : 209ms
-100000039 : 215ms
+100000007 : 210ms
+100000037 : 208ms
+100000039 : 212ms
 </pre>
 </div>
 </div>

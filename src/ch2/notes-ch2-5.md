@@ -46,7 +46,6 @@ case?
 
 ##### Solution
 
-Okay, so we've added the `put` statements. 
 Implicitly, we must mean that we have also defined:
 
 ```rkt
@@ -54,7 +53,9 @@ Implicitly, we must mean that we have also defined:
   (apply-generic 'magnitude z))
 ```
 
-So then the sequence of calls looks like: 
+So then the sequence of calls looks as follows. We make two calls to
+`apply-generic`, on the first call we wind up inside the complex package,
+and on the second call we wind up inside the rectangular package.
 
 ```rkt
 (magnitude z)
@@ -71,12 +72,9 @@ So then the sequence of calls looks like:
 5
 ```
 
+Full working example:
+
 @src(code/ex2-77.rkt, collapsed)
-
-
-
-
-
 
 #### Exercise 2.78
 
@@ -117,7 +115,9 @@ scheme-number package.
 
 Working example:
 
-@src(code/ex2-78.rkt)
+@src(code/ex2-78.rkt, collapsed)
+
+
 
 #### Exercise 2.79
 
@@ -127,6 +127,9 @@ the generic arithmetic package.  This operation should work for ordinary
 numbers, rational numbers, and complex numbers.
 
 ##### Solution
+
+We certainly want to do this without type coercion, because we get to
+type coercion in the next sections.
 
 ```rkt
 ;; Inside scheme-number
@@ -153,6 +156,10 @@ numbers, rational numbers, and complex numbers.
   (apply-generic 'equ? z1 z2))
 ```
 
+Testing:
+
+@src(code/ex2-79.rkt, collapsed)
+
 #### Exercise 2.80
 
 Define a generic predicate
@@ -176,9 +183,10 @@ numbers, and complex numbers.
 (define (=zero? a)
   (apply-generic '=zero? a))
 ```
+Testing:
+@src(code/ex2-80.rkt, collapsed)
 
 
-@src(code/ex2-78-85.rkt)
 #### Exercise 2.81
 
 Louis Reasoner has noticed that
@@ -264,7 +272,7 @@ after we use `let` to get the two types, we check for type equality.
                     (type2 (cadr type-tags))
                     (a1 (car args))
                     (a2 (cadr args)))
-                (if (eq? type1 type2) 
+                (if (eq? type1 type2)  ;; <-- our modification
                   (error "No method for these types"
                     (list op type-tags))
                   (let ((t1->t2
@@ -308,8 +316,17 @@ the book asks. But of course it won't be sufficient, say we wanted to define
 `fast-pow` from chapter 1 as `(fast-pow complex int)`. Our type conversion
 system would miss this.
 
+I ended up with a very overcomplicated method to do this, I wanted to power
+through it but it's definitely worth comparing to other solutions to see
+if they did it a simpler way.
+
 ```rkt
+;; Try to coerce every element of args into target-type (a single type).
+;; If a coercion fails to exist, or if the function on type (target-type
+;; target-type ...) doesn't exist, return false.
 (define (coerce-all target-type args) 
+  ;; get the function f that coerces source-type to target-type if it 
+  ;; exists, identity lambda if it's the same type, and false otherwise.
   (define (coerce-function source-type) 
     (let ((coercion (get-coercion source-type target-type)))
       (if coercion 
@@ -335,6 +352,9 @@ system would miss this.
       (map-if-exists procs args))))
 
 (define (apply-generic op . args)
+  ;; Attempt the coerction to the nth type. 
+  ;; The car of the result will be false if no function and coercion exists
+  ;; If one does exist, the car will be true and the cadr will be the result.
   (define (attempt-coercions n type-tags args)
     ;; So long as n<=length(type-tags) try to look up a function 
     ;; with type tags all of (list-ref type-tags n). If not, increase n by one
@@ -344,17 +364,17 @@ system would miss this.
         (let ((proc (get op (map (lambda (x) target-type) type-tags)))
               (args-coerced (coerce-all target-type args)))
           (if (and proc args-coerced)
-              (apply proc (map contents args-coerced))
+              (list #t (apply proc (map contents args-coerced)))
             (attempt-coercions (+ n 1) type-tags args))))
-       #f))
+       (list #f )))
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
           (apply proc (map contents args))
           (if (> (length args) 1)
             (let ((res (attempt-coercions 0 type-tags args)))
-              (if res 
-                res
+              (if (car res)
+                (cadr res)
                 (error
                  "No method for these types!!!"
                  (list op type-tags))))
@@ -363,7 +383,9 @@ system would miss this.
              (list op type-tags)))))))
 ```
 
-@src(code/ex2-82.rkt)
+Because this is so much code, I wanted to run a bunch of test cases for it:
+
+@src(code/ex2-82.rkt, collapsed)
 
 #### Exercise 2.83
 
@@ -403,9 +425,24 @@ of Exercise 2.83, modify the `apply-generic` procedure so that it
 coerces its arguments to have the same type by the method of successive
 raising, as discussed in this section.  You will need to devise a way to test
 which of two types is higher in the tower.  Do this in a manner that is
-``compatible'' with the rest of the system and will not lead to problems in
+compatible with the rest of the system and will not lead to problems in
 adding new levels to the tower.
 ##### Solution
+
+I'm really tempted to use the method of 2.82 and just install coercions
+`scheme-number->rational` and `scheme-number->complex`.
+A lot of this problem is up to interpretation. Let's define two functions:
+
+```rkt
+;; returns (list #t raised-result) if repeated application of raise can turn 
+;; source into target. Returns (list #f) otherwise.
+(define (raise-recurse argument target-type) 
+  (let ((source-type (type-tag argument)))
+     
+  
+  )
+```
+
 So, there's no `'real` in the system that we've built up so far, I'm going to ignore
 this, but it should work. Let's assume that we use the methods of 2.82 
 
@@ -429,14 +466,14 @@ this, but it should work. Let's assume that we use the methods of 2.82
 #### Exercise 2.85
 
 This section mentioned a method
-for ``simplifying'' a data object by lowering it in the tower of types as far
+for simplifying a data object by lowering it in the tower of types as far
 as possible.  Design a procedure `drop` that accomplishes this for the
 tower described in Exercise 2.83.  The key is to decide, in some general
 way, whether an object can be lowered.  For example, the complex number 
 ${1.5 + 0i$} can be lowered as far as `real`, the complex number ${1 + 0i$} can
 be lowered as far as `integer`, and the complex number ${2 + 3i$} cannot
 be lowered at all.  Here is a plan for determining whether an object can be
-lowered: Begin by defining a generic operation `project` that ``pushes''
+lowered: Begin by defining a generic operation `project` that pushes
 an object down in the tower.  For example, projecting a complex number would
 involve throwing away the imaginary part.  Then a number can be dropped if,
 when we `project` it and `raise` the result back to the type we
@@ -447,7 +484,7 @@ operations and
 install `project` as a generic operation in the system.  You will also
 need to make use of a generic equality predicate, such as described in
 Exercise 2.79.  Finally, use `drop` to rewrite `apply-generic`
-from Exercise 2.84 so that it ``simplifies'' its answers.
+from Exercise 2.84 so that it simplifies its answers.
 
 ##### Solution
 
@@ -696,3 +733,4 @@ See if you get the correct answer, correctly reduced to lowest terms.
 
 
 
+<!--@src(code/ex2-78-85.rkt)-->
