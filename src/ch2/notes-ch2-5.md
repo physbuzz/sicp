@@ -13,6 +13,13 @@
 ## Section 2.5
 
 Note: At the end it looks like we talk about polynomials, it might be worth skimming over some simple algorithms from Ideals, Varieties, and Algorithms and maybe implementing a simple one. 
+
+
+Note: Lagrange interpolating polynomials are cool. [https://en.wikipedia.org/wiki/Lagrange_polynomial](https://en.wikipedia.org/wiki/Lagrange_polynomial)
+
+TODO: Skip 86
+
+#### Creating a Sensible 
 ### Introduction
 
 ### Exercises
@@ -143,7 +150,8 @@ type coercion in the next sections.
   ;; z1a/z1b = z2a/z2b  iff z1a*z2b - z2a*z1b = 0
   (define (equ? z1 z2)
     (= (- (* (numer z1) (denom z2)) 
-          (* (numer z2) (denom z1)))))
+          (* (numer z2) (denom z1)))
+        0))
   (put 'equ? '(rational rational) equ?)
 
 ;;inside complex-package
@@ -387,6 +395,12 @@ Because this is so much code, I wanted to run a bunch of test cases for it:
 
 @src(code/ex2-82.rkt, collapsed)
 
+Other solutions include...
+
+ - [This solution](https://github.com/kana/sicp/blob/master/ex-2.82.scm) using square brackets for everything, which isn't a language feature I've used yet.
+ - [This solution](https://wizardbook.wordpress.com/2010/12/08/exercise-2-82/) which uses `member` and `(map func list1 list2)`. In Python this would be something like `[func(a,b) for (a,b) in zip(list1,list2)]`.
+ - [This solution](https://github.com/track02/Scheme---SICP/blob/master/Ex%202.82%20-%20Generics.scm) is a much better / shorter implementation of what I did. 
+
 #### Exercise 2.83
 
 Suppose you are designing a
@@ -429,39 +443,74 @@ compatible with the rest of the system and will not lead to problems in
 adding new levels to the tower.
 ##### Solution
 
-I'm really tempted to use the method of 2.82 and just install coercions
-`scheme-number->rational` and `scheme-number->complex`.
-A lot of this problem is up to interpretation. Let's define two functions:
+Let's use our solution to 2.82. 
+All we need to do is implement `coerce-all` in this new context, and everything will work. 
 
 ```rkt
+;; Use accumulate from chapter 2-2.
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op
+                      initial
+                      (cdr sequence)))))
+
 ;; returns (list #t raised-result) if repeated application of raise can turn 
 ;; source into target. Returns (list #f) otherwise.
 (define (raise-recurse argument target-type) 
   (let ((source-type (type-tag argument)))
-     
-  
-  )
+    (if (eq? source-type target-type)
+        (list #t argument)
+        (let ((raise-func (get 'raise (list source-type))))
+          (if raise-func
+            (raise-recurse (raise-func (contents argument)) target-type)
+            (list #f))))))
+
+(define (coerce-all target-type args) 
+  ;; The point of this is that when we apply (map (... raise-recurse ) args),
+  ;; we get a list list ((#t coerced) (#t coerced) (#f) (#t coerced))
+  ;; If anything is false, then we fail.
+  ;; If all are true, then we return a list (list #t coerced-list)
+  ((lambda (args-coerced) (if (car args-coerced) (cadr args-coerced) #f))
+    (accumulate (lambda (x y) 
+                  (if (and (car x) (car y))
+                    (list #t (cons (cadr x) (cadr y)))
+                    (list #f))) 
+              (list #t '()) 
+              (map (lambda (arg) (raise-recurse arg target-type)) args))))
+
+;; The rest is the same as in 2-82, all we've done is replace coerce-all to work
+;; by repeated application of raise.
+(define (apply-generic op . args)
+  (define (attempt-coercions n type-tags args)
+    (if (< n (length type-tags))
+      (let ((target-type (list-ref type-tags n)))
+        (let ((proc (get op (map (lambda (x) target-type) type-tags)))
+              (args-coerced (coerce-all target-type args)))
+          (if (and proc args-coerced)
+              (list #t (apply proc (map contents args-coerced)))
+            (attempt-coercions (+ n 1) type-tags args))))
+       (list #f )))
+  (let ((type-tags (map type-tag args)))
+    (let ((proc (get op type-tags)))
+      (if proc
+          (apply proc (map contents args))
+          (if (> (length args) 1)
+            (let ((res (attempt-coercions 0 type-tags args)))
+              (if (car res)
+                (cadr res)
+                (error
+                 "No method for these types!!!"
+                 (list op type-tags))))
+            (error
+             "No method for these types"
+             (list op type-tags)))))))
 ```
 
-So, there's no `'real` in the system that we've built up so far, I'm going to ignore
-this, but it should work. Let's assume that we use the methods of 2.82 
+Working example:
 
-```rkt
-  ;; inside scheme-number
-  (put 'raise '(scheme-number)
-    (lambda (a) ((get 'make 'rational) (contents a) 1)))
-
-  ;; inside rational package
-  (put 'raise '(rational)
-    (lambda (rat) (
-      (apply-generic 'div ((get 'make 'real) (numer rat)) 
-                          ((get 'make 'real) (denom rat))))))
-
-  ;; inside real package
-  (put 'raise '(real)
-    (lambda (r) ((get 'make 'complex) (contents real) 0) ))
-```
-
+@src(code/ex2-84.rkt, collapsed)
 
 #### Exercise 2.85
 
@@ -470,8 +519,8 @@ for simplifying a data object by lowering it in the tower of types as far
 as possible.  Design a procedure `drop` that accomplishes this for the
 tower described in Exercise 2.83.  The key is to decide, in some general
 way, whether an object can be lowered.  For example, the complex number 
-${1.5 + 0i$} can be lowered as far as `real`, the complex number ${1 + 0i$} can
-be lowered as far as `integer`, and the complex number ${2 + 3i$} cannot
+$1.5 + 0i$ can be lowered as far as `real`, the complex number $1 + 0i$ can
+be lowered as far as `integer`, and the complex number $2 + 3i$ cannot
 be lowered at all.  Here is a plan for determining whether an object can be
 lowered: Begin by defining a generic operation `project` that pushes
 an object down in the tower.  For example, projecting a complex number would
@@ -488,6 +537,42 @@ from Exercise 2.84 so that it simplifies its answers.
 
 ##### Solution
 
+Let's assume that we have the solution to 2.84 and 2.79. Then we can just 
+do something like `(equ? (drop arg) arg)` and the raising will be handled for us,
+using the code of 2.84.
+
+First of all, since we're changing apply-generic I found that I had some 
+unintended side-effects with my 'raise rational definition. So I change that definition
+too.
+
+```rkt
+  ;; inside rational package
+  (put 'project '(rational) (lambda (rat) 
+    (/ (- (numer rat) (remainder (numer rat) (denom rat))) (denom rat))))
+  (put 'raise '(rational)
+    (lambda (rat) 
+      ((get 'make-from-real-imag 'complex) (/ (numer rat) (denom rat)) 0)))
+  ;; inside complex package
+  (put 'project '(complex) (lambda (z) 
+    ((get 'make 'rational) (real-part z) 1)))
+
+(define (drop arg)
+  (let ((proj-proc (get 'project (type-tag arg))))
+    (if (not proj-proc) 
+      arg
+      (let ((projected-arg (proj-proc (contents arg))))
+        (let ((raise-proc (get 'raise (type-tag projected-arg))))
+          (if (not raise-proc) 
+            (error "type is projected to but has no raise function!" projected-arg)
+            (let ((raised-projected-arg (raise-proc projected-arg))
+                  (equ? (get 'equ? (list (type-tag arg) (type-tag arg)))))
+                  (if (equ? arg raised-projected-arg)
+                     (drop projected-arg)
+                     arg))))))))
+```
+
+@src(code/ex2-85.rkt, collapsed)
+
 #### Exercise 2.86
 
 Suppose we want to handle complex
@@ -499,6 +584,7 @@ accommodate this.  You will have to define operations such as `sine` and
 
 ##### Solution
 
+
 #### Exercise 2.87
 
 Install `=zero?` for
@@ -507,6 +593,22 @@ polynomials in the generic arithmetic package.  This will allow
 themselves polynomials.
 
 ##### Solution
+
+I make use of the `accumulate` function.
+Ideally, we'd prevent the construction of terms with zero coefficients, but that doesn't seem
+to be the approach we're taking so we have to check each coef individually.
+
+```rkt
+  (define (=zero?-poly poly)
+    (accumulate (lambda (x y) (and y (=zero? (coeff x))))
+                #t
+                (term-list poly)))
+  ;; Make sure to install the function
+  (put '=zero? '(polynomial) =zero?-poly)
+```
+
+
+@src(code/ex2-87.rkt, collapsed)
 
 #### Exercise 2.88
 
@@ -731,6 +833,3 @@ See if you get the correct answer, correctly reduced to lowest terms.
 ##### Solution
 
 
-
-
-<!--@src(code/ex2-78-85.rkt)-->

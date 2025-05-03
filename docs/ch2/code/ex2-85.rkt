@@ -1,4 +1,3 @@
-
 #lang sicp
 
 (define (square x) (* x x))
@@ -12,13 +11,8 @@
         ((equal? key (caar records)) (car records))
         (else (assoc key (cdr records)))))
 
-(define (assoc-op key records)
-   (cond ((null? records) #f)
-         ((equal? key (caar records)) (car records))
-         (else (assoc-op key (cdr records)))))
-
 (define (put op type-tags proc)
-  (let ((op-list-entry (assoc-op op operation-table)))
+  (let ((op-list-entry (assoc op operation-table)))
     (if op-list-entry
         (let ((proc-list (cadr op-list-entry)))
            (let ((proc-pair-entry (assoc type-tags proc-list)))
@@ -31,7 +25,7 @@
                     operation-table)))))
 
 (define (get op type-tags)
-  (let ((op-list-entry (assoc-op op operation-table)))
+  (let ((op-list-entry (assoc op operation-table)))
     (if op-list-entry
         (let ((proc-list (cadr op-list-entry)))
           (let ((proc-pair-entry (assoc type-tags proc-list)))
@@ -48,19 +42,89 @@
 (define (type-tag datum)
   (cond ((pair? datum) (car datum))
         ((number? datum) 'scheme-number)
+        ((boolean? datum) 'scheme-bool)
         (else (error "Bad tagged datum: TYPE-TAG" datum))))
 (define (contents datum)
   (cond ((pair? datum) (cdr datum))
         ((number? datum) datum)
         (else (error "Bad tagged datum: CONTENTS" datum))))
-(define (apply-generic op . args)
+
+
+;; Use accumulate from chapter 2-2.
+(define (accumulate op initial sequence)
+  (if (null? sequence)
+      initial
+      (op (car sequence)
+          (accumulate op
+                      initial
+                      (cdr sequence)))))
+
+;; returns (list #t raised-result) if repeated application of raise can turn 
+;; source into target. Returns (list #f) otherwise.
+(define (raise-recurse argument target-type) 
+  (let ((source-type (type-tag argument)))
+    (if (eq? source-type target-type)
+        (list #t argument)
+        (let ((raise-func (get 'raise (list source-type))))
+          (if raise-func
+            (raise-recurse (raise-func (contents argument)) target-type)
+            (list #f))))))
+
+(define (coerce-all target-type args) 
+  ;; The point of this is that when we apply (map (... raise-recurse ) args),
+  ;; we get a list list ((#t coerced) (#t coerced) (#f) (#t coerced))
+  ;; If anything is false, then we fail.
+  ;; If all are true, then we return a list (list #t coerced-list)
+  ((lambda (args-coerced) (if (car args-coerced) (cadr args-coerced) #f))
+    (accumulate (lambda (x y) 
+                  (if (and (car x) (car y))
+                    (list #t (cons (cadr x) (cadr y)))
+                    (list #f))) 
+              (list #t '()) 
+              (map (lambda (arg) (raise-recurse arg target-type)) args))))
+
+;; The rest is the same as in 2-82, all we've done is replace coerce-all to work
+;; by repeated application of raise.
+(define (apply-generic-inner op . args)
+  (define (attempt-coercions n type-tags args)
+    (if (< n (length type-tags))
+      (let ((target-type (list-ref type-tags n)))
+        (let ((proc (get op (map (lambda (x) target-type) type-tags)))
+              (args-coerced (coerce-all target-type args)))
+          (if (and proc args-coerced)
+              (list #t (apply proc (map contents args-coerced)))
+            (attempt-coercions (+ n 1) type-tags args))))
+       (list #f )))
   (let ((type-tags (map type-tag args)))
     (let ((proc (get op type-tags)))
       (if proc
           (apply proc (map contents args))
-          (error
-            "No method for these types: APPLY-GENERIC"
-            (list op type-tags))))))
+          (if (> (length args) 1)
+            (let ((res (attempt-coercions 0 type-tags args)))
+              (if (car res)
+                (cadr res)
+                (error
+                 "No method for these types!!!"
+                 (list op type-tags))))
+            (error
+             "No method for these types"
+             (list op type-tags)))))))
+
+(define (drop arg)
+  (let ((proj-proc (get 'project (list (type-tag arg)))))
+    (if (not proj-proc) 
+      arg
+      (let ((projected-arg (proj-proc (contents arg))))
+        (let ((raise-proc (get 'raise (list (type-tag projected-arg)))))
+          (if (not raise-proc) 
+            (error "type is projected to but has no raise function!" projected-arg)
+            (let ((raised-projected-arg (raise-proc (contents projected-arg)))
+                  (equ? (get 'equ? (list (type-tag arg) (type-tag arg)))))
+                  (if (equ? (contents arg) (contents raised-projected-arg))
+                     (drop projected-arg)
+                     arg))))))))
+(define (apply-generic op . args)
+  (drop (apply apply-generic-inner (cons op args))))
 
 ;; ===================================================================
 ;; ========================== Number package =========================
@@ -84,6 +148,8 @@
   ;problem 2.80
   (put '=zero? '(scheme-number)
     (lambda (a) (= a 0)))
+  (put 'raise '(scheme-number)
+    (lambda (a) ((get 'make 'rational) (contents a) 1)))
   'done)
 
 (install-scheme-number-package)
@@ -122,8 +188,7 @@
   ;; equ? for problem 2.79
   (define (equ? z1 z2)
     (= (- (* (numer z1) (denom z2))
-          (* (numer z2) (denom z1)))
-        0))
+          (* (numer z2) (denom z1))) 0))
   ;; interface to rest of the system
   (put 'equ? '(rational rational) equ?)
   (define (tag x) (attach-tag 'rational x))
@@ -137,6 +202,11 @@
        (lambda (x y) (tag (div-rat x y))))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
+  (put 'raise '(rational)
+    (lambda (rat) 
+      ((get 'make-from-real-imag 'complex) (/ (numer rat) (denom rat)) 0)))
+  (put 'project '(rational) (lambda (rat) 
+    (/ (- (numer rat) (remainder (numer rat) (denom rat))) (denom rat))))
   ;problem 2.80
   (put '=zero? '(rational)
     (lambda (a) (= (numer a) 0)))
@@ -277,6 +347,8 @@
   (put 'make-from-mag-ang 'complex
        (lambda (r a) 
          (tag (make-from-mag-ang r a))))
+  (put 'project '(complex) (lambda (z) 
+    ((get 'make 'rational) (real-part z) 1)))
   ;problem 2.80
   (put '=zero? '(complex)
     (lambda (z) (and (= (real-part z) 0) (= (imag-part z) 0))))
@@ -302,14 +374,54 @@
 (define (make-complex-from-mag-ang r a)
   ((get 'make-from-mag-ang 'complex) r a))
 
-(define a (make-complex-from-real-imag 3 4))
-(define b (make-complex-from-real-imag 3 4))
-(define c (make-rational 3 4))
-(define d (make-rational 6 8))
+;; Crazy test cases (test cases generated by gemini 2.5 pro)
+ 
+;; ===================================================================
+;; ===================== Coercion Procedures =======================
+;; ===================================================================
+(define (scheme-number->rational n) (make-rational (contents n) 1))
+(define (scheme-number->complex n) (make-complex-from-real-imag (contents n) 0))
+(define (rational->complex r)
+  (let ((rat-val (contents r)))
+    (make-complex-from-real-imag (/ (car rat-val) (cdr rat-val)) 0)))
 
-(newline) (display "Testing for 2.80") (newline)
-(display "(=zero? (make-complex-from-real-imag 3 4))") (newline)
-(=zero? a)
-(display "(=zero? (sub (make-complex-from-real-imag 3 4) 
-             (make-complex-from-real-imag 3 4)))") (newline)
-(=zero? (apply-generic 'sub a b))
+
+
+;; ===================================================================
+;; ======================== Test Variables =========================
+;; ===================================================================
+(define sn1 (make-scheme-number 5))
+(define sn2 (make-scheme-number -2))
+(define rat1 (make-rational 1 2))
+(define rat2 (make-rational 3 4))
+(define comp1 (make-complex-from-real-imag 2 3))
+(define comp2 (make-complex-from-real-imag 1 1))
+
+(apply-generic 'raise sn1)
+(apply-generic 'raise rat2)
+(newline)(display "Testing whether 1/2+1/2 simplifies:")(newline)
+(apply-generic 'add rat1 rat1)
+
+;; ===================================================================
+;; ========================== Test Suite ===========================
+;; ===================================================================
+(newline) (display "--- Testing Basic Operations ---") (newline)
+(display "Add SN+SN: ") (display (apply-generic 'add sn1 sn2)) (newline)
+(display "Add Rat+Rat: ") (display (apply-generic 'add rat1 rat2)) (newline)
+(display "Add Comp+Comp: ") (display (apply-generic 'add comp1 comp2)) (newline)
+
+(newline) (display "--- Testing Simple Coercion (2 Args) ---") (newline)
+
+(display "Add SN+Rat: ") (display (apply-generic 'add sn1 rat1)) (newline) ; Expect Rat (11 . 2)
+(display "Add Rat+SN: ") (display (apply-generic 'add rat1 sn1)) (newline) ; Expect Rat (11 . 2)
+(display "Add SN+Comp: ") (display (apply-generic 'add sn1 comp1)) (newline) ; Expect Comp (rect 7 . 3)
+(display "Add Comp+SN: ") (display (apply-generic 'add comp1 sn1)) (newline) ; Expect Comp (rect 7 . 3)
+(display "Add Rat+Comp: ") (display (apply-generic 'add rat1 comp2)) (newline) ; Expect Comp (rect 1.5 . 1)
+(display "Add Comp+Rat: ") (display (apply-generic 'add comp2 rat1)) (newline) ; Expect Comp (rect 1.5 . 1)
+
+(newline) (display "--- Testing Equ? with Coercion ---") (newline)
+(display "Equ? SN=Rat: ") (display (equ? (make-scheme-number 3) (make-rational 6 2))) (newline) ; Expect #t
+(display "Equ? Rat=Comp: ") (display (equ? (make-rational 3 2) (make-complex-from-real-imag 1.5 0))) (newline) ; Expect #t
+(display "Equ? SN=Comp: ") (display (equ? sn1 (make-complex-from-real-imag 5 0))) (newline) ; Expect #t
+(display "Equ? SN!=Comp: ") (display (equ? sn1 comp1)) (newline) ; Expect #f
+

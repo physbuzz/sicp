@@ -122,7 +122,8 @@
   ;; equ? for problem 2.79
   (define (equ? z1 z2)
     (= (- (* (numer z1) (denom z2))
-          (* (numer z2) (denom z1)))))
+          (* (numer z2) (denom z1)))
+        0))
   ;; interface to rest of the system
   (put 'equ? '(rational rational) equ?)
   (define (tag x) (attach-tag 'rational x))
