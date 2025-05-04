@@ -1,4 +1,17 @@
-#lang racket
+#lang sicp
+
+
+(define (insert x lst less?)
+  (cond ((null? lst) (list x))
+        ((less? x (car lst)) (cons x lst))
+        (else (cons (car lst) (insert x (cdr lst) less?)))))
+
+(define (sort lst less?)
+  (if (null? lst)
+      '()
+      (insert (car lst)
+              (sort (cdr lst) less?)
+              less?)))
 (define (symbol<? s1 s2)
   (string<? (symbol->string s1) (symbol->string s2)))
 (define (symbol=? s1 s2)

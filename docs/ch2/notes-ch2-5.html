@@ -6549,7 +6549,20 @@ but <code>(order term)</code> gives the order of the lits of variables.</p>
 <div class="code-box">
 <div class="code-header"><a href="code/ex2-92b.rkt">code/ex2-92b.rkt</a></div>
 
-<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">racket</span>
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">insert</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">lst</span><span class="w"> </span><span class="n">less?</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="n">less?</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">insert</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="n">less?</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">sort</span><span class="w"> </span><span class="n">lst</span><span class="w"> </span><span class="n">less?</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span>
+<span class="w">      </span><span class="o">&#39;</span><span class="p">()</span>
+<span class="w">      </span><span class="p">(</span><span class="n">insert</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">sort</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="n">less?</span><span class="p">)</span>
+<span class="w">              </span><span class="n">less?</span><span class="p">)))</span>
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">symbol&lt;?</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span>
 <span class="w">  </span><span class="p">(</span><span class="nb">string&lt;?</span><span class="w"> </span><span class="p">(</span><span class="nb">symbol-&gt;string</span><span class="w"> </span><span class="n">s1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">symbol-&gt;string</span><span class="w"> </span><span class="n">s2</span><span class="p">)))</span>
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">symbol=?</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span>
@@ -6634,7 +6647,7 @@ but <code>(order term)</code> gives the order of the lits of variables.</p>
 
 <div class="code-output">
 <span>Output:</span>
-<pre>&#x27;(((a 4) (foobar 10) (x 2) (y 2)) ((x 2) (y 2)) ((x 2) (y 1)) ())
+<pre>(((x 2) (y 2)) ((x 2) (y 1)) ((a 4) (foobar 10) (x 2) (y 2)) ())
 </pre>
 </div>
 </div>
