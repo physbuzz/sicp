@@ -618,6 +618,56 @@ generic negation operation.)
 
 ##### Solution
 
+Let's add a generic `'negate`. We do have to define negate for the other types as well.
+
+```rkt
+;; Exercise 2-88. 
+;; Inside the polynomial package.
+(define (negate-terms L) 
+  (if (empty-termlist? L)
+    L
+    (let ((t (first-term L)) (r (rest-terms L)))
+      (adjoin-term (make-term (order t) (apply-generic 'negate (coeff t)))
+                   (negate-terms r)))))
+(define (sub-terms L1 L2)
+  (add-terms L1 (negate-terms L2)))
+(define (sub-poly p1 p2)
+  (if (same-variable? (variable p1)
+                      (variable p2))
+    (make-poly
+     (variable p1)
+     (sub-terms (term-list p1)
+                (term-list p2)))
+    (error "Polys not in same var:
+           SUB-POLY"
+           (list p1 p2))))
+(put 'sub '(polynomial polynomial)
+     (lambda (p1 p2) 
+       (tag (sub-poly p1 p2))))
+(put 'negate '(polynomial)
+     (lambda (p) 
+       (tag (make-poly (variable p) (negate-terms (term-list p))))))
+```
+
+Generic negate:
+```rkt
+  (put 'negate '(scheme-number)
+       (lambda (x) (- x)))
+  (put 'negate '(rational)
+       (lambda (r) (tag (make-rat (- (numer r)) (denom r)))))
+  (put 'negate '(polar)
+       (lambda (z) (tag (make-from-mag-ang (magnitude z) (+ (angle z) pi)))))
+  (put 'negate '(rectangular)
+       (lambda (z) (tag (make-from-real-imag (- (real-part z) (- (imag-part z)))))))
+
+```
+Full code:
+
+@src(code/ex2-88.rkt, collapsed)
+
+
+
+
 #### Exercise 2.89
 
 Define procedures that implement
@@ -625,6 +675,85 @@ the term-list representation described above as appropriate for dense
 polynomials.
 
 ##### Solution
+
+Let's define an `install-dense-polynomial-package`. Some changes that have to be made are:
+
+- We no longer have `order` or `coeff` functions that can be applied to each term.
+- Addition is now much simpler, but we have to rewrite multiplication
+
+First, inside `make-poly` I chop off leading zeros (we can't chop off trailing zeros):
+
+```rkt
+  ;; Chop off the leading zeros of a term list.
+  (define (chop-leading-zeros L)
+    (cond ((null? L) L)
+          ((apply-generic '=zero? (car L)) (chop-leading-zeros (cdr L)))
+          (else L)))
+  (define (make-poly variable term-list)
+    (cons variable (chop-leading-zeros term-list)))
+```
+
+Addition is somewhat simple. Note that the order of the algorithm is much worse than it needs to be 
+because of my calls to `length`. There's probably some trick we can do to avoid this overhead by thinking
+about tail recursive or linear recursive algorithms, but I just wanted to get this working. Also note that
+`add-poly` is the same as before with no changes, it just calls the `add-terms` function.
+```rkt
+  (define (add-terms L1 L2)
+    (let ((length1 (length L1)) (length2 (length L2)))
+      ;; divide into cases. If L2 is longer, swap the terms
+      (cond ((< length1 length2) (add-terms L2 L1))
+            ;; if the lengths are equal, add term by term
+            ((= length1 length2) 
+              (map (lambda (x y) 
+                     (apply-generic 'add x y)) 
+                   L1 
+                   L2))
+            ;; else, shorten the longer list.
+            (else (cons (car L1) (add-terms (cdr L1) L2))))))
+```
+
+Multiplication is a bit more complicated. I define functions `map-indexed`
+and `make-zero-terms`. Then, I follow the same approach as the polynomial package.
+First we define (monomial) $\times$ (term list) multiplication, and then use this to 
+build (term list) $\times$ (term list) multiplication.
+```rkt
+  ;; Note: this is NOT generic if we don't have type coercion. 
+  ;; We could define a ((get 'make-zero type)) to make it generic.
+  (define (make-zero-terms l)
+    (if (= l 0) '() (cons 0 (make-zero-terms (- l 1)))))
+  ;; returns the term list representing 
+  ;; (coeff)*(variable)^order * (polynomial represented by L)
+  (define (mul-term-by-all-terms order coeff L)
+    (if (null? L)
+      '()
+      (append (map (lambda (x) 
+                     (apply-generic 'mul x coeff)) 
+                   L)  
+              (make-zero-terms order))))
+  ;; Define a map-indexed function. (map-indexed f '(a b c)) is
+  ;; ((f a 0) (f b 1) (f c 2))
+  (define (map-indexed my-lambda lst)
+    (define (map-indexed-inner lst-cur counter)
+      (if (null? lst-cur) '()
+      (cons (my-lambda (car lst-cur) counter) (map-indexed-inner (cdr lst-cur) (+ counter 1)))))
+    (map-indexed-inner lst 0))
+  (define (mul-terms L1 L2)
+    (let ((length1 (length L1)) (length2 (length L2)))
+      (cond ((< length1 length2) (mul-terms L2 L1))
+            ((= length2 0) '())
+            (else 
+              (accumulate 
+                (lambda (Lx Ly) (add-terms Lx Ly))
+                '()
+                (map-indexed 
+                  (lambda (coeff ctr) 
+                    ;; multiply L2 polynomial by the term x*(var)^(order).
+                    (mul-term-by-all-terms (- (- length1 ctr) 1) coeff L2))
+                  L1))))))
+```
+
+
+@src(code/ex2-89.rkt, collapsed)
 
 #### Exercise 2.90
 
@@ -638,6 +767,62 @@ on term lists generic.  Redesign the polynomial system to implement this
 generalization.  This is a major effort, not a local change.
 
 ##### Solution
+We already have most things handled. Firstly, I renamed the tags to `sparse-poly` and `dense-poly`. 
+There are six generic functions for our polynomial package:
+`'add`, `'sub`, `'mul`, `'negate`, `'=zero?`, and `'make`. We should expand this into `'make-dense-polynomial` and
+`'make-sparse-polynomial`.
+
+```rkt
+(install-sparse-polynomial-package)
+(install-dense-polynomial-package)
+(define (install-polynomial-package)
+  (define (tag p) (attach-tag 'polynomial p))
+  (put '=zero? '(polynomial)
+       (lambda (p) (apply-generic '=zero? p)))
+  (put 'negate '(polynomial)
+       (lambda (p) (tag (apply-generic 'negate p))))
+  (put 'make-sparse-polynomial 'polynomial
+       (lambda (var terms) 
+         (tag ((get 'make 'sparse-poly) var terms))))
+  (put 'make-dense-polynomial 'polynomial
+       (lambda (var terms) 
+         (tag ((get 'make 'dense-poly) var terms))))
+...)
+```
+
+The only difficult remaining thing would be handling operations involving
+two different types of polynomials, depending on how we've implemented type coercion.
+I handle this by converting to sparse - sparse operations by default.
+
+```rkt
+(define (dense-poly->sparse-poly dense)
+  (let ((var (car dense)) 
+        (terms (cdr dense)) 
+        (order (length (cdr dense))))
+    ((get 'make 'sparse-poly) 
+        var 
+        (map-indexed (lambda (term index) (list (- (- order index) 1) term)) terms))))
+(define (put-poly-symb symb)
+  (put symb '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag 
+           (let ((t1 (type-tag p1)) (t2 (type-tag p2)))
+             (cond ((eq? t1 t2) (apply-generic symb p1 p2))
+                   ((and (eq? t1 'sparse-poly)
+                         (eq? t2 'dense-poly)) 
+                    (apply-generic symb p1 (dense-poly->sparse-poly (contents p2))))
+                   ((and (eq? t1 'dense-poly)
+                         (eq? t2 'sparse-poly)) 
+                    (apply-generic symb (dense-poly->sparse-poly (contents p1)) p2))
+                   (else (error "Symbol called with polynomials of invalid types:" symb t1 t2))))))))
+(put-poly-symb 'add)
+(put-poly-symb 'mul)
+(put-poly-symb 'sub)
+```
+
+Working code test:
+
+@src(code/ex2-90.rkt,collapsed)
 
 #### Exercise 2.91
 
@@ -684,12 +869,62 @@ arguments and returns a list of the quotient and remainder polys.
                   (new-o (- (order t1) 
                             (order t2))))
               (let ((rest-of-result
-                     ⟨@var{compute rest of result 
-                     recursively}⟩ ))
-                ⟨@var{form complete result}⟩ ))))))
+                     ⟨compute rest of result recursively}⟩ ))
+                ⟨form complete result⟩ ))))))
 ```
 
+
 ##### Solution
+
+Given the new term $t$, we have:
+
+$$\frac{P_1}{P_2} =\frac{P_1- t P_2+t P_2}{P_2} = t + \frac{P_1-t P_2}{P_2}$$
+And the whole idea behind long division is to choose $t$ so that the leading term of $P_1$ cancels.
+I do this subtraction using the function `sub-terms` which I defined in problem 2.88.
+
+```rkt
+(define (div-terms L1 L2)
+  (if (empty-termlist? L1)
+      (list (the-empty-termlist) 
+            (the-empty-termlist))
+      (let ((t1 (first-term L1))
+            (t2 (first-term L2)))
+        (if (> (order t2) (order t1))
+            (list (the-empty-termlist) L1)
+            (let ((new-c (apply-generic 'div (coeff t1) 
+                                             (coeff t2)))
+                  (new-o (- (order t1) 
+                            (order t2))))
+              (let ((new-t (make-term new-o new-c)))
+                (let ((rest-of-result
+                       (div-terms 
+                         (sub-terms L1 (mul-term-by-all-terms new-t L2)) 
+                         L2)))
+                  (let ((div-val (car rest-of-result))
+                        (rem-val (cadr rest-of-result)))
+                    (list (add-terms (list new-t) div-val)
+                          rem-val)))))))))
+```
+
+
+Also, in order to do the plumbing for everything, I define 
+```rkt
+(define (div-poly p1 p2)
+  (if (same-variable? (variable p1)
+                      (variable p2))
+    (let ((res (div-terms (term-list p1)
+                (term-list p2))))
+       (list (make-poly (variable p1) (car res)) (make-poly (variable p1) (cadr res))))
+    (error "Polys not in same var:
+           SUB-POLY"
+           (list p1 p2))))
+(put 'div-poly '(polynomial polynomial) 
+     (lambda (p1 p2)
+       (let ((res (div-poly p1 p2)))
+         (list (tag (car res)) (tag (cadr res))))))
+```
+
+@src(code/ex2-91.rkt, collapsed)
 
 #### Exercise 2.92
 
@@ -698,7 +933,22 @@ variables, extend the polynomial package so that addition and multiplication of
 polynomials works for polynomials in different variables.  (This is not easy!)
 
 ##### Solution
+We have a few different options here:
 
+- We could have a `set` of monomials. 
+- We could replace `variables` with `variable-list` and use the ordering imposed by that list.
+- We could define a lexicographic ordering over symbols and monomials.
+
+I'm going with the third option. The monomial $C x^a y^b$ 
+will be represented as `(list (list (list 'x a) (list 'y b)) C)`. So now, `(coeff term)` still behaves the same,
+but `(order term)` gives the order of the lits of variables.
+
+@src(code/ex2-92b.rkt)
+
+
+Maybe $C x^a y^b$
+So, we'll get rid of the `variable` function. Let's have a sparse representation, and let's say that
+the monomial $C x^a y^b$ is represented as `(list (list (list 'x a) (list 'y b)) 
 #### Exercise 2.93
 
 Modify the rational-arithmetic

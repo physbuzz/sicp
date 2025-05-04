@@ -1,5 +1,6 @@
 #lang sicp
 
+(define pi 3.14159)
 (define (square x) (* x x))
 (define (accumulate op initial sequence)
   (if (null? sequence)
@@ -83,6 +84,8 @@
        (lambda (x) (tag x)))
   (put '=zero? '(scheme-number)
        (lambda (x) (= x 0)))
+  (put 'negate '(scheme-number)
+       (lambda (x) (- x)))
   'done)
 
 (install-scheme-number-package)
@@ -138,6 +141,8 @@
   ;problem 2.80
   (put '=zero? '(rational)
     (lambda (a) (= (numer a) 0)))
+  (put 'negate '(rational)
+       (lambda (r) (tag (make-rat (- (numer r)) (denom r)))))
   'done)
 
 (install-rational-package)
@@ -173,6 +178,8 @@
   (put 'make-from-mag-ang 'polar
        (lambda (r a) 
          (tag (make-from-mag-ang r a))))
+  (put 'negate '(polar)
+       (lambda (z) (tag (make-from-mag-ang (magnitude z) (+ (angle z) pi)))))
   'done)
 (install-polar-package)
 
@@ -202,6 +209,8 @@
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a)
          (tag (make-from-mag-ang r a))))
+  (put 'negate '(rectangular)
+       (lambda (z) (tag (make-from-real-imag (- (real-part z) (- (imag-part z)))))))
   'done)
 (install-rectangular-package)
 
@@ -255,6 +264,8 @@
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
   (put 'angle '(complex) angle)
+  (put 'negate '(complex)
+       (lambda (z) (tag (apply-generic 'negate z))))
 
   (define (tag z) (attach-tag 'complex z))
   (put 'add '(complex complex)
@@ -352,6 +363,7 @@
   (define (order term) (car term))
   (define (coeff term) (cadr term))
 
+
   (define (add-poly p1 p2)
     (if (same-variable? (variable p1)
                         (variable p2))
@@ -400,6 +412,12 @@
              (add-terms
               (rest-terms L1)
               (rest-terms L2)))))))))
+
+;; (ct1 x^(ot1)+rest1)/(ct2 x^(ot2)+rest2) 
+;; =(poly1 - (ct1/ct2) x^(ot1-ot2)(poly2) + (ct1/ct2) x^(ot1-ot2)(poly2))/(poly2)
+;; =(ct1/ct2) x^(ot1-ot2) + (poly1 - (ct1/ct2) x^(ot1-ot2)(poly2))/poly2
+
+
   ;; During construction, we don't check whether coefficients are zero
   ;; So now, we have to check all coefficients.
   (define (=zero?-poly poly)
@@ -409,6 +427,44 @@
   ;; Make sure to install the function
   (put '=zero? '(polynomial) =zero?-poly)
 
+  ;; Exercise 2-88
+  (define (negate-terms L) 
+    (if (empty-termlist? L)
+      L
+      (let ((t (first-term L)) (r (rest-terms L)))
+        (adjoin-term (make-term (order t) (apply-generic 'negate (coeff t)))
+                     (negate-terms r)))))
+  (define (sub-terms L1 L2)
+    (add-terms L1 (negate-terms L2)))
+  (define (sub-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly
+       (variable p1)
+       (sub-terms (term-list p1)
+                  (term-list p2)))
+      (error "Polys not in same var:
+             SUB-POLY"
+             (list p1 p2))))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag (sub-poly p1 p2))))
+  (define (div-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (let ((res (div-terms (term-list p1)
+                  (term-list p2))))
+         (list (make-poly (variable p1) (car res)) (make-poly (variable p1) (cadr res))))
+      (error "Polys not in same var:
+             SUB-POLY"
+             (list p1 p2))))
+  (put 'div-poly '(polynomial polynomial) 
+       (lambda (p1 p2)
+         (let ((res (div-poly p1 p2)))
+           (list (tag (car res)) (tag (cadr res))))))
+  (put 'negate '(polynomial)
+       (lambda (p) 
+         (tag (make-poly (variable p) (negate-terms (term-list p))))))
   ;; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
@@ -427,19 +483,12 @@
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
 
-(define a (make-polynomial 'x '((2 1) (0 1))))
+(define a (make-polynomial 'x '((5 1) (0 -1))))
 (define b (make-polynomial 'x '((2 1) (0 -1))))
+(define c (make-polynomial 'x '((1 1) (0 -1))))
 
-(display "(x^2+1)(x^2-1) = ")
+(display "(x^5-1)*(x^2-1) = ")
 (apply-generic 'mul a b)
-
-(define c (make-polynomial 'x '((2 0) (0 0))))
-(display "P1 = ")
-c
-(display "(=zero? P1)") (newline)
-(=zero? c)
-(display "P2 = ")
-a
-(display "(=zero? P2)") (newline)
-(=zero? a)
+(display "(x^5-1)+(x-1) = ")
+(apply-generic 'add a c)
 

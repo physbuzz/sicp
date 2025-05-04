@@ -1,5 +1,6 @@
 #lang sicp
 
+(define pi 3.14159)
 (define (square x) (* x x))
 (define (accumulate op initial sequence)
   (if (null? sequence)
@@ -83,6 +84,8 @@
        (lambda (x) (tag x)))
   (put '=zero? '(scheme-number)
        (lambda (x) (= x 0)))
+  (put 'negate '(scheme-number)
+       (lambda (x) (- x)))
   'done)
 
 (install-scheme-number-package)
@@ -138,6 +141,8 @@
   ;problem 2.80
   (put '=zero? '(rational)
     (lambda (a) (= (numer a) 0)))
+  (put 'negate '(rational)
+       (lambda (r) (tag (make-rat (- (numer r)) (denom r)))))
   'done)
 
 (install-rational-package)
@@ -173,6 +178,8 @@
   (put 'make-from-mag-ang 'polar
        (lambda (r a) 
          (tag (make-from-mag-ang r a))))
+  (put 'negate '(polar)
+       (lambda (z) (tag (make-from-mag-ang (magnitude z) (+ (angle z) pi)))))
   'done)
 (install-polar-package)
 
@@ -202,6 +209,8 @@
   (put 'make-from-mag-ang 'rectangular
        (lambda (r a)
          (tag (make-from-mag-ang r a))))
+  (put 'negate '(rectangular)
+       (lambda (z) (tag (make-from-real-imag (- (real-part z) (- (imag-part z)))))))
   'done)
 (install-rectangular-package)
 
@@ -255,6 +264,8 @@
   (put 'imag-part '(complex) imag-part)
   (put 'magnitude '(complex) magnitude)
   (put 'angle '(complex) angle)
+  (put 'negate '(complex)
+       (lambda (z) (tag (apply-generic 'negate z))))
 
   (define (tag z) (attach-tag 'complex z))
   (put 'add '(complex complex)
@@ -352,6 +363,7 @@
   (define (order term) (car term))
   (define (coeff term) (cadr term))
 
+
   (define (add-poly p1 p2)
     (if (same-variable? (variable p1)
                         (variable p2))
@@ -409,6 +421,31 @@
   ;; Make sure to install the function
   (put '=zero? '(polynomial) =zero?-poly)
 
+  ;; Exercise 2-88
+  (define (negate-terms L) 
+    (if (empty-termlist? L)
+      L
+      (let ((t (first-term L)) (r (rest-terms L)))
+        (adjoin-term (make-term (order t) (apply-generic 'negate (coeff t)))
+                     (negate-terms r)))))
+  (define (sub-terms L1 L2)
+    (add-terms L1 (negate-terms L2)))
+  (define (sub-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly
+       (variable p1)
+       (sub-terms (term-list p1)
+                  (term-list p2)))
+      (error "Polys not in same var:
+             SUB-POLY"
+             (list p1 p2))))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag (sub-poly p1 p2))))
+  (put 'negate '(polynomial)
+       (lambda (p) 
+         (tag (make-poly (variable p) (negate-terms (term-list p))))))
   ;; interface to rest of the system
   (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
@@ -421,25 +458,145 @@
        (lambda (var terms) 
          (tag (make-poly var terms))))
   'done)
+(define (install-dense-polynomial-package)
+  ;; internal procedures
+  ;; representation of poly
+  ;; Chop off the leading zeros of a term list.
+  (define (chop-leading-zeros L)
+    (cond ((null? L) L)
+          ((apply-generic '=zero? (car L)) (chop-leading-zeros (cdr L)))
+          (else L)))
+  (define (make-poly variable term-list)
+    (cons variable (chop-leading-zeros term-list)))
+  (define (variable p) (car p))
+  (define (term-list p) (cdr p))
+
+  (define (variable? x) (symbol? x))
+  (define (same-variable? v1 v2)
+    (and (variable? v1)
+         (variable? v2)
+         (eq? v1 v2)))
+
+
+  ;; Note: this is NOT generic. We could define a ((get 'make-zero type)) 
+  ;; to make it generic.
+  (define (make-zero-terms l)
+    (if (= l 0) '() (cons 0 (make-zero-terms (- l 1)))))
+  ;; returns the term list representing 
+  ;; (coeff)*(variable)^order * (polynomial represented by L)
+  (define (mul-term-by-all-terms order coeff L)
+    (if (null? L)
+      '()
+      (append (map (lambda (x) 
+                     (apply-generic 'mul x coeff)) 
+                   L)  
+              (make-zero-terms order))))
+  ;; Define a map-indexed function. (map-indexed f '(a b c)) is
+  ;; ((f a 0) (f b 1) (f c 2))
+  (define (map-indexed my-lambda lst)
+    (define (map-indexed-inner lst-cur counter)
+      (if (null? lst-cur) '()
+      (cons (my-lambda (car lst-cur) counter) (map-indexed-inner (cdr lst-cur) (+ counter 1)))))
+    (map-indexed-inner lst 0))
+  (define (mul-terms L1 L2)
+    (let ((length1 (length L1)) (length2 (length L2)))
+      (cond ((< length1 length2) (mul-terms L2 L1))
+            ((= length2 0) '())
+            (else 
+              (accumulate 
+                (lambda (Lx Ly) (add-terms Lx Ly))
+                '()
+                (map-indexed 
+                  (lambda (coeff ctr) 
+                    ;; multiply L2 polynomial by the term x*(var)^(order).
+                    (mul-term-by-all-terms (- (- length1 ctr) 1) coeff L2))
+                  L1))))))
+
+  (define (empty-termlist? term-list)
+    (null? term-list))
+
+  (define (mul-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly
+       (variable p1)
+       (mul-terms (term-list p1)
+                  (term-list p2)))
+      (error "Polys not in same var:
+             MUL-POLY"
+             (list p1 p2))))
+
+  (define (add-terms L1 L2)
+    (let ((length1 (length L1)) (length2 (length L2)))
+      (cond ((< length1 length2) (add-terms L2 L1))
+            ((= length1 length2) 
+              (map (lambda (x y) 
+                     (apply-generic 'add x y)) 
+                   L1 
+                   L2))
+            (else (cons (car L1) (add-terms (cdr L1) L2))))))
+  (define (add-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly
+       (variable p1)
+       (add-terms (term-list p1)
+                  (term-list p2)))
+      (error "Polys not in same var:
+             ADD-POLY"
+             (list p1 p2))))
+
+  (define (=zero?-poly poly)
+    (accumulate (lambda (x y) (and y (=zero? x)))
+                #t
+                (term-list poly)))
+
+
+  (define (negate-terms L) 
+    (map (lambda (x) (apply-generic 'negate x)) L))
+  (define (sub-terms L1 L2)
+    (add-terms L1 (negate-terms L2)))
+  (define (sub-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly
+       (variable p1)
+       (sub-terms (term-list p1)
+                  (term-list p2)))
+      (error "Polys not in same var:
+             SUB-POLY"
+             (list p1 p2))))
+  ;; interface to rest of the system
+  (define (tag p) (attach-tag 'dense-poly p))
+  (put 'add '(dense-poly dense-poly)
+       (lambda (p1 p2) 
+         (tag (add-poly p1 p2))))
+  (put 'mul '(dense-poly dense-poly)
+       (lambda (p1 p2) 
+         (tag (mul-poly p1 p2))))
+  (put 'make 'dense-poly
+       (lambda (var terms) 
+         (tag (make-poly var terms))))
+  (put 'sub '(dense-poly dense-poly)
+       (lambda (p1 p2) 
+         (tag (sub-poly p1 p2))))
+  (put 'negate '(dense-poly)
+       (lambda (p) 
+         (tag (make-poly (variable p) (negate-terms (term-list p))))))
+  (put '=zero? '(dense-poly) =zero?-poly)
+  'done)
 
 (install-polynomial-package)
+(install-dense-polynomial-package)
 
-(define (make-polynomial var terms)
-  ((get 'make 'polynomial) var terms))
+(define (make-dense-polynomial var terms)
+  ((get 'make 'dense-poly) var terms))
 
-(define a (make-polynomial 'x '((2 1) (0 1))))
-(define b (make-polynomial 'x '((2 1) (0 -1))))
+(define a (make-dense-polynomial 'x '(1 1 1 1)))
+(define b (make-dense-polynomial 'x '(1 -1)))
 
-(display "(x^2+1)(x^2-1) = ")
+(display "(x^3+x^2+x+1)+(x-1) = ")
+(apply-generic 'add a b)
+(display "(x^3+x^2+x+1)*(x-1) = ")
 (apply-generic 'mul a b)
-
-(define c (make-polynomial 'x '((2 0) (0 0))))
-(display "P1 = ")
-c
-(display "(=zero? P1)") (newline)
-(=zero? c)
-(display "P2 = ")
-a
-(display "(=zero? P2)") (newline)
-(=zero? a)
 

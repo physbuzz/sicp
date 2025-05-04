@@ -427,15 +427,19 @@
 (define (make-polynomial var terms)
   ((get 'make 'polynomial) var terms))
 
-(define p1 (make-polynomial 'x '((2 1) (0 1))))
-(define p2 (make-polynomial 'x '((2 1) (0 -1))))
-(define p3 (make-polynomial 'x '((100 1) (2 2) (0 1))))
+(define a (make-polynomial 'x '((2 1) (0 1))))
+(define b (make-polynomial 'x '((2 1) (0 -1))))
 
-(apply-generic 'mul p1 p2)
+(display "(x^2+1)(x^2-1) = ")
+(apply-generic 'mul a b)
 
-(define p4 (make-polynomial 'x '((2 0) (0 0))))
-p4
-(=zero? p4)
-p1
-(=zero? p1)
+(define c (make-polynomial 'x '((2 0) (0 0))))
+(display "P1 = ")
+c
+(display "(=zero? P1)") (newline)
+(=zero? c)
+(display "P2 = ")
+a
+(display "(=zero? P2)") (newline)
+(=zero? a)
 
