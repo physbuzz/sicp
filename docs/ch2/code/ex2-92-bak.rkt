@@ -1,22 +1,5 @@
 #lang sicp
 
-;; insertion sort from https://gist.github.com/miyukino/5652107
-(define (insert L M comp)
-	(if (null? L) M
-		(if (null? M) L
-			(if (comp (car L) (car M))
-				(cons (car L) (insert (cdr L) M comp))
-				(cons (car M) (insert (cdr M) L comp))))))
-(define (insertionsort L comp)
-	(if (null? L) '()
-		(insert (list (car L)) (insertionsort (cdr L) comp) comp)))
-(define sort insertionsort)
-
-(define (symbol<? s1 s2)
-  (string<? (symbol->string s1) (symbol->string s2)))
-(define (symbol=? s1 s2)
-  (string=? (symbol->string s1) (symbol->string s2)))
-
 
 
 (define pi 3.14159)
@@ -333,37 +316,78 @@
 
 
 (define (install-polynomial-package)
-  (define (single-order<? so1 so2)
-    (or (symbol<? (car so1) (car so2))
-        (< (cadr so2) (cadr so1))))
-  (define (order<? o1 o2)
-    (cond 
-      ((null? o1) #f)
-      ((null? o2) #t)
-      ((< (length o2) (length o1)) #t)
-      ((single-order<? (car o1) (car o2)) #t)
-      ((single-order<? (car o2) (car o1)) #f)
-      (else (order<? (cdr o1) (cdr o2)))))
+  ;; internal procedures
+  ;; representation of poly
+  (define (make-poly variable term-list)
+    (cons variable term-list))
+  (define (variable p) (car p))
+  (define (term-list p) (cdr p))
 
-  ;; Term list should be a list of (list coeff monomial)
-  ;; monomial is of the form '((x 3) (y 2) (z 4)) to represent x^3*y^2*z^4.
-  (define (make-mono coeff order) (list coeff order)) 
-  (define (coeff mono) (car mono))
-  (define (order mono) (cadr mono))
-  (define (make-poly-from-unsorted term-list)
-    (define (sort-monomial mono) 
-      (make-mono (coeff mono) (sort (order mono) single-order<?)))
-    (define (monomial-compare x y) 
-      (order<? (order x) (order y)))
-    (sort (map sort-monomial term-list) monomial-compare))
-  (define (tag p) (attach-tag 'polynomial p))
-  (put 'make 'polynomial
-       (lambda (terms) 
-         (tag (make-poly-from-unsorted terms))))
+  (define (variable? x) (symbol? x))
+  (define (same-variable? v1 v2)
+    (and (variable? v1)
+         (variable? v2)
+         (eq? v1 v2)))
+
+  (define (mul-terms L1 L2)
+    (if (empty-termlist? L1)
+      (the-empty-termlist)
+      (add-terms
+       (mul-term-by-all-terms
+        (first-term L1) L2)
+       (mul-terms (rest-terms L1) L2))))
+
+  (define (mul-term-by-all-terms t1 L)
+    (if (empty-termlist? L)
+      (the-empty-termlist)
+      (let ((t2 (first-term L)))
+        (adjoin-term
+         (make-term
+          (+ (order t1) (order t2))
+          (mul (coeff t1) (coeff t2)))
+         (mul-term-by-all-terms
+          t1
+          (rest-terms L))))))
 
 
-  ;; negate
-  ;; add-poly
+  ;; representation of terms and term lists
+  (define (adjoin-term term term-list)
+    (if (=zero? (coeff term))
+      term-list
+      (cons term term-list)))
+  (define (the-empty-termlist) '())
+  (define (first-term term-list) (car term-list))
+  (define (rest-terms term-list) (cdr term-list))
+  (define (empty-termlist? term-list)
+    (null? term-list))
+  (define (make-term order coeff)
+    (list order coeff))
+  (define (order term) (car term))
+  (define (coeff term) (cadr term))
+
+
+  (define (add-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly
+       (variable p1)
+       (add-terms (term-list p1)
+                  (term-list p2)))
+      (error "Polys not in same var:
+             ADD-POLY"
+             (list p1 p2))))
+
+  (define (mul-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly
+       (variable p1)
+       (mul-terms (term-list p1)
+                  (term-list p2)))
+      (error "Polys not in same var:
+             MUL-POLY"
+             (list p1 p2))))
+
   (define (add-terms L1 L2)
     (cond ((empty-termlist? L1) L2)
       ((empty-termlist? L2) L1)
@@ -390,157 +414,70 @@
              (add-terms
               (rest-terms L1)
               (rest-terms L2)))))))))
-  ;; sub-poly
 
-  ;; mul-poly
+;; (ct1 x^(ot1)+rest1)/(ct2 x^(ot2)+rest2) 
+;; =(poly1 - (ct1/ct2) x^(ot1-ot2)(poly2) + (ct1/ct2) x^(ot1-ot2)(poly2))/(poly2)
+;; =(ct1/ct2) x^(ot1-ot2) + (poly1 - (ct1/ct2) x^(ot1-ot2)(poly2))/poly2
 
 
-;;   ;; internal procedures
-;;   ;; representation of poly
-;;   (define (make-poly variable term-list)
-;;     (cons variable term-list))
-;;   (define (variable p) (car p))
-;;   (define (term-list p) (cdr p))
-;; 
-;;   (define (variable? x) (symbol? x))
-;;   (define (same-variable? v1 v2)
-;;     (and (variable? v1)
-;;          (variable? v2)
-;;          (eq? v1 v2)))
-;; 
-;;   (define (mul-terms L1 L2)
-;;     (if (empty-termlist? L1)
-;;       (the-empty-termlist)
-;;       (add-terms
-;;        (mul-term-by-all-terms
-;;         (first-term L1) L2)
-;;        (mul-terms (rest-terms L1) L2))))
-;; 
-;;   (define (mul-term-by-all-terms t1 L)
-;;     (if (empty-termlist? L)
-;;       (the-empty-termlist)
-;;       (let ((t2 (first-term L)))
-;;         (adjoin-term
-;;          (make-term
-;;           (+ (order t1) (order t2))
-;;           (mul (coeff t1) (coeff t2)))
-;;          (mul-term-by-all-terms
-;;           t1
-;;           (rest-terms L))))))
-;; 
-;; 
-;;   ;; representation of terms and term lists
-;;   (define (adjoin-term term term-list)
-;;     (if (=zero? (coeff term))
-;;       term-list
-;;       (cons term term-list)))
-;;   (define (the-empty-termlist) '())
-;;   (define (first-term term-list) (car term-list))
-;;   (define (rest-terms term-list) (cdr term-list))
-;;   (define (empty-termlist? term-list)
-;;     (null? term-list))
-;;   (define (make-term order coeff)
-;;     (list order coeff))
-;;   (define (order term) (car term))
-;;   (define (coeff term) (cadr term))
-;; 
-;; 
-;;   (define (add-poly p1 p2)
-;;     (if (same-variable? (variable p1)
-;;                         (variable p2))
-;;       (make-poly
-;;        (variable p1)
-;;        (add-terms (term-list p1)
-;;                   (term-list p2)))
-;;       (error "Polys not in same var:
-;;              ADD-POLY"
-;;              (list p1 p2))))
-;; 
-;;   (define (mul-poly p1 p2)
-;;     (if (same-variable? (variable p1)
-;;                         (variable p2))
-;;       (make-poly
-;;        (variable p1)
-;;        (mul-terms (term-list p1)
-;;                   (term-list p2)))
-;;       (error "Polys not in same var:
-;;              MUL-POLY"
-;;              (list p1 p2))))
-;; 
-;; 
-;; ;; (ct1 x^(ot1)+rest1)/(ct2 x^(ot2)+rest2) 
-;; ;; =(poly1 - (ct1/ct2) x^(ot1-ot2)(poly2) + (ct1/ct2) x^(ot1-ot2)(poly2))/(poly2)
-;; ;; =(ct1/ct2) x^(ot1-ot2) + (poly1 - (ct1/ct2) x^(ot1-ot2)(poly2))/poly2
-;; 
-;; 
-;;   ;; During construction, we don't check whether coefficients are zero
-;;   ;; So now, we have to check all coefficients.
-;;   (define (=zero?-poly poly)
-;;     (accumulate (lambda (x y) (and y (=zero? (coeff x))))
-;;                 #t
-;;                 (term-list poly)))
-;;   ;; Make sure to install the function
-;;   (put '=zero? '(polynomial) =zero?-poly)
-;; 
-;;   ;; Exercise 2-88
-;;   (define (negate-terms L) 
-;;     (if (empty-termlist? L)
-;;       L
-;;       (let ((t (first-term L)) (r (rest-terms L)))
-;;         (adjoin-term (make-term (order t) (apply-generic 'negate (coeff t)))
-;;                      (negate-terms r)))))
-;;   (define (sub-terms L1 L2)
-;;     (add-terms L1 (negate-terms L2)))
-;;   (define (sub-poly p1 p2)
-;;     (if (same-variable? (variable p1)
-;;                         (variable p2))
-;;       (make-poly
-;;        (variable p1)
-;;        (sub-terms (term-list p1)
-;;                   (term-list p2)))
-;;       (error "Polys not in same var:
-;;              SUB-POLY"
-;;              (list p1 p2))))
-;;   (put 'sub '(polynomial polynomial)
-;;        (lambda (p1 p2) 
-;;          (tag (sub-poly p1 p2))))
-;;   (put 'negate '(polynomial)
-;;        (lambda (p) 
-;;          (tag (make-poly (variable p) (negate-terms (term-list p))))))
-;;   ;; interface to rest of the system
-;;   (define (tag p) (attach-tag 'polynomial p))
-;;   (put 'add '(polynomial polynomial)
-;;        (lambda (p1 p2) 
-;;          (tag (add-poly p1 p2))))
-;;   (put 'mul '(polynomial polynomial)
-;;        (lambda (p1 p2) 
-;;          (tag (mul-poly p1 p2))))
-;;   (put 'make 'polynomial
-;;        (lambda (var terms) 
-;;          (tag (make-poly var terms))))
+  ;; During construction, we don't check whether coefficients are zero
+  ;; So now, we have to check all coefficients.
+  (define (=zero?-poly poly)
+    (accumulate (lambda (x y) (and y (=zero? (coeff x))))
+                #t
+                (term-list poly)))
+  ;; Make sure to install the function
+  (put '=zero? '(polynomial) =zero?-poly)
+
+  ;; Exercise 2-88
+  (define (negate-terms L) 
+    (if (empty-termlist? L)
+      L
+      (let ((t (first-term L)) (r (rest-terms L)))
+        (adjoin-term (make-term (order t) (apply-generic 'negate (coeff t)))
+                     (negate-terms r)))))
+  (define (sub-terms L1 L2)
+    (add-terms L1 (negate-terms L2)))
+  (define (sub-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly
+       (variable p1)
+       (sub-terms (term-list p1)
+                  (term-list p2)))
+      (error "Polys not in same var:
+             SUB-POLY"
+             (list p1 p2))))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag (sub-poly p1 p2))))
+  (put 'negate '(polynomial)
+       (lambda (p) 
+         (tag (make-poly (variable p) (negate-terms (term-list p))))))
+  ;; interface to rest of the system
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag (add-poly p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag (mul-poly p1 p2))))
+  (put 'make 'polynomial
+       (lambda (var terms) 
+         (tag (make-poly var terms))))
   'done)
 
 (install-polynomial-package)
 
-(define (make-polynomial terms)
-  ((get 'make 'polynomial) terms))
+(define (make-polynomial var terms)
+  ((get 'make 'polynomial) var terms))
 
+(define a (make-polynomial 'x '((5 1) (0 -1))))
+(define b (make-polynomial 'x '((2 1) (0 -1))))
+(define c (make-polynomial 'x '((1 1) (0 -1))))
 
-(define l1 '((x 2) (y 1)))
-(define l2 '((x 2) (y 2)))
-;;(define l3 (sort '((x 2) (y 2) (b 10) (a 4)) single-order<?))
-(define l3 '((x 2) (y 2) (b 10) (a 4)))
-(define l4 '())
+(display "(x^5-1)*(x^2-1) = ")
+(apply-generic 'mul a b)
+(display "(x^5-1)+(x-1) = ")
+(apply-generic 'add a c)
 
-(make-polynomial (list (list 1 l1) (list -1 l2) (list 3 l3) (list -10 l4)))
-;; (define (make-polynomial var terms)
-;;   ((get 'make 'polynomial) var terms))
-;; 
-;; (define a (make-polynomial 'x '((5 1) (0 -1))))
-;; (define b (make-polynomial 'x '((2 1) (0 -1))))
-;; (define c (make-polynomial 'x '((1 1) (0 -1))))
-;; 
-;; (display "(x^5-1)*(x^2-1) = ")
-;; (apply-generic 'mul a b)
-;; (display "(x^5-1)+(x-1) = ")
-;; (apply-generic 'add a 

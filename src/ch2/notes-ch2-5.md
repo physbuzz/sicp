@@ -943,8 +943,55 @@ I'm going with the third option. The monomial $C x^a y^b$
 will be represented as `(list (list (list 'x a) (list 'y b)) C)`. So now, `(coeff term)` still behaves the same,
 but `(order term)` gives the order of the lits of variables.
 
-@src(code/ex2-92b.rkt)
+First, let's make sure I can define the ordering on monomials properly:
 
+@src(code/ex2-92b.rkt, collapsible)
+
+Next, we can define a function to create a correct polynomial from a 
+unsorted list of monomials (unsorted because I can never remember the 
+correct way to do things). 
+
+```rkt
+(define (install-polynomial-package)
+  (define (single-order<? so1 so2)
+    (or (symbol<? (car so1) (car so2))
+        (< (cadr so2) (cadr so1))))
+  (define (order<? o1 o2)
+    (cond 
+      ((null? o1) #f)
+      ((null? o2) #t)
+      ((< (length o2) (length o1)) #t)
+      ((single-order<? (car o1) (car o2)) #t)
+      ((single-order<? (car o2) (car o1)) #f)
+      (else (order<? (cdr o1) (cdr o2)))))
+
+  ;; Term list should be a list of (list coeff monomial)
+  ;; monomial is of the form '((x 3) (y 2) (z 4)) to represent x^3*y^2*z^4.
+  (define (make-mono coeff order) (list coeff order)) 
+  (define (coeff mono) (car mono))
+  (define (order mono) (cadr mono))
+  (define (make-poly-from-unsorted term-list)
+    (define (sort-monomial mono) 
+      (make-mono (coeff mono) (sort (order mono) single-order<?)))
+    (define (monomial-compare x y) 
+      (order<? (order x) (order y)))
+    (sort (map sort-monomial term-list) monomial-compare))
+  (define (tag p) (attach-tag 'polynomial p))
+  (put 'make 'polynomial
+       (lambda (terms) 
+         (tag (make-poly-from-unsorted terms))))
+  ...
+  'done)
+```
+
+Now, `add-poly` is going to be basically the same as add-terms, 
+except instead of `<` to compare orders, we'll have to use `order<?`. 
+We'll also have to define `adjoin-term` correctly.
+`negate` and `sub` are easy. 
+
+
+
+@src(code/ex2-92.rkt, collapsed)
 
 Maybe $C x^a y^b$
 So, we'll get rid of the `variable` function. Let's have a sparse representation, and let's say that
