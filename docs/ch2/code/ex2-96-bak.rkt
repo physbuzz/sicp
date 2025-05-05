@@ -467,15 +467,9 @@
                           (rem-val (cadr rest-of-result)))
                       (list (add-terms (list new-t) div-val)
                             rem-val)))))))))
-  (define (remainder-terms L1 L2)
-    (cadr (div-terms L1 L2)))
-
   (put 'sub '(polynomial polynomial)
        (lambda (p1 p2) 
          (tag (sub-poly p1 p2))))
-
-
-
 
   (define (div-poly p1 p2)
     (if (same-variable? (variable p1)
@@ -487,20 +481,44 @@
              SUB-POLY"
              (list p1 p2))))
 
+
+  (define (remainder-terms L1 L2)
+    (cadr (div-terms L1 L2)))
+
   (define (poly-remainder p1 p2)
     (cadr (div-poly p1 p2)))
+
+  (define (term-order L)
+    (if (null? L) 0
+      (order (first-term L))))
+  (define (pow a b)
+    (if (= b 0) 1 (* a (pow a (- b 1)))))
+  (define (poly-pseudoremainder-terms L1 L2)
+    (display L1) (newline)(display L2) (newline)(newline)
+    (let ((o1 (term-order L1)) 
+          (o2 (term-order L2)))
+          ;(c (coeff (first-term L2))))
+      (remainder-terms L1 L2)))
+;;        (mul-term-by-all-terms 
+;;          (list 0 (pow c (+ 1 (- o1 o2)))) 
+;;          L1)
+;;        L2)))
+  (define (poly-pseudoremainder p1 p2)
+    (lambda (p1 p2)
+      (let ((terms (poly-pseudoremainder-terms (term-list p1) (term-list p2))))
+        (make-poly (variable p1) terms))))
   (define (poly-gcd a b)
     (if (=zero?-poly b)
         a
-        (poly-gcd b (poly-remainder a b))))
+        (poly-gcd b (poly-pseudoremainder a b))))
 
+  (define (tag p) (attach-tag 'polynomial p))
   (put 'remainder '(polynomial polynomial) 
        (lambda (p1 p2)
          (tag (poly-remainder p1 p2))))
   (put 'gcd '(polynomial polynomial) 
        (lambda (p1 p2)
          (tag (poly-gcd p1 p2))))
-
   (put 'div-poly '(polynomial polynomial) 
        (lambda (p1 p2)
          (let ((res (div-poly p1 p2)))
@@ -509,7 +527,6 @@
        (lambda (p) 
          (tag (make-poly (variable p) (negate-terms (term-list p))))))
   ;; interface to rest of the system
-  (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
        (lambda (p1 p2) 
          (tag (add-poly p1 p2))))
@@ -528,11 +545,16 @@
 
 (define p1
   (make-polynomial
-   'x '((4 1) (3 -1) (2 -2) (1 2))))
-
+   'x '((2 1) (1 -2) (0 1))))
 (define p2
   (make-polynomial
-   'x '((3 1) (1 -1))))
+   'x '((2 11) (0 7))))
+(define p3
+  (make-polynomial
+   'x '((1 13) (0 5))))
+(define q1
+  (apply-generic 'mul p1 p2))
+(define q2
+  (apply-generic 'mul p1 p3))
 
-(apply-generic 'gcd p1 p2)
-
+(apply-generic 'gcd q1 q2)

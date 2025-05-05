@@ -610,6 +610,16 @@ accommodate this.  You will have to define operations such as `sine` and
 
 ##### Solution
 
+Inside the complex numbers packages, we have to make sure that we always use
+`apply-generic 'mul` instead of `*`, and we also have to make sure to use
+`apply-generic 'sin` instead of `sin`, as well as define the sine and 
+cosine generic functions inside the other packages. I'll omit defining 
+the sine and cosine of complex numbers, but this can be done using the 
+hyperbolic trig functions and/or exponentials.
+
+@src(code/ex2-86.rkt, collapsed)
+
+
 
 #### Exercise 2.87
 
@@ -1154,6 +1164,48 @@ greatest common divisor.
 
 ##### Solution
 
+**For part 1,** it's just an exercise in computing the correct power of c.
+I use `mul-term-by-all-terms` to perform the scalar multiplication.
+
+```rkt
+  (define (term-order L)
+    (if (null? L) 0
+      (order (first-term L))))
+  (define (pow a b)
+    (if (= b 0) 1 (* a (pow a (- b 1)))))
+  (define (pseudoremainder-terms L1 L2)
+    (let ((o1 (term-order L1)) 
+          (o2 (term-order L2))
+          (c (coeff (first-term L2))))
+      (remainder-terms 
+        (mul-term-by-all-terms 
+          (list 0 (pow c (+ 1 (- o1 o2)))) 
+          L1)
+       L2)))
+```
+
+With this change alone, we end up printing out the polynomial
+`('polynomial 'x ((2 1458) (1 -2916) (0 1458)))` which isn't reduced.
+
+**For part 2,** I use accumulate to find the gcd of all the coefficients,
+then apply `remove-common-factors` inside the gcd function.
+
+```rkt
+  (define (remove-common-factors L)
+    (let ((common-factor
+           (accumulate (lambda (x y) (gcd x y))
+                (coeff (car L))
+                (map coeff (cdr L)))))
+      (map (lambda (x) (make-term (order x) (/ (coeff x) common-factor))) L)))
+  (define (gcd-terms L1 L2)
+    (remove-common-factors
+      (if (=zero?-terms L2)
+        L1
+        (gcd-terms L2 (pseudoremainder-terms L1 L2)))))
+```
+
+Working example:
+
 @src(code/ex2-96.rkt, collapsed)
 
 #### Exercise 2.97
@@ -1203,4 +1255,48 @@ See if you get the correct answer, correctly reduced to lowest terms.
 
 ##### Solution
 
+**Part 1:** Here's what I did for reduce:
 
+```rkt
+  (define (reduce-terms L1 L2)
+    (let ((my-gcd (gcd-terms L1 L2)))
+      (let ((o1 (max (term-order L1) (term-order L2))) 
+            (o2 (term-order my-gcd))
+            (c (coeff (first-term my-gcd))))
+        (let ((numer-list (div-terms 
+                       (mul-term-by-all-terms 
+                         (list 0 (pow c (+ 1 (- o1 o2)))) 
+                         L1)
+                       my-gcd))
+              (denom-list (div-terms 
+                       (mul-term-by-all-terms 
+                         (list 0 (pow c (+ 1 (- o1 o2)))) 
+                         L2)
+                       my-gcd)))
+          (list (car numer-list) (car denom-list))))))
+
+  (define (reduce-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (map (lambda (L) (make-poly (variable p1) L))
+             (reduce-terms (term-list p1) (term-list p2)))
+      (error "Polys not in same var:
+             REDUCE-POLY"
+             (list p1 p2))))
+  (put 'reduce '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (map tag (reduce-poly p1 p2))))
+```
+
+**Part 2** We change the make-rational function to look like this:
+```rkt
+  (define (make-rat n d)
+    (let ((red (apply-generic 'reduce n d)))
+      (cons (car red) (cadr red))))
+```
+
+Demonstrate that it works:
+
+@src(code/ex2-97.rkt, collapsed)
+
+Important note: I've just focused on getting things that work for our test cases of integer polynomials, I can't guarantee that everything works correctly, especially in case rational numbers sneak into the objects without me noticing, or we get division by zero or that sort of thing! This can definitely be rewritten in a better way.

@@ -420,10 +420,12 @@
 
   ;; During construction, we don't check whether coefficients are zero
   ;; So now, we have to check all coefficients.
-  (define (=zero?-poly poly)
+  (define (=zero?-terms L)
     (accumulate (lambda (x y) (and y (=zero? (coeff x))))
                 #t
-                (term-list poly)))
+                L))
+  (define (=zero?-poly poly)
+    (=zero?-terms (term-list poly)))
   ;; Make sure to install the function
   (put '=zero? '(polynomial) =zero?-poly)
 
@@ -467,10 +469,6 @@
                           (rem-val (cadr rest-of-result)))
                       (list (add-terms (list new-t) div-val)
                             rem-val)))))))))
-  (put 'sub '(polynomial polynomial)
-       (lambda (p1 p2) 
-         (tag (sub-poly p1 p2))))
-
   (define (div-poly p1 p2)
     (if (same-variable? (variable p1)
                         (variable p2))
@@ -478,47 +476,64 @@
                   (term-list p2))))
          (list (make-poly (variable p1) (car res)) (make-poly (variable p1) (cadr res))))
       (error "Polys not in same var:
-             SUB-POLY"
+             DIV-POLY"
              (list p1 p2))))
-
 
   (define (remainder-terms L1 L2)
     (cadr (div-terms L1 L2)))
 
-  (define (poly-remainder p1 p2)
-    (cadr (div-poly p1 p2)))
+
 
   (define (term-order L)
     (if (null? L) 0
       (order (first-term L))))
   (define (pow a b)
     (if (= b 0) 1 (* a (pow a (- b 1)))))
-  (define (poly-pseudoremainder-terms L1 L2)
-    (display L1) (newline)(display L2) (newline)(newline)
+  (define (pseudoremainder-terms L1 L2)
     (let ((o1 (term-order L1)) 
-          (o2 (term-order L2)))
-          ;(c (coeff (first-term L2))))
-      (remainder-terms L1 L2)))
-;;        (mul-term-by-all-terms 
-;;          (list 0 (pow c (+ 1 (- o1 o2)))) 
-;;          L1)
-;;        L2)))
-  (define (poly-pseudoremainder p1 p2)
-    (lambda (p1 p2)
-      (let ((terms (poly-pseudoremainder-terms (term-list p1) (term-list p2))))
-        (make-poly (variable p1) terms))))
-  (define (poly-gcd a b)
-    (if (=zero?-poly b)
-        a
-        (poly-gcd b (poly-pseudoremainder a b))))
+          (o2 (term-order L2))
+          (c (coeff (first-term L2))))
+      (remainder-terms 
+        (mul-term-by-all-terms 
+          (list 0 (pow c (+ 1 (- o1 o2)))) 
+          L1)
+       L2)))
 
-  (define (tag p) (attach-tag 'polynomial p))
+  (define (remove-common-factors L)
+    (let ((common-factor
+           (accumulate (lambda (x y) (gcd x y))
+                (coeff (car L))
+                (map coeff (cdr L)))))
+      (map (lambda (x) (make-term (order x) (/ (coeff x) common-factor))) L)))
+
+  (define (gcd-terms L1 L2)
+    (remove-common-factors
+      (if (=zero?-terms L2)
+        L1
+        (gcd-terms L2 (pseudoremainder-terms L1 L2)))))
+
+
+  (define (gcd-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly (variable p1) (gcd-terms (term-list p1) (term-list p2)))
+      (error "Polys not in same var:
+             GCD-POLY"
+             (list p1 p2))))
+
+  (define (poly-remainder p1 p2)
+    (cadr (div-poly p1 p2)))
+
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag (sub-poly p1 p2))))
   (put 'remainder '(polynomial polynomial) 
        (lambda (p1 p2)
          (tag (poly-remainder p1 p2))))
   (put 'gcd '(polynomial polynomial) 
        (lambda (p1 p2)
-         (tag (poly-gcd p1 p2))))
+         (tag (gcd-poly p1 p2))))
+
   (put 'div-poly '(polynomial polynomial) 
        (lambda (p1 p2)
          (let ((res (div-poly p1 p2)))
@@ -527,6 +542,7 @@
        (lambda (p) 
          (tag (make-poly (variable p) (negate-terms (term-list p))))))
   ;; interface to rest of the system
+  (define (tag p) (attach-tag 'polynomial p))
   (put 'add '(polynomial polynomial)
        (lambda (p1 p2) 
          (tag (add-poly p1 p2))))

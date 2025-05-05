@@ -72,6 +72,10 @@
 (define (install-scheme-number-package)
   (define (tag x)
     (attach-tag 'scheme-number x))
+  (put 'reduce '(scheme-number scheme-number)
+       (lambda (x y) (tag 
+         (let ((g (gcd x y)))
+           (list (/ x g) (/ y g))))))
   (put 'add '(scheme-number scheme-number)
        (lambda (x y) (tag (+ x y))))
   (put 'sub '(scheme-number scheme-number)
@@ -97,34 +101,39 @@
 ;; ======================== Rational package =========================
 ;; ===================================================================
 
+
 (define (install-rational-package)
   ;; internal procedures
   (define (numer x) (car x))
   (define (denom x) (cdr x))
   (define (make-rat n d)
-    (let ((g (gcd n d)))
-      (cons (/ n g) (/ d g))))
+    (let ((red (apply-generic 'reduce n d)))
+      (cons (car red) (cadr red))))
+  (define (add x y) (apply-generic 'add x y))
+  (define (sub x y) (apply-generic 'sub x y))
+  (define (mul x y) (apply-generic 'mul x y))
+  (define (=zero? x) (apply-generic '=zero? x))
+  (define (negate x) (apply-generic 'negate x))
   (define (add-rat x y)
-    (make-rat (+ (* (numer x) (denom y))
-                 (* (numer y) (denom x)))
-              (* (denom x) (denom y))))
+    (make-rat (add (mul (numer x) (denom y))
+                 (mul (numer y) (denom x)))
+              (mul (denom x) (denom y))))
   (define (sub-rat x y)
-    (make-rat (- (* (numer x) (denom y))
-                 (* (numer y) (denom x)))
-              (* (denom x) (denom y))))
+    (make-rat (sub (mul (numer x) (denom y))
+                 (mul (numer y) (denom x)))
+              (mul (denom x) (denom y))))
   (define (mul-rat x y)
-    (make-rat (* (numer x) (numer y))
-              (* (denom x) (denom y))))
+    (make-rat (mul (numer x) (numer y))
+              (mul (denom x) (denom y))))
   (define (div-rat x y)
-    (make-rat (* (numer x) (denom y))
-              (* (denom x) (numer y))))
+    (make-rat (mul (numer x) (denom y))
+              (mul (denom x) (numer y))))
 
-  ;; z1a/z1b = z2a/z2b  iff z1a*z2b - z2a*z1b = 0
+  ;; z1a/z1b = z2a/z2b  iff z1amulz2b - z2amulz1b = 0
   ;; equ? for problem 2.79
   (define (equ? z1 z2)
-    (= (- (* (numer z1) (denom z2))
-          (* (numer z2) (denom z1)))
-        0))
+    (=zero? (sub (mul (numer z1) (denom z2))
+          (mul (numer z2) (denom z1)))))
   ;; interface to rest of the system
   (put 'equ? '(rational rational) equ?)
   (define (tag x) (attach-tag 'rational x))
@@ -140,9 +149,9 @@
        (lambda (n d) (tag (make-rat n d))))
   ;problem 2.80
   (put '=zero? '(rational)
-    (lambda (a) (= (numer a) 0)))
+    (lambda (a) (=zero? (numer a))))
   (put 'negate '(rational)
-       (lambda (r) (tag (make-rat (- (numer r)) (denom r)))))
+       (lambda (r) (tag (make-rat (negate (numer r)) (denom r)))))
   'done)
 
 (install-rational-package)
@@ -420,10 +429,12 @@
 
   ;; During construction, we don't check whether coefficients are zero
   ;; So now, we have to check all coefficients.
-  (define (=zero?-poly poly)
+  (define (=zero?-terms L)
     (accumulate (lambda (x y) (and y (=zero? (coeff x))))
                 #t
-                (term-list poly)))
+                L))
+  (define (=zero?-poly poly)
+    (=zero?-terms (term-list poly)))
   ;; Make sure to install the function
   (put '=zero? '(polynomial) =zero?-poly)
 
@@ -467,16 +478,6 @@
                           (rem-val (cadr rest-of-result)))
                       (list (add-terms (list new-t) div-val)
                             rem-val)))))))))
-  (define (remainder-terms L1 L2)
-    (cadr (div-terms L1 L2)))
-
-  (put 'sub '(polynomial polynomial)
-       (lambda (p1 p2) 
-         (tag (sub-poly p1 p2))))
-
-
-
-
   (define (div-poly p1 p2)
     (if (same-variable? (variable p1)
                         (variable p2))
@@ -484,22 +485,89 @@
                   (term-list p2))))
          (list (make-poly (variable p1) (car res)) (make-poly (variable p1) (cadr res))))
       (error "Polys not in same var:
-             SUB-POLY"
+             DIV-POLY"
+             (list p1 p2))))
+
+  (define (remainder-terms L1 L2)
+    (cadr (div-terms L1 L2)))
+
+
+
+  (define (term-order L)
+    (if (null? L) 0
+      (order (first-term L))))
+  (define (pow a b)
+    (if (= b 0) 1 (* a (pow a (- b 1)))))
+  (define (pseudoremainder-terms L1 L2)
+    (let ((o1 (term-order L1)) 
+          (o2 (term-order L2))
+          (c (coeff (first-term L2))))
+      (remainder-terms 
+        (mul-term-by-all-terms 
+          (list 0 (pow c (+ 1 (- o1 o2)))) 
+          L1)
+       L2)))
+
+  (define (remove-common-factors L)
+    (let ((common-factor
+           (accumulate (lambda (x y) (gcd x y))
+                (coeff (car L))
+                (map coeff (cdr L)))))
+      (map (lambda (x) (make-term (order x) (/ (coeff x) common-factor))) L)))
+  (define (gcd-terms L1 L2)
+    (remove-common-factors
+      (if (=zero?-terms L2)
+        L1
+        (gcd-terms L2 (pseudoremainder-terms L1 L2)))))
+
+  (define (reduce-terms L1 L2)
+    (let ((my-gcd (gcd-terms L1 L2)))
+      (let ((o1 (max (term-order L1) (term-order L2))) 
+            (o2 (term-order my-gcd))
+            (c (coeff (first-term my-gcd))))
+        (let ((numer-list (div-terms 
+                       (mul-term-by-all-terms 
+                         (list 0 (pow c (+ 1 (- o1 o2)))) 
+                         L1)
+                       my-gcd))
+              (denom-list (div-terms 
+                       (mul-term-by-all-terms 
+                         (list 0 (pow c (+ 1 (- o1 o2)))) 
+                         L2)
+                       my-gcd)))
+          (list (car numer-list) (car denom-list))))))
+
+  (define (reduce-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (map (lambda (L) (make-poly (variable p1) L))
+             (reduce-terms (term-list p1) (term-list p2)))
+      (error "Polys not in same var:
+             REDUCE-POLY"
+             (list p1 p2))))
+
+  (define (gcd-poly p1 p2)
+    (if (same-variable? (variable p1)
+                        (variable p2))
+      (make-poly (variable p1) (gcd-terms (term-list p1) (term-list p2)))
+      (error "Polys not in same var:
+             GCD-POLY"
              (list p1 p2))))
 
   (define (poly-remainder p1 p2)
     (cadr (div-poly p1 p2)))
-  (define (poly-gcd a b)
-    (if (=zero?-poly b)
-        a
-        (poly-gcd b (poly-remainder a b))))
-
+  (put 'reduce '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (map tag (reduce-poly p1 p2))))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag (sub-poly p1 p2))))
   (put 'remainder '(polynomial polynomial) 
        (lambda (p1 p2)
          (tag (poly-remainder p1 p2))))
   (put 'gcd '(polynomial polynomial) 
        (lambda (p1 p2)
-         (tag (poly-gcd p1 p2))))
+         (tag (gcd-poly p1 p2))))
 
   (put 'div-poly '(polynomial polynomial) 
        (lambda (p1 p2)
@@ -528,11 +596,31 @@
 
 (define p1
   (make-polynomial
-   'x '((4 1) (3 -1) (2 -2) (1 2))))
-
+   'x '((2 1) (1 -2) (0 1))))
 (define p2
   (make-polynomial
-   'x '((3 1) (1 -1))))
+   'x '((2 11) (0 7))))
+(define p3
+  (make-polynomial
+   'x '((1 13) (0 5))))
+(define q1
+  (apply-generic 'mul p1 p2))
+(define q2
+  (apply-generic 'mul p1 p3))
 
-(apply-generic 'gcd p1 p2)
-
+;; (apply-generic 'gcd q1 q2)
+;; (apply-generic 'reduce q1 q2)
+(display "(make-rational 15 5) = ")
+(make-rational 15 5)
+(display "
+(make-rational
+  (polynomial x (4 11) (3 -22) (2 18) (1 -14) (0 7))
+  (polynomial x (3 13) (2 -21) (1 3) (0 5)))
+=
+")
+(make-rational q1 q2)
+(newline)
+(display "Testing that (x+1)/(x-1) does not get simplified:")(newline)
+(make-rational
+  '(polynomial x (1 1) (0 1))
+  '(polynomial x (1 1) (0 -1)))

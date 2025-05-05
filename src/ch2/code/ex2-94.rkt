@@ -467,6 +467,9 @@
                           (rem-val (cadr rest-of-result)))
                       (list (add-terms (list new-t) div-val)
                             rem-val)))))))))
+  (define (remainder-terms L1 L2)
+    (cadr (div-terms L1 L2)))
+
   (put 'sub '(polynomial polynomial)
        (lambda (p1 p2) 
          (tag (sub-poly p1 p2))))
