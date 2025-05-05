@@ -341,6 +341,7 @@
       ((null? o1) #f)
       ((null? o2) #t)
       ((< (length o2) (length o1)) #t)
+      ((< (length o1) (length o2)) #f)
       ((single-order<? (car o1) (car o2)) #t)
       ((single-order<? (car o2) (car o1)) #f)
       (else (order<? (cdr o1) (cdr o2)))))
@@ -356,168 +357,134 @@
     (define (monomial-compare x y) 
       (order<? (order x) (order y)))
     (sort (map sort-monomial term-list) monomial-compare))
+
+
+
+
+  ;; negate
+  (define (negate polynomial) 
+    (map (lambda (mono) 
+           (make-mono (apply-generic 'negate (coeff mono)) 
+                      (order mono))) polynomial))
+
+
+  (define (empty-polynomial? poly) 
+    (null? poly))
+  (define (first-monomial poly) 
+    (car poly))
+  (define (rest-monomials poly) 
+    (cdr poly))
+  (define (adjoin-term term polynomial)
+    (if (apply-generic '=zero? (coeff term))
+      polynomial
+      (cons term polynomial)))
+  ;; add-poly
+  (define (add-polys L1 L2)
+    (cond 
+      ((empty-polynomial? L1) L2)
+      ((empty-polynomial? L2) L1)
+      (else
+       (let ((t1 (first-monomial L1))
+             (t2 (first-monomial L2)))
+         (cond 
+           ((order<? (order t1) (order t2) )
+            (adjoin-term
+             t1
+             (add-polys (rest-monomials L1)
+                        L2)))
+           ((order<? (order t2) (order t1))
+            (adjoin-term
+             t2
+             (add-polys
+              L1
+              (rest-monomials L2))))
+           (else
+            (adjoin-term
+             (make-mono
+  ;(define (make-mono coeff order) (list coeff order)) 
+              (apply-generic 'add (coeff t1)
+                                  (coeff t2)) 
+              (order t1))
+             (add-polys
+              (rest-monomials L1)
+              (rest-monomials L2)))))))))
+  (define (sub-polys p1 p2)
+    (add-polys p1 (negate p2)))
+
+
+  (define (adjoin-order single-order order)
+    (if (= (cadr single-order) 0)
+      order
+      (cons single-order order)))
+  (define (add-orders o1 o2)
+    (cond 
+      ((null? o1) o2)
+      ((null? o2) o1)
+      (else
+       (let ((so1 (car o1))
+             (so2 (car o2)))
+         (cond
+           ((symbol<? (car so1) (car so2))
+            (adjoin-order
+             so1
+             (add-orders (cdr o1)
+                          o2)))
+           ((symbol<? (car so2) (car so1))
+            (adjoin-order
+             so2
+             (add-orders
+              o1
+              (cdr o2))))
+           (else
+            (adjoin-order
+             (list
+              (car so1)
+              (+ (cadr so1) (cadr so2)))
+             (add-orders
+              (cdr o1)
+              (cdr o2)))))))))
+  ;; mul-poly
+  (define (mul-mono-by-poly m1 P)
+    (define (mul-mono-by-poly-inner m1 P)
+      (if (empty-polynomial? P)
+        '()
+        (let ((m2 (first-monomial P)))
+          (adjoin-term
+           (make-mono
+            (apply-generic 'mul (coeff m1) (coeff m2))
+            (add-orders (order m1) (order m2)))
+           ;; If m2 < m3, does m1*m2 < m1*m3? 
+           ;; NO! 
+           ;; '((a 3)) < '((b 3))  <-- true
+           ;; '((a 3)) * '((a 1)) = '((a 4))
+           ;; '((b 3)) * '((a 1)) = '((a 1) (b 3))
+           ;; So with my definition, '((a 1) (b 3)) < '((a 4))
+           ;; Therefore, we need to make sure we sort the result.
+           (mul-mono-by-poly-inner
+            m1
+            (rest-monomials P))))))
+    (make-poly-from-unsorted (mul-mono-by-poly-inner m1 P)))
+  (define (mul-polys P1 P2)
+    (if (empty-polynomial? P1)
+      '()
+      (add-polys
+       (mul-mono-by-poly
+        (first-monomial P1) P2)
+       (mul-polys (rest-monomials P1) P2))))
+
   (define (tag p) (attach-tag 'polynomial p))
   (put 'make 'polynomial
        (lambda (terms) 
          (tag (make-poly-from-unsorted terms))))
-
-
-  ;; negate
-  ;; add-poly
-  (define (add-terms L1 L2)
-    (cond ((empty-termlist? L1) L2)
-      ((empty-termlist? L2) L1)
-      (else
-       (let ((t1 (first-term L1))
-             (t2 (first-term L2)))
-         (cond ((> (order t1) (order t2))
-                (adjoin-term
-                 t1
-                 (add-terms (rest-terms L1)
-                            L2)))
-           ((< (order t1) (order t2))
-            (adjoin-term
-             t2
-             (add-terms
-              L1
-              (rest-terms L2))))
-           (else
-            (adjoin-term
-             (make-term
-              (order t1)
-              (add (coeff t1)
-                   (coeff t2)))
-             (add-terms
-              (rest-terms L1)
-              (rest-terms L2)))))))))
-  ;; sub-poly
-
-  ;; mul-poly
-
-
-;;   ;; internal procedures
-;;   ;; representation of poly
-;;   (define (make-poly variable term-list)
-;;     (cons variable term-list))
-;;   (define (variable p) (car p))
-;;   (define (term-list p) (cdr p))
-;; 
-;;   (define (variable? x) (symbol? x))
-;;   (define (same-variable? v1 v2)
-;;     (and (variable? v1)
-;;          (variable? v2)
-;;          (eq? v1 v2)))
-;; 
-;;   (define (mul-terms L1 L2)
-;;     (if (empty-termlist? L1)
-;;       (the-empty-termlist)
-;;       (add-terms
-;;        (mul-term-by-all-terms
-;;         (first-term L1) L2)
-;;        (mul-terms (rest-terms L1) L2))))
-;; 
-;;   (define (mul-term-by-all-terms t1 L)
-;;     (if (empty-termlist? L)
-;;       (the-empty-termlist)
-;;       (let ((t2 (first-term L)))
-;;         (adjoin-term
-;;          (make-term
-;;           (+ (order t1) (order t2))
-;;           (mul (coeff t1) (coeff t2)))
-;;          (mul-term-by-all-terms
-;;           t1
-;;           (rest-terms L))))))
-;; 
-;; 
-;;   ;; representation of terms and term lists
-;;   (define (adjoin-term term term-list)
-;;     (if (=zero? (coeff term))
-;;       term-list
-;;       (cons term term-list)))
-;;   (define (the-empty-termlist) '())
-;;   (define (first-term term-list) (car term-list))
-;;   (define (rest-terms term-list) (cdr term-list))
-;;   (define (empty-termlist? term-list)
-;;     (null? term-list))
-;;   (define (make-term order coeff)
-;;     (list order coeff))
-;;   (define (order term) (car term))
-;;   (define (coeff term) (cadr term))
-;; 
-;; 
-;;   (define (add-poly p1 p2)
-;;     (if (same-variable? (variable p1)
-;;                         (variable p2))
-;;       (make-poly
-;;        (variable p1)
-;;        (add-terms (term-list p1)
-;;                   (term-list p2)))
-;;       (error "Polys not in same var:
-;;              ADD-POLY"
-;;              (list p1 p2))))
-;; 
-;;   (define (mul-poly p1 p2)
-;;     (if (same-variable? (variable p1)
-;;                         (variable p2))
-;;       (make-poly
-;;        (variable p1)
-;;        (mul-terms (term-list p1)
-;;                   (term-list p2)))
-;;       (error "Polys not in same var:
-;;              MUL-POLY"
-;;              (list p1 p2))))
-;; 
-;; 
-;; ;; (ct1 x^(ot1)+rest1)/(ct2 x^(ot2)+rest2) 
-;; ;; =(poly1 - (ct1/ct2) x^(ot1-ot2)(poly2) + (ct1/ct2) x^(ot1-ot2)(poly2))/(poly2)
-;; ;; =(ct1/ct2) x^(ot1-ot2) + (poly1 - (ct1/ct2) x^(ot1-ot2)(poly2))/poly2
-;; 
-;; 
-;;   ;; During construction, we don't check whether coefficients are zero
-;;   ;; So now, we have to check all coefficients.
-;;   (define (=zero?-poly poly)
-;;     (accumulate (lambda (x y) (and y (=zero? (coeff x))))
-;;                 #t
-;;                 (term-list poly)))
-;;   ;; Make sure to install the function
-;;   (put '=zero? '(polynomial) =zero?-poly)
-;; 
-;;   ;; Exercise 2-88
-;;   (define (negate-terms L) 
-;;     (if (empty-termlist? L)
-;;       L
-;;       (let ((t (first-term L)) (r (rest-terms L)))
-;;         (adjoin-term (make-term (order t) (apply-generic 'negate (coeff t)))
-;;                      (negate-terms r)))))
-;;   (define (sub-terms L1 L2)
-;;     (add-terms L1 (negate-terms L2)))
-;;   (define (sub-poly p1 p2)
-;;     (if (same-variable? (variable p1)
-;;                         (variable p2))
-;;       (make-poly
-;;        (variable p1)
-;;        (sub-terms (term-list p1)
-;;                   (term-list p2)))
-;;       (error "Polys not in same var:
-;;              SUB-POLY"
-;;              (list p1 p2))))
-;;   (put 'sub '(polynomial polynomial)
-;;        (lambda (p1 p2) 
-;;          (tag (sub-poly p1 p2))))
-;;   (put 'negate '(polynomial)
-;;        (lambda (p) 
-;;          (tag (make-poly (variable p) (negate-terms (term-list p))))))
-;;   ;; interface to rest of the system
-;;   (define (tag p) (attach-tag 'polynomial p))
-;;   (put 'add '(polynomial polynomial)
-;;        (lambda (p1 p2) 
-;;          (tag (add-poly p1 p2))))
-;;   (put 'mul '(polynomial polynomial)
-;;        (lambda (p1 p2) 
-;;          (tag (mul-poly p1 p2))))
-;;   (put 'make 'polynomial
-;;        (lambda (var terms) 
-;;          (tag (make-poly var terms))))
+  (put 'negate '(polynomial)
+       (lambda (p) (tag (negate p))))
+  (put 'add '(polynomial polynomial)
+       (lambda (p1 p2) (tag (add-polys p1 p2))))
+  (put 'sub '(polynomial polynomial)
+       (lambda (p1 p2) 
+         (tag (sub-polys p1 p2))))
+  (put 'mul '(polynomial polynomial)
+       (lambda (p1 p2) (tag (mul-polys p1 p2))))
   'done)
 
 (install-polynomial-package)
@@ -532,15 +499,18 @@
 (define l3 '((x 2) (y 2) (b 10) (a 4)))
 (define l4 '())
 
-(make-polynomial (list (list 1 l1) (list -1 l2) (list 3 l3) (list -10 l4)))
-;; (define (make-polynomial var terms)
-;;   ((get 'make 'polynomial) var terms))
-;; 
-;; (define a (make-polynomial 'x '((5 1) (0 -1))))
-;; (define b (make-polynomial 'x '((2 1) (0 -1))))
-;; (define c (make-polynomial 'x '((1 1) (0 -1))))
-;; 
-;; (display "(x^5-1)*(x^2-1) = ")
-;; (apply-generic 'mul a b)
-;; (display "(x^5-1)+(x-1) = ")
-;; (apply-generic 'add a 
+(define p1 (make-polynomial (list (list 1 l1) (list -1 l2) (list 3 l3) (list -10 l4))))
+(define p2 (apply-generic 'negate p1))
+(define p3 (make-polynomial '((1 ((x 3))) (1 ((x 1))))))
+(define p4 (make-polynomial '((1 ((x 2))) (1 ()) (-1 ((y 1))))))
+(define p5 (make-polynomial '((1 ((x 4))) (1 ((x 3))) (1 ((x 2))) (1 ((x 1))) (1 ()))))
+(define p6 (make-polynomial '((1 ((x 1))) (-1 ()))))
+;;p1
+;;p2
+(apply-generic 'add p1 p3)
+;;(apply-generic 'add p1 p1)
+;;(apply-generic 'add p1 p1)
+(display "(x^3+x)(x^2-y+1) = -x^3y -xy + x^5 + 2x^3 + x^2 + x") (newline)
+(apply-generic 'mul p3 p4)
+(display "(x^4+x^3+x^2+x+1)(x-1) = x^5 - 1") (newline)
+(apply-generic 'mul p5 p6)

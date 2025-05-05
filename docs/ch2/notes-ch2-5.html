@@ -524,9 +524,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <ul>
 <li><a href="#section-25">Section 2.5</a></li>
 <ul>
+<li><a href="#meeting-05-04-2025">Meeting 05-04-2025</a></li>
 <ul>
-<li><a href="#creating-a-sensible">Creating a Sensible</a></li>
+<li><a href="#relevant-wiki-pages">Relevant Wiki Pages:</a></li>
+<li><a href="#info-about-julia">Info about Julia:</a></li>
 </ul>
+<li><a href="#goofiness">Goofiness</a></li>
 <li><a href="#introduction">Introduction</a></li>
 <li><a href="#exercises" class="toc-exercises">Exercises</a>
 <div class="exercise-container">(
@@ -562,7 +565,36 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <p>Note: At the end it looks like we talk about polynomials, it might be worth skimming over some simple algorithms from Ideals, Varieties, and Algorithms and maybe implementing a simple one. </p>
 <p>Note: Lagrange interpolating polynomials are cool. <a href="https://en.wikipedia.org/wiki/Lagrange_polynomial">https://en.wikipedia.org/wiki/Lagrange_polynomial</a></p>
 <p>TODO: Skip 86</p>
-<h4 id="creating-a-sensible">Creating a Sensible</h4>
+<h3 id="meeting-05-04-2025">Meeting 05-04-2025</h3>
+<p>https://sarabander.github.io/sicp/html/2_002e5.xhtml#g_t2_002e5</p>
+<ul>
+<li><a href="The Unreasonable Effectiveness of Multiple Dispatch">https://www.youtube.com/watch?v=kc9HwsxE1OY</a> and <a href="https://www.juliaopt.org/meetings/santiago2019/slides/stefan_karpinski.pdf">the slides to the talk</a></li>
+<li>Take a look at this <a href="https://cs.brown.edu/~sk/Publications/Papers/Published/fffk-htdp-vs-sicp-journal/paper.pdf">curriculum document</a></li>
+</ul>
+<h4 id="relevant-wiki-pages">Relevant Wiki Pages:</h4>
+<ul>
+<li><a href="https://en.wikipedia.org/wiki/Numerical_tower">Numerical tower</a>. A more formal version of the integer &lt; rational &lt; real &lt; complex.</li>
+<li><a href="https://en.wikipedia.org/wiki/Expression_problem">Expression problem</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Multiple_inheritance">Multiple inheritance</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Common_Lisp_Object_System">Common Lisp Object System</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Metaobject#Metaobject_protocol">Metaobject protocol</a></li>
+<li><a href="https://en.wikipedia.org/wiki/Greenspun%27s_tenth_rule">Greenspun's tenth rule</a></li>
+</ul>
+<h4 id="info-about-julia">Info about Julia:</h4>
+<ul>
+<li><a href="https://juliacon.org/2025/">https://juliacon.org/2025/</a></li>
+</ul>
+<h3 id="goofiness">Goofiness</h3>
+<ul>
+<li>turn music back on (DONE!!!!)</li>
+<li>Ad break / stretch (DONE) </li>
+<li>Finish recording the links (YEP YOU GUESSED IT)</li>
+<li>try to take over the world (seems to0 hard)</li>
+<li>fail (IN THE BAG!!!)</li>
+<li>Learn two spell</li>
+<li>fail</li>
+<li>keep doing problems</li>
+</ul>
 <h3 id="introduction">Introduction</h3>
 <h3 id="exercises">Exercises</h3>
 <h5>Solution</h5>
@@ -6640,6 +6672,7 @@ correct way to do things). </p>
 except instead of <code>&lt;</code> to compare orders, we'll have to use <code>order&lt;?</code>. 
 We'll also have to define <code>adjoin-term</code> correctly.
 <code>negate</code> and <code>sub</code> are easy. </p>
+<p>Testing some polynomial multiplication examples:</p>
 <div class="code-box">
 <details class="collapsible-code">
 <summary class="code-summary"><a href="code/ex2-92.rkt">code/ex2-92.rkt</a> <span class="expand-hint">(click to expand)</span></summary>
@@ -6987,6 +7020,7 @@ We'll also have to define <code>adjoin-term</code> correctly.
 <span class="w">      </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">o1</span><span class="p">)</span><span class="w"> </span><span class="no">#f</span><span class="p">)</span>
 <span class="w">      </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">o2</span><span class="p">)</span><span class="w"> </span><span class="no">#t</span><span class="p">)</span>
 <span class="w">      </span><span class="p">((</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="n">o2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="n">o1</span><span class="p">))</span><span class="w"> </span><span class="no">#t</span><span class="p">)</span>
+<span class="w">      </span><span class="p">((</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="n">o1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">length</span><span class="w"> </span><span class="n">o2</span><span class="p">))</span><span class="w"> </span><span class="no">#f</span><span class="p">)</span>
 <span class="w">      </span><span class="p">((</span><span class="n">single-order&lt;?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">o1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">o2</span><span class="p">))</span><span class="w"> </span><span class="no">#t</span><span class="p">)</span>
 <span class="w">      </span><span class="p">((</span><span class="n">single-order&lt;?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">o2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">o1</span><span class="p">))</span><span class="w"> </span><span class="no">#f</span><span class="p">)</span>
 <span class="w">      </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">order&lt;?</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">o1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">o2</span><span class="p">)))))</span>
@@ -7002,14 +7036,456 @@ We'll also have to define <code>adjoin-term</code> correctly.
 <span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">monomial-compare</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span>
 <span class="w">      </span><span class="p">(</span><span class="n">order&lt;?</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
 <span class="w">    </span><span class="p">(</span><span class="nb">sort</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">sort-monomial</span><span class="w"> </span><span class="n">term-list</span><span class="p">)</span><span class="w"> </span><span class="n">monomial-compare</span><span class="p">))</span>
+
+
+
+
+<span class="w">  </span><span class="c1">;; negate</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">negate</span><span class="w"> </span><span class="n">polynomial</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">mono</span><span class="p">)</span><span class="w"> </span>
+<span class="w">           </span><span class="p">(</span><span class="n">make-mono</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">negate</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">mono</span><span class="p">))</span><span class="w"> </span>
+<span class="w">                      </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">mono</span><span class="p">)))</span><span class="w"> </span><span class="n">polynomial</span><span class="p">))</span>
+
+
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">empty-polynomial?</span><span class="w"> </span><span class="n">poly</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">poly</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">first-monomial</span><span class="w"> </span><span class="n">poly</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">poly</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rest-monomials</span><span class="w"> </span><span class="n">poly</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">poly</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">adjoin-term</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">polynomial</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">=zero?</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">term</span><span class="p">))</span>
+<span class="w">      </span><span class="n">polynomial</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">polynomial</span><span class="p">)))</span>
+<span class="w">  </span><span class="c1">;; add-poly</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-polys</span><span class="w"> </span><span class="n">L1</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span>
+<span class="w">      </span><span class="p">((</span><span class="n">empty-polynomial?</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span>
+<span class="w">      </span><span class="p">((</span><span class="n">empty-polynomial?</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">else</span>
+<span class="w">       </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">t1</span><span class="w"> </span><span class="p">(</span><span class="n">first-monomial</span><span class="w"> </span><span class="n">L1</span><span class="p">))</span>
+<span class="w">             </span><span class="p">(</span><span class="n">t2</span><span class="w"> </span><span class="p">(</span><span class="n">first-monomial</span><span class="w"> </span><span class="n">L2</span><span class="p">)))</span>
+<span class="w">         </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span>
+<span class="w">           </span><span class="p">((</span><span class="n">order&lt;?</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t2</span><span class="p">)</span><span class="w"> </span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="n">adjoin-term</span>
+<span class="w">             </span><span class="n">t1</span>
+<span class="w">             </span><span class="p">(</span><span class="n">add-polys</span><span class="w"> </span><span class="p">(</span><span class="n">rest-monomials</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span>
+<span class="w">                        </span><span class="n">L2</span><span class="p">)))</span>
+<span class="w">           </span><span class="p">((</span><span class="n">order&lt;?</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t1</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="n">adjoin-term</span>
+<span class="w">             </span><span class="n">t2</span>
+<span class="w">             </span><span class="p">(</span><span class="n">add-polys</span>
+<span class="w">              </span><span class="n">L1</span>
+<span class="w">              </span><span class="p">(</span><span class="n">rest-monomials</span><span class="w"> </span><span class="n">L2</span><span class="p">))))</span>
+<span class="w">           </span><span class="p">(</span><span class="k">else</span>
+<span class="w">            </span><span class="p">(</span><span class="n">adjoin-term</span>
+<span class="w">             </span><span class="p">(</span><span class="n">make-mono</span>
+<span class="w">  </span><span class="c1">;(define (make-mono coeff order) (list coeff order)) </span>
+<span class="w">              </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">t1</span><span class="p">)</span>
+<span class="w">                                  </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">t2</span><span class="p">))</span><span class="w"> </span>
+<span class="w">              </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t1</span><span class="p">))</span>
+<span class="w">             </span><span class="p">(</span><span class="n">add-polys</span>
+<span class="w">              </span><span class="p">(</span><span class="n">rest-monomials</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span>
+<span class="w">              </span><span class="p">(</span><span class="n">rest-monomials</span><span class="w"> </span><span class="n">L2</span><span class="p">)))))))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub-polys</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">add-polys</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="p">(</span><span class="nb">negate</span><span class="w"> </span><span class="n">p2</span><span class="p">)))</span>
+
+
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">adjoin-order</span><span class="w"> </span><span class="n">single-order</span><span class="w"> </span><span class="n">order</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="n">single-order</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">      </span><span class="n">order</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">single-order</span><span class="w"> </span><span class="n">order</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-orders</span><span class="w"> </span><span class="n">o1</span><span class="w"> </span><span class="n">o2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span>
+<span class="w">      </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">o1</span><span class="p">)</span><span class="w"> </span><span class="n">o2</span><span class="p">)</span>
+<span class="w">      </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">o2</span><span class="p">)</span><span class="w"> </span><span class="n">o1</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">else</span>
+<span class="w">       </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">so1</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">o1</span><span class="p">))</span>
+<span class="w">             </span><span class="p">(</span><span class="n">so2</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">o2</span><span class="p">)))</span>
+<span class="w">         </span><span class="p">(</span><span class="k">cond</span>
+<span class="w">           </span><span class="p">((</span><span class="nb">symbol&lt;?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">so1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">so2</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="n">adjoin-order</span>
+<span class="w">             </span><span class="n">so1</span>
+<span class="w">             </span><span class="p">(</span><span class="n">add-orders</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">o1</span><span class="p">)</span>
+<span class="w">                          </span><span class="n">o2</span><span class="p">)))</span>
+<span class="w">           </span><span class="p">((</span><span class="nb">symbol&lt;?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">so2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">so1</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="n">adjoin-order</span>
+<span class="w">             </span><span class="n">so2</span>
+<span class="w">             </span><span class="p">(</span><span class="n">add-orders</span>
+<span class="w">              </span><span class="n">o1</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">o2</span><span class="p">))))</span>
+<span class="w">           </span><span class="p">(</span><span class="k">else</span>
+<span class="w">            </span><span class="p">(</span><span class="n">adjoin-order</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">list</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">so1</span><span class="p">)</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="n">so1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="n">so2</span><span class="p">)))</span>
+<span class="w">             </span><span class="p">(</span><span class="n">add-orders</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">o1</span><span class="p">)</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">o2</span><span class="p">)))))))))</span>
+<span class="w">  </span><span class="c1">;; mul-poly</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-mono-by-poly</span><span class="w"> </span><span class="n">m1</span><span class="w"> </span><span class="n">P</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-mono-by-poly-inner</span><span class="w"> </span><span class="n">m1</span><span class="w"> </span><span class="n">P</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-polynomial?</span><span class="w"> </span><span class="n">P</span><span class="p">)</span>
+<span class="w">        </span><span class="o">&#39;</span><span class="p">()</span>
+<span class="w">        </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">m2</span><span class="w"> </span><span class="p">(</span><span class="n">first-monomial</span><span class="w"> </span><span class="n">P</span><span class="p">)))</span>
+<span class="w">          </span><span class="p">(</span><span class="n">adjoin-term</span>
+<span class="w">           </span><span class="p">(</span><span class="n">make-mono</span>
+<span class="w">            </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">m1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">m2</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="n">add-orders</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">m1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">m2</span><span class="p">)))</span>
+<span class="w">           </span><span class="c1">;; If m2 &lt; m3, does m1*m2 &lt; m1*m3? </span>
+<span class="w">           </span><span class="c1">;; NO! </span>
+<span class="w">           </span><span class="c1">;; &#39;((a 3)) &lt; &#39;((b 3))  &lt;-- true</span>
+<span class="w">           </span><span class="c1">;; &#39;((a 3)) * &#39;((a 1)) = &#39;((a 4))</span>
+<span class="w">           </span><span class="c1">;; &#39;((b 3)) * &#39;((a 1)) = &#39;((a 1) (b 3))</span>
+<span class="w">           </span><span class="c1">;; So with my definition, &#39;((a 1) (b 3)) &lt; &#39;((a 4))</span>
+<span class="w">           </span><span class="c1">;; Therefore, we need to make sure we sort the result.</span>
+<span class="w">           </span><span class="p">(</span><span class="n">mul-mono-by-poly-inner</span>
+<span class="w">            </span><span class="n">m1</span>
+<span class="w">            </span><span class="p">(</span><span class="n">rest-monomials</span><span class="w"> </span><span class="n">P</span><span class="p">))))))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-poly-from-unsorted</span><span class="w"> </span><span class="p">(</span><span class="n">mul-mono-by-poly-inner</span><span class="w"> </span><span class="n">m1</span><span class="w"> </span><span class="n">P</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-polys</span><span class="w"> </span><span class="n">P1</span><span class="w"> </span><span class="n">P2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-polynomial?</span><span class="w"> </span><span class="n">P1</span><span class="p">)</span>
+<span class="w">      </span><span class="o">&#39;</span><span class="p">()</span>
+<span class="w">      </span><span class="p">(</span><span class="n">add-polys</span>
+<span class="w">       </span><span class="p">(</span><span class="n">mul-mono-by-poly</span>
+<span class="w">        </span><span class="p">(</span><span class="n">first-monomial</span><span class="w"> </span><span class="n">P1</span><span class="p">)</span><span class="w"> </span><span class="n">P2</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="n">mul-polys</span><span class="w"> </span><span class="p">(</span><span class="n">rest-monomials</span><span class="w"> </span><span class="n">P1</span><span class="p">)</span><span class="w"> </span><span class="n">P2</span><span class="p">))))</span>
+
 <span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">attach-tag</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">polynomial</span><span class="w"> </span><span class="n">p</span><span class="p">))</span>
 <span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">polynomial</span>
 <span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">terms</span><span class="p">)</span><span class="w"> </span>
 <span class="w">         </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">make-poly-from-unsorted</span><span class="w"> </span><span class="n">terms</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">negate</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="nb">negate</span><span class="w"> </span><span class="n">p</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">polynomial</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">add-polys</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">sub</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">polynomial</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">sub-polys</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">polynomial</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">mul-polys</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+<span class="w">  </span><span class="o">&#39;</span><span class="ss">done</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">install-polynomial-package</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="n">terms</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">get</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">polynomial</span><span class="p">)</span><span class="w"> </span><span class="n">terms</span><span class="p">))</span>
 
 
-<span class="w">  </span><span class="c1">;; negate</span>
-<span class="w">  </span><span class="c1">;; add-poly</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">l1</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
+<span class="c1">;;(define l3 (sort &#39;((x 2) (y 2) (b 10) (a 4)) single-order&lt;?))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">l3</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">b</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">a</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">l4</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">l1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="n">l2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">l3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">-10</span><span class="w"> </span><span class="n">l4</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">negate</span><span class="w"> </span><span class="n">p1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p4</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">())</span><span class="w"> </span><span class="p">(</span><span class="mi">-1</span><span class="w"> </span><span class="p">((</span><span class="ss">y</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p5</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">3</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">()))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p6</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="mi">-1</span><span class="w"> </span><span class="p">()))))</span>
+<span class="c1">;;p1</span>
+<span class="c1">;;p2</span>
+<span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p3</span><span class="p">)</span>
+<span class="c1">;;(apply-generic &#39;add p1 p1)</span>
+<span class="c1">;;(apply-generic &#39;add p1 p1)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;(x^3+x)(x^2-y+1) = -x^3y -xy + x^5 + 2x^3 + x^2 + x&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="n">p3</span><span class="w"> </span><span class="n">p4</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;(x^4+x^3+x^2+x+1)(x-1) = x^5 - 1&quot;</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="n">p5</span><span class="w"> </span><span class="n">p6</span><span class="p">)</span>
+</code></pre></div>
+
+
+</details>
+<div class="code-output">
+<span>Output:</span>
+<pre>done
+done
+done
+done
+done
+done
+(polynomial (3 ((b 10) (a 4) (x 2) (y 2))) (-1 ((x 2) (y 2))) (1 ((x 2) (y 1))) (1 ((x 3))) (1 ((x 1))) (-10 ()))
+(x^3+x)(x^2-y+1) = -x^3y -xy + x^5 + 2x^3 + x^2 + x
+(polynomial (-1 ((x 3) (y 1))) (-1 ((x 1) (y 1))) (1 ((x 5))) (2 ((x 3))) (1 ((x 1))))
+(x^4+x^3+x^2+x+1)(x-1) = x^5 - 1
+(polynomial (1 ((x 5))) (-1 ()))
+</pre>
+</div>
+</div>
+
+<h4 id="exercise-293">Exercise 2.93</h4>
+<p>Modify the rational-arithmetic
+package to use generic operations, but change <code>make-rat</code> so that it does
+not attempt to reduce fractions to lowest terms.  Test your system by calling
+<code>make-rational</code> on two polynomials to produce a rational function:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">3</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">rf</span><span class="w"> </span><span class="p">(</span><span class="n">make-rational</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p1</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Now add <code>rf</code> to itself, using <code>add</code>. You will observe that this
+addition procedure does not reduce fractions to lowest terms.</p>
+<h5>Solution</h5>
+<p>We have the following rational function</p>
+<p>$$r_f = \frac{x^3+1}{x^2+1}$$</p>
+<p>We add rational numbers by doing</p>
+<p>$$\frac{a}{b}+\frac{c}{d} = \frac{ad+bc}{bd}$$</p>
+<p>According to this rule</p>
+<div>$$2 r_f = \frac{2(x^3+1)(x^2+1)}{(x^2+1)^2} =\frac{2x^5+2x^3+2x^2+2}{x^4+2x^2+1}$$</div>
+
+<div class="code-box">
+<details class="collapsible-code">
+<summary class="code-summary"><a href="code/ex2-93.rkt">code/ex2-93.rkt</a> <span class="expand-hint">(click to expand)</span></summary>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nb">pi</span><span class="w"> </span><span class="mf">3.14159</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">initial</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">      </span><span class="n">initial</span>
+<span class="w">      </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">sequence</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="n">op</span>
+<span class="w">                      </span><span class="n">initial</span>
+<span class="w">                      </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">sequence</span><span class="p">)))))</span>
+<span class="c1">;; get and put definitions</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">operation-table</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">records</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="no">#f</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">equal?</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">caar</span><span class="w"> </span><span class="n">records</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">records</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">records</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">assoc-op</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">records</span><span class="p">)</span>
+<span class="w">   </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="no">#f</span><span class="p">)</span>
+<span class="w">         </span><span class="p">((</span><span class="nb">equal?</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">caar</span><span class="w"> </span><span class="n">records</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">records</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">assoc-op</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">records</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">type-tags</span><span class="w"> </span><span class="n">proc</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">op-list-entry</span><span class="w"> </span><span class="p">(</span><span class="n">assoc-op</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">operation-table</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">op-list-entry</span>
+<span class="w">        </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">proc-list</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="n">op-list-entry</span><span class="p">)))</span>
+<span class="w">           </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">proc-pair-entry</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">type-tags</span><span class="w"> </span><span class="n">proc-list</span><span class="p">)))</span>
+<span class="w">             </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">proc-pair-entry</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">proc-pair-entry</span><span class="w"> </span><span class="n">proc</span><span class="p">)</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">set-car!</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">op-list-entry</span><span class="p">)</span>
+<span class="w">                           </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">type-tags</span><span class="w"> </span><span class="n">proc</span><span class="p">)</span><span class="w"> </span><span class="n">proc-list</span><span class="p">)))))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">operation-table</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">type-tags</span><span class="w"> </span><span class="n">proc</span><span class="p">)))</span>
+<span class="w">                    </span><span class="n">operation-table</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">get</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">type-tags</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">op-list-entry</span><span class="w"> </span><span class="p">(</span><span class="n">assoc-op</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">operation-table</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">op-list-entry</span>
+<span class="w">        </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">proc-list</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="n">op-list-entry</span><span class="p">)))</span>
+<span class="w">          </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">proc-pair-entry</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">type-tags</span><span class="w"> </span><span class="n">proc-list</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">proc-pair-entry</span>
+<span class="w">                </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">proc-pair-entry</span><span class="p">)</span>
+<span class="w">                </span><span class="no">#f</span><span class="p">)))</span>
+<span class="w">        </span><span class="no">#f</span><span class="p">)))</span>
+
+<span class="c1">;; Modified for ex2-78. </span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">attach-tag</span><span class="w"> </span><span class="n">type-tag</span><span class="w"> </span><span class="n">contents</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="n">type-tag</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">scheme-number</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="n">contents</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">type-tag</span><span class="w"> </span><span class="n">contents</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">type-tag</span><span class="w"> </span><span class="n">datum</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">pair?</span><span class="w"> </span><span class="n">datum</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">datum</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">number?</span><span class="w"> </span><span class="n">datum</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">scheme-number</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Bad tagged datum: TYPE-TAG&quot;</span><span class="w"> </span><span class="n">datum</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">contents</span><span class="w"> </span><span class="n">datum</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">pair?</span><span class="w"> </span><span class="n">datum</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">datum</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">number?</span><span class="w"> </span><span class="n">datum</span><span class="p">)</span><span class="w"> </span><span class="n">datum</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Bad tagged datum: CONTENTS&quot;</span><span class="w"> </span><span class="n">datum</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">args</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">type-tags</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">type-tag</span><span class="w"> </span><span class="n">args</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">proc</span><span class="w"> </span><span class="p">(</span><span class="n">get</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">type-tags</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">proc</span>
+<span class="w">          </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">contents</span><span class="w"> </span><span class="n">args</span><span class="p">))</span>
+<span class="w">          </span><span class="p">(</span><span class="nb">error</span>
+<span class="w">            </span><span class="s2">&quot;No method for these types: APPLY-GENERIC&quot;</span>
+<span class="w">            </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">op</span><span class="w"> </span><span class="n">type-tags</span><span class="p">))))))</span>
+
+
+<span class="c1">;; Number package</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">install-scheme-number-package</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">attach-tag</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">scheme-number</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">scheme-number</span><span class="w"> </span><span class="ss">scheme-number</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">sub</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">scheme-number</span><span class="w"> </span><span class="ss">scheme-number</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">scheme-number</span><span class="w"> </span><span class="ss">scheme-number</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">div</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">scheme-number</span><span class="w"> </span><span class="ss">scheme-number</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">scheme-number</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">=zero?</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">scheme-number</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">negate</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">scheme-number</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="w">  </span><span class="o">&#39;</span><span class="ss">done</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">install-scheme-number-package</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-scheme-number</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">get</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">scheme-number</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+
+<span class="c1">;; ===================================================================</span>
+<span class="c1">;; ======================== Rational package =========================</span>
+<span class="c1">;; ===================================================================</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">install-rational-package</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">;; internal procedures</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">sub</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">=zero?</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">=zero?</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">negate</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">negate</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-rat</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="p">(</span><span class="n">add</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="w">              </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub-rat</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="p">(</span><span class="n">sub</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="w">              </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-rat</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">              </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">div-rat</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">              </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+
+<span class="w">  </span><span class="c1">;; z1a/z1b = z2a/z2b  iff z1amulz2b - z2amulz1b = 0</span>
+<span class="w">  </span><span class="c1">;; equ? for problem 2.79</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">equ?</span><span class="w"> </span><span class="n">z1</span><span class="w"> </span><span class="n">z2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">=zero?</span><span class="w"> </span><span class="p">(</span><span class="n">sub</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">z1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">z2</span><span class="p">))</span>
+<span class="w">          </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">z2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">z1</span><span class="p">)))))</span>
+<span class="w">  </span><span class="c1">;; interface to rest of the system</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">equ?</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">rational</span><span class="w"> </span><span class="ss">rational</span><span class="p">)</span><span class="w"> </span><span class="n">equ?</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">attach-tag</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">rational</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">rational</span><span class="w"> </span><span class="ss">rational</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">add-rat</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">sub</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">rational</span><span class="w"> </span><span class="ss">rational</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">sub-rat</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">rational</span><span class="w"> </span><span class="ss">rational</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">mul-rat</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">div</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">rational</span><span class="w"> </span><span class="ss">rational</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">div-rat</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">rational</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="p">))))</span>
+<span class="w">  </span><span class="c1">;problem 2.80</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">=zero?</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">rational</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">=zero?</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">a</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">negate</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">rational</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">make-rat</span><span class="w"> </span><span class="p">(</span><span class="nb">negate</span><span class="w"> </span><span class="p">(</span><span class="n">numer</span><span class="w"> </span><span class="n">r</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">denom</span><span class="w"> </span><span class="n">r</span><span class="p">)))))</span>
+<span class="w">  </span><span class="o">&#39;</span><span class="ss">done</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">install-rational-package</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-rational</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">get</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">rational</span><span class="p">)</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="n">d</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">=zero?</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">=zero?</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">real-part</span><span class="w"> </span><span class="n">z</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">real-part</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">imag-part</span><span class="w"> </span><span class="n">z</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">imag-part</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">magnitude</span><span class="w"> </span><span class="n">z</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">magnitude</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">angle</span><span class="w"> </span><span class="n">z</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">angle</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">sub</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">equ?</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">equ?</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">install-polynomial-package</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">;; internal procedures</span>
+<span class="w">  </span><span class="c1">;; representation of poly</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-poly</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="n">term-list</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">variable</span><span class="w"> </span><span class="n">term-list</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">p</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">p</span><span class="p">))</span>
+
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">variable?</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">symbol?</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">same-variable?</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">variable?</span><span class="w"> </span><span class="n">v1</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="n">variable?</span><span class="w"> </span><span class="n">v2</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">eq?</span><span class="w"> </span><span class="n">v1</span><span class="w"> </span><span class="n">v2</span><span class="p">)))</span>
+
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-terms</span><span class="w"> </span><span class="n">L1</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-termlist?</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">the-empty-termlist</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">add-terms</span>
+<span class="w">       </span><span class="p">(</span><span class="n">mul-term-by-all-terms</span>
+<span class="w">        </span><span class="p">(</span><span class="n">first-term</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="n">mul-terms</span><span class="w"> </span><span class="p">(</span><span class="n">rest-terms</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span><span class="w"> </span><span class="n">L2</span><span class="p">))))</span>
+
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-term-by-all-terms</span><span class="w"> </span><span class="n">t1</span><span class="w"> </span><span class="n">L</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-termlist?</span><span class="w"> </span><span class="n">L</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">the-empty-termlist</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">t2</span><span class="w"> </span><span class="p">(</span><span class="n">first-term</span><span class="w"> </span><span class="n">L</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">adjoin-term</span>
+<span class="w">         </span><span class="p">(</span><span class="n">make-term</span>
+<span class="w">          </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t2</span><span class="p">))</span>
+<span class="w">          </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">t1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">t2</span><span class="p">)))</span>
+<span class="w">         </span><span class="p">(</span><span class="n">mul-term-by-all-terms</span>
+<span class="w">          </span><span class="n">t1</span>
+<span class="w">          </span><span class="p">(</span><span class="n">rest-terms</span><span class="w"> </span><span class="n">L</span><span class="p">))))))</span>
+
+
+<span class="w">  </span><span class="c1">;; representation of terms and term lists</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">adjoin-term</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">term-list</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">=zero?</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">term</span><span class="p">))</span>
+<span class="w">      </span><span class="n">term-list</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">term</span><span class="w"> </span><span class="n">term-list</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">the-empty-termlist</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">first-term</span><span class="w"> </span><span class="n">term-list</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">term-list</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rest-terms</span><span class="w"> </span><span class="n">term-list</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">term-list</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">empty-termlist?</span><span class="w"> </span><span class="n">term-list</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">term-list</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-term</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="n">coeff</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">order</span><span class="w"> </span><span class="n">coeff</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">term</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">term</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">term</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="n">term</span><span class="p">))</span>
+
+
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-poly</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">same-variable?</span><span class="w"> </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p2</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">make-poly</span>
+<span class="w">       </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="n">add-terms</span><span class="w"> </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">p2</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Polys not in same var:</span>
+<span class="s2">             ADD-POLY&quot;</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-poly</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">same-variable?</span><span class="w"> </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p2</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">make-poly</span>
+<span class="w">       </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="n">mul-terms</span><span class="w"> </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">p2</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Polys not in same var:</span>
+<span class="s2">             MUL-POLY&quot;</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+
 <span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-terms</span><span class="w"> </span><span class="n">L1</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span>
 <span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-termlist?</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span>
 <span class="w">      </span><span class="p">((</span><span class="n">empty-termlist?</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span>
@@ -7036,197 +7512,83 @@ We'll also have to define <code>adjoin-term</code> correctly.
 <span class="w">             </span><span class="p">(</span><span class="n">add-terms</span>
 <span class="w">              </span><span class="p">(</span><span class="n">rest-terms</span><span class="w"> </span><span class="n">L1</span><span class="p">)</span>
 <span class="w">              </span><span class="p">(</span><span class="n">rest-terms</span><span class="w"> </span><span class="n">L2</span><span class="p">)))))))))</span>
-<span class="w">  </span><span class="c1">;; sub-poly</span>
+<span class="w">  </span><span class="c1">;; During construction, we don&#39;t check whether coefficients are zero</span>
+<span class="w">  </span><span class="c1">;; So now, we have to check all coefficients.</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">=zero?-poly</span><span class="w"> </span><span class="n">poly</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">accumulate</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="n">=zero?</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="w">                </span><span class="no">#t</span>
+<span class="w">                </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">poly</span><span class="p">)))</span>
+<span class="w">  </span><span class="c1">;; Make sure to install the function</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">=zero?</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="p">)</span><span class="w"> </span><span class="n">=zero?-poly</span><span class="p">)</span>
 
-<span class="w">  </span><span class="c1">;; mul-poly</span>
-
-
-<span class="c1">;;   ;; internal procedures</span>
-<span class="c1">;;   ;; representation of poly</span>
-<span class="c1">;;   (define (make-poly variable term-list)</span>
-<span class="c1">;;     (cons variable term-list))</span>
-<span class="c1">;;   (define (variable p) (car p))</span>
-<span class="c1">;;   (define (term-list p) (cdr p))</span>
-<span class="c1">;; </span>
-<span class="c1">;;   (define (variable? x) (symbol? x))</span>
-<span class="c1">;;   (define (same-variable? v1 v2)</span>
-<span class="c1">;;     (and (variable? v1)</span>
-<span class="c1">;;          (variable? v2)</span>
-<span class="c1">;;          (eq? v1 v2)))</span>
-<span class="c1">;; </span>
-<span class="c1">;;   (define (mul-terms L1 L2)</span>
-<span class="c1">;;     (if (empty-termlist? L1)</span>
-<span class="c1">;;       (the-empty-termlist)</span>
-<span class="c1">;;       (add-terms</span>
-<span class="c1">;;        (mul-term-by-all-terms</span>
-<span class="c1">;;         (first-term L1) L2)</span>
-<span class="c1">;;        (mul-terms (rest-terms L1) L2))))</span>
-<span class="c1">;; </span>
-<span class="c1">;;   (define (mul-term-by-all-terms t1 L)</span>
-<span class="c1">;;     (if (empty-termlist? L)</span>
-<span class="c1">;;       (the-empty-termlist)</span>
-<span class="c1">;;       (let ((t2 (first-term L)))</span>
-<span class="c1">;;         (adjoin-term</span>
-<span class="c1">;;          (make-term</span>
-<span class="c1">;;           (+ (order t1) (order t2))</span>
-<span class="c1">;;           (mul (coeff t1) (coeff t2)))</span>
-<span class="c1">;;          (mul-term-by-all-terms</span>
-<span class="c1">;;           t1</span>
-<span class="c1">;;           (rest-terms L))))))</span>
-<span class="c1">;; </span>
-<span class="c1">;; </span>
-<span class="c1">;;   ;; representation of terms and term lists</span>
-<span class="c1">;;   (define (adjoin-term term term-list)</span>
-<span class="c1">;;     (if (=zero? (coeff term))</span>
-<span class="c1">;;       term-list</span>
-<span class="c1">;;       (cons term term-list)))</span>
-<span class="c1">;;   (define (the-empty-termlist) &#39;())</span>
-<span class="c1">;;   (define (first-term term-list) (car term-list))</span>
-<span class="c1">;;   (define (rest-terms term-list) (cdr term-list))</span>
-<span class="c1">;;   (define (empty-termlist? term-list)</span>
-<span class="c1">;;     (null? term-list))</span>
-<span class="c1">;;   (define (make-term order coeff)</span>
-<span class="c1">;;     (list order coeff))</span>
-<span class="c1">;;   (define (order term) (car term))</span>
-<span class="c1">;;   (define (coeff term) (cadr term))</span>
-<span class="c1">;; </span>
-<span class="c1">;; </span>
-<span class="c1">;;   (define (add-poly p1 p2)</span>
-<span class="c1">;;     (if (same-variable? (variable p1)</span>
-<span class="c1">;;                         (variable p2))</span>
-<span class="c1">;;       (make-poly</span>
-<span class="c1">;;        (variable p1)</span>
-<span class="c1">;;        (add-terms (term-list p1)</span>
-<span class="c1">;;                   (term-list p2)))</span>
-<span class="c1">;;       (error &quot;Polys not in same var:</span>
-<span class="c1">;;              ADD-POLY&quot;</span>
-<span class="c1">;;              (list p1 p2))))</span>
-<span class="c1">;; </span>
-<span class="c1">;;   (define (mul-poly p1 p2)</span>
-<span class="c1">;;     (if (same-variable? (variable p1)</span>
-<span class="c1">;;                         (variable p2))</span>
-<span class="c1">;;       (make-poly</span>
-<span class="c1">;;        (variable p1)</span>
-<span class="c1">;;        (mul-terms (term-list p1)</span>
-<span class="c1">;;                   (term-list p2)))</span>
-<span class="c1">;;       (error &quot;Polys not in same var:</span>
-<span class="c1">;;              MUL-POLY&quot;</span>
-<span class="c1">;;              (list p1 p2))))</span>
-<span class="c1">;; </span>
-<span class="c1">;; </span>
-<span class="c1">;; ;; (ct1 x^(ot1)+rest1)/(ct2 x^(ot2)+rest2) </span>
-<span class="c1">;; ;; =(poly1 - (ct1/ct2) x^(ot1-ot2)(poly2) + (ct1/ct2) x^(ot1-ot2)(poly2))/(poly2)</span>
-<span class="c1">;; ;; =(ct1/ct2) x^(ot1-ot2) + (poly1 - (ct1/ct2) x^(ot1-ot2)(poly2))/poly2</span>
-<span class="c1">;; </span>
-<span class="c1">;; </span>
-<span class="c1">;;   ;; During construction, we don&#39;t check whether coefficients are zero</span>
-<span class="c1">;;   ;; So now, we have to check all coefficients.</span>
-<span class="c1">;;   (define (=zero?-poly poly)</span>
-<span class="c1">;;     (accumulate (lambda (x y) (and y (=zero? (coeff x))))</span>
-<span class="c1">;;                 #t</span>
-<span class="c1">;;                 (term-list poly)))</span>
-<span class="c1">;;   ;; Make sure to install the function</span>
-<span class="c1">;;   (put &#39;=zero? &#39;(polynomial) =zero?-poly)</span>
-<span class="c1">;; </span>
-<span class="c1">;;   ;; Exercise 2-88</span>
-<span class="c1">;;   (define (negate-terms L) </span>
-<span class="c1">;;     (if (empty-termlist? L)</span>
-<span class="c1">;;       L</span>
-<span class="c1">;;       (let ((t (first-term L)) (r (rest-terms L)))</span>
-<span class="c1">;;         (adjoin-term (make-term (order t) (apply-generic &#39;negate (coeff t)))</span>
-<span class="c1">;;                      (negate-terms r)))))</span>
-<span class="c1">;;   (define (sub-terms L1 L2)</span>
-<span class="c1">;;     (add-terms L1 (negate-terms L2)))</span>
-<span class="c1">;;   (define (sub-poly p1 p2)</span>
-<span class="c1">;;     (if (same-variable? (variable p1)</span>
-<span class="c1">;;                         (variable p2))</span>
-<span class="c1">;;       (make-poly</span>
-<span class="c1">;;        (variable p1)</span>
-<span class="c1">;;        (sub-terms (term-list p1)</span>
-<span class="c1">;;                   (term-list p2)))</span>
-<span class="c1">;;       (error &quot;Polys not in same var:</span>
-<span class="c1">;;              SUB-POLY&quot;</span>
-<span class="c1">;;              (list p1 p2))))</span>
-<span class="c1">;;   (put &#39;sub &#39;(polynomial polynomial)</span>
-<span class="c1">;;        (lambda (p1 p2) </span>
-<span class="c1">;;          (tag (sub-poly p1 p2))))</span>
-<span class="c1">;;   (put &#39;negate &#39;(polynomial)</span>
-<span class="c1">;;        (lambda (p) </span>
-<span class="c1">;;          (tag (make-poly (variable p) (negate-terms (term-list p))))))</span>
-<span class="c1">;;   ;; interface to rest of the system</span>
-<span class="c1">;;   (define (tag p) (attach-tag &#39;polynomial p))</span>
-<span class="c1">;;   (put &#39;add &#39;(polynomial polynomial)</span>
-<span class="c1">;;        (lambda (p1 p2) </span>
-<span class="c1">;;          (tag (add-poly p1 p2))))</span>
-<span class="c1">;;   (put &#39;mul &#39;(polynomial polynomial)</span>
-<span class="c1">;;        (lambda (p1 p2) </span>
-<span class="c1">;;          (tag (mul-poly p1 p2))))</span>
-<span class="c1">;;   (put &#39;make &#39;polynomial</span>
-<span class="c1">;;        (lambda (var terms) </span>
-<span class="c1">;;          (tag (make-poly var terms))))</span>
+<span class="w">  </span><span class="c1">;; Exercise 2-88</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">negate-terms</span><span class="w"> </span><span class="n">L</span><span class="p">)</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-termlist?</span><span class="w"> </span><span class="n">L</span><span class="p">)</span>
+<span class="w">      </span><span class="n">L</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">t</span><span class="w"> </span><span class="p">(</span><span class="n">first-term</span><span class="w"> </span><span class="n">L</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">r</span><span class="w"> </span><span class="p">(</span><span class="n">rest-terms</span><span class="w"> </span><span class="n">L</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">adjoin-term</span><span class="w"> </span><span class="p">(</span><span class="n">make-term</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">negate</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">t</span><span class="p">)))</span>
+<span class="w">                     </span><span class="p">(</span><span class="n">negate-terms</span><span class="w"> </span><span class="n">r</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub-terms</span><span class="w"> </span><span class="n">L1</span><span class="w"> </span><span class="n">L2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">add-terms</span><span class="w"> </span><span class="n">L1</span><span class="w"> </span><span class="p">(</span><span class="n">negate-terms</span><span class="w"> </span><span class="n">L2</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sub-poly</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">same-variable?</span><span class="w"> </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p2</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">make-poly</span>
+<span class="w">       </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="n">sub-terms</span><span class="w"> </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">p1</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">p2</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Polys not in same var:</span>
+<span class="s2">             SUB-POLY&quot;</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">sub</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">polynomial</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">sub-poly</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">negate</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">make-poly</span><span class="w"> </span><span class="p">(</span><span class="n">variable</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">negate-terms</span><span class="w"> </span><span class="p">(</span><span class="n">term-list</span><span class="w"> </span><span class="n">p</span><span class="p">))))))</span>
+<span class="w">  </span><span class="c1">;; interface to rest of the system</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="n">p</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">attach-tag</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">polynomial</span><span class="w"> </span><span class="n">p</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">polynomial</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">add-poly</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">mul</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">polynomial</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">mul-poly</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="n">p2</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">polynomial</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">var</span><span class="w"> </span><span class="n">terms</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="k">tag</span><span class="w"> </span><span class="p">(</span><span class="n">make-poly</span><span class="w"> </span><span class="n">var</span><span class="w"> </span><span class="n">terms</span><span class="p">))))</span>
 <span class="w">  </span><span class="o">&#39;</span><span class="ss">done</span><span class="p">)</span>
 
 <span class="p">(</span><span class="n">install-polynomial-package</span><span class="p">)</span>
 
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="n">terms</span><span class="p">)</span>
-<span class="w">  </span><span class="p">((</span><span class="n">get</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">polynomial</span><span class="p">)</span><span class="w"> </span><span class="n">terms</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="n">var</span><span class="w"> </span><span class="n">terms</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">get</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">make</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">polynomial</span><span class="p">)</span><span class="w"> </span><span class="n">var</span><span class="w"> </span><span class="n">terms</span><span class="p">))</span>
 
-
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">l1</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">l2</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
-<span class="c1">;;(define l3 (sort &#39;((x 2) (y 2) (b 10) (a 4)) single-order&lt;?))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">l3</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">b</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">a</span><span class="w"> </span><span class="mi">4</span><span class="p">)))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">l4</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
-
-<span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">l1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">-1</span><span class="w"> </span><span class="n">l2</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">l3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="mi">-10</span><span class="w"> </span><span class="n">l4</span><span class="p">)))</span>
-<span class="c1">;; (define (make-polynomial var terms)</span>
-<span class="c1">;;   ((get &#39;make &#39;polynomial) var terms))</span>
-<span class="c1">;; </span>
-<span class="c1">;; (define a (make-polynomial &#39;x &#39;((5 1) (0 -1))))</span>
-<span class="c1">;; (define b (make-polynomial &#39;x &#39;((2 1) (0 -1))))</span>
-<span class="c1">;; (define c (make-polynomial &#39;x &#39;((1 1) (0 -1))))</span>
-<span class="c1">;; </span>
-<span class="c1">;; (display &quot;(x^5-1)*(x^2-1) = &quot;)</span>
-<span class="c1">;; (apply-generic &#39;mul a b)</span>
-<span class="c1">;; (display &quot;(x^5-1)+(x-1) = &quot;)</span>
-<span class="c1">;; (apply-generic &#39;add a </span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">3</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">rf</span><span class="w"> </span><span class="p">(</span><span class="n">make-rational</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p1</span><span class="p">))</span>
+<span class="n">rf</span>
+<span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">add</span><span class="w"> </span><span class="n">rf</span><span class="w"> </span><span class="n">rf</span><span class="p">)</span>
 </code></pre></div>
 
 
 </details>
 <div class="code-output">
 <span>Output:</span>
-<pre>
-Error (exit code 1):
-src/ch2/code/ex2-92.rkt:368:12: empty-termlist?: unbound identifier
-  in: empty-termlist?
-  location...:
-   src/ch2/code/ex2-92.rkt:368:12
+<pre>done
+done
+done
+(rational (polynomial x (3 1) (0 1)) polynomial x (2 1) (0 1))
+(rational (polynomial x (5 2) (3 2) (2 2) (0 2)) polynomial x (4 1) (2 2) (0 1))
 </pre>
 </div>
 </div>
 
-<p>Maybe $C x^a y^b$
-So, we'll get rid of the <code>variable</code> function. Let's have a sparse representation, and let's say that
-the monomial $C x^a y^b$ is represented as `(list (list (list 'x a) (list 'y b)) </p>
-<h4 id="exercise-293">Exercise 2.93</h4>
-<p>Modify the rational-arithmetic
-package to use generic operations, but change <code>make-rat</code> so that it does
-not attempt to reduce fractions to lowest terms.  Test your system by calling
-<code>make-rational</code> on two polynomials to produce a rational function:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p1</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="p">(</span><span class="n">make-polynomial</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="mi">3</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
-<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">rf</span><span class="w"> </span><span class="p">(</span><span class="n">make-rational</span><span class="w"> </span><span class="n">p2</span><span class="w"> </span><span class="n">p1</span><span class="p">))</span>
-</code></pre></div>
-
-<p>Now add <code>rf</code> to itself, using <code>add</code>. You will observe that this
-addition procedure does not reduce fractions to lowest terms.</p>
-<h5>Solution</h5>
 <h4 id="exercise-294">Exercise 2.94</h4>
 <p>Using <code>div-terms</code>, implement
 the procedure <code>remainder-terms</code> and use this to define <code>gcd-terms</code> as
 above.  Now write a procedure <code>gcd-poly</code> that computes the polynomial
-@abbr{GCD} of two polys.  (The procedure should signal an error if the two
+GCD of two polys.  (The procedure should signal an error if the two
 polys are not in the same variable.)  Install in the system a generic operation
 <code>greatest-common-divisor</code> that reduces to <code>gcd-poly</code> for polynomials
 and to ordinary <code>gcd</code> for ordinary numbers.  As a test, try</p>
@@ -7243,6 +7605,23 @@ and to ordinary <code>gcd</code> for ordinary numbers.  As a test, try</p>
 
 <p>and check your result by hand.</p>
 <h5>Solution</h5>
+<p>Let's do it by hand first. </p>
+<div>$$\begin{align*}
+\textrm{gcd}(x^4-x^3-2x^2+2x,x^3-x) &=\textrm{gcd}(x^3-x ,\textrm{mod}(x^4-x^3-2x^2+2x, x^3-x))
+\end{align*}$$</div>
+
+<div>$$\begin{align*}
+\textrm{mod}(x^4-x^3-2x^2+2x, x^3-x)&=\textrm{mod}(x^4-x^3-2x^2+2x - (x-1)(x^3-x))\\
+&=\textrm{mod}(x^4-x^3-2x^2+2x - (x^4-x^3-x^2+x), x^3-x)\\
+&=\textrm{mod}(-x^2+x, x^3-x)\\
+&=-x^2+x\\
+\end{align*}$$</div>
+
+<div>$$\begin{align*}
+\textrm{gcd}(x^4-x^3-2x^2+2x,x^3-x) &=\textrm{gcd}(x^3-x ,-x^2+x))\\
+&=\textrm{gcd}(x^3-x ,-x^2+x)\\
+&=\textrm{gcd}(-x^2+x,\textrm{mod}(x^3-x,-x^2+x) )\\
+\end{align*}$$</div>
 <h4 id="exercise-295">Exercise 2.95</h4>
 <p>Define $P_1$, $P_2$, and
 $P_3$ to be the polynomials</p>
@@ -7254,11 +7633,11 @@ $P_3$ to be the polynomials</p>
 $$</p>
 <p>Now define $Q_1$ to be the product of $P_1$ and $P_2$, and $Q_2$ to be
 the product of $P_1$ and $P_3$, and use <code>greatest-common-divisor</code>
-(Exercise 2.94) to compute the @abbr{GCD} of $Q_1$ and $Q_2$.
+(Exercise 2.94) to compute the GCD of $Q_1$ and $Q_2$.
 Note that the answer is not the same as $P_1$.  This example introduces
 noninteger operations into the computation, causing difficulties with the
-@abbr{GCD} algorithm.  To understand what is happening, try tracing
-<code>gcd-terms</code> while computing the @abbr{GCD} or try performing the
+GCD algorithm.  To understand what is happening, try tracing
+<code>gcd-terms</code> while computing the GCD or try performing the
 division by hand.</p>
 <h5>Solution</h5>
 <h4 id="exercise-296">Exercise 2.96</h4>
@@ -7268,7 +7647,7 @@ integerizing factor described above before calling <code>div-terms</code>.  Modi
 <code>gcd-terms</code> to use <code>pseudoremainder-terms</code>, and verify that
 <code>greatest-common-divisor</code> now produces an answer with integer coefficients
 on the example in Exercise 2.95.</p>
-<p><strong>2.</strong> The @abbr{GCD} now has integer coefficients, but they are larger than those
+<p><strong>2.</strong> The GCD now has integer coefficients, but they are larger than those
 of $P_1$.  Modify <code>gcd-terms</code> so that it removes common factors from the
 coefficients of the answer by dividing all the coefficients by their (integer)
 greatest common divisor.</p>

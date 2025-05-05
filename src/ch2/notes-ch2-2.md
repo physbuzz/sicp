@@ -4,7 +4,6 @@
     <span class="activenav"><a href="notes-ch2-3.html">Next →</a></span>
 </div>
 
-
 [HTML Book Chapter 2.2 Link](https://sarabander.github.io/sicp/html/2_002e2.xhtml#g_t2_002e2)
 
 @toc
@@ -38,7 +37,7 @@ number?
 ### Experiments with binary trees
 - Note to self: do some enumeration of binary trees here! It'll be fun!
 
-### Meeting April 6
+### Meeting 04-06-2025
 
 Note:
 

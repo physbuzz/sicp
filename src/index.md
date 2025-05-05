@@ -18,7 +18,11 @@
 - [March 16, 2025](ch1/notes-ch1-2.html#meeting-03-16-2025)
 - [March 23, 2025](ch1/notes-ch1-3.html#meeting-03-23-2025) 
 - [March 30, 2025](ch2/notes-ch2-1.html#meeting-03-30-2025) 
-- [April 6, 2025](ch2/notes-ch2-2.html#meeting-04-06-2025) (Placeholder)
+- [April 6, 2025](ch2/notes-ch2-2.html#meeting-04-06-2025)
+- [April 20, 2025](ch2/notes-ch2-3.html#meeting-04-20-2025)
+- [April 27, 2025](ch2/notes-ch2-4.html#meeting-04-27-2025)
+- [May 4, 2025](ch2/notes-ch2-5.html#meeting-05-04-2025)
+- [May 11, 2025](ch3/notes-ch3-1.html#meeting-04-27-2025)
 
 ## Nice Links
 - [SICP html edition](https://sarabander.github.io/sicp/)

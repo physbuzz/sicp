@@ -19,7 +19,33 @@ Note: Lagrange interpolating polynomials are cool. [https://en.wikipedia.org/wik
 
 TODO: Skip 86
 
-#### Creating a Sensible 
+### Meeting 05-04-2025
+https://sarabander.github.io/sicp/html/2_002e5.xhtml#g_t2_002e5
+
+- [https://www.youtube.com/watch?v=kc9HwsxE1OY](The Unreasonable Effectiveness of Multiple Dispatch) and [the slides to the talk](https://www.juliaopt.org/meetings/santiago2019/slides/stefan_karpinski.pdf)
+- Take a look at this [curriculum document](https://cs.brown.edu/~sk/Publications/Papers/Published/fffk-htdp-vs-sicp-journal/paper.pdf)
+
+#### Relevant Wiki Pages:
+- [Numerical tower](https://en.wikipedia.org/wiki/Numerical_tower). A more formal version of the integer &lt; rational &lt; real &lt; complex.
+- [Expression problem](https://en.wikipedia.org/wiki/Expression_problem)
+- [Multiple inheritance](https://en.wikipedia.org/wiki/Multiple_inheritance)
+- [Common Lisp Object System](https://en.wikipedia.org/wiki/Common_Lisp_Object_System)
+- [Metaobject protocol](https://en.wikipedia.org/wiki/Metaobject#Metaobject_protocol)
+- [Greenspun's tenth rule](https://en.wikipedia.org/wiki/Greenspun%27s_tenth_rule)
+
+#### Info about Julia:
+- [https://juliacon.org/2025/](https://juliacon.org/2025/)
+
+### Goofiness
+- turn music back on (DONE!!!!)
+- Ad break / stretch (DONE) 
+- Finish recording the links (YEP YOU GUESSED IT)
+- try to take over the world (seems to0 hard)
+- fail (IN THE BAG!!!)
+- Learn two spell
+- fail
+- keep doing problems
+
 ### Introduction
 
 ### Exercises
@@ -989,13 +1015,10 @@ except instead of `<` to compare orders, we'll have to use `order<?`.
 We'll also have to define `adjoin-term` correctly.
 `negate` and `sub` are easy. 
 
-
+Testing some polynomial multiplication examples:
 
 @src(code/ex2-92.rkt, collapsed)
 
-Maybe $C x^a y^b$
-So, we'll get rid of the `variable` function. Let's have a sparse representation, and let's say that
-the monomial $C x^a y^b$ is represented as `(list (list (list 'x a) (list 'y b)) 
 #### Exercise 2.93
 
 Modify the rational-arithmetic
@@ -1014,12 +1037,26 @@ addition procedure does not reduce fractions to lowest terms.
 
 ##### Solution
 
+We have the following rational function
+
+$$r_f = \frac{x^3+1}{x^2+1}$$
+
+We add rational numbers by doing
+
+$$\frac{a}{b}+\frac{c}{d} = \frac{ad+bc}{bd}$$
+
+According to this rule
+
+<div>$$2 r_f = \frac{2(x^3+1)(x^2+1)}{(x^2+1)^2} =\frac{2x^5+2x^3+2x^2+2}{x^4+2x^2+1}$$</div>
+
+@src(code/ex2-93.rkt, collapsed)
+
 #### Exercise 2.94
 
 Using `div-terms`, implement
 the procedure `remainder-terms` and use this to define `gcd-terms` as
 above.  Now write a procedure `gcd-poly` that computes the polynomial
-@abbr{GCD} of two polys.  (The procedure should signal an error if the two
+GCD of two polys.  (The procedure should signal an error if the two
 polys are not in the same variable.)  Install in the system a generic operation
 `greatest-common-divisor` that reduces to `gcd-poly` for polynomials
 and to ordinary `gcd` for ordinary numbers.  As a test, try
@@ -1036,11 +1073,27 @@ and to ordinary `gcd` for ordinary numbers.  As a test, try
 (greatest-common-divisor p1 p2)
 ```
 
-
 and check your result by hand.
 
 ##### Solution
+Let's do it by hand first. 
 
+<div>$$\begin{align*}
+\textrm{gcd}(x^4-x^3-2x^2+2x,x^3-x) &=\textrm{gcd}(x^3-x ,\textrm{mod}(x^4-x^3-2x^2+2x, x^3-x))
+\end{align*}$$</div>
+
+<div>$$\begin{align*}
+\textrm{mod}(x^4-x^3-2x^2+2x, x^3-x)&=\textrm{mod}(x^4-x^3-2x^2+2x - (x-1)(x^3-x))\\
+&=\textrm{mod}(x^4-x^3-2x^2+2x - (x^4-x^3-x^2+x), x^3-x)\\
+&=\textrm{mod}(-x^2+x, x^3-x)\\
+&=-x^2+x\\
+\end{align*}$$</div>
+
+<div>$$\begin{align*}
+\textrm{gcd}(x^4-x^3-2x^2+2x,x^3-x) &=\textrm{gcd}(x^3-x ,-x^2+x))\\
+&=\textrm{gcd}(x^3-x ,-x^2+x)\\
+&=\textrm{gcd}(-x^2+x,\textrm{mod}(x^3-x,-x^2+x) )\\
+\end{align*}$$</div>
 #### Exercise 2.95
 
 Define $P_1$, $P_2$, and
@@ -1055,11 +1108,11 @@ $$
 
 Now define $Q_1$ to be the product of $P_1$ and $P_2$, and $Q_2$ to be
 the product of $P_1$ and $P_3$, and use `greatest-common-divisor`
-(Exercise 2.94) to compute the @abbr{GCD} of $Q_1$ and $Q_2$.
+(Exercise 2.94) to compute the GCD of $Q_1$ and $Q_2$.
 Note that the answer is not the same as $P_1$.  This example introduces
 noninteger operations into the computation, causing difficulties with the
-@abbr{GCD} algorithm.  To understand what is happening, try tracing
-`gcd-terms` while computing the @abbr{GCD} or try performing the
+GCD algorithm.  To understand what is happening, try tracing
+`gcd-terms` while computing the GCD or try performing the
 division by hand.
 
 ##### Solution
@@ -1073,7 +1126,7 @@ integerizing factor described above before calling `div-terms`.  Modify
 `greatest-common-divisor` now produces an answer with integer coefficients
 on the example in Exercise 2.95.
 
-**2.** The @abbr{GCD} now has integer coefficients, but they are larger than those
+**2.** The GCD now has integer coefficients, but they are larger than those
 of $P_1$.  Modify `gcd-terms` so that it removes common factors from the
 coefficients of the answer by dividing all the coefficients by their (integer)
 greatest common divisor.
