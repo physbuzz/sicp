@@ -1076,14 +1076,14 @@ and to ordinary `gcd` for ordinary numbers.  As a test, try
 and check your result by hand.
 
 ##### Solution
-Let's do it by hand first. 
+Let's do it by hand first. Writing this out in excruciating detail...
 
 <div>$$\begin{align*}
 \textrm{gcd}(x^4-x^3-2x^2+2x,x^3-x) &=\textrm{gcd}(x^3-x ,\textrm{mod}(x^4-x^3-2x^2+2x, x^3-x))
 \end{align*}$$</div>
 
 <div>$$\begin{align*}
-\textrm{mod}(x^4-x^3-2x^2+2x, x^3-x)&=\textrm{mod}(x^4-x^3-2x^2+2x - (x-1)(x^3-x))\\
+\textrm{mod}(x^4-x^3-2x^2+2x, x^3-x)&=\textrm{mod}(x^4-x^3-2x^2+2x - (x-1)(x^3-x), x^3-x)\\
 &=\textrm{mod}(x^4-x^3-2x^2+2x - (x^4-x^3-x^2+x), x^3-x)\\
 &=\textrm{mod}(-x^2+x, x^3-x)\\
 &=-x^2+x\\
@@ -1091,9 +1091,24 @@ Let's do it by hand first.
 
 <div>$$\begin{align*}
 \textrm{gcd}(x^4-x^3-2x^2+2x,x^3-x) &=\textrm{gcd}(x^3-x ,-x^2+x))\\
-&=\textrm{gcd}(x^3-x ,-x^2+x)\\
-&=\textrm{gcd}(-x^2+x,\textrm{mod}(x^3-x,-x^2+x) )\\
+&=\textrm{gcd}(-x^2+x,\textrm{mod}(x^3-x,-x^2+x))\\
 \end{align*}$$</div>
+
+<div>$$\begin{align*}
+\textrm{mod}(x^3-x,-x^2+x) &= \textrm{mod}(x^3-x + x(-x^2+x),-x^2+x)\\
+ &= \textrm{mod}(x^2-x,-x^2+x)\\
+ &= 0
+\end{align*}$$</div>
+<div>$$\begin{align*}
+\textrm{gcd}(x^4-x^3-2x^2+2x,x^3-x) &=\textrm{gcd}(x^3-x ,-x^2+x))\\
+&=\textrm{gcd}(-x^2+x,0)\\
+&=-x^2+x
+\end{align*}$$</div>
+
+Checking, we do in fact get the same result.
+
+@src(code/ex2-94.rkt, collapsed)
+
 #### Exercise 2.95
 
 Define $P_1$, $P_2$, and
@@ -1117,6 +1132,12 @@ division by hand.
 
 ##### Solution
 
+@src(code/ex2-95.rkt, collapsed)
+
+This is just a general fact of Euclidean domains. The GCD is only defined up to multiplication
+by invertible elements. Most applications would choose to normalize the leading term to 1,
+in which case we get back the polynomial $x^2-2x+1.$
+
 #### Exercise 2.96
 
 **1.** Implement the procedure `pseudoremainder-terms`, which is just like
@@ -1131,9 +1152,9 @@ of $P_1$.  Modify `gcd-terms` so that it removes common factors from the
 coefficients of the answer by dividing all the coefficients by their (integer)
 greatest common divisor.
 
-
-
 ##### Solution
+
+@src(code/ex2-96.rkt, collapsed)
 
 #### Exercise 2.97
 
