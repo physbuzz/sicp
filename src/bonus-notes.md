@@ -283,6 +283,15 @@ enumerating partitions, enumerating binary trees (rather than just counting), en
 # n queens and dancing links
 # Story about polynomial long division + my grandpa
 
+
+
+
+
+
+
+
+
+
 <div>$$\begin{align*}
 \end{align*}$$</div>
 <div>$$\begin{align*}

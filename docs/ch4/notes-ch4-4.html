@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notes-ch4-4.md</title>
+    <!-- MathJax for LaTeX support -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']]
+            }
+        };
+    </script>
+    <style>
+        /* Pygments Syntax Highlighting */
+        pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #880000 } /* Name.Constant */
+.codehilite .nd { color: #AA22FF } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #0000FF } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #666666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #0000FF } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+        /* Base CSS from markdown_styles.py */
+        
+        /* Basic reset and fonts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        /* Navigation styling */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .nav span {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav .activenav {
+            background-color: #f1f8ff;
+        }
+
+        .nav .activenav a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .nav .activenav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav .inactivenav {
+            color: #959da5;
+            background-color: #f6f8fa;
+        }
+
+        /* Center column layout */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: #34495e;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.8rem 0 1rem;
+            color: #34495e;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        h5 {
+            font-size: 1.1rem;
+            margin: 1.2rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        /* Table of Contents styling */
+        .table-of-contents {
+            margin: 0 0 0;
+            line-height: 1;
+        }
+
+        .toc-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .toc-list li {
+            margin-bottom: 2px;
+        }
+        .toc-list ul {
+            margin-bottom: 2px;
+        }
+
+        .exercise-list {
+            margin: 0;
+            padding-left: 0;
+            font-size: 0.95em;
+            display: inline;
+        }
+
+        .exercise-container {
+            display: inline-block;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+
+        .toc-exercises {
+            font-style: italic;
+            color: #555;
+        }
+
+        .exercise-list a {
+            text-decoration: none;
+            color: #2070b0;
+            margin-right: 0;
+        }
+
+        .exercise-list a:hover {
+            text-decoration: underline;
+        }
+
+        .exercise-list span:not(:last-child):after {
+            content: ", ";
+            color: #777;
+            margin-right: 0;
+        }
+
+        /* Blockquote styling */
+        blockquote {
+            border-left: 4px solid #dfe2e5;
+            color: #6a737d;
+            padding: 0 1rem;
+            margin: 1rem 0 1.5rem;
+            background-color: #f6f8fa;
+            border-radius: 0 3px 3px 0;
+        }
+
+        blockquote p {
+            padding: 0.8rem 0;
+        }
+
+        blockquote p:first-child {
+            margin-top: 0;
+        }
+
+        blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Solution styling */
+        h5:has(+p:contains("Solution")) {
+            margin-bottom: 0;
+        }
+
+        h5:has(+p:contains("Solution")) + p {
+            font-weight: bold;
+            color: #3c8dbc;
+            border-left: 3px solid #3c8dbc;
+            padding-left: 0.8rem;
+            margin: 0.5rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* List styling */
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        .code-box {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        .code-header {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.3rem 0 0rem 0.3rem;
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+
+        .code-header a {
+            color: #6a737d;
+            text-decoration: none;
+        }
+
+        .code-header a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+        /* Standalone code blocks (triple backticks) */
+        .codehilite {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        /* When inside a code-box, remove default styling */
+        .code-box .codehilite {
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Adjust padding for code blocks inside code-box */
+        .code-box .codehilite pre {
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        /* Normal padding for standalone code blocks */
+        .codehilite pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .code-output {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            border-top: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+        .code-output span {
+            color: #de37cc;
+        }
+
+        .code-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        /* --- Styles for Collapsible Code Blocks --- */
+        .collapsible-code {
+            border: none; /* Remove default border from details */
+            margin-top: 0; /* Adjust spacing if needed */
+            margin-bottom: 0; /* Adjust spacing if needed */
+        }
+
+        .code-summary {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.5rem 0.8rem; /* Adjusted padding */
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+            cursor: pointer;
+            list-style: none; /* Hide default marker */
+            display: block; /* Make it block level */
+            border-radius: 6px 6px 0 0; /* Round top corners like header */
+            position: relative; /* For positioning the marker */
+            transition: background-color 0.1s ease-in-out;
+        }
+
+        .code-summary:hover {
+            background-color: #f1f3f5; /* Slight hover effect */
+        }
+
+        /* Add custom marker */
+        .code-summary::before {
+            content: '►'; /* Collapsed marker */
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6em;
+            color: #6a737d;
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .collapsible-code[open] > .code-summary::before {
+            transform: translateY(-50%) rotate(90deg); /* Expanded marker */
+        }
+
+        .collapsible-code[open] > .code-summary {
+             border-bottom: 1px solid #e1e4e8; /* Ensure border shows when open */
+             border-radius: 6px 6px 0 0; /* Keep top rounding when open */
+        }
+
+        /* Adjust summary content positioning relative to marker */
+        .code-summary a {
+            margin-left: 1.2rem; /* Space for the marker */
+            color: #6a737d;
+            text-decoration: none;
+        }
+        .code-summary a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+        /* New style for the expand hint */
+        .expand-hint {
+            font-style: italic;
+            font-size: 0.85em;
+            color: #888;
+            margin-left: 0.5rem;
+        }
+
+        /* Ensure content inside details has appropriate spacing/styling */
+        .collapsible-code > .codehilite {
+            margin: 0;
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            border: none; /* Remove border from codehilite itself */
+            border-top: none; /* Remove top border */
+        }
+
+        /* Since code output is now outside the details element,
+           we need to adjust its styling */
+        .collapsible-code + .code-output {
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            margin-top: 0; /* Remove gap */
+            border-top: 1px solid #e1e4e8;
+        }
+
+        /* Ensure code output has proper border when outside details */
+        .code-box > .code-output {
+            border-top: 1px solid #e1e4e8;
+        }
+
+        .collapsible-code > .run-racket {
+             margin-left: 1rem; /* Indent run button */
+             margin-bottom: 1rem; /* Add bottom margin */
+        }
+        /* --- End Collapsible Styles --- */
+
+        code {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+            padding: 0.2em 0.4em;
+            background-color: #f6f8fa;
+            border-radius: 3px;
+        }
+
+        .codehilite code {
+            padding: 0;
+            background-color: transparent;
+        }
+
+        /* Links */
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Run button */
+        .run-racket {
+            display: inline-block;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.4rem 0.8rem;
+            background-color: #3c8dbc;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .run-racket:hover {
+            background-color: #367fa9;
+            text-decoration: none;
+        }
+
+        /* Make LaTeX display nicely */
+        .MathJax {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+    <span class="activenav"><a href="notes-ch4-3.html">← Previous</a></span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="activenav"><a href="../ch5/notes-ch5-1.html">Next →</a></span>
+</div>
+
+<p><a href="https://sarabander.github.io/sicp/html/4_002e4.xhtml#g_t4_002e4">HTML Book Chapter 4.4 Link</a></p>
+<p><div class="table-of-contents">
+<h2>Directory</h2>
+<ul class="toc-list">
+<ul>
+<li><a href="#section-44">Section 4.4</a></li>
+<ul>
+<li><a href="#notes">Notes</a></li>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-455">Exercise 4.55</a></span>
+<span><a href="#exercise-456">Exercise 4.56</a></span>
+<span><a href="#exercise-457">Exercise 4.57</a></span>
+<span><a href="#exercise-458">Exercise 4.58</a></span>
+<span><a href="#exercise-459">Exercise 4.59</a></span>
+<span><a href="#exercise-460">Exercise 4.60</a></span>
+<span><a href="#exercise-461">Exercise 4.61</a></span>
+<span><a href="#exercise-462">Exercise 4.62</a></span>
+<span><a href="#exercise-463">Exercise 4.63</a></span>
+<span><a href="#exercise-464">Exercise 4.64</a></span>
+<span><a href="#exercise-465">Exercise 4.65</a></span>
+<span><a href="#exercise-466">Exercise 4.66</a></span>
+<span><a href="#exercise-467">Exercise 4.67</a></span>
+<span><a href="#exercise-468">Exercise 4.68</a></span>
+<span><a href="#exercise-469">Exercise 4.69</a></span>
+<span><a href="#exercise-470">Exercise 4.70</a></span>
+<span><a href="#exercise-471">Exercise 4.71</a></span>
+<span><a href="#exercise-472">Exercise 4.72</a></span>
+<span><a href="#exercise-473">Exercise 4.73</a></span>
+<span><a href="#exercise-474">Exercise 4.74</a></span>
+<span><a href="#exercise-475">Exercise 4.75</a></span>
+<span><a href="#exercise-476">Exercise 4.76</a></span>
+<span><a href="#exercise-477">Exercise 4.77</a></span>
+<span><a href="#exercise-478">Exercise 4.78</a></span>
+<span><a href="#exercise-479">Exercise 4.79</a></span>
+</span>)
+</div></li>
+</ul>
+</ul>
+</ul>
+</div></p>
+<h2 id="section-44">Section 4.4</h2>
+<h3 id="notes">Notes</h3>
+<h3 id="exercises">Exercises</h3>
+<h4 id="exercise-455">Exercise 4.55</h4>
+<p>Give simple queries that retrieve
+the following information from the data base:</p>
+<p><strong>1.</strong> all people supervised by Ben Bitdiddle;</p>
+<p><strong>2.</strong> the names and jobs of all people in the accounting division;</p>
+<p><strong>3.</strong> the names and addresses of all people who live in Slumerville.</p>
+<h5>Solution</h5>
+<h4 id="exercise-456">Exercise 4.56</h4>
+<p>Formulate compound queries that
+retrieve the following information:</p>
+<p><strong>1.</strong> the names of all people who are supervised by Ben Bitdiddle, together with
+their addresses;</p>
+<p><strong>2.</strong> all people whose salary is less than Ben Bitdiddle's, together with their
+salary and Ben Bitdiddle's salary;</p>
+<p><strong>3.</strong> all people who are supervised by someone who is not in the computer division,
+together with the supervisor's name and job.</p>
+<h5>Solution</h5>
+<h4 id="exercise-457">Exercise 4.57</h4>
+<p>Define a rule that says that
+person 1 can replace person 2 if either person 1 does the same job as person 2
+or someone who does person 1's job can also do person 2's job, and if person 1
+and person 2 are not the same person. Using your rule, give queries that find
+the following:</p>
+<p><strong>1.</strong> all people who can replace Cy D. Fect;</p>
+<p><strong>2.</strong> all people who can replace someone who is being paid more than they are,
+together with the two salaries.</p>
+<h5>Solution</h5>
+<h4 id="exercise-458">Exercise 4.58</h4>
+<p>Define a rule that says that a
+person is a ``big shot'' in a division if the person works in the division but
+does not have a supervisor who works in the division.</p>
+<h5>Solution</h5>
+<h4 id="exercise-459">Exercise 4.59</h4>
+<p>Ben Bitdiddle has missed one
+meeting too many.  Fearing that his habit of forgetting meetings could cost him
+his job, Ben decides to do something about it.  He adds all the weekly meetings
+of the firm to the Microshaft data base by asserting the following:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">meeting</span><span class="w"> </span><span class="n">accounting</span><span class="w"> </span><span class="p">(</span><span class="n">Monday</span><span class="w"> </span><span class="n">9am</span><span class="p">))</span>
+<span class="p">(</span><span class="n">meeting</span><span class="w"> </span><span class="n">administration</span><span class="w"> </span><span class="p">(</span><span class="n">Monday</span><span class="w"> </span><span class="n">10am</span><span class="p">))</span>
+<span class="p">(</span><span class="n">meeting</span><span class="w"> </span><span class="n">computer</span><span class="w"> </span><span class="p">(</span><span class="n">Wednesday</span><span class="w"> </span><span class="n">3pm</span><span class="p">))</span>
+<span class="p">(</span><span class="n">meeting</span><span class="w"> </span><span class="n">administration</span><span class="w"> </span><span class="p">(</span><span class="n">Friday</span><span class="w"> </span><span class="n">1pm</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Each of the above assertions is for a meeting of an entire division.  Ben also
+adds an entry for the company-wide meeting that spans all the divisions.  All
+of the company's employees attend this meeting.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">meeting</span><span class="w"> </span><span class="n">whole-company</span><span class="w"> </span><span class="p">(</span><span class="n">Wednesday</span><span class="w"> </span><span class="n">4pm</span><span class="p">))</span>
+</code></pre></div>
+
+<p><strong>1.</strong> On Friday morning, Ben wants to query the data base for all the meetings that
+occur that day.  What query should he use?</p>
+<p><strong>2.</strong> Alyssa P. Hacker is unimpressed.  She thinks it would be much more useful to be
+able to ask for her meetings by specifying her name.  So she designs a rule
+that says that a person's meetings include all <code>whole-company</code> meetings
+plus all meetings of that person's division.  Fill in the body of Alyssa's
+rule.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">rule</span><span class="w"> </span><span class="p">(</span><span class="n">meeting-time</span><span class="w"> </span><span class="n">?person</span><span class="w"> </span><span class="n">?day-and-time</span><span class="p">)</span>
+<span class="w">      </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">rule-body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>3.</strong> Alyssa arrives at work on Wednesday morning and wonders what meetings she has
+to attend that day.  Having defined the above rule, what query should she make
+to find this out?</p>
+<h5>Solution</h5>
+<h4 id="exercise-460">Exercise 4.60</h4>
+<p>By giving the query</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">lives-near</span><span class="w"> </span><span class="n">?person</span><span class="w"> </span><span class="p">(</span><span class="n">Hacker</span><span class="w"> </span><span class="n">Alyssa</span><span class="w"> </span><span class="n">P</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Alyssa P. Hacker is able to find people who live near her, with whom she can
+ride to work.  On the other hand, when she tries to find all pairs of people
+who live near each other by querying</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">lives-near</span><span class="w"> </span><span class="n">?person-1</span><span class="w"> </span><span class="n">?person-2</span><span class="p">)</span>
+</code></pre></div>
+
+<p>she notices that each pair of people who live near each other is listed twice;
+for example,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">lives-near</span><span class="w"> </span><span class="p">(</span><span class="n">Hacker</span><span class="w"> </span><span class="n">Alyssa</span><span class="w"> </span><span class="n">P</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Fect</span><span class="w"> </span><span class="n">Cy</span><span class="w"> </span><span class="n">D</span><span class="p">))</span>
+<span class="p">(</span><span class="n">lives-near</span><span class="w"> </span><span class="p">(</span><span class="n">Fect</span><span class="w"> </span><span class="n">Cy</span><span class="w"> </span><span class="n">D</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Hacker</span><span class="w"> </span><span class="n">Alyssa</span><span class="w"> </span><span class="n">P</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Why does this happen?  Is there a way to find a list of people who live near
+each other, in which each pair appears only once?  Explain.</p>
+<h5>Solution</h5>
+<h4 id="exercise-461">Exercise 4.61</h4>
+<p>The following rules implement a
+<code>next-to</code> relation that finds adjacent elements of a list:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">rule</span><span class="w"> </span><span class="p">(</span><span class="n">?x</span><span class="w"> </span><span class="n">next-to</span><span class="w"> </span><span class="n">?y</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">(</span><span class="n">?x</span><span class="w"> </span><span class="n">?y</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">?u</span><span class="p">)))</span>
+<span class="p">(</span><span class="n">rule</span><span class="w"> </span><span class="p">(</span><span class="n">?x</span><span class="w"> </span><span class="n">next-to</span><span class="w"> </span><span class="n">?y</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">(</span><span class="n">?v</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">?z</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">?x</span><span class="w"> </span><span class="n">next-to</span><span class="w"> </span><span class="n">?y</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">?z</span><span class="p">))</span>
+</code></pre></div>
+
+<p>What will the response be to the following queries?</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">?x</span><span class="w"> </span><span class="n">next-to</span><span class="w"> </span><span class="n">?y</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="p">(</span><span class="n">?x</span><span class="w"> </span><span class="n">next-to</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-462">Exercise 4.62</h4>
+<p>Define rules to implement the
+<code>last-pair</code> operation of Exercise 2.17, which returns a list
+containing the last element of a nonempty list.  Check your rules on queries
+such as <code>(last-pair (3) ?x)</code>, <code>(last-pair (1 2 3) ?x)</code> and
+<code>(last-pair (2 ?x) (3))</code>.  Do your rules work correctly on queries such as
+<code>(last-pair ?x (3))</code>?</p>
+<h5>Solution</h5>
+<h4 id="exercise-463">Exercise 4.63</h4>
+<p>The following data base (see
+Genesis 4) traces the genealogy of the descendants of Ada back to Adam, by way
+of Cain:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">son</span><span class="w"> </span><span class="n">Adam</span><span class="w"> </span><span class="n">Cain</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">son</span><span class="w"> </span><span class="n">Cain</span><span class="w"> </span><span class="n">Enoch</span><span class="p">)</span>
+<span class="p">(</span><span class="n">son</span><span class="w"> </span><span class="n">Enoch</span><span class="w"> </span><span class="n">Irad</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">son</span><span class="w"> </span><span class="n">Irad</span><span class="w"> </span><span class="n">Mehujael</span><span class="p">)</span>
+<span class="p">(</span><span class="n">son</span><span class="w"> </span><span class="n">Mehujael</span><span class="w"> </span><span class="n">Methushael</span><span class="p">)</span>
+<span class="p">(</span><span class="n">son</span><span class="w"> </span><span class="n">Methushael</span><span class="w"> </span><span class="n">Lamech</span><span class="p">)</span>
+<span class="p">(</span><span class="n">wife</span><span class="w"> </span><span class="n">Lamech</span><span class="w"> </span><span class="n">Ada</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">son</span><span class="w"> </span><span class="n">Ada</span><span class="w"> </span><span class="n">Jabal</span><span class="p">)</span>
+<span class="p">(</span><span class="n">son</span><span class="w"> </span><span class="n">Ada</span><span class="w"> </span><span class="n">Jubal</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Formulate rules such as <code>If $S$ is the son of $f$, and $f$ is the son of
+$G$, then $S$ is the grandson of $G$'' and</code>If $W$ is the wife of
+$M$, and $S$ is the son of $W$, then $S$ is the son of $M$'' (which
+was supposedly more true in biblical times than today) that will enable the
+query system to find the grandson of Cain; the sons of Lamech; the grandsons of
+Methushael.  (See Exercise 4.69 for some rules to deduce more complicated
+relationships.)</p>
+<h5>Solution</h5>
+<h4 id="exercise-464">Exercise 4.64</h4>
+<p>Louis Reasoner mistakenly deletes
+the <code>outranked-by</code> rule (4.4.1) from the data base.  When he
+realizes this, he quickly reinstalls it.  Unfortunately, he makes a slight
+change in the rule, and types it in as</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">rule</span><span class="w"> </span><span class="p">(</span><span class="n">outranked-by</span><span class="w"> </span><span class="n">?staff-person</span><span class="w"> </span><span class="n">?boss</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="n">supervisor</span><span class="w"> </span><span class="n">?staff-person</span><span class="w"> </span><span class="n">?boss</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">outranked-by</span><span class="w"> </span><span class="n">?middle-manager</span>
+<span class="w">                         </span><span class="n">?boss</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="n">supervisor</span><span class="w"> </span><span class="n">?staff-person</span><span class="w"> </span>
+<span class="w">                       </span><span class="n">?middle-manager</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>Just after Louis types this information into the system, DeWitt Aull comes by
+to find out who outranks Ben Bitdiddle. He issues the query</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">outranked-by</span><span class="w"> </span><span class="p">(</span><span class="n">Bitdiddle</span><span class="w"> </span><span class="n">Ben</span><span class="p">)</span><span class="w"> </span><span class="n">?who</span><span class="p">)</span>
+</code></pre></div>
+
+<p>After answering, the system goes into an infinite loop.  Explain why.</p>
+<h5>Solution</h5>
+<h4 id="exercise-465">Exercise 4.65</h4>
+<p>Cy D. Fect, looking forward to
+the day when he will rise in the organization, gives a query to find all the
+wheels (using the <code>wheel</code> rule of 4.4.1):</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">wheel</span><span class="w"> </span><span class="n">?who</span><span class="p">)</span>
+</code></pre></div>
+
+<p>To his surprise, the system responds</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;;; Query results:</span>
+<span class="p">(</span><span class="n">wheel</span><span class="w"> </span><span class="p">(</span><span class="n">Warbucks</span><span class="w"> </span><span class="n">Oliver</span><span class="p">))</span>
+<span class="p">(</span><span class="n">wheel</span><span class="w"> </span><span class="p">(</span><span class="n">Bitdiddle</span><span class="w"> </span><span class="n">Ben</span><span class="p">))</span>
+<span class="p">(</span><span class="n">wheel</span><span class="w"> </span><span class="p">(</span><span class="n">Warbucks</span><span class="w"> </span><span class="n">Oliver</span><span class="p">))</span>
+<span class="p">(</span><span class="n">wheel</span><span class="w"> </span><span class="p">(</span><span class="n">Warbucks</span><span class="w"> </span><span class="n">Oliver</span><span class="p">))</span>
+<span class="p">(</span><span class="n">wheel</span><span class="w"> </span><span class="p">(</span><span class="n">Warbucks</span><span class="w"> </span><span class="n">Oliver</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Why is Oliver Warbucks listed four times?</p>
+<h5>Solution</h5>
+<h4 id="exercise-466">Exercise 4.66</h4>
+<p>Ben has been generalizing the
+query system to provide statistics about the company.  For example, to find the
+total salaries of all the computer programmers one will be able to say</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">sum</span><span class="w"> </span><span class="n">?amount</span>
+<span class="w">     </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?x</span><span class="w"> </span><span class="p">(</span><span class="n">computer</span><span class="w"> </span><span class="n">programmer</span><span class="p">))</span>
+<span class="w">          </span><span class="p">(</span><span class="n">salary</span><span class="w"> </span><span class="n">?x</span><span class="w"> </span><span class="n">?amount</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>In general, Ben's new system allows expressions of the form</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">accumulation-function</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">variable</span><span class="p">}</span><span class="n">⟩</span>
+<span class="w">                       </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">query</span><span class="w"> </span><span class="n">pattern</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>where <code>accumulation-function</code> can be things like <code>sum</code>,
+<code>average</code>, or <code>maximum</code>.  Ben reasons that it should be a cinch to
+implement this.  He will simply feed the query pattern to <code>qeval</code>.  This
+will produce a stream of frames.  He will then pass this stream through a
+mapping function that extracts the value of the designated variable from each
+frame in the stream and feed the resulting stream of values to the accumulation
+function.  Just as Ben completes the implementation and is about to try it out,
+Cy walks by, still puzzling over the <code>wheel</code> query result in 
+Exercise 4.65.  When Cy shows Ben the system's response, Ben groans,
+``Oh, no, my simple accumulation scheme won't work!''</p>
+<p>What has Ben just realized?  Outline a method he can use to salvage the
+situation.</p>
+<h5>Solution</h5>
+<h4 id="exercise-467">Exercise 4.67</h4>
+<p>Devise a way to install a loop
+detector in the query system so as to avoid the kinds of simple loops
+illustrated in the text and in Exercise 4.64.  The general idea is that
+the system should maintain some sort of history of its current chain of
+deductions and should not begin processing a query that it is already working
+on.  Describe what kind of information (patterns and frames) is included in
+this history, and how the check should be made.  (After you study the details
+of the query-system implementation in 4.4.4, you may want to
+modify the system to include your loop detector.)</p>
+<h5>Solution</h5>
+<h4 id="exercise-468">Exercise 4.68</h4>
+<p>Define rules to implement the
+<code>reverse</code> operation of Exercise 2.18, which returns a list
+containing the same elements as a given list in reverse order.  (Hint: Use
+<code>append-to-form</code>.)  Can your rules answer both <code>(reverse (1 2 3) ?x)</code>
+and <code>(reverse ?x (1 2 3))</code>?</p>
+<h5>Solution</h5>
+<h4 id="exercise-469">Exercise 4.69</h4>
+<p>Beginning with the data base and
+the rules you formulated in Exercise 4.63, devise a rule for adding
+<code>`greats'' to a grandson relationship. This should enable the system to deduce
+that Irad is the great-grandson of Adam, or that Jabal and Jubal are the
+great-great-great-great-great-grandsons of Adam.  (Hint: Represent the fact
+about Irad, for example, as</code>((great grandson) Adam Irad)<code>.  Write rules
+that determine if a list ends in the word</code>grandson<code>.  Use this to express
+a rule that allows one to derive the relationship</code>((great .  ?rel) ?x
+?y)<code>, where</code>?rel<code>is a list ending in</code>grandson<code>.)  Check your rules
+on queries such as</code>((great grandson) ?g ?ggs)<code>and</code>(?relationship
+Adam Irad)`.</p>
+<h5>Solution</h5>
+<h4 id="exercise-470">Exercise 4.70</h4>
+<p>What is the purpose of the
+<code>let</code> bindings in the procedures <code>add-assertion!</code> and
+<code>add-rule!</code>?  What would be wrong with the following implementation of
+<code>add-assertion!</code>?  Hint: Recall the definition of the infinite stream of
+ones in 3.5.2: <code>(define ones (cons-stream 1 ones))</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-assertion!</span><span class="w"> </span><span class="n">assertion</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">store-assertion-in-index</span><span class="w"> </span><span class="n">assertion</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">THE-ASSERTIONS</span>
+<span class="w">        </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="n">assertion</span><span class="w"> </span>
+<span class="w">                     </span><span class="n">THE-ASSERTIONS</span><span class="p">))</span>
+<span class="w">  </span><span class="o">&#39;</span><span class="ss">ok</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-471">Exercise 4.71</h4>
+<p>Louis Reasoner wonders why the
+<code>simple-query</code> and <code>disjoin</code> procedures (4.4.4.2) are
+implemented using explicit <code>delay</code> operations, rather than being defined
+as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">simple-query</span><span class="w"> </span>
+<span class="w">         </span><span class="n">query-pattern</span><span class="w"> </span><span class="n">frame-stream</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">stream-flatmap</span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="nb">stream-append</span>
+<span class="w">      </span><span class="p">(</span><span class="n">find-assertions</span><span class="w"> </span><span class="n">query-pattern</span><span class="w"> </span><span class="n">frame</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">apply-rules</span><span class="w"> </span><span class="n">query-pattern</span><span class="w"> </span><span class="n">frame</span><span class="p">)))</span>
+<span class="w">   </span><span class="n">frame-stream</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">disjoin</span><span class="w"> </span><span class="n">disjuncts</span><span class="w"> </span><span class="n">frame-stream</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-disjunction?</span><span class="w"> </span><span class="n">disjuncts</span><span class="p">)</span>
+<span class="w">      </span><span class="n">the-empty-stream</span>
+<span class="w">      </span><span class="p">(</span><span class="n">interleave</span>
+<span class="w">       </span><span class="p">(</span><span class="n">qeval</span><span class="w"> </span><span class="p">(</span><span class="n">first-disjunct</span><span class="w"> </span><span class="n">disjuncts</span><span class="p">)</span>
+<span class="w">              </span><span class="n">frame-stream</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">disjoin</span><span class="w"> </span><span class="p">(</span><span class="n">rest-disjuncts</span><span class="w"> </span><span class="n">disjuncts</span><span class="p">)</span>
+<span class="w">                </span><span class="n">frame-stream</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>Can you give examples of queries where these simpler definitions would lead to
+undesirable behavior?</p>
+<h5>Solution</h5>
+<h4 id="exercise-472">Exercise 4.72</h4>
+<p>Why do <code>disjoin</code> and
+<code>stream-flatmap</code> interleave the streams rather than simply append them?
+Give examples that illustrate why interleaving works better.  (Hint: Why did we
+use <code>interleave</code> in 3.5.3?)</p>
+<h5>Solution</h5>
+<h4 id="exercise-473">Exercise 4.73</h4>
+<p>Why does <code>flatten-stream</code>
+use <code>delay</code> explicitly?  What would be wrong with defining it as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">flatten-stream</span><span class="w"> </span><span class="k">stream</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stream-null?</span><span class="w"> </span><span class="k">stream</span><span class="p">)</span>
+<span class="w">      </span><span class="n">the-empty-stream</span>
+<span class="w">      </span><span class="p">(</span><span class="n">interleave</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="k">stream</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">(</span><span class="n">flatten-stream</span><span class="w"> </span>
+<span class="w">                   </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="k">stream</span><span class="p">)))))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-474">Exercise 4.74</h4>
+<p>Alyssa P. Hacker proposes to use
+a simpler version of <code>stream-flatmap</code> in <code>negate</code>, <code>lisp-value</code>,
+and <code>find-assertions</code>.  She observes that the procedure that is mapped
+over the frame stream in these cases always produces either the empty stream or
+a singleton stream, so no interleaving is needed when combining these streams.</p>
+<p><strong>1.</strong> Fill in the missing expressions in Alyssa's program.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">simple-stream-flatmap</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="n">s</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">simple-flatten</span><span class="w"> </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="n">s</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">simple-flatten</span><span class="w"> </span><span class="k">stream</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="n">⟨??⟩</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">stream-filter</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span>
+<span class="w">                             </span><span class="k">stream</span><span class="p">)))</span>
+</code></pre></div>
+
+<p><strong>2.</strong> Does the query system's behavior change if we change it in this way?</p>
+<h5>Solution</h5>
+<h4 id="exercise-475">Exercise 4.75</h4>
+<p>Implement for the query language
+a new special form called <code>unique</code>.  <code>Unique</code> should succeed if there
+is precisely one item in the data base satisfying a specified query.  For
+example,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">unique</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?x</span><span class="w"> </span><span class="p">(</span><span class="n">computer</span><span class="w"> </span><span class="n">wizard</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>should print the one-item stream</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">unique</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="p">(</span><span class="n">Bitdiddle</span><span class="w"> </span><span class="n">Ben</span><span class="p">)</span>
+<span class="w">             </span><span class="p">(</span><span class="n">computer</span><span class="w"> </span><span class="n">wizard</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>since Ben is the only computer wizard, and</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">unique</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?x</span><span class="w"> </span><span class="p">(</span><span class="n">computer</span><span class="w"> </span><span class="n">programmer</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>should print the empty stream, since there is more than one computer
+programmer.  Moreover,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?x</span><span class="w"> </span><span class="n">?j</span><span class="p">)</span><span class="w"> </span>
+<span class="w">     </span><span class="p">(</span><span class="n">unique</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?anyone</span><span class="w"> </span><span class="n">?j</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>should list all the jobs that are filled by only one person, and the people who
+fill them.</p>
+<p>There are two parts to implementing <code>unique</code>.  The first is to write a
+procedure that handles this special form, and the second is to make
+<code>qeval</code> dispatch to that procedure.  The second part is trivial, since
+<code>qeval</code> does its dispatching in a data-directed way.  If your procedure is
+called <code>uniquely-asserted</code>, all you need to do is</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">unique</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">qeval</span><span class="w"> </span><span class="n">uniquely-asserted</span><span class="p">)</span>
+</code></pre></div>
+
+<p>and <code>qeval</code> will dispatch to this procedure for every query whose
+<code>type</code> (<code>car</code>) is the symbol <code>unique</code>.</p>
+<p>The real problem is to write the procedure <code>uniquely-asserted</code>.  This
+should take as input the <code>contents</code> (<code>cdr</code>) of the <code>unique</code>
+query, together with a stream of frames.  For each frame in the stream, it
+should use <code>qeval</code> to find the stream of all extensions to the frame that
+satisfy the given query.  Any stream that does not have exactly one item in it
+should be eliminated.  The remaining streams should be passed back to be
+accumulated into one big stream that is the result of the <code>unique</code> query.
+This is similar to the implementation of the <code>not</code> special form.</p>
+<p>Test your implementation by forming a query that lists all people who supervise
+precisely one person.</p>
+<h5>Solution</h5>
+<h4 id="exercise-476">Exercise 4.76</h4>
+<p>Our implementation of <code>and</code>
+as a series combination of queries (Figure 4.5) is elegant, but it is
+inefficient because in processing the second query of the <code>and</code> we must
+scan the data base for each frame produced by the first query.  If the data
+base has $n$ elements, and a typical query produces a number of output frames
+proportional to $n$ (say ${n \,/\, k$}), then scanning the data base for each
+frame produced by the first query will require ${n^2 /\, k$} calls to the
+pattern matcher.  Another approach would be to process the two clauses of the
+<code>and</code> separately, then look for all pairs of output frames that are
+compatible.  If each query produces ${n \,/\, k$} output frames, then this means
+that we must perform ${n^2 /\, k^2$} compatibility checks---a factor of $k$
+fewer than the number of matches required in our current method.</p>
+<p>Devise an implementation of <code>and</code> that uses this strategy.  You must
+implement a procedure that takes two frames as inputs, checks whether the
+bindings in the frames are compatible, and, if so, produces a frame that merges
+the two sets of bindings.  This operation is similar to unification.</p>
+<h5>Solution</h5>
+<h4 id="exercise-477">Exercise 4.77</h4>
+<p>In 4.4.3 we saw
+that <code>not</code> and <code>lisp-value</code> can cause the query language to give
+<code>wrong'' answers if these filtering operations are applied to frames in which
+variables are unbound.  Devise a way to fix this shortcoming.  One idea is to
+perform the filtering in a</code>delayed'' manner by appending to the frame a
+``promise'' to filter that is fulfilled only when enough variables have been
+bound to make the operation possible.  We could wait to perform filtering until
+all other operations have been performed.  However, for efficiency's sake, we
+would like to perform filtering as soon as possible so as to cut down on the
+number of intermediate frames generated.</p>
+<h5>Solution</h5>
+<h4 id="exercise-478">Exercise 4.78</h4>
+<p>Redesign the query language as a
+nondeterministic program to be implemented using the evaluator of 
+4.3, rather than as a stream process.  In this approach, each query will
+produce a single answer (rather than the stream of all answers) and the user
+can type <code>try-again</code> to see more answers.  You should find that much of
+the mechanism we built in this section is subsumed by nondeterministic search
+and backtracking.  You will probably also find, however, that your new query
+language has subtle differences in behavior from the one implemented here.  Can
+you find examples that illustrate this difference?</p>
+<h5>Solution</h5>
+<h4 id="exercise-479">Exercise 4.79</h4>
+<p>When we implemented the Lisp
+evaluator in 4.1, we saw how to use local environments to avoid
+name conflicts between the parameters of procedures.  For example, in
+evaluating</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sum-of-squares</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">square</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="n">sum-of-squares</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div>
+
+<p>there is no confusion between the <code>x</code> in <code>square</code> and the <code>x</code> in
+<code>sum-of-squares</code>, because we evaluate the body of each procedure in an
+environment that is specially constructed to contain bindings for the local
+variables.  In the query system, we used a different strategy to avoid name
+conflicts in applying rules.  Each time we apply a rule we rename the variables
+with new names that are guaranteed to be unique.  The analogous strategy for
+the Lisp evaluator would be to do away with local environments and simply
+rename the variables in the body of a procedure each time we apply the
+procedure.</p>
+<p>Implement for the query language a rule-application method that uses
+environments rather than renaming.  See if you can build on your environment
+structure to create constructs in the query language for dealing with large
+systems, such as the rule analog of block-structured procedures.  Can you
+relate any of this to the problem of making deductions in a context (e.g., ``If
+I supposed that $P$ were true, then I would be able to deduce $A$ and
+$B$.'') as a method of problem solving?  (This problem is open-ended.  A good
+answer is probably worth a Ph.D.)</p>
+<h5>Solution</h5>
+    </div>
+</body>
+</html>

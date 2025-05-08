@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index.md</title>
+    <title>notes-ch5-2.md</title>
     <!-- MathJax for LaTeX support -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -510,100 +510,216 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </head>
 <body>
     <div class="container">
-        <h1>SICP Reading Group</h1>
-<h2>Book club Notes</h2>
+        <div class="nav">
+    <span class="activenav"><a href="notes-ch5-1.html">← Previous</a></span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="activenav"><a href="notes-ch5-3.html">Next →</a></span>
+</div>
+
+<p><a href="https://sarabander.github.io/sicp/html/5_002e2.xhtml#g_t5_002e2">HTML Book Chapter 5.2 Link</a></p>
+<p><div class="table-of-contents">
+<h2>Directory</h2>
+<ul class="toc-list">
 <ul>
-<li><a href="ch1/notes-ch1-1.html">Chapter 1-1</a> (8/8 problems, total 8/8)</li>
-<li><a href="ch1/notes-ch1-2.html">Chapter 1-2</a> (20/20 problems, total 28/28)</li>
-<li><a href="ch1/notes-ch1-3.html">Chapter 1-3</a> (18/18 problems, total 46/46)</li>
-<li><a href="ch2/notes-ch2-1.html">Chapter 2-1</a> (16/16 problems, total 62/62)</li>
-<li><a href="ch2/notes-ch2-2.html">Chapter 2-2</a> (27/36 problems, total 89/98)</li>
-<li><a href="ch2/notes-ch2-3.html">Chapter 2-3</a> (20/20 problems, total 109/118)</li>
-<li><a href="ch2/notes-ch2-4.html">Chapter 2-4</a> (4/4 problems, total 113/122)</li>
-<li><a href="ch2/notes-ch2-5.html">Chapter 2-5</a> (21/21 problems, total 134/143)</li>
-<li><a href="ch3/notes-ch3-1.html">Chapter 3-1</a> (0/8 problems, total /151)</li>
-<li><a href="ch3/notes-ch3-2.html">Chapter 3-2</a> (0/3 problems, total /154)</li>
-<li><a href="ch3/notes-ch3-3.html">Chapter 3-3</a> (0/26 problems, total /180)</li>
-<li><a href="ch3/notes-ch3-4.html">Chapter 3-4</a> (0/12 problems, total /192)</li>
-<li><a href="ch3/notes-ch3-5.html">Chapter 3-5</a> (0/33 problems, total /225)</li>
-<li><a href="ch4/notes-ch4-1.html">Chapter 4-1</a> (0/24 problems, total /249)</li>
-<li><a href="ch4/notes-ch4-2.html">Chapter 4-2</a> (0/10 problems, total /259)</li>
-<li><a href="ch4/notes-ch4-3.html">Chapter 4-3</a> (0/20 problems, total /279)</li>
-<li><a href="ch4/notes-ch4-4.html">Chapter 4-4</a> (0/25 problems, total /304)</li>
-<li><a href="ch5/notes-ch5-1.html">Chapter 5-1</a> (0/6 problems, total /310)</li>
-<li><a href="ch5/notes-ch5-2.html">Chapter 5-2</a> (0/13 problems, total /323)</li>
-<li><a href="ch5/notes-ch5-3.html">Chapter 5-3</a> (0/3 problems, total /326)</li>
-<li><a href="ch5/notes-ch5-4.html">Chapter 5-4</a> (0/8 problems, total /334)</li>
-<li><a href="ch5/notes-ch5-5.html">Chapter 5-5</a> (0/22 problems, total /356)</li>
-</ul>
-<h2>Meetings</h2>
+<li><a href="#section-52">Section 5.2</a></li>
 <ul>
-<li><a href="ch1/notes-ch1-1.html#meeting-02-23-2025">Feb 23, 2025</a></li>
-<li><a href="ch1/notes-ch1-1.html#meeting-03-02-2025">March 2, 2025</a></li>
-<li><a href="ch1/notes-ch1-2.html#meeting-03-09-2025">March 9, 2025</a></li>
-<li><a href="ch1/notes-ch1-2.html#meeting-03-16-2025">March 16, 2025</a></li>
-<li><a href="ch1/notes-ch1-3.html#meeting-03-23-2025">March 23, 2025</a> </li>
-<li><a href="ch2/notes-ch2-1.html#meeting-03-30-2025">March 30, 2025</a> </li>
-<li><a href="ch2/notes-ch2-2.html#meeting-04-06-2025">April 6, 2025</a></li>
-<li><a href="ch2/notes-ch2-3.html#meeting-04-20-2025">April 20, 2025</a></li>
-<li><a href="ch2/notes-ch2-4.html#meeting-04-27-2025">April 27, 2025</a></li>
-<li><a href="ch2/notes-ch2-5.html#meeting-05-04-2025">May 4, 2025</a></li>
-<li><a href="ch3/notes-ch3-1.html#meeting-04-27-2025">May 11, 2025</a></li>
+<li><a href="#notes">Notes</a></li>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-57">Exercise 5.7</a></span>
+<span><a href="#exercise-58">Exercise 5.8</a></span>
+<span><a href="#exercise-59">Exercise 5.9</a></span>
+<span><a href="#exercise-510">Exercise 5.10</a></span>
+<span><a href="#exercise-511">Exercise 5.11</a></span>
+<span><a href="#exercise-512">Exercise 5.12</a></span>
+<span><a href="#exercise-513">Exercise 5.13</a></span>
+<span><a href="#exercise-514">Exercise 5.14</a></span>
+<span><a href="#exercise-515">Exercise 5.15</a></span>
+<span><a href="#exercise-516">Exercise 5.16</a></span>
+<span><a href="#exercise-517">Exercise 5.17</a></span>
+<span><a href="#exercise-518">Exercise 5.18</a></span>
+<span><a href="#exercise-519">Exercise 5.19</a></span>
+</span>)
+</div></li>
 </ul>
-<h2>Nice Links</h2>
-<ul>
-<li><a href="https://sarabander.github.io/sicp/">SICP html edition</a></li>
-<li><a href="https://www.youtube.com/playlist?list=PLE18841CABEA24090">Lectures from 1986</a></li>
-<li>Meetup link: <a href="https://www.meetup.com/code-and-coffee-long-beach">https://www.meetup.com/code-and-coffee-long-beach</a></li>
-<li>Twitch: <a href="https://www.twitch.tv/codeandcoffeelb">https://www.twitch.tv/codeandcoffeelb</a></li>
-<li>Discord: <a href="https://www.codeandcoffee.dev/">https://www.codeandcoffee.dev/</a></li>
-<li><a href="https://www.racket-lang.org/">Racket IDE</a></li>
 </ul>
-<h2>Extras</h2>
-<p>Filling in stuff from <a href="bonus-notes.html">bonus-notes.md</a> as time goes on. A lot of this is a big TODO. Anything with a ✯ next to it means it takes significant work.</p>
-<p><strong>General stuff:</strong></p>
-<ul>
-<li><a href="anki.html">Anki flashcards</a></li>
-<li>✯ Racket crash course</li>
-<li>SICP Library Functions</li>
 </ul>
-<p><strong>Ch1 Bonuses</strong></p>
-<ul>
-<li>Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. </li>
-<li>The ill-fated Santa Barbara Monte Carlo machine</li>
-<li>Exact runtime of count-change</li>
-<li>RSA implementation</li>
-<li>Linear diophantine equations </li>
-<li>Bonus number theory (Euler totient, base b expansions of fractions)</li>
-<li>Bonus special numbers (Lucas, Catalan, partition numbers, "negative binomial")</li>
-<li>Numerical approximation formulas (iterated polynomial gives sine, other iterated special polynomials give special things too)</li>
-<li>Improving rates of convergence (newton, accelerated newton, successive averaging, resummation)</li>
-<li>✯ Challenge 1: try to compute the Ramanujan tau function. This is some memoized code using recursion that supposedly works: <a href="https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896">https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896</a>, but simple mathematica code can generate it too: <code>CoefficientList[Take[Expand[Product[(1 - x^k)^24, {k, 1, 30}]], 30],x]</code></li>
-<li>✯ Challenge 2: Continued fraction expansion of pi or 1/pi using exact arithmetic.</li>
-<li>✯ Challenge 3: Thoughts on reversibility and quantum computing</li>
-</ul>
-<p><strong>Ch2 Bonuses</strong></p>
-<ul>
-<li>✯ Drawing Church numerals</li>
-<li>Enumerating binary trees and arithmetic expressions (builds on top of enumerating permutations)</li>
-<li>✯ n queens and dancing links</li>
-<li>Story about polynomial long division + my grandpa</li>
-</ul>
-<p>Chapter 2 stuff:</p>
-<ol>
-<li>It would be useful to review all the different functions: accumulate, map, map-indexed, fold-left, fold-right. Not just how they're implemented, but also 
-the generic functions you'd actually use when programming Racket or Guile or whatever. Same with <code>set</code>s.</li>
-<li>For data abstraction, it might be nice to write a library containing many of 
-the features from all of the practice problems for section 2.4-2.5. </li>
-<li>I'd like to write an article about polynomial stuff. Including why things 
-like the gcd are only well-defined up to units, and what that means. So,
-we could do a proper implementation of rational functions and polynomials. 
-<strong>A program that finds all roots</strong>.
-There's plenty of other stuff we could do here: Euclidean domains, Z[i],
-Z[(-1)^(1/3)]. This is all about abstract algebra of one variable.</li>
-<li>Abstract algebra with multiple variables: Groebner bases, various algos.</li>
-<li>It would be really cool to implement some of Katherine Stange's <a href="https://math.colorado.edu/~kstange/papers/Stange-short-exp.pdf">Visualizing imaginary quadratic fields</a></li>
-</ol>
+</div></p>
+<h2 id="section-52">Section 5.2</h2>
+<h3 id="notes">Notes</h3>
+<h3 id="exercises">Exercises</h3>
+<h4 id="exercise-57">Exercise 5.7</h4>
+<p>Use the simulator to test the
+machines you designed in Exercise 5.4.</p>
+<h5>Solution</h5>
+<h4 id="exercise-58">Exercise 5.8</h4>
+<p>The following register-machine code
+is ambiguous, because the label <code>here</code> is defined more than once:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">start</span>
+<span class="w">  </span><span class="p">(</span><span class="n">goto</span><span class="w"> </span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="n">here</span><span class="p">))</span>
+<span class="n">here</span>
+<span class="w">  </span><span class="p">(</span><span class="n">assign</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">const</span><span class="w"> </span><span class="mi">3</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">goto</span><span class="w"> </span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="n">there</span><span class="p">))</span>
+<span class="n">here</span>
+<span class="w">  </span><span class="p">(</span><span class="n">assign</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">const</span><span class="w"> </span><span class="mi">4</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">goto</span><span class="w"> </span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="n">there</span><span class="p">))</span>
+<span class="n">there</span>
+</code></pre></div>
+
+<p>With the simulator as written, what will the contents of register <code>a</code> be
+when control reaches <code>there</code>?  Modify the <code>extract-labels</code> procedure
+so that the assembler will signal an error if the same label name is used to
+indicate two different locations.</p>
+<h5>Solution</h5>
+<h4 id="exercise-59">Exercise 5.9</h4>
+<p>The treatment of machine operations
+above permits them to operate on labels as well as on constants and the
+contents of registers.  Modify the expression-processing procedures to enforce
+the condition that operations can be used only with registers and constants.</p>
+<h5>Solution</h5>
+<h4 id="exercise-510">Exercise 5.10</h4>
+<p>Design a new syntax for
+register-machine instructions and modify the simulator to use your new syntax.
+Can you implement your new syntax without changing any part of the simulator
+except the syntax procedures in this section?</p>
+<h5>Solution</h5>
+<h4 id="exercise-511">Exercise 5.11</h4>
+<p>When we introduced <code>save</code>
+and <code>restore</code> in 5.1.4, we didn't specify what would happen
+if you tried to restore a register that was not the last one saved, as in the
+sequence</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">save</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="p">(</span><span class="n">save</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="p">(</span><span class="n">restore</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+
+<p>There are several reasonable possibilities for the meaning of <code>restore</code>:</p>
+<p><strong>1.</strong> <code>(restore y)</code> puts into <code>y</code> the last value saved on the stack,
+regardless of what register that value came from.  This is the way our
+simulator behaves.  Show how to take advantage of this behavior to eliminate
+one instruction from the Fibonacci machine of 5.1.4 (Figure 5.12).</p>
+<p><strong>2.</strong> <code>(restore y)</code> puts into <code>y</code> the last value saved on the stack, but
+only if that value was saved from <code>y</code>; otherwise, it signals an error.
+Modify the simulator to behave this way.  You will have to change <code>save</code>
+to put the register name on the stack along with the value.</p>
+<p><strong>3.</strong> <code>(restore y)</code> puts into <code>y</code> the last value saved from <code>y</code>
+regardless of what other registers were saved after <code>y</code> and not restored.
+Modify the simulator to behave this way.  You will have to associate a separate
+stack with each register.  You should make the <code>initialize-stack</code>
+operation initialize all the register stacks.</p>
+<h5>Solution</h5>
+<h4 id="exercise-512">Exercise 5.12</h4>
+<p>The simulator can be used to help
+determine the data paths required for implementing a machine with a given
+controller.  Extend the assembler to store the following information in the
+machine model:</p>
+<p>@itemize</p>
+<p>@item
+a list of all instructions, with duplicates removed, sorted by instruction type
+(<code>assign</code>, <code>goto</code>, and so on);</p>
+<p>@item
+a list (without duplicates) of the registers used to hold entry points (these
+are the registers referenced by <code>goto</code> instructions);</p>
+<p>@item
+a list (without duplicates) of the registers that are <code>save</code>d
+or <code>restore</code>d;</p>
+<p>@item
+for each register, a list (without duplicates) of the sources from which it is
+assigned (for example, the sources for register <code>val</code> in the factorial
+machine of Figure 5.11 are <code>(const 1)</code> and <code>((op *) (reg n)
+(reg val))</code>).</p>
+<p>Extend the message-passing interface to the machine to provide access to this
+new information.  To test your analyzer, define the Fibonacci machine from
+Figure 5.12 and examine the lists you constructed.</p>
+<h5>Solution</h5>
+<h4 id="exercise-513">Exercise 5.13</h4>
+<p>Modify the simulator so that it
+uses the controller sequence to determine what registers the machine has rather
+than requiring a list of registers as an argument to <code>make-machine</code>.
+Instead of pre-allocating the registers in <code>make-machine</code>, you can
+allocate them one at a time when they are first seen during assembly of the
+instructions.</p>
+<h5>Solution</h5>
+<h4 id="exercise-514">Exercise 5.14</h4>
+<p>Measure the number of pushes and
+the maximum stack depth required to compute ${n!$} for various small values of
+$n$ using the factorial machine shown in Figure 5.11.  From your data
+determine formulas in terms of $n$ for the total number of push operations
+and the maximum stack depth used in computing ${n!$} for any ${n \gt 1$}. Note
+that each of these is a linear function of $n$ and is thus determined by two
+constants.  In order to get the statistics printed, you will have to augment
+the factorial machine with instructions to initialize the stack and print the
+statistics.  You may want to also modify the machine so that it repeatedly
+reads a value for $n$, computes the factorial, and prints the result (as we
+did for the @abbr{GCD} machine in Figure 5.4), so that you will not
+have to repeatedly invoke <code>get-register-contents</code>,
+<code>set-register-contents!</code>, and <code>start</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-515">Exercise 5.15</h4>
+<p>Add instruction counting 
+to the register machine simulation.  That is, have the machine model
+keep track of the number of instructions executed.  Extend the machine model's
+interface to accept a new message that prints the value of the instruction
+count and resets the count to zero.</p>
+<h5>Solution</h5>
+<h4 id="exercise-516">Exercise 5.16</h4>
+<p>Augment the simulator to provide
+for instruction tracing.  That is, before each instruction is
+executed, the simulator should print the text of the instruction.  Make the
+machine model accept <code>trace-on</code> and <code>trace-off</code> messages to turn
+tracing on and off.</p>
+<h5>Solution</h5>
+<h4 id="exercise-517">Exercise 5.17</h4>
+<p>Extend the instruction tracing of
+Exercise 5.16 so that before printing an instruction, the simulator
+prints any labels that immediately precede that instruction in the controller
+sequence.  Be careful to do this in a way that does not interfere with
+instruction counting (Exercise 5.15).  You will have to make the
+simulator retain the necessary label information.</p>
+<h5>Solution</h5>
+<h4 id="exercise-518">Exercise 5.18</h4>
+<p>Modify the <code>make-register</code>
+procedure of 5.2.1 so that registers can be traced.  Registers
+should accept messages that turn tracing on and off.  When a register is
+traced, assigning a value to the register should print the name of the
+register, the old contents of the register, and the new contents being
+assigned.  Extend the interface to the machine model to permit you to turn
+tracing on and off for designated machine registers.</p>
+<h5>Solution</h5>
+<h4 id="exercise-519">Exercise 5.19</h4>
+<p>Alyssa P. Hacker wants a
+breakpoint feature in the simulator to help her debug her machine
+designs.  You have been hired to install this feature for her.  She wants to be
+able to specify a place in the controller sequence where the simulator will
+stop and allow her to examine the state of the machine.  You are to implement a
+procedure</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">set-breakpoint</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">machine</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">label</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">n</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>that sets a breakpoint just before the $n^{\text{th}}$ instruction after the given
+label.  For example,</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">set-breakpoint</span><span class="w"> </span><span class="n">gcd-machine</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">test-b</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div>
+
+<p>installs a breakpoint in <code>gcd-machine</code> just before the assignment to
+register <code>a</code>.  When the simulator reaches the breakpoint it should print
+the label and the offset of the breakpoint and stop executing instructions.
+Alyssa can then use <code>get-register-contents</code> and
+<code>set-register-contents!</code> to manipulate the state of the simulated machine.
+She should then be able to continue execution by saying</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">proceed-machine</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">machine</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>She should also be able to remove a specific breakpoint by means of</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">cancel-breakpoint</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">machine</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">label</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">n</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>or to remove all breakpoints by means of</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">cancel-all-breakpoints</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">machine</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
     </div>
 </body>
 </html>

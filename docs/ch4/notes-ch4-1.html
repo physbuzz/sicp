@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notes-ch4-1.md</title>
+    <!-- MathJax for LaTeX support -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']]
+            }
+        };
+    </script>
+    <style>
+        /* Pygments Syntax Highlighting */
+        pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #880000 } /* Name.Constant */
+.codehilite .nd { color: #AA22FF } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #0000FF } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #666666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #0000FF } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+        /* Base CSS from markdown_styles.py */
+        
+        /* Basic reset and fonts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        /* Navigation styling */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .nav span {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav .activenav {
+            background-color: #f1f8ff;
+        }
+
+        .nav .activenav a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .nav .activenav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav .inactivenav {
+            color: #959da5;
+            background-color: #f6f8fa;
+        }
+
+        /* Center column layout */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: #34495e;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.8rem 0 1rem;
+            color: #34495e;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        h5 {
+            font-size: 1.1rem;
+            margin: 1.2rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        /* Table of Contents styling */
+        .table-of-contents {
+            margin: 0 0 0;
+            line-height: 1;
+        }
+
+        .toc-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .toc-list li {
+            margin-bottom: 2px;
+        }
+        .toc-list ul {
+            margin-bottom: 2px;
+        }
+
+        .exercise-list {
+            margin: 0;
+            padding-left: 0;
+            font-size: 0.95em;
+            display: inline;
+        }
+
+        .exercise-container {
+            display: inline-block;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+
+        .toc-exercises {
+            font-style: italic;
+            color: #555;
+        }
+
+        .exercise-list a {
+            text-decoration: none;
+            color: #2070b0;
+            margin-right: 0;
+        }
+
+        .exercise-list a:hover {
+            text-decoration: underline;
+        }
+
+        .exercise-list span:not(:last-child):after {
+            content: ", ";
+            color: #777;
+            margin-right: 0;
+        }
+
+        /* Blockquote styling */
+        blockquote {
+            border-left: 4px solid #dfe2e5;
+            color: #6a737d;
+            padding: 0 1rem;
+            margin: 1rem 0 1.5rem;
+            background-color: #f6f8fa;
+            border-radius: 0 3px 3px 0;
+        }
+
+        blockquote p {
+            padding: 0.8rem 0;
+        }
+
+        blockquote p:first-child {
+            margin-top: 0;
+        }
+
+        blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Solution styling */
+        h5:has(+p:contains("Solution")) {
+            margin-bottom: 0;
+        }
+
+        h5:has(+p:contains("Solution")) + p {
+            font-weight: bold;
+            color: #3c8dbc;
+            border-left: 3px solid #3c8dbc;
+            padding-left: 0.8rem;
+            margin: 0.5rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* List styling */
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        .code-box {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        .code-header {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.3rem 0 0rem 0.3rem;
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+
+        .code-header a {
+            color: #6a737d;
+            text-decoration: none;
+        }
+
+        .code-header a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+        /* Standalone code blocks (triple backticks) */
+        .codehilite {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        /* When inside a code-box, remove default styling */
+        .code-box .codehilite {
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Adjust padding for code blocks inside code-box */
+        .code-box .codehilite pre {
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        /* Normal padding for standalone code blocks */
+        .codehilite pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .code-output {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            border-top: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+        .code-output span {
+            color: #de37cc;
+        }
+
+        .code-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        /* --- Styles for Collapsible Code Blocks --- */
+        .collapsible-code {
+            border: none; /* Remove default border from details */
+            margin-top: 0; /* Adjust spacing if needed */
+            margin-bottom: 0; /* Adjust spacing if needed */
+        }
+
+        .code-summary {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.5rem 0.8rem; /* Adjusted padding */
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+            cursor: pointer;
+            list-style: none; /* Hide default marker */
+            display: block; /* Make it block level */
+            border-radius: 6px 6px 0 0; /* Round top corners like header */
+            position: relative; /* For positioning the marker */
+            transition: background-color 0.1s ease-in-out;
+        }
+
+        .code-summary:hover {
+            background-color: #f1f3f5; /* Slight hover effect */
+        }
+
+        /* Add custom marker */
+        .code-summary::before {
+            content: '►'; /* Collapsed marker */
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6em;
+            color: #6a737d;
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .collapsible-code[open] > .code-summary::before {
+            transform: translateY(-50%) rotate(90deg); /* Expanded marker */
+        }
+
+        .collapsible-code[open] > .code-summary {
+             border-bottom: 1px solid #e1e4e8; /* Ensure border shows when open */
+             border-radius: 6px 6px 0 0; /* Keep top rounding when open */
+        }
+
+        /* Adjust summary content positioning relative to marker */
+        .code-summary a {
+            margin-left: 1.2rem; /* Space for the marker */
+            color: #6a737d;
+            text-decoration: none;
+        }
+        .code-summary a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+        /* New style for the expand hint */
+        .expand-hint {
+            font-style: italic;
+            font-size: 0.85em;
+            color: #888;
+            margin-left: 0.5rem;
+        }
+
+        /* Ensure content inside details has appropriate spacing/styling */
+        .collapsible-code > .codehilite {
+            margin: 0;
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            border: none; /* Remove border from codehilite itself */
+            border-top: none; /* Remove top border */
+        }
+
+        /* Since code output is now outside the details element,
+           we need to adjust its styling */
+        .collapsible-code + .code-output {
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            margin-top: 0; /* Remove gap */
+            border-top: 1px solid #e1e4e8;
+        }
+
+        /* Ensure code output has proper border when outside details */
+        .code-box > .code-output {
+            border-top: 1px solid #e1e4e8;
+        }
+
+        .collapsible-code > .run-racket {
+             margin-left: 1rem; /* Indent run button */
+             margin-bottom: 1rem; /* Add bottom margin */
+        }
+        /* --- End Collapsible Styles --- */
+
+        code {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+            padding: 0.2em 0.4em;
+            background-color: #f6f8fa;
+            border-radius: 3px;
+        }
+
+        .codehilite code {
+            padding: 0;
+            background-color: transparent;
+        }
+
+        /* Links */
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Run button */
+        .run-racket {
+            display: inline-block;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.4rem 0.8rem;
+            background-color: #3c8dbc;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .run-racket:hover {
+            background-color: #367fa9;
+            text-decoration: none;
+        }
+
+        /* Make LaTeX display nicely */
+        .MathJax {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+    <span class="activenav"><a href="../ch3/notes-ch3-5.html">← Previous</a></span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="activenav"><a href="notes-ch4-2.html">Next →</a></span>
+</div>
+
+<p><a href="https://sarabander.github.io/sicp/html/4_002e1.xhtml#g_t4_002e1">HTML Book Chapter 4.1 Link</a></p>
+<p><div class="table-of-contents">
+<h2>Directory</h2>
+<ul class="toc-list">
+<ul>
+<li><a href="#section-41">Section 4.1</a></li>
+<ul>
+<li><a href="#notes">Notes</a></li>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-41">Exercise 4.1</a></span>
+<span><a href="#exercise-42">Exercise 4.2</a></span>
+<span><a href="#exercise-43">Exercise 4.3</a></span>
+<span><a href="#exercise-44">Exercise 4.4</a></span>
+<span><a href="#exercise-45">Exercise 4.5</a></span>
+<span><a href="#exercise-46">Exercise 4.6</a></span>
+<span><a href="#exercise-47">Exercise 4.7</a></span>
+<span><a href="#exercise-48">Exercise 4.8</a></span>
+<span><a href="#exercise-49">Exercise 4.9</a></span>
+<span><a href="#exercise-410">Exercise 4.10</a></span>
+<span><a href="#exercise-411">Exercise 4.11</a></span>
+<span><a href="#exercise-412">Exercise 4.12</a></span>
+<span><a href="#exercise-413">Exercise 4.13</a></span>
+<span><a href="#exercise-414">Exercise 4.14</a></span>
+<span><a href="#exercise-415">Exercise 4.15</a></span>
+<span><a href="#exercise-416">Exercise 4.16</a></span>
+<span><a href="#exercise-417">Exercise 4.17</a></span>
+<span><a href="#exercise-418">Exercise 4.18</a></span>
+<span><a href="#exercise-419">Exercise 4.19</a></span>
+<span><a href="#exercise-420">Exercise 4.20</a></span>
+<span><a href="#exercise-421">Exercise 4.21</a></span>
+<span><a href="#exercise-422">Exercise 4.22</a></span>
+<span><a href="#exercise-423">Exercise 4.23</a></span>
+<span><a href="#exercise-424">Exercise 4.24</a></span>
+</span>)
+</div></li>
+</ul>
+</ul>
+</ul>
+</div></p>
+<h2 id="section-41">Section 4.1</h2>
+<h3 id="notes">Notes</h3>
+<h3 id="exercises">Exercises</h3>
+<h4 id="exercise-41">Exercise 4.1</h4>
+<p>Notice that we cannot tell whether
+the metacircular evaluator evaluates operands from left to right or from right
+to left.  Its evaluation order is inherited from the underlying Lisp: If the
+arguments to <code>cons</code> in <code>list-of-values</code> are evaluated from left to
+right, then <code>list-of-values</code> will evaluate operands from left to right;
+and if the arguments to <code>cons</code> are evaluated from right to left, then
+<code>list-of-values</code> will evaluate operands from right to left.</p>
+<p>Write a version of <code>list-of-values</code> that evaluates operands from left to
+right regardless of the order of evaluation in the underlying Lisp.  Also write
+a version of <code>list-of-values</code> that evaluates operands from right to left.</p>
+<h5>Solution</h5>
+<h4 id="exercise-42">Exercise 4.2</h4>
+<p>Louis Reasoner plans to reorder the
+<code>cond</code> clauses in <code>eval</code> so that the clause for procedure
+applications appears before the clause for assignments.  He argues that this
+will make the interpreter more efficient: Since programs usually contain more
+applications than assignments, definitions, and so on, his modified <code>eval</code>
+will usually check fewer clauses than the original <code>eval</code> before
+identifying the type of an expression.</p>
+<p><strong>1.</strong> What is wrong with Louis's plan?  (Hint: What will Louis's evaluator do with
+the expression <code>(define x 3)</code>?)</p>
+<p><strong>2.</strong> Louis is upset that his plan didn't work.  He is willing to go to any lengths
+to make his evaluator recognize procedure applications before it checks for
+most other kinds of expressions.  Help him by changing the syntax of the
+evaluated language so that procedure applications start with <code>call</code>.  For
+example, instead of <code>(factorial 3)</code> we will now have to write <code>(call
+factorial 3)</code> and instead of <code>(+ 1 2)</code> we will have to write <code>(call +
+1 2)</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-43">Exercise 4.3</h4>
+<p>Rewrite <code>eval</code> so that the
+dispatch is done in data-directed style.  Compare this with the data-directed
+differentiation procedure of Exercise 2.73.  (You may use the <code>car</code>
+of a compound expression as the type of the expression, as is appropriate for
+the syntax implemented in this section.)</p>
+<h5>Solution</h5>
+<h4 id="exercise-44">Exercise 4.4</h4>
+<p>Recall the definitions of the
+special forms <code>and</code> and <code>or</code> from Chapter 1:</p>
+<p>@itemize @bullet</p>
+<p>@item
+<code>and</code>: The expressions are evaluated from left to right.  If any
+expression evaluates to false, false is returned; any remaining expressions are
+not evaluated.  If all the expressions evaluate to true values, the value of
+the last expression is returned.  If there are no expressions then true is
+returned.</p>
+<p>@item
+<code>or</code>: The expressions are evaluated from left to right.  If any expression
+evaluates to a true value, that value is returned; any remaining expressions
+are not evaluated.  If all expressions evaluate to false, or if there are no
+expressions, then false is returned.</p>
+<p>Install <code>and</code> and <code>or</code> as new special forms for the evaluator by
+defining appropriate syntax procedures and evaluation procedures
+<code>eval-and</code> and <code>eval-or</code>.  Alternatively, show how to implement
+<code>and</code> and <code>or</code> as derived expressions.</p>
+<h5>Solution</h5>
+<h4 id="exercise-45">Exercise 4.5</h4>
+<p>Scheme allows an additional syntax
+for <code>cond</code> clauses, <code>(⟨@var{test}⟩ =&gt; ⟨@var{recipient}⟩)</code>.  If
+<code>⟨</code>@var{test}<code>⟩</code> evaluates to a true value, then <code>⟨</code>@var{recipient}<code>⟩</code> is evaluated.
+Its value must be a procedure of one argument; this procedure is then invoked
+on the value of the <code>⟨</code>@var{test}<code>⟩</code>, and the result is returned as the value of
+the <code>cond</code> expression.  For example</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">assoc</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">b</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">b</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span><span class="w"> </span><span class="k">=&gt;</span><span class="w"> </span><span class="nb">cadr</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="k">false</span><span class="p">))</span>
+</code></pre></div>
+
+<p>returns 2.  Modify the handling of <code>cond</code> so that it supports this
+extended syntax.</p>
+<h5>Solution</h5>
+<h4 id="exercise-46">Exercise 4.6</h4>
+<p><code>Let</code> expressions are derived
+expressions, because</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">var₁</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">exp₁</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span><span class="w"> </span><span class="n">@r</span><span class="p">{</span><span class="n">…</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">varₙ</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">expₙ</span><span class="p">}</span><span class="n">⟩</span><span class="p">))</span>
+<span class="w">  </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>is equivalent to</p>
+<div class="codehilite"><pre><span></span><code><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">var₁</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">@r</span><span class="p">{</span><span class="n">…</span><span class="p">}</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">varₙ</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+<span class="w">   </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+<span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">exp₁</span><span class="p">}</span><span class="n">⟩</span>
+<span class="w"> </span><span class="n">@r</span><span class="p">{</span><span class="n">…</span><span class="p">}</span>
+<span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">expₙ</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Implement a syntactic transformation <code>let-&gt;combination</code> that reduces
+evaluating <code>let</code> expressions to evaluating combinations of the type shown
+above, and add the appropriate clause to <code>eval</code> to handle <code>let</code>
+expressions.</p>
+<h5>Solution</h5>
+<h4 id="exercise-47">Exercise 4.7</h4>
+<p><code>Let*</code> is similar to
+<code>let</code>, except that the bindings of the <code>let*</code> variables are performed
+sequentially from left to right, and each binding is made in an environment in
+which all of the preceding bindings are visible.  For example</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">let*</span><span class="w"> </span><span class="p">((</span><span class="n">x</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span>
+<span class="w">       </span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">2</span><span class="p">))</span>
+<span class="w">       </span><span class="p">(</span><span class="n">z</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="mi">5</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+</code></pre></div>
+
+<p>returns 39.  Explain how a <code>let*</code> expression can be rewritten as a set of
+nested <code>let</code> expressions, and write a procedure <code>let*-&gt;nested-lets</code>
+that performs this transformation.  If we have already implemented <code>let</code>
+(Exercise 4.6) and we want to extend the evaluator to handle <code>let*</code>,
+is it sufficient to add a clause to <code>eval</code> whose action is</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">eval</span><span class="w"> </span><span class="p">(</span><span class="n">let*-&gt;nested-lets</span><span class="w"> </span><span class="nb">exp</span><span class="p">)</span><span class="w"> </span><span class="n">env</span><span class="p">)</span>
+</code></pre></div>
+
+<p>or must we explicitly expand <code>let*</code> in terms of non-derived expressions?</p>
+<h5>Solution</h5>
+<h4 id="exercise-48">Exercise 4.8</h4>
+<p><code>`Named</code>let<code>'' is a variant
+of</code>let` that has the form </p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">var</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">bindings</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>The <code>⟨</code>@var{bindings}<code>⟩</code> and <code>⟨</code>@var{body}<code>⟩</code> are just as in ordinary <code>let</code>,
+except that <code>⟨</code>@var{var}<code>⟩</code> is bound within <code>⟨</code>@var{body}<code>⟩</code> to a procedure whose body
+is <code>⟨</code>@var{body}<code>⟩</code> and whose parameters are the variables in the <code>⟨</code>@var{bindings}<code>⟩</code>.
+Thus, one can repeatedly execute the <code>⟨</code>@var{body}<code>⟩</code> by invoking the procedure
+named <code>⟨</code>@var{var}<code>⟩</code>.  For example, the iterative Fibonacci procedure 
+(1.2.2) can be rewritten using named <code>let</code> as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fib</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="n">fib-iter</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">count</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="nb">count</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="n">b</span>
+<span class="w">        </span><span class="p">(</span><span class="n">fib-iter</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                  </span><span class="n">a</span><span class="w"> </span>
+<span class="w">                  </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="nb">count</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>Modify <code>let-&gt;combination</code> of Exercise 4.6 to also support named
+<code>let</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-49">Exercise 4.9</h4>
+<p>Many languages support a variety of
+iteration constructs, such as <code>do</code>, <code>for</code>, <code>while</code>, and
+<code>until</code>.  In Scheme, iterative processes can be expressed in terms of
+ordinary procedure calls, so special iteration constructs provide no essential
+gain in computational power.  On the other hand, such constructs are often
+convenient.  Design some iteration constructs, give examples of their use, and
+show how to implement them as derived expressions.</p>
+<h5>Solution</h5>
+<h4 id="exercise-410">Exercise 4.10</h4>
+<p>By using data abstraction, we
+were able to write an <code>eval</code> procedure that is independent of the
+particular syntax of the language to be evaluated.  To illustrate this, design
+and implement a new syntax for Scheme by modifying the procedures in this
+section, without changing <code>eval</code> or <code>apply</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-411">Exercise 4.11</h4>
+<p>Instead of representing a frame
+as a pair of lists, we can represent a frame as a list of bindings, where each
+binding is a name-value pair.  Rewrite the environment operations to use this
+alternative representation.</p>
+<h5>Solution</h5>
+<h4 id="exercise-412">Exercise 4.12</h4>
+<p>The procedures
+<code>define-variable!</code>, <code>set-variable-value!</code> and
+<code>lookup-variable-value</code> can be expressed in terms of more abstract
+procedures for traversing the environment structure.  Define abstractions that
+capture the common patterns and redefine the three procedures in terms of these
+abstractions.</p>
+<h5>Solution</h5>
+<h4 id="exercise-413">Exercise 4.13</h4>
+<p>Scheme allows us to create new
+bindings for variables by means of <code>define</code>, but provides no way to get
+rid of bindings.  Implement for the evaluator a special form
+<code>make-unbound!</code> that removes the binding of a given symbol from the
+environment in which the <code>make-unbound!</code> expression is evaluated.  This
+problem is not completely specified.  For example, should we remove only the
+binding in the first frame of the environment?  Complete the specification and
+justify any choices you make.</p>
+<h5>Solution</h5>
+<h4 id="exercise-414">Exercise 4.14</h4>
+<p>Eva Lu Ator and Louis Reasoner
+are each experimenting with the metacircular evaluator.  Eva types in the
+definition of <code>map</code>, and runs some test programs that use it.  They work
+fine.  Louis, in contrast, has installed the system version of <code>map</code> as a
+primitive for the metacircular evaluator.  When he tries it, things go terribly
+wrong.  Explain why Louis's <code>map</code> fails even though Eva's works.</p>
+<h5>Solution</h5>
+<h4 id="exercise-415">Exercise 4.15</h4>
+<p>Given a one-argument procedure
+<code>p</code> and an object <code>a</code>, <code>p</code> is said to <code>`halt'' on</code>a<code>if
+evaluating the expression</code>(p a)<code>returns a value (as opposed to
+terminating with an error message or running forever).  Show that it is
+impossible to write a procedure</code>halts?<code>that correctly determines whether</code>p<code>halts on</code>a<code>for any procedure</code>p<code>and object</code>a<code>.  Use
+the following reasoning: If you had such a procedure</code>halts?`, you could
+implement the following program:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">run-forever</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">run-forever</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">try</span><span class="w"> </span><span class="n">p</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">halts?</span><span class="w"> </span><span class="n">p</span><span class="w"> </span><span class="n">p</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="n">run-forever</span><span class="p">)</span>
+<span class="w">      </span><span class="o">&#39;</span><span class="ss">halted</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Now consider evaluating the expression <code>(try try)</code> and show that any
+possible outcome (either halting or running forever) violates the intended
+behavior of <code>halts?</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-416">Exercise 4.16</h4>
+<p>In this exercise we implement the
+method just described for interpreting internal definitions.  We assume that
+the evaluator supports <code>let</code> (see Exercise 4.6).</p>
+<p><strong>1.</strong> Change <code>lookup-variable-value</code> (4.1.3) to signal an error if
+the value it finds is the symbol <code>*unassigned*</code>.</p>
+<p><strong>2.</strong> Write a procedure <code>scan-out-defines</code> that takes a procedure body and
+returns an equivalent one that has no internal definitions, by making the
+transformation described above.</p>
+<p><strong>3.</strong> Install <code>scan-out-defines</code> in the interpreter, either in
+<code>make-procedure</code> or in <code>procedure-body</code> (see 4.1.3).
+Which place is better?  Why?</p>
+<h5>Solution</h5>
+<h4 id="exercise-417">Exercise 4.17</h4>
+<p>Draw diagrams of the environment
+in effect when evaluating the expression <code>⟨</code>@var{e3}<code>⟩</code> in the procedure in the
+text, comparing how this will be structured when definitions are interpreted
+sequentially with how it will be structured if definitions are scanned out as
+described.  Why is there an extra frame in the transformed program?  Explain
+why this difference in environment structure can never make a difference in the
+behavior of a correct program.  Design a way to make the interpreter implement
+the ``simultaneous'' scope rule for internal definitions without constructing
+the extra frame.</p>
+<h5>Solution</h5>
+<h4 id="exercise-418">Exercise 4.18</h4>
+<p>Consider an alternative strategy
+for scanning out definitions that translates the example in the text to</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">vars</span><span class="p">}</span><span class="n">⟩</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">u</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">*unassigned*</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="n">v</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">*unassigned*</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">e1</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">b</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">e2</span><span class="p">}</span><span class="n">⟩</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="w">    </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">e3</span><span class="p">}</span><span class="n">⟩</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Here <code>a</code> and <code>b</code> are meant to represent new variable names, created
+by the interpreter, that do not appear in the user's program.  Consider the
+<code>solve</code> procedure from 3.5.4:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">solve</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">y0</span><span class="w"> </span><span class="n">dt</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="n">integral</span><span class="w"> </span><span class="p">(</span><span class="k">delay</span><span class="w"> </span><span class="n">dy</span><span class="p">)</span><span class="w"> </span><span class="n">y0</span><span class="w"> </span><span class="n">dt</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">dy</span><span class="w"> </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="w">  </span><span class="n">y</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Will this procedure work if internal definitions are scanned out as shown in
+this exercise?  What if they are scanned out as shown in the text?  Explain.</p>
+<h5>Solution</h5>
+<h4 id="exercise-419">Exercise 4.19</h4>
+<p>Ben Bitdiddle, Alyssa P. Hacker,
+and Eva Lu Ator are arguing about the desired result of evaluating the
+expression</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Ben asserts that the result should be obtained using the sequential rule for
+<code>define</code>: <code>b</code> is defined to be 11, then <code>a</code> is defined to be 5,
+so the result is 16.  Alyssa objects that mutual recursion requires the
+simultaneous scope rule for internal procedure definitions, and that it is
+unreasonable to treat procedure names differently from other names.  Thus, she
+argues for the mechanism implemented in Exercise 4.16.  This would lead
+to <code>a</code> being unassigned at the time that the value for <code>b</code> is to be
+computed.  Hence, in Alyssa's view the procedure should produce an error.  Eva
+has a third opinion.  She says that if the definitions of <code>a</code> and <code>b</code>
+are truly meant to be simultaneous, then the value 5 for <code>a</code> should be
+used in evaluating <code>b</code>.  Hence, in Eva's view <code>a</code> should be 5,
+<code>b</code> should be 15, and the result should be 20.  Which (if any) of these
+viewpoints do you support?  Can you devise a way to implement internal
+definitions so that they behave as Eva prefers?</p>
+<h5>Solution</h5>
+<h4 id="exercise-420">Exercise 4.20</h4>
+<p>Because internal definitions look
+sequential but are actually simultaneous, some people prefer to avoid them
+entirely, and use the special form <code>letrec</code> instead.  <code>Letrec</code> looks
+like <code>let</code>, so it is not surprising that the variables it binds are bound
+simultaneously and have the same scope as each other.  The sample procedure
+<code>f</code> above can be written without internal definitions, but with exactly
+the same meaning, as</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">letrec</span>
+<span class="w">      </span><span class="p">((</span><span class="nb">even?</span>
+<span class="w">        </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">              </span><span class="nb">true</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">odd?</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">odd?</span>
+<span class="w">        </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">              </span><span class="k">false</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">even?</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))))))</span>
+<span class="w">    </span><span class="n">⟨@var</span><span class="p">{</span><span class="nb">rest</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">body</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="o">`</span><span class="ss">f</span><span class="o">`</span><span class="p">}</span><span class="n">⟩</span><span class="p">))</span>
+</code></pre></div>
+
+<p><code>Letrec</code> expressions, which have the form</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">letrec</span><span class="w"> </span><span class="p">((</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">var₁</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">exp₁</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span><span class="w"> </span><span class="n">@r</span><span class="p">{</span><span class="n">…</span><span class="p">}</span><span class="w"> </span><span class="p">(</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">varₙ</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">expₙ</span><span class="p">}</span><span class="n">⟩</span><span class="p">))</span>
+<span class="w">  </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>are a variation on <code>let</code> in which the expressions
+${⟨\kern0.1em exp_k⟩$} that provide the initial values for the
+variables ${⟨\kern0.06em var_k⟩$} are evaluated in an environment
+that includes all the <code>letrec</code> bindings.  This permits recursion in the
+bindings, such as the mutual recursion of <code>even?</code> and <code>odd?</code> in the
+example above, or the evaluation of 10 factorial with</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">letrec</span>
+<span class="w">    </span><span class="p">((</span><span class="n">fact</span>
+<span class="w">      </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">            </span><span class="mi">1</span>
+<span class="w">            </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">fact</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fact</span><span class="w"> </span><span class="mi">10</span><span class="p">))</span>
+</code></pre></div>
+
+<p><strong>1.</strong> Implement <code>letrec</code> as a derived expression, by transforming a
+<code>letrec</code> expression into a <code>let</code> expression as shown in the text
+above or in Exercise 4.18.  That is, the <code>letrec</code> variables should
+be created with a <code>let</code> and then be assigned their values with
+<code>set!</code>.</p>
+<p><strong>2.</strong> Louis Reasoner is confused by all this fuss about internal definitions.  The
+way he sees it, if you don't like to use <code>define</code> inside a procedure, you
+can just use <code>let</code>.  Illustrate what is loose about his reasoning by
+drawing an environment diagram that shows the environment in which the
+<code>⟨</code>@var{rest of body of <code>f</code>}<code>⟩</code> is evaluated during evaluation of the
+expression <code>(f 5)</code>, with <code>f</code> defined as in this exercise.  Draw an
+environment diagram for the same evaluation, but with <code>let</code> in place of
+<code>letrec</code> in the definition of <code>f</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-421">Exercise 4.21</h4>
+<p>Amazingly, Louis's intuition in
+Exercise 4.20 is correct.  It is indeed possible to specify recursive
+procedures without using <code>letrec</code> (or even <code>define</code>), although the
+method for accomplishing this is much more subtle than Louis imagined.  The
+following expression computes 10 factorial by applying a recursive factorial
+procedure:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">   </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">fact</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">fact</span><span class="w"> </span><span class="n">fact</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">ft</span><span class="w"> </span><span class="n">k</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">          </span><span class="mi">1</span>
+<span class="w">          </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="p">(</span><span class="n">ft</span><span class="w"> </span><span class="n">ft</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">k</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))))</span>
+<span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>1.</strong> Check (by evaluating the expression) that this really does compute factorials.
+Devise an analogous expression for computing Fibonacci numbers.</p>
+<p><strong>2.</strong> Consider the following procedure, which includes mutually recursive internal
+definitions:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">even?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="nb">true</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">odd?</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">odd?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="k">false</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">even?</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">even?</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Fill in the missing expressions to complete an alternative definition of
+<code>f</code>, which uses neither internal definitions nor <code>letrec</code>:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nb">even?</span><span class="w"> </span><span class="nb">odd?</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="nb">even?</span><span class="w"> </span><span class="nb">even?</span><span class="w"> </span><span class="nb">odd?</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">ev?</span><span class="w"> </span><span class="n">od?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="nb">true</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="n">od?</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)))</span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">ev?</span><span class="w"> </span><span class="n">od?</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span>
+<span class="w">         </span><span class="k">false</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="n">ev?</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="w"> </span><span class="n">⟨??⟩</span><span class="p">)))))</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-422">Exercise 4.22</h4>
+<p>Extend the evaluator in this
+section to support the special form <code>let</code>.  (See Exercise 4.6.)</p>
+<h5>Solution</h5>
+<h4 id="exercise-423">Exercise 4.23</h4>
+<p>Alyssa P. Hacker doesn't
+understand why <code>analyze-sequence</code> needs to be so complicated.  All the
+other analysis procedures are straightforward transformations of the
+corresponding evaluation procedures (or <code>eval</code> clauses) in 
+4.1.1.  She expected <code>analyze-sequence</code> to look like this:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">analyze-sequence</span><span class="w"> </span><span class="n">exps</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">execute-sequence</span><span class="w"> </span><span class="n">procs</span><span class="w"> </span><span class="n">env</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">procs</span><span class="p">))</span><span class="w"> </span>
+<span class="w">           </span><span class="p">((</span><span class="nb">car</span><span class="w"> </span><span class="n">procs</span><span class="p">)</span><span class="w"> </span><span class="n">env</span><span class="p">))</span>
+<span class="w">          </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">((</span><span class="nb">car</span><span class="w"> </span><span class="n">procs</span><span class="p">)</span><span class="w"> </span><span class="n">env</span><span class="p">)</span>
+<span class="w">                </span><span class="p">(</span><span class="n">execute-sequence</span><span class="w"> </span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">procs</span><span class="p">)</span><span class="w"> </span><span class="n">env</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">procs</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">analyze</span><span class="w"> </span><span class="n">exps</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">procs</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Empty sequence: </span>
+<span class="s2">                ANALYZE&quot;</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">env</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="n">execute-sequence</span><span class="w"> </span><span class="n">procs</span><span class="w"> </span><span class="n">env</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>Eva Lu Ator explains to Alyssa that the version in the text does more of the
+work of evaluating a sequence at analysis time.  Alyssa's sequence-execution
+procedure, rather than having the calls to the individual execution procedures
+built in, loops through the procedures in order to call them: In effect,
+although the individual expressions in the sequence have been analyzed, the
+sequence itself has not been.</p>
+<p>Compare the two versions of <code>analyze-sequence</code>.  For example, consider the
+common case (typical of procedure bodies) where the sequence has just one
+expression.  What work will the execution procedure produced by Alyssa's
+program do?  What about the execution procedure produced by the program in the
+text above?  How do the two versions compare for a sequence with two
+expressions?</p>
+<h5>Solution</h5>
+<h4 id="exercise-424">Exercise 4.24</h4>
+<p>Design and carry out some
+experiments to compare the speed of the original metacircular evaluator with
+the version in this section.  Use your results to estimate the fraction of time
+that is spent in analysis versus execution for various procedures.</p>
+<h5>Solution</h5>
+    </div>
+</body>
+</html>

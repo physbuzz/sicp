@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>index.md</title>
+    <title>notes-ch3-2.md</title>
     <!-- MathJax for LaTeX support -->
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -510,100 +510,141 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </head>
 <body>
     <div class="container">
-        <h1>SICP Reading Group</h1>
-<h2>Book club Notes</h2>
+        <div class="nav">
+    <span class="activenav"><a href="notes-ch3-1.html">← Previous</a></span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="activenav"><a href="notes-ch3-3.html">Next →</a></span>
+</div>
+
+<p><a href="https://sarabander.github.io/sicp/html/3_002e2.xhtml#g_t3_002e2">HTML Book Chapter 3.2 Link</a></p>
+<p><div class="table-of-contents">
+<h2>Directory</h2>
+<ul class="toc-list">
 <ul>
-<li><a href="ch1/notes-ch1-1.html">Chapter 1-1</a> (8/8 problems, total 8/8)</li>
-<li><a href="ch1/notes-ch1-2.html">Chapter 1-2</a> (20/20 problems, total 28/28)</li>
-<li><a href="ch1/notes-ch1-3.html">Chapter 1-3</a> (18/18 problems, total 46/46)</li>
-<li><a href="ch2/notes-ch2-1.html">Chapter 2-1</a> (16/16 problems, total 62/62)</li>
-<li><a href="ch2/notes-ch2-2.html">Chapter 2-2</a> (27/36 problems, total 89/98)</li>
-<li><a href="ch2/notes-ch2-3.html">Chapter 2-3</a> (20/20 problems, total 109/118)</li>
-<li><a href="ch2/notes-ch2-4.html">Chapter 2-4</a> (4/4 problems, total 113/122)</li>
-<li><a href="ch2/notes-ch2-5.html">Chapter 2-5</a> (21/21 problems, total 134/143)</li>
-<li><a href="ch3/notes-ch3-1.html">Chapter 3-1</a> (0/8 problems, total /151)</li>
-<li><a href="ch3/notes-ch3-2.html">Chapter 3-2</a> (0/3 problems, total /154)</li>
-<li><a href="ch3/notes-ch3-3.html">Chapter 3-3</a> (0/26 problems, total /180)</li>
-<li><a href="ch3/notes-ch3-4.html">Chapter 3-4</a> (0/12 problems, total /192)</li>
-<li><a href="ch3/notes-ch3-5.html">Chapter 3-5</a> (0/33 problems, total /225)</li>
-<li><a href="ch4/notes-ch4-1.html">Chapter 4-1</a> (0/24 problems, total /249)</li>
-<li><a href="ch4/notes-ch4-2.html">Chapter 4-2</a> (0/10 problems, total /259)</li>
-<li><a href="ch4/notes-ch4-3.html">Chapter 4-3</a> (0/20 problems, total /279)</li>
-<li><a href="ch4/notes-ch4-4.html">Chapter 4-4</a> (0/25 problems, total /304)</li>
-<li><a href="ch5/notes-ch5-1.html">Chapter 5-1</a> (0/6 problems, total /310)</li>
-<li><a href="ch5/notes-ch5-2.html">Chapter 5-2</a> (0/13 problems, total /323)</li>
-<li><a href="ch5/notes-ch5-3.html">Chapter 5-3</a> (0/3 problems, total /326)</li>
-<li><a href="ch5/notes-ch5-4.html">Chapter 5-4</a> (0/8 problems, total /334)</li>
-<li><a href="ch5/notes-ch5-5.html">Chapter 5-5</a> (0/22 problems, total /356)</li>
-</ul>
-<h2>Meetings</h2>
+<li><a href="#section-32">Section 3.2</a></li>
 <ul>
-<li><a href="ch1/notes-ch1-1.html#meeting-02-23-2025">Feb 23, 2025</a></li>
-<li><a href="ch1/notes-ch1-1.html#meeting-03-02-2025">March 2, 2025</a></li>
-<li><a href="ch1/notes-ch1-2.html#meeting-03-09-2025">March 9, 2025</a></li>
-<li><a href="ch1/notes-ch1-2.html#meeting-03-16-2025">March 16, 2025</a></li>
-<li><a href="ch1/notes-ch1-3.html#meeting-03-23-2025">March 23, 2025</a> </li>
-<li><a href="ch2/notes-ch2-1.html#meeting-03-30-2025">March 30, 2025</a> </li>
-<li><a href="ch2/notes-ch2-2.html#meeting-04-06-2025">April 6, 2025</a></li>
-<li><a href="ch2/notes-ch2-3.html#meeting-04-20-2025">April 20, 2025</a></li>
-<li><a href="ch2/notes-ch2-4.html#meeting-04-27-2025">April 27, 2025</a></li>
-<li><a href="ch2/notes-ch2-5.html#meeting-05-04-2025">May 4, 2025</a></li>
-<li><a href="ch3/notes-ch3-1.html#meeting-04-27-2025">May 11, 2025</a></li>
+<li><a href="#notes">Notes</a></li>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-39">Exercise 3.9</a></span>
+<span><a href="#exercise-310">Exercise 3.10</a></span>
+<span><a href="#exercise-311">Exercise 3.11</a></span>
+</span>)
+</div></li>
 </ul>
-<h2>Nice Links</h2>
-<ul>
-<li><a href="https://sarabander.github.io/sicp/">SICP html edition</a></li>
-<li><a href="https://www.youtube.com/playlist?list=PLE18841CABEA24090">Lectures from 1986</a></li>
-<li>Meetup link: <a href="https://www.meetup.com/code-and-coffee-long-beach">https://www.meetup.com/code-and-coffee-long-beach</a></li>
-<li>Twitch: <a href="https://www.twitch.tv/codeandcoffeelb">https://www.twitch.tv/codeandcoffeelb</a></li>
-<li>Discord: <a href="https://www.codeandcoffee.dev/">https://www.codeandcoffee.dev/</a></li>
-<li><a href="https://www.racket-lang.org/">Racket IDE</a></li>
 </ul>
-<h2>Extras</h2>
-<p>Filling in stuff from <a href="bonus-notes.html">bonus-notes.md</a> as time goes on. A lot of this is a big TODO. Anything with a ✯ next to it means it takes significant work.</p>
-<p><strong>General stuff:</strong></p>
-<ul>
-<li><a href="anki.html">Anki flashcards</a></li>
-<li>✯ Racket crash course</li>
-<li>SICP Library Functions</li>
 </ul>
-<p><strong>Ch1 Bonuses</strong></p>
-<ul>
-<li>Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. </li>
-<li>The ill-fated Santa Barbara Monte Carlo machine</li>
-<li>Exact runtime of count-change</li>
-<li>RSA implementation</li>
-<li>Linear diophantine equations </li>
-<li>Bonus number theory (Euler totient, base b expansions of fractions)</li>
-<li>Bonus special numbers (Lucas, Catalan, partition numbers, "negative binomial")</li>
-<li>Numerical approximation formulas (iterated polynomial gives sine, other iterated special polynomials give special things too)</li>
-<li>Improving rates of convergence (newton, accelerated newton, successive averaging, resummation)</li>
-<li>✯ Challenge 1: try to compute the Ramanujan tau function. This is some memoized code using recursion that supposedly works: <a href="https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896">https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896</a>, but simple mathematica code can generate it too: <code>CoefficientList[Take[Expand[Product[(1 - x^k)^24, {k, 1, 30}]], 30],x]</code></li>
-<li>✯ Challenge 2: Continued fraction expansion of pi or 1/pi using exact arithmetic.</li>
-<li>✯ Challenge 3: Thoughts on reversibility and quantum computing</li>
-</ul>
-<p><strong>Ch2 Bonuses</strong></p>
-<ul>
-<li>✯ Drawing Church numerals</li>
-<li>Enumerating binary trees and arithmetic expressions (builds on top of enumerating permutations)</li>
-<li>✯ n queens and dancing links</li>
-<li>Story about polynomial long division + my grandpa</li>
-</ul>
-<p>Chapter 2 stuff:</p>
-<ol>
-<li>It would be useful to review all the different functions: accumulate, map, map-indexed, fold-left, fold-right. Not just how they're implemented, but also 
-the generic functions you'd actually use when programming Racket or Guile or whatever. Same with <code>set</code>s.</li>
-<li>For data abstraction, it might be nice to write a library containing many of 
-the features from all of the practice problems for section 2.4-2.5. </li>
-<li>I'd like to write an article about polynomial stuff. Including why things 
-like the gcd are only well-defined up to units, and what that means. So,
-we could do a proper implementation of rational functions and polynomials. 
-<strong>A program that finds all roots</strong>.
-There's plenty of other stuff we could do here: Euclidean domains, Z[i],
-Z[(-1)^(1/3)]. This is all about abstract algebra of one variable.</li>
-<li>Abstract algebra with multiple variables: Groebner bases, various algos.</li>
-<li>It would be really cool to implement some of Katherine Stange's <a href="https://math.colorado.edu/~kstange/papers/Stange-short-exp.pdf">Visualizing imaginary quadratic fields</a></li>
-</ol>
+</div></p>
+<h2 id="section-32">Section 3.2</h2>
+<h3 id="notes">Notes</h3>
+<h3 id="exercises">Exercises</h3>
+<h4 id="exercise-39">Exercise 3.9</h4>
+<p>In 1.2.1 we used the
+substitution model to analyze two procedures for computing factorials, a
+recursive version</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">factorial</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="mi">1</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">factorial</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>and an iterative version</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">factorial</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">fact-iter</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">n</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fact-iter</span><span class="w"> </span><span class="n">product</span><span class="w"> </span>
+<span class="w">                   </span><span class="n">counter</span><span class="w"> </span>
+<span class="w">                   </span><span class="n">max-count</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="n">max-count</span><span class="p">)</span>
+<span class="w">      </span><span class="n">product</span>
+<span class="w">      </span><span class="p">(</span><span class="n">fact-iter</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="n">product</span><span class="p">)</span>
+<span class="w">                 </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">                 </span><span class="n">max-count</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>Show the environment structures created by evaluating <code>(factorial 6)</code>
+using each version of the <code>factorial</code> procedure.</p>
+<h5>Solution</h5>
+<h4 id="exercise-310">Exercise 3.10</h4>
+<p>In the <code>make-withdraw</code>
+procedure, the local variable <code>balance</code> is created as a parameter of
+<code>make-withdraw</code>.  We could also create the local state variable
+explicitly, using <code>let</code>, as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-withdraw</span><span class="w"> </span><span class="n">initial-amount</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">balance</span><span class="w"> </span><span class="n">initial-amount</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">amount</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="k">begin</span><span class="w"> </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span>
+<span class="w">                       </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="n">amount</span><span class="p">))</span>
+<span class="w">                 </span><span class="n">balance</span><span class="p">)</span>
+<span class="w">          </span><span class="s2">&quot;Insufficient funds&quot;</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>Recall from 1.3.2 that <code>let</code> is simply syntactic sugar for a
+procedure call:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">var</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="nb">exp</span><span class="p">}</span><span class="n">⟩</span><span class="p">))</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>is interpreted as an alternate syntax for</p>
+<div class="codehilite"><pre><span></span><code><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">var</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="nb">exp</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Use the environment model to analyze this alternate version of
+<code>make-withdraw</code>, drawing figures like the ones above to illustrate the
+interactions</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">W1</span><span class="w"> </span><span class="p">(</span><span class="n">make-withdraw</span><span class="w"> </span><span class="mi">100</span><span class="p">))</span>
+<span class="p">(</span><span class="n">W1</span><span class="w"> </span><span class="mi">50</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">W2</span><span class="w"> </span><span class="p">(</span><span class="n">make-withdraw</span><span class="w"> </span><span class="mi">100</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Show that the two versions of <code>make-withdraw</code> create objects with the same
+behavior.  How do the environment structures differ for the two versions?</p>
+<h5>Solution</h5>
+<h4 id="exercise-311">Exercise 3.11</h4>
+<p>In 3.2.3 we saw how
+the environment model described the behavior of procedures with local state.
+Now we have seen how internal definitions work.  A typical message-passing
+procedure contains both of these aspects.  Consider the bank account procedure
+of 3.1.1:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-account</span><span class="w"> </span><span class="n">balance</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">withdraw</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;=</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">begin</span><span class="w"> </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span>
+<span class="w">                     </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span>
+<span class="w">                        </span><span class="n">amount</span><span class="p">))</span>
+<span class="w">               </span><span class="n">balance</span><span class="p">)</span>
+<span class="w">        </span><span class="s2">&quot;Insufficient funds&quot;</span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">deposit</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">balance</span><span class="w"> </span><span class="n">amount</span><span class="p">))</span>
+<span class="w">    </span><span class="n">balance</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">dispatch</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">withdraw</span><span class="p">)</span><span class="w"> </span><span class="n">withdraw</span><span class="p">)</span>
+<span class="w">          </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">deposit</span><span class="p">)</span><span class="w"> </span><span class="n">deposit</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Unknown request: </span>
+<span class="s2">                        MAKE-ACCOUNT&quot;</span><span class="w"> </span>
+<span class="w">                       </span><span class="n">m</span><span class="p">))))</span>
+<span class="w">  </span><span class="n">dispatch</span><span class="p">)</span>
+</code></pre></div>
+
+<p>Show the environment structure generated by the sequence of interactions</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="p">(</span><span class="n">make-account</span><span class="w"> </span><span class="mi">50</span><span class="p">))</span>
+
+<span class="p">((</span><span class="n">acc</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">deposit</span><span class="p">)</span><span class="w"> </span><span class="mi">40</span><span class="p">)</span>
+<span class="mi">90</span>
+
+<span class="p">((</span><span class="n">acc</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">withdraw</span><span class="p">)</span><span class="w"> </span><span class="mi">60</span><span class="p">)</span>
+<span class="mi">30</span>
+</code></pre></div>
+
+<p>Where is the local state for <code>acc</code> kept?  Suppose we define another
+account</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">acc2</span><span class="w"> </span><span class="p">(</span><span class="n">make-account</span><span class="w"> </span><span class="mi">100</span><span class="p">))</span>
+</code></pre></div>
+
+<p>How are the local states for the two accounts kept distinct?  Which parts of
+the environment structure are shared between <code>acc</code> and <code>acc2</code>?</p>
+<h5>Solution</h5>
     </div>
 </body>
 </html>

@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>notes-ch5-5.md</title>
+    <!-- MathJax for LaTeX support -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$']],
+                displayMath: [['$$', '$$']]
+            }
+        };
+    </script>
+    <style>
+        /* Pygments Syntax Highlighting */
+        pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+.codehilite .hll { background-color: #ffffcc }
+.codehilite { background: #f8f8f8; }
+.codehilite .c { color: #3D7B7B; font-style: italic } /* Comment */
+.codehilite .err { border: 1px solid #FF0000 } /* Error */
+.codehilite .k { color: #008000; font-weight: bold } /* Keyword */
+.codehilite .o { color: #666666 } /* Operator */
+.codehilite .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+.codehilite .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+.codehilite .cp { color: #9C6500 } /* Comment.Preproc */
+.codehilite .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+.codehilite .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+.codehilite .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+.codehilite .gd { color: #A00000 } /* Generic.Deleted */
+.codehilite .ge { font-style: italic } /* Generic.Emph */
+.codehilite .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+.codehilite .gr { color: #E40000 } /* Generic.Error */
+.codehilite .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+.codehilite .gi { color: #008400 } /* Generic.Inserted */
+.codehilite .go { color: #717171 } /* Generic.Output */
+.codehilite .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+.codehilite .gs { font-weight: bold } /* Generic.Strong */
+.codehilite .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+.codehilite .gt { color: #0044DD } /* Generic.Traceback */
+.codehilite .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+.codehilite .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+.codehilite .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+.codehilite .kp { color: #008000 } /* Keyword.Pseudo */
+.codehilite .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+.codehilite .kt { color: #B00040 } /* Keyword.Type */
+.codehilite .m { color: #666666 } /* Literal.Number */
+.codehilite .s { color: #BA2121 } /* Literal.String */
+.codehilite .na { color: #687822 } /* Name.Attribute */
+.codehilite .nb { color: #008000 } /* Name.Builtin */
+.codehilite .nc { color: #0000FF; font-weight: bold } /* Name.Class */
+.codehilite .no { color: #880000 } /* Name.Constant */
+.codehilite .nd { color: #AA22FF } /* Name.Decorator */
+.codehilite .ni { color: #717171; font-weight: bold } /* Name.Entity */
+.codehilite .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+.codehilite .nf { color: #0000FF } /* Name.Function */
+.codehilite .nl { color: #767600 } /* Name.Label */
+.codehilite .nn { color: #0000FF; font-weight: bold } /* Name.Namespace */
+.codehilite .nt { color: #008000; font-weight: bold } /* Name.Tag */
+.codehilite .nv { color: #19177C } /* Name.Variable */
+.codehilite .ow { color: #AA22FF; font-weight: bold } /* Operator.Word */
+.codehilite .w { color: #bbbbbb } /* Text.Whitespace */
+.codehilite .mb { color: #666666 } /* Literal.Number.Bin */
+.codehilite .mf { color: #666666 } /* Literal.Number.Float */
+.codehilite .mh { color: #666666 } /* Literal.Number.Hex */
+.codehilite .mi { color: #666666 } /* Literal.Number.Integer */
+.codehilite .mo { color: #666666 } /* Literal.Number.Oct */
+.codehilite .sa { color: #BA2121 } /* Literal.String.Affix */
+.codehilite .sb { color: #BA2121 } /* Literal.String.Backtick */
+.codehilite .sc { color: #BA2121 } /* Literal.String.Char */
+.codehilite .dl { color: #BA2121 } /* Literal.String.Delimiter */
+.codehilite .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+.codehilite .s2 { color: #BA2121 } /* Literal.String.Double */
+.codehilite .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+.codehilite .sh { color: #BA2121 } /* Literal.String.Heredoc */
+.codehilite .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+.codehilite .sx { color: #008000 } /* Literal.String.Other */
+.codehilite .sr { color: #A45A77 } /* Literal.String.Regex */
+.codehilite .s1 { color: #BA2121 } /* Literal.String.Single */
+.codehilite .ss { color: #19177C } /* Literal.String.Symbol */
+.codehilite .bp { color: #008000 } /* Name.Builtin.Pseudo */
+.codehilite .fm { color: #0000FF } /* Name.Function.Magic */
+.codehilite .vc { color: #19177C } /* Name.Variable.Class */
+.codehilite .vg { color: #19177C } /* Name.Variable.Global */
+.codehilite .vi { color: #19177C } /* Name.Variable.Instance */
+.codehilite .vm { color: #19177C } /* Name.Variable.Magic */
+.codehilite .il { color: #666666 } /* Literal.Number.Integer.Long */
+
+        /* Base CSS from markdown_styles.py */
+        
+        /* Basic reset and fonts */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        /* Navigation styling */
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            padding-bottom: 0.8rem;
+            border-bottom: 1px solid #e1e4e8;
+        }
+
+        .nav span {
+            padding: 0.4rem 0.8rem;
+            border-radius: 4px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .nav .activenav {
+            background-color: #f1f8ff;
+        }
+
+        .nav .activenav a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        .nav .activenav a:hover {
+            text-decoration: underline;
+        }
+
+        .nav .inactivenav {
+            color: #959da5;
+            background-color: #f6f8fa;
+        }
+
+        /* Center column layout */
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            background-color: white;
+            padding: 2rem 3rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin: 2rem 0 1rem;
+            color: #34495e;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.8rem 0 1rem;
+            color: #34495e;
+        }
+
+        h4 {
+            font-size: 1.3rem;
+            margin: 1.5rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        h5 {
+            font-size: 1.1rem;
+            margin: 1.2rem 0 0.8rem;
+            color: #34495e;
+        }
+
+        /* Table of Contents styling */
+        .table-of-contents {
+            margin: 0 0 0;
+            line-height: 1;
+        }
+
+        .toc-list {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .toc-list li {
+            margin-bottom: 2px;
+        }
+        .toc-list ul {
+            margin-bottom: 2px;
+        }
+
+        .exercise-list {
+            margin: 0;
+            padding-left: 0;
+            font-size: 0.95em;
+            display: inline;
+        }
+
+        .exercise-container {
+            display: inline-block;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+
+        .toc-exercises {
+            font-style: italic;
+            color: #555;
+        }
+
+        .exercise-list a {
+            text-decoration: none;
+            color: #2070b0;
+            margin-right: 0;
+        }
+
+        .exercise-list a:hover {
+            text-decoration: underline;
+        }
+
+        .exercise-list span:not(:last-child):after {
+            content: ", ";
+            color: #777;
+            margin-right: 0;
+        }
+
+        /* Blockquote styling */
+        blockquote {
+            border-left: 4px solid #dfe2e5;
+            color: #6a737d;
+            padding: 0 1rem;
+            margin: 1rem 0 1.5rem;
+            background-color: #f6f8fa;
+            border-radius: 0 3px 3px 0;
+        }
+
+        blockquote p {
+            padding: 0.8rem 0;
+        }
+
+        blockquote p:first-child {
+            margin-top: 0;
+        }
+
+        blockquote p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Solution styling */
+        h5:has(+p:contains("Solution")) {
+            margin-bottom: 0;
+        }
+
+        h5:has(+p:contains("Solution")) + p {
+            font-weight: bold;
+            color: #3c8dbc;
+            border-left: 3px solid #3c8dbc;
+            padding-left: 0.8rem;
+            margin: 0.5rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* List styling */
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2.5rem;
+        }
+
+        ul li, ol li {
+            margin-bottom: 0.5rem;
+        }
+
+        /* Code blocks */
+        .code-box {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        .code-header {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.3rem 0 0rem 0.3rem;
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+
+        .code-header a {
+            color: #6a737d;
+            text-decoration: none;
+        }
+
+        .code-header a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+        /* Standalone code blocks (triple backticks) */
+        .codehilite {
+            background-color: #f6f8fa;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0 1.5rem;
+            border: 1px solid #e1e4e8;
+        }
+
+        /* When inside a code-box, remove default styling */
+        .code-box .codehilite {
+            margin: 0;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+        }
+
+        /* Adjust padding for code blocks inside code-box */
+        .code-box .codehilite pre {
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        /* Normal padding for standalone code blocks */
+        .codehilite pre {
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .code-output {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.2rem 0 0.3rem 0.3rem;
+            border-top: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+        }
+        .code-output span {
+            color: #de37cc;
+        }
+
+        .code-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+        }
+        /* --- Styles for Collapsible Code Blocks --- */
+        .collapsible-code {
+            border: none; /* Remove default border from details */
+            margin-top: 0; /* Adjust spacing if needed */
+            margin-bottom: 0; /* Adjust spacing if needed */
+        }
+
+        .code-summary {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.75rem;
+            color: #6a737d;
+            padding: 0.5rem 0.8rem; /* Adjusted padding */
+            border-bottom: 1px solid #e1e4e8;
+            background-color: #fafbfc;
+            cursor: pointer;
+            list-style: none; /* Hide default marker */
+            display: block; /* Make it block level */
+            border-radius: 6px 6px 0 0; /* Round top corners like header */
+            position: relative; /* For positioning the marker */
+            transition: background-color 0.1s ease-in-out;
+        }
+
+        .code-summary:hover {
+            background-color: #f1f3f5; /* Slight hover effect */
+        }
+
+        /* Add custom marker */
+        .code-summary::before {
+            content: '►'; /* Collapsed marker */
+            position: absolute;
+            left: 0.8rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.6em;
+            color: #6a737d;
+            margin-right: 0.5rem;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .collapsible-code[open] > .code-summary::before {
+            transform: translateY(-50%) rotate(90deg); /* Expanded marker */
+        }
+
+        .collapsible-code[open] > .code-summary {
+             border-bottom: 1px solid #e1e4e8; /* Ensure border shows when open */
+             border-radius: 6px 6px 0 0; /* Keep top rounding when open */
+        }
+
+        /* Adjust summary content positioning relative to marker */
+        .code-summary a {
+            margin-left: 1.2rem; /* Space for the marker */
+            color: #6a737d;
+            text-decoration: none;
+        }
+        .code-summary a:hover {
+            text-decoration: underline;
+            color: #0366d6;
+        }
+
+        /* New style for the expand hint */
+        .expand-hint {
+            font-style: italic;
+            font-size: 0.85em;
+            color: #888;
+            margin-left: 0.5rem;
+        }
+
+        /* Ensure content inside details has appropriate spacing/styling */
+        .collapsible-code > .codehilite {
+            margin: 0;
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            border: none; /* Remove border from codehilite itself */
+            border-top: none; /* Remove top border */
+        }
+
+        /* Since code output is now outside the details element,
+           we need to adjust its styling */
+        .collapsible-code + .code-output {
+            border-radius: 0 0 6px 6px; /* Round bottom corners */
+            margin-top: 0; /* Remove gap */
+            border-top: 1px solid #e1e4e8;
+        }
+
+        /* Ensure code output has proper border when outside details */
+        .code-box > .code-output {
+            border-top: 1px solid #e1e4e8;
+        }
+
+        .collapsible-code > .run-racket {
+             margin-left: 1rem; /* Indent run button */
+             margin-bottom: 1rem; /* Add bottom margin */
+        }
+        /* --- End Collapsible Styles --- */
+
+        code {
+            font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 0.9em;
+            padding: 0.2em 0.4em;
+            background-color: #f6f8fa;
+            border-radius: 3px;
+        }
+
+        .codehilite code {
+            padding: 0;
+            background-color: transparent;
+        }
+
+        /* Links */
+        a {
+            color: #0366d6;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Run button */
+        .run-racket {
+            display: inline-block;
+            margin-top: 0.5rem;
+            margin-bottom: 1rem;
+            padding: 0.4rem 0.8rem;
+            background-color: #3c8dbc;
+            color: white;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        .run-racket:hover {
+            background-color: #367fa9;
+            text-decoration: none;
+        }
+
+        /* Make LaTeX display nicely */
+        .MathJax {
+            overflow-x: auto;
+            overflow-y: hidden;
+        }
+    
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav">
+    <span class="activenav"><a href="notes-ch5-4.html">← Previous</a></span>
+    <span class="activenav"><a href="../index.html">↑ Up</a></span>
+    <span class="inactivenav">Next →</span>
+</div>
+
+<p><a href="https://sarabander.github.io/sicp/html/5_002e5.xhtml#g_t5_002e5">HTML Book Chapter 5.5 Link</a></p>
+<p><div class="table-of-contents">
+<h2>Directory</h2>
+<ul class="toc-list">
+<ul>
+<li><a href="#section-31">Section 3.1</a></li>
+<ul>
+<li><a href="#notes">Notes</a></li>
+<li><a href="#exercises" class="toc-exercises">Exercises</a>
+<div class="exercise-container">(
+<span class="exercise-list">
+<span><a href="#exercise-531">Exercise 5.31</a></span>
+<span><a href="#exercise-532">Exercise 5.32</a></span>
+<span><a href="#exercise-533">Exercise 5.33</a></span>
+<span><a href="#exercise-534">Exercise 5.34</a></span>
+<span><a href="#exercise-535">Exercise 5.35</a></span>
+<span><a href="#exercise-536">Exercise 5.36</a></span>
+<span><a href="#exercise-537">Exercise 5.37</a></span>
+<span><a href="#exercise-538">Exercise 5.38</a></span>
+<span><a href="#exercise-539">Exercise 5.39</a></span>
+<span><a href="#exercise-540">Exercise 5.40</a></span>
+<span><a href="#exercise-541">Exercise 5.41</a></span>
+<span><a href="#exercise-542">Exercise 5.42</a></span>
+<span><a href="#exercise-543">Exercise 5.43</a></span>
+<span><a href="#exercise-544">Exercise 5.44</a></span>
+<span><a href="#exercise-545">Exercise 5.45</a></span>
+<span><a href="#exercise-546">Exercise 5.46</a></span>
+<span><a href="#exercise-547">Exercise 5.47</a></span>
+<span><a href="#exercise-548">Exercise 5.48</a></span>
+<span><a href="#exercise-549">Exercise 5.49</a></span>
+<span><a href="#exercise-550">Exercise 5.50</a></span>
+<span><a href="#exercise-551">Exercise 5.51</a></span>
+<span><a href="#exercise-552">Exercise 5.52</a></span>
+</span>)
+</div></li>
+</ul>
+</ul>
+</ul>
+</div></p>
+<h2 id="section-31">Section 3.1</h2>
+<h3 id="notes">Notes</h3>
+<h3 id="exercises">Exercises</h3>
+<h4 id="exercise-531">Exercise 5.31</h4>
+<p>In evaluating a procedure
+application, the explicit-control evaluator always saves and restores the
+<code>env</code> register around the evaluation of the operator, saves and restores
+<code>env</code> around the evaluation of each operand (except the final one), saves
+and restores <code>argl</code> around the evaluation of each operand, and saves and
+restores <code>proc</code> around the evaluation of the operand sequence.  For each
+of the following combinations, say which of these <code>save</code> and
+<code>restore</code> operations are superfluous and thus could be eliminated by the
+compiler's <code>preserving</code> mechanism:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">y</span><span class="p">)</span>
+<span class="p">((</span><span class="n">f</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">y</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="p">(</span><span class="n">g</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="p">)</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">y</span><span class="p">)</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-532">Exercise 5.32</h4>
+<p>Using the <code>preserving</code>
+mechanism, the compiler will avoid saving and restoring <code>env</code> around the
+evaluation of the operator of a combination in the case where the operator is a
+symbol.  We could also build such optimizations into the evaluator.  Indeed,
+the explicit-control evaluator of 5.4 already performs a similar
+optimization, by treating combinations with no operands as a special case.</p>
+<p><strong>1.</strong> Extend the explicit-control evaluator to recognize as a separate class of
+expressions combinations whose operator is a symbol, and to take advantage of
+this fact in evaluating such expressions.</p>
+<p><strong>2.</strong> Alyssa P. Hacker suggests that by extending the evaluator to recognize more and
+more special cases we could incorporate all the compiler's optimizations, and
+that this would eliminate the advantage of compilation altogether.  What do you
+think of this idea?</p>
+<h5>Solution</h5>
+<h4 id="exercise-533">Exercise 5.33</h4>
+<p>Consider the following definition
+of a factorial procedure, which is slightly different from the one given above:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">factorial-alt</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">      </span><span class="mi">1</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">factorial-alt</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>Compile this procedure and compare the resulting code with that produced for
+<code>factorial</code>.  Explain any differences you find.  Does either program
+execute more efficiently than the other?</p>
+<h5>Solution</h5>
+<h4 id="exercise-534">Exercise 5.34</h4>
+<p>Compile the iterative factorial
+procedure</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">factorial</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="n">product</span><span class="w"> </span><span class="n">counter</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">        </span><span class="n">product</span>
+<span class="w">        </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="n">product</span><span class="p">)</span>
+<span class="w">              </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">counter</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">iter</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Annotate the resulting code, showing the essential difference between the code
+for iterative and recursive versions of <code>factorial</code> that makes one process
+build up stack space and the other run in constant stack space.</p>
+<h5>Solution</h5>
+<h4 id="exercise-535">Exercise 5.35</h4>
+<p>What expression was compiled to
+produce the code shown in Figure 5.18?</p>
+<h5>Solution</h5>
+<h4 id="exercise-536">Exercise 5.36</h4>
+<p>What order of evaluation does our
+compiler produce for operands of a combination?  Is it left-to-right,
+right-to-left, or some other order?  Where in the compiler is this order
+determined?  Modify the compiler so that it produces some other order of
+evaluation.  (See the discussion of order of evaluation for the
+explicit-control evaluator in 5.4.1.)  How does changing the
+order of operand evaluation affect the efficiency of the code that constructs
+the argument list?</p>
+<h5>Solution</h5>
+<h4 id="exercise-537">Exercise 5.37</h4>
+<p>One way to understand the
+compiler's <code>preserving</code> mechanism for optimizing stack usage is to see
+what extra operations would be generated if we did not use this idea.  Modify
+<code>preserving</code> so that it always generates the <code>save</code> and
+<code>restore</code> operations.  Compile some simple expressions and identify the
+unnecessary stack operations that are generated.  Compare the code to that
+generated with the <code>preserving</code> mechanism intact.</p>
+<h5>Solution</h5>
+<h4 id="exercise-538">Exercise 5.38</h4>
+<p>Our compiler is clever about
+avoiding unnecessary stack operations, but it is not clever at all when it
+comes to compiling calls to the primitive procedures of the language in terms
+of the primitive operations supplied by the machine.  For example, consider how
+much code is compiled to compute <code>(+ a 1)</code>: The code sets up an argument
+list in <code>argl</code>, puts the primitive addition procedure (which it finds by
+looking up the symbol <code>+</code> in the environment) into <code>proc</code>, and tests
+whether the procedure is primitive or compound.  The compiler always generates
+code to perform the test, as well as code for primitive and compound branches
+(only one of which will be executed).  We have not shown the part of the
+controller that implements primitives, but we presume that these instructions
+make use of primitive arithmetic operations in the machine's data paths.
+Consider how much less code would be generated if the compiler could
+open-code primitives---that is, if it could generate code to directly
+use these primitive machine operations.  The expression <code>(+ a 1)</code> might be
+compiled into something as simple as</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">assign</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="n">lookup-variable-value</span><span class="p">)</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="nb">const</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="n">env</span><span class="p">))</span>
+<span class="p">(</span><span class="n">assign</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="p">(</span><span class="n">op</span><span class="w"> </span><span class="nb">+</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="n">reg</span><span class="w"> </span><span class="n">val</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="nb">const</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
+
+<p>In this exercise we will extend our compiler to support open coding of selected
+primitives.  Special-purpose code will be generated for calls to these
+primitive procedures instead of the general procedure-application code.  In
+order to support this, we will augment our machine with special argument
+registers <code>arg1</code> and <code>arg2</code>.  The primitive arithmetic operations of
+the machine will take their inputs from <code>arg1</code> and <code>arg2</code>. The
+results may be put into <code>val</code>, <code>arg1</code>, or <code>arg2</code>.</p>
+<p>The compiler must be able to recognize the application of an open-coded
+primitive in the source program.  We will augment the dispatch in the
+<code>compile</code> procedure to recognize the names of these primitives in addition
+to the reserved words (the special forms) it currently
+recognizes. For each special
+form our compiler has a code generator.  In this exercise we will construct a
+family of code generators for the open-coded primitives.</p>
+<p><strong>1.</strong> The open-coded primitives, unlike the special forms, all need their operands
+evaluated.  Write a code generator <code>spread-arguments</code> for use by all the
+open-coding code generators.  <code>Spread-arguments</code> should take an operand
+list and compile the given operands targeted to successive argument registers.
+Note that an operand may contain a call to an open-coded primitive, so argument
+registers will have to be preserved during operand evaluation.</p>
+<p><strong>2.</strong> For each of the primitive procedures <code>=</code>, <code>*</code>, <code>-</code>, and
+<code>+</code>, write a code generator that takes a combination with that operator,
+together with a target and a linkage descriptor, and produces code to spread
+the arguments into the registers and then perform the operation targeted to the
+given target with the given linkage.  You need only handle expressions with two
+operands.  Make <code>compile</code> dispatch to these code generators.</p>
+<p><strong>3.</strong> Try your new compiler on the <code>factorial</code> example.  Compare the resulting
+code with the result produced without open coding.</p>
+<p><strong>4.</strong> Extend your code generators for <code>+</code> and <code>*</code> so that they can handle
+expressions with arbitrary numbers of operands.  An expression with more than
+two operands will have to be compiled into a sequence of operations, each with
+only two inputs.</p>
+<h5>Solution</h5>
+<h4 id="exercise-539">Exercise 5.39</h4>
+<p>Write a procedure
+<code>lexical-address-lookup</code> that implements the new lookup operation.  It
+should take two arguments---a lexical address and a run-time environment---and
+return the value of the variable stored at the specified lexical address.
+<code>Lexical-address-lookup</code> should signal an error if the value of the
+variable is the symbol <code>*unassigned*</code>. Also write a procedure
+<code>lexical-address-set!</code> that implements the operation that changes the
+value of the variable at a specified lexical address.</p>
+<h5>Solution</h5>
+<h4 id="exercise-540">Exercise 5.40</h4>
+<p>Modify the compiler to maintain
+the compile-time environment as described above.  That is, add a
+compile-time-environment argument to <code>compile</code> and the various code
+generators, and extend it in <code>compile-lambda-body</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-541">Exercise 5.41</h4>
+<p>Write a procedure
+<code>find-variable</code> that takes as arguments a variable and a compile-time
+environment and returns the lexical address of the variable with respect to
+that environment.  For example, in the program fragment that is shown above,
+the compile-time environment during the compilation of expression <code>⟨</code>@var{e1}<code>⟩</code> is
+<code>((y z) (a b c d e) (x y))</code>.  <code>Find-variable</code> should produce</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">find-variable</span><span class="w"> </span>
+<span class="w"> </span><span class="o">&#39;</span><span class="ss">c</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">y</span><span class="w"> </span><span class="ss">z</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">a</span><span class="w"> </span><span class="ss">b</span><span class="w"> </span><span class="ss">c</span><span class="w"> </span><span class="ss">d</span><span class="w"> </span><span class="ss">e</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">x</span><span class="w"> </span><span class="ss">y</span><span class="p">)))</span>
+<span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">find-variable</span><span class="w"> </span>
+<span class="w"> </span><span class="o">&#39;</span><span class="ss">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">y</span><span class="w"> </span><span class="ss">z</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">a</span><span class="w"> </span><span class="ss">b</span><span class="w"> </span><span class="ss">c</span><span class="w"> </span><span class="ss">d</span><span class="w"> </span><span class="ss">e</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">x</span><span class="w"> </span><span class="ss">y</span><span class="p">)))</span>
+<span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">find-variable</span><span class="w"> </span>
+<span class="w"> </span><span class="o">&#39;</span><span class="ss">w</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">y</span><span class="w"> </span><span class="ss">z</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">a</span><span class="w"> </span><span class="ss">b</span><span class="w"> </span><span class="ss">c</span><span class="w"> </span><span class="ss">d</span><span class="w"> </span><span class="ss">e</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">x</span><span class="w"> </span><span class="ss">y</span><span class="p">)))</span>
+<span class="n">not-found</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-542">Exercise 5.42</h4>
+<p>Using <code>find-variable</code> from
+Exercise 5.41, rewrite <code>compile-variable</code> and
+<code>compile-assignment</code> to output lexical-address instructions.  In cases
+where <code>find-variable</code> returns <code>not-found</code> (that is, where the
+variable is not in the compile-time environment), you should have the code
+generators use the evaluator operations, as before, to search for the binding.
+(The only place a variable that is not found at compile time can be is in the
+global environment, which is part of the run-time environment but is not part
+of the compile-time environment.  Thus, if you wish, you may have the evaluator operations look
+directly in the global environment, which can be obtained with the operation
+<code>(op get-global-environment)</code>, instead of having them search the whole
+run-time environment found in <code>env</code>.)  Test the modified compiler on a few
+simple cases, such as the nested <code>lambda</code> combination at the beginning of
+this section.</p>
+<h5>Solution</h5>
+<h4 id="exercise-543">Exercise 5.43</h4>
+<p>We argued in 4.1.6
+that internal definitions for block structure should not be considered <code>`real''</code>define<code>s.  Rather, a procedure body should be interpreted as if the
+internal variables being defined were installed as ordinary</code>lambda<code>variables initialized to their correct values using</code>set!`.<br />
+4.1.6 and Exercise 4.16 showed how to modify the metacircular
+interpreter to accomplish this by scanning out internal definitions.  Modify
+the compiler to perform the same transformation before it compiles a procedure
+body.</p>
+<h5>Solution</h5>
+<h4 id="exercise-544">Exercise 5.44</h4>
+<p>In this section we have focused
+on the use of the compile-time environment to produce lexical addresses.  But
+there are other uses for compile-time environments.  For instance, in
+Exercise 5.38 we increased the efficiency of compiled code by open-coding
+primitive procedures.  Our implementation treated the names of open-coded
+procedures as reserved words.  If a program were to rebind such a name, the
+mechanism described in Exercise 5.38 would still open-code it as a
+primitive, ignoring the new binding.  For example, consider the procedure</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">y</span><span class="p">)))</span>
+</code></pre></div>
+
+<p>which computes a linear combination of <code>x</code> and <code>y</code>.  We might call it
+with arguments <code>+matrix</code>, <code>*matrix</code>, and four matrices, but the
+open-coding compiler would still open-code the <code>+</code> and the <code>*</code> in
+<code>(+ (* a x) (* b y))</code> as primitive <code>+</code> and <code>*</code>.  Modify the
+open-coding compiler to consult the compile-time environment in order to
+compile the correct code for expressions involving the names of primitive
+procedures.  (The code will work correctly as long as the program does not
+<code>define</code> or <code>set!</code> these names.)</p>
+<h5>Solution</h5>
+<h4 id="exercise-545">Exercise 5.45</h4>
+<p>By comparing the stack operations
+used by compiled code to the stack operations used by the evaluator for the
+same computation, we can determine the extent to which the compiler optimizes
+use of the stack, both in speed (reducing the total number of stack operations)
+and in space (reducing the maximum stack depth).  Comparing this optimized
+stack use to the performance of a special-purpose machine for the same
+computation gives some indication of the quality of the compiler.</p>
+<p><strong>1.</strong> Exercise 5.27 asked you to determine, as a function of $n$, the number
+of pushes and the maximum stack depth needed by the evaluator to compute ${n!$}
+using the recursive factorial procedure given above.  Exercise 5.14 asked
+you to do the same measurements for the special-purpose factorial machine shown
+in Figure 5.11. Now perform the same analysis using the compiled
+<code>factorial</code> procedure.</p>
+<p>Take the ratio of the number of pushes in the compiled version to the number of
+pushes in the interpreted version, and do the same for the maximum stack depth.
+Since the number of operations and the stack depth used to compute ${n!$}  are
+linear in $n$, these ratios should approach constants as $n$ becomes large.
+What are these constants?  Similarly, find the ratios of the stack usage in the
+special-purpose machine to the usage in the interpreted version.</p>
+<p>Compare the ratios for special-purpose versus interpreted code to the ratios
+for compiled versus interpreted code.  You should find that the special-purpose
+machine does much better than the compiled code, since the hand-tailored
+controller code should be much better than what is produced by our rudimentary
+general-purpose compiler.</p>
+<p><strong>2.</strong> Can you suggest improvements to the compiler that would help it generate code
+that would come closer in performance to the hand-tailored version?</p>
+<h5>Solution</h5>
+<h4 id="exercise-546">Exercise 5.46</h4>
+<p>Carry out an analysis like the
+one in Exercise 5.45 to determine the effectiveness of compiling the
+tree-recursive Fibonacci procedure</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fib</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span>
+<span class="w">      </span><span class="n">n</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">fib</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="n">fib</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">)))))</span>
+</code></pre></div>
+
+<p>compared to the effectiveness of using the special-purpose Fibonacci machine of
+Figure 5.12.  (For measurement of the interpreted performance, see
+Exercise 5.29.)  For Fibonacci, the time resource used is not linear in
+${n;$} hence the ratios of stack operations will not approach a limiting value
+that is independent of $n$.</p>
+<h5>Solution</h5>
+<h4 id="exercise-547">Exercise 5.47</h4>
+<p>This section described how to
+modify the explicit-control evaluator so that interpreted code can call
+compiled procedures.  Show how to modify the compiler so that compiled
+procedures can call not only primitive procedures and compiled procedures, but
+interpreted procedures as well.  This requires modifying
+<code>compile-procedure-call</code> to handle the case of compound (interpreted)
+procedures.  Be sure to handle all the same <code>target</code> and <code>linkage</code>
+combinations as in <code>compile-proc-appl</code>.  To do the actual procedure
+application, the code needs to jump to the evaluator's <code>compound-apply</code>
+entry point.  This label cannot be directly referenced in object code (since
+the assembler requires that all labels referenced by the code it is assembling
+be defined there), so we will add a register called <code>compapp</code> to the
+evaluator machine to hold this entry point, and add an instruction to
+initialize it:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">assign</span><span class="w"> </span><span class="n">compapp</span><span class="w"> </span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="n">compound-apply</span><span class="p">))</span>
+<span class="w">  </span><span class="n">@r</span><span class="p">{</span><span class="c1">;; branches if `flag` is set:}</span>
+<span class="w">  </span><span class="p">(</span><span class="n">branch</span><span class="w"> </span><span class="p">(</span><span class="n">label</span><span class="w"> </span><span class="n">external-entry</span><span class="p">))</span>
+<span class="nb">read-eval-print-loop</span><span class="w"> </span><span class="n">@r</span><span class="p">{</span><span class="n">…</span><span class="p">}</span>
+</code></pre></div>
+
+<p>To test your code, start by defining a procedure <code>f</code> that calls a
+procedure <code>g</code>.  Use <code>compile-and-go</code> to compile the definition of
+<code>f</code> and start the evaluator.  Now, typing at the evaluator, define
+<code>g</code> and try to call <code>f</code>.</p>
+<h5>Solution</h5>
+<h4 id="exercise-548">Exercise 5.48</h4>
+<p>The <code>compile-and-go</code>
+interface implemented in this section is awkward, since the compiler can be
+called only once (when the evaluator machine is started).  Augment the
+compiler-interpreter interface by providing a <code>compile-and-run</code> primitive
+that can be called from within the explicit-control evaluator as follows:</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;;; EC-Eval input:</span>
+<span class="p">(</span><span class="n">compile-and-run</span>
+<span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">define</span><span class="w"> </span><span class="p">(</span><span class="ss">factorial</span><span class="w"> </span><span class="ss">n</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="ss">if</span><span class="w"> </span><span class="p">(</span><span class="ss">=</span><span class="w"> </span><span class="ss">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="mi">1</span>
+<span class="w">        </span><span class="p">(</span><span class="ss">*</span><span class="w"> </span><span class="p">(</span><span class="ss">factorial</span><span class="w"> </span><span class="p">(</span><span class="ss">-</span><span class="w"> </span><span class="ss">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="ss">n</span><span class="p">))))</span>
+
+<span class="c1">;;; EC-Eval value:</span>
+<span class="n">ok</span>
+
+<span class="c1">;;; EC-Eval input:</span>
+<span class="p">(</span><span class="n">factorial</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1">;;; EC-Eval value:</span>
+<span class="mi">120</span>
+</code></pre></div>
+
+<h5>Solution</h5>
+<h4 id="exercise-549">Exercise 5.49</h4>
+<p>As an alternative to using the
+explicit-control evaluator's read-eval-print loop, design a register machine
+that performs a read-compile-execute-print loop.  That is, the machine should
+run a loop that reads an expression, compiles it, assembles and executes the
+resulting code, and prints the result.  This is easy to run in our simulated
+setup, since we can arrange to call the procedures <code>compile</code> and
+<code>assemble</code> as ``register-machine operations.''</p>
+<h5>Solution</h5>
+<h4 id="exercise-550">Exercise 5.50</h4>
+<p>Use the compiler to compile the
+metacircular evaluator of 4.1 and run this program using the
+register-machine simulator.  (To compile more than one definition at a time,
+you can package the definitions in a <code>begin</code>.)  The resulting interpreter
+will run very slowly because of the multiple levels of interpretation, but
+getting all the details to work is an instructive exercise.</p>
+<h5>Solution</h5>
+<h4 id="exercise-551">Exercise 5.51</h4>
+<p>Develop a rudimentary
+implementation of Scheme in C (or some other low-level language of your choice)
+by translating the explicit-control evaluator of 5.4 into C.  In
+order to run this code you will need to also provide appropriate
+storage-allocation routines and other run-time support.</p>
+<h5>Solution</h5>
+<h4 id="exercise-552">Exercise 5.52</h4>
+<p>As a counterpoint to 
+Exercise 5.51, modify the compiler so that it compiles Scheme procedures
+into sequences of C instructions.  Compile the metacircular evaluator of
+4.1 to produce a Scheme interpreter written in C.</p>
+<h5>Solution</h5>
+    </div>
+</body>
+</html>
