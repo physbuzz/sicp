@@ -13,8 +13,19 @@
 
 ### Notes
 
-### Exercises
+An environment is a sequence of frames.
 
+Each frame is a table of bindings.
+
+Each binding associates variable names with their corresponding values.
+
+`define` creates definitions by adding bindings to frames.
+
+
+Note from chat: How do we write recursive lambdas anyways? rcr points out
+`auto factorial = []() { ... factorial(...); ... }` fails in C++. 
+
+### Exercises
 
 #### Exercise 3.9
 
@@ -28,7 +39,6 @@ recursive version
       1
       (* n (factorial (- n 1)))))
 ```
-
 
 and an iterative version
 
@@ -50,6 +60,27 @@ Show the environment structures created by evaluating `(factorial 6)`
 using each version of the `factorial` procedure.
 
 ##### Solution
+
+
+```txt
+factorial E1: n:6
+factorial E2: n:5
+factorial E3: n:4
+factorial E4: n:3
+factorial E5: n:2
+factorial E6: n:1
+```
+
+```txt
+factorial E1: n:6
+fact-iter E2: product: 1, counter: 1, n: 6
+fact-iter E3: product: 1, counter: 2, n: 6
+fact-iter E4: product: 2, counter: 3, n: 6
+fact-iter E5: product: 6, counter: 4, n: 6
+fact-iter E6: product: 24 counter: 5, n: 6
+fact-iter E7: product: 120 counter: 6, n: 6
+fact-iter E8: product: 720 counter: 7, n: 6
+```
 
 #### Exercise 3.10
 

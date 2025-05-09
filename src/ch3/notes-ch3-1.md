@@ -13,6 +13,14 @@
 
 ### Notes
 
+- Worth reading: https://gwern.net/doc/math/1975-chaitin.pdf 
+- Note on evaluation order: we can use `let*` to evaluate
+the arguments of let in order.
+
+Here's some useful code about the equality of different functions in the context of the end of 3.1
+
+@src(code/test.rkt)
+
 ### Meeting 05-11-2025
 Future 
 
@@ -39,6 +47,8 @@ example
 ```
 
 ##### Solution
+
+@src(code/ex3-1.rkt)
 
 #### Exercise 3.2
 
@@ -67,6 +77,11 @@ could make a monitored version of the `sqrt` procedure:
 
 ##### Solution
 
+
+
+@src(code/ex3-2.rkt)
+
+
 #### Exercise 3.3
 
 Modify the `make-account`
@@ -92,6 +107,7 @@ a complaint:
 
 ##### Solution
 
+@src(code/ex3-3.rkt)
 #### Exercise 3.4
 
 Modify the `make-account`
@@ -101,6 +117,13 @@ password, it invokes the procedure `call-the-cops`.
 
 ##### Solution
 
+I structured this answer in a bit of a weird way, I want the 
+"cops called" message to display when the function
+is returned. Not when the returned function is called by the 
+user.
+
+@src(code/ex3-4.rkt)
+
 #### Exercise 3.5
 
 Monte Carlo integration
@@ -109,7 +132,7 @@ simulation.  Consider computing the area of a region of space described by a
 predicate $P(x, y)$ that is true for points $(x, y)$ in the
 region and false for points not in the region.  For example, the region
 contained within a circle of radius 3 centered at (5, 7) is described by the
-predicate that tests whether ${(x - 5)^2$ + {(y - 7)^2 \le 3^2}}$.  To estimate
+predicate that tests whether ${(x - 5)^2 + {(y - 7)^2 \le 3^2}}$.  To estimate
 the area of the region described by such a predicate, begin by choosing a
 rectangle that contains the region.  For example, a rectangle with diagonally
 opposite corners at (2, 4) and (8, 10) contains the circle above.  The desired
@@ -144,6 +167,8 @@ input.
 
 ##### Solution
 
+@src(code/ex3-5.rkt)
+
 #### Exercise 3.6
 
 It is useful to be able to reset a
@@ -157,6 +182,8 @@ repeatable sequences.  These are very handy to have when testing and debugging
 programs that use random numbers.
 
 ##### Solution
+
+@src(code/ex3-6.rkt)
 
 #### Exercise 3.7
 
@@ -186,6 +213,8 @@ solution to Exercise 3.3 to accommodate this new feature.
 
 ##### Solution
 
+@src(code/ex3-7.rkt)
+
 #### Exercise 3.8
 
 When we defined the evaluation
@@ -207,3 +236,4 @@ the arguments are evaluated from right to left.
 
 ##### Solution
 
+@src(code/ex3-8.rkt)
