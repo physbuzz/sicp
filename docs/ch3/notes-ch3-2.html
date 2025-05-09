@@ -538,6 +538,12 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div></p>
 <h2 id="section-32">Section 3.2</h2>
 <h3 id="notes">Notes</h3>
+<p>An environment is a sequence of frames.</p>
+<p>Each frame is a table of bindings.</p>
+<p>Each binding associates variable names with their corresponding values.</p>
+<p><code>define</code> creates definitions by adding bindings to frames.</p>
+<p>Note from chat: How do we write recursive lambdas anyways? rcr points out
+<code>auto factorial = []() { ... factorial(...); ... }</code> fails in C++. </p>
 <h3 id="exercises">Exercises</h3>
 <h4 id="exercise-39">Exercise 3.9</h4>
 <p>In 1.2.1 we used the
@@ -566,6 +572,24 @@ recursive version</p>
 <p>Show the environment structures created by evaluating <code>(factorial 6)</code>
 using each version of the <code>factorial</code> procedure.</p>
 <h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code>factorial E1: n:6
+factorial E2: n:5
+factorial E3: n:4
+factorial E4: n:3
+factorial E5: n:2
+factorial E6: n:1
+</code></pre></div>
+
+<div class="codehilite"><pre><span></span><code>factorial E1: n:6
+fact-iter E2: product: 1, counter: 1, n: 6
+fact-iter E3: product: 1, counter: 2, n: 6
+fact-iter E4: product: 2, counter: 3, n: 6
+fact-iter E5: product: 6, counter: 4, n: 6
+fact-iter E6: product: 24 counter: 5, n: 6
+fact-iter E7: product: 120 counter: 6, n: 6
+fact-iter E8: product: 720 counter: 7, n: 6
+</code></pre></div>
+
 <h4 id="exercise-310">Exercise 3.10</h4>
 <p>In the <code>make-withdraw</code>
 procedure, the local variable <code>balance</code> is created as a parameter of
