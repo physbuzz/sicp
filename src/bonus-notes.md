@@ -18,15 +18,23 @@ Filling in stuff from [bonus-notes.md](bonus-notes.html) as time goes on. A lot 
 - Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. 
 - The ill-fated Santa Barbara Monte Carlo machine
 - Exact runtime of count-change
-- RSA implementation
-- Linear diophantine equations 
+- Linear diophantine equations (using lists)
 - Bonus number theory (Euler totient, base b expansions of fractions)
 - Bonus special numbers (Lucas, Catalan, partition numbers, "negative binomial")
-- Numerical approximation formulas (iterated polynomial gives sine, other iterated special polynomials give special things too)
+
+**Ch1 runners up:**
+
+- Iterated functions for numerical approximation. (Following up on the iterated polynomial for approximating sine. This is more fitting 
+in a 
+
 - Improving rates of convergence (newton, accelerated newton, successive averaging, resummation)
+- ✯ Challenge 3: Thoughts on reversibility and quantum computing
+
+**Ch1 scrapped ideas:**
+
+- RSA implementation
 - ✯ Challenge 1: try to compute the Ramanujan tau function. This is some memoized code using recursion that supposedly works: [https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896](https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896), but simple mathematica code can generate it too: `CoefficientList[Take[Expand[Product[(1 - x^k)^24, {k, 1, 30}]], 30],x]`
 - ✯ Challenge 2: Continued fraction expansion of pi or 1/pi using exact arithmetic.
-- ✯ Challenge 3: Thoughts on reversibility and quantum computing
 
 **Ch2 Bonuses**
 
