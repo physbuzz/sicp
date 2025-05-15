@@ -13,6 +13,8 @@
 
 ### Notes
 
+@src(code/examples-3-3.rkt)
+
 
 ### Exercises
 
@@ -62,7 +64,7 @@ z
 (a b c d)
 
 (cdr x)
-⟨@var{response}⟩
+⟨response⟩
 
 (define w (append! x y))
 
@@ -70,13 +72,19 @@ w
 (a b c d)
 
 (cdr x)
-⟨@var{response}⟩
+⟨response⟩
 ```
 
-What are the missing `⟨`@var{response}`⟩`s?  Draw box-and-pointer diagrams to
+What are the missing `⟨response⟩`s?  Draw box-and-pointer diagrams to
 explain your answer.
 
 ##### Solution
+
+@src(code/ex3-12.rkt)
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-12.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
 
 #### Exercise 3.13
 
@@ -100,6 +108,14 @@ What happens if we try to compute `(last-pair z)`?
 
 ##### Solution
 
+If we try to compute `(last-pair z)`, the algorithm will run
+until it finds a pair which has a cdr equal to nil. Unfortunately this will never happen!
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-13.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
+
 #### Exercise 3.14
 
 The following procedure is quite
@@ -116,7 +132,7 @@ useful, although obscure:
   (loop x '()))
 ```
 
-`Loop` uses the ``temporary'' variable `temp` to hold the old value
+`Loop` uses the "temporary" variable `temp` to hold the old value
 of the `cdr` of `x`, since the `set-cdr!`  on the next line
 destroys the `cdr`.  Explain what `mystery` does in general.  Suppose
 `v` is defined by `(define v (list 'a 'b 'c 'd))`. Draw the
@@ -128,6 +144,18 @@ and `w`?
 
 ##### Solution
 
+@src(code/ex3-14.rkt)
+
+This is a recursive algorithm for reversing a linked list.
+Recall that every pair in the linked list has a pointer to the element stored
+and a pointer to the next element stored. We want to change this second pointer 
+to point towards the previous element in the list. We do this by storing 
+the previous pair in the list as `y` and the rest of the not-updated list as `x`.
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-14.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
 #### Exercise 3.15
 
 Draw box-and-pointer diagrams to
@@ -135,6 +163,15 @@ explain the effect of `set-to-wow!` on the structures `z1` and
 `z2` above.
 
 ##### Solution
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-15.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
+So this explains why in the first case when we call `set-to-wow!` it seems like
+"both pairs" are changed. In fact we are changing the first pair, x, and it is pointed to
+twice.
+
+In the case of `z2`, these point to two separate lists.
 
 #### Exercise 3.16
 

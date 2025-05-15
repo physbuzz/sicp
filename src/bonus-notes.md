@@ -1,34 +1,44 @@
 
-
 @toc 
-
 
 ## Extras
 
 Filling in stuff from [bonus-notes.md](bonus-notes.html) as time goes on. A lot of this is a big TODO. Anything with a ✯ next to it means it takes significant work.
 
-**General stuff:**
-
 - [Anki flashcards](anki.html)
-- ✯ Racket crash course
-- SICP Library Functions
 
 **Ch1 Bonuses**
 
-- Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. 
+- Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. **(~done)**
 - The ill-fated Santa Barbara Monte Carlo machine
 - Exact runtime of count-change
 - Linear diophantine equations (using lists)
-- Bonus number theory (Euler totient, base b expansions of fractions)
-- Bonus special numbers (Lucas, Catalan, partition numbers, "negative binomial")
+- Bonus special numbers and number theory (Euler totient, base b expansions of fractions, Lucas, Catalan, partition numbers, "negative binomial")
+
+**Ch2 Bonuses**
+
+ - ✯ Drawing Church numerals
+ - The abstract algebra of 2-5 **(~pretty far)**
+ - Actually useful polynomial algorithms **(~outlined)**
+ - Story about polynomial long division + my grandpa (at least research it)
+
+## Articles I decided not to work on:
+
+**General stuff:**
+
+- ✯ Racket crash course
+- SICP Library Functions
 
 **Ch1 runners up:**
 
-- Iterated functions for numerical approximation. (Following up on the iterated polynomial for approximating sine. This is more fitting 
-in a 
-
-- Improving rates of convergence (newton, accelerated newton, successive averaging, resummation)
-- ✯ Challenge 3: Thoughts on reversibility and quantum computing
+- Iterated functions for numerical approximation. Following up on the iterated 
+polynomial for approximating sine. There's also iteration for the 
+Feigenbaum-cvitanovic functional equation. This is a great research project, 
+not a great bonus chapter.
+- Improving rates of convergence (newton, accelerated newton, successive averaging, resummation). Again we probably just want to work with a full plotting + 
+CAS here.
+- ✯ Challenge 3: Thoughts on reversibility and quantum computing. This is just a 
+big independent project, not a good bonus chapter.
 
 **Ch1 scrapped ideas:**
 
@@ -36,31 +46,13 @@ in a
 - ✯ Challenge 1: try to compute the Ramanujan tau function. This is some memoized code using recursion that supposedly works: [https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896](https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896), but simple mathematica code can generate it too: `CoefficientList[Take[Expand[Product[(1 - x^k)^24, {k, 1, 30}]], 30],x]`
 - ✯ Challenge 2: Continued fraction expansion of pi or 1/pi using exact arithmetic.
 
-**Ch2 Bonuses**
+**Ch2 scrapped ideas:**
 
-- ✯ Drawing Church numerals
 - Enumerating binary trees and arithmetic expressions (builds on top of enumerating permutations)
-- ✯ n queens and dancing links
-- Story about polynomial long division + my grandpa
 - Review standard functions you might use in Racket: accumulate, map, map-indexed, fold-left, fold-right. Not just how they're implemented and linear-recursive vs linear-iterative, but also Same with `set`s.
-
-Chapter 2 stuff:
-
-1. It would be useful to review all the different functions: accumulate, map, map-indexed, fold-left, fold-right. Not just how they're implemented and linear-recursive vs linear-iterative, but also
-the generic functions you'd actually use when programming Racket or Guile or whatever. Same with `set`s.
-2. For data abstraction, it might be nice to write a library containing many of 
-the features from all of the practice problems for section 2.4-2.5. 
-3. An explanation of the abstract algebra going on with polynomials. Re-explain the problem about the leading coefficient
-to state that the gcd algorithm is only defined up to multiplication by invertible elements. 
-
-I'd like to write an article about polynomial stuff. Including why things 
-like the gcd are only well-defined up to units, and what that means. So,
-we could do a proper implementation of rational functions and polynomials. 
-**A program that finds all roots**.
-There's plenty of other stuff we could do here: Euclidean domains, Z[i],
-Z[(-1)^(1/3)]. This is all about abstract algebra of one variable.
-4. Abstract algebra with multiple variables: Groebner bases, various algos.
-5. It would be really cool to implement some of Katherine Stange's [Visualizing imaginary quadratic fields](https://math.colorado.edu/~kstange/papers/Stange-short-exp.pdf)
+- ✯ n queens and dancing links (still want to try it, probably not good for an article)
+- Abstract algebra with multiplve variables: Groebner bases, various algos.
+- It would be really cool to implement some of Katherine Stange's [Visualizing imaginary quadratic fields](https://math.colorado.edu/~kstange/papers/Stange-short-exp.pdf).
 
 
 

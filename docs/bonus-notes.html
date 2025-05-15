@@ -515,6 +515,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <ul class="toc-list">
 <ul>
 <li><a href="#extras">Extras</a></li>
+<li><a href="#articles-i-decided-not-to-work-on">Articles I decided not to work on:</a></li>
 </ul>
 <li><a href="#symbols-and-sicp-library-functions">Symbols and SICP Library Functions</a></li>
 <ul>
@@ -539,31 +540,40 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div> </p>
 <h2 id="extras">Extras</h2>
 <p>Filling in stuff from <a href="bonus-notes.html">bonus-notes.md</a> as time goes on. A lot of this is a big TODO. Anything with a ✯ next to it means it takes significant work.</p>
-<p><strong>General stuff:</strong></p>
 <ul>
 <li><a href="anki.html">Anki flashcards</a></li>
-<li>✯ Racket crash course</li>
-<li>SICP Library Functions</li>
 </ul>
 <p><strong>Ch1 Bonuses</strong></p>
 <ul>
-<li>Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. </li>
+<li>Asymptotic approximations and some notes on $\Theta$, $\Omega$, $O$. <strong>(~done)</strong></li>
 <li>The ill-fated Santa Barbara Monte Carlo machine</li>
 <li>Exact runtime of count-change</li>
 <li>Linear diophantine equations (using lists)</li>
-<li>Bonus number theory (Euler totient, base b expansions of fractions)</li>
-<li>Bonus special numbers (Lucas, Catalan, partition numbers, "negative binomial")</li>
+<li>Bonus special numbers and number theory (Euler totient, base b expansions of fractions, Lucas, Catalan, partition numbers, "negative binomial")</li>
+</ul>
+<p><strong>Ch2 Bonuses</strong></p>
+<ul>
+<li>✯ Drawing Church numerals</li>
+<li>The abstract algebra of 2-5 <strong>(~pretty far)</strong></li>
+<li>Actually useful polynomial algorithms <strong>(~outlined)</strong></li>
+<li>Story about polynomial long division + my grandpa (at least research it)</li>
+</ul>
+<h2 id="articles-i-decided-not-to-work-on">Articles I decided not to work on:</h2>
+<p><strong>General stuff:</strong></p>
+<ul>
+<li>✯ Racket crash course</li>
+<li>SICP Library Functions</li>
 </ul>
 <p><strong>Ch1 runners up:</strong></p>
 <ul>
-<li>
-<p>Iterated functions for numerical approximation. (Following up on the iterated polynomial for approximating sine. This is more fitting 
-in a </p>
-</li>
-<li>
-<p>Improving rates of convergence (newton, accelerated newton, successive averaging, resummation)</p>
-</li>
-<li>✯ Challenge 3: Thoughts on reversibility and quantum computing</li>
+<li>Iterated functions for numerical approximation. Following up on the iterated 
+polynomial for approximating sine. There's also iteration for the 
+Feigenbaum-cvitanovic functional equation. This is a great research project, 
+not a great bonus chapter.</li>
+<li>Improving rates of convergence (newton, accelerated newton, successive averaging, resummation). Again we probably just want to work with a full plotting + 
+CAS here.</li>
+<li>✯ Challenge 3: Thoughts on reversibility and quantum computing. This is just a 
+big independent project, not a good bonus chapter.</li>
 </ul>
 <p><strong>Ch1 scrapped ideas:</strong></p>
 <ul>
@@ -571,31 +581,14 @@ in a </p>
 <li>✯ Challenge 1: try to compute the Ramanujan tau function. This is some memoized code using recursion that supposedly works: <a href="https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896">https://claude.ai/chat/374b1219-3cd8-4a9e-87a3-dfddfc1f8896</a>, but simple mathematica code can generate it too: <code>CoefficientList[Take[Expand[Product[(1 - x^k)^24, {k, 1, 30}]], 30],x]</code></li>
 <li>✯ Challenge 2: Continued fraction expansion of pi or 1/pi using exact arithmetic.</li>
 </ul>
-<p><strong>Ch2 Bonuses</strong></p>
+<p><strong>Ch2 scrapped ideas:</strong></p>
 <ul>
-<li>✯ Drawing Church numerals</li>
 <li>Enumerating binary trees and arithmetic expressions (builds on top of enumerating permutations)</li>
-<li>✯ n queens and dancing links</li>
-<li>Story about polynomial long division + my grandpa</li>
 <li>Review standard functions you might use in Racket: accumulate, map, map-indexed, fold-left, fold-right. Not just how they're implemented and linear-recursive vs linear-iterative, but also Same with <code>set</code>s.</li>
+<li>✯ n queens and dancing links (still want to try it, probably not good for an article)</li>
+<li>Abstract algebra with multiplve variables: Groebner bases, various algos.</li>
+<li>It would be really cool to implement some of Katherine Stange's <a href="https://math.colorado.edu/~kstange/papers/Stange-short-exp.pdf">Visualizing imaginary quadratic fields</a>.</li>
 </ul>
-<p>Chapter 2 stuff:</p>
-<ol>
-<li>It would be useful to review all the different functions: accumulate, map, map-indexed, fold-left, fold-right. Not just how they're implemented and linear-recursive vs linear-iterative, but also
-the generic functions you'd actually use when programming Racket or Guile or whatever. Same with <code>set</code>s.</li>
-<li>For data abstraction, it might be nice to write a library containing many of 
-the features from all of the practice problems for section 2.4-2.5. </li>
-<li>An explanation of the abstract algebra going on with polynomials. Re-explain the problem about the leading coefficient
-to state that the gcd algorithm is only defined up to multiplication by invertible elements. </li>
-</ol>
-<p>I'd like to write an article about polynomial stuff. Including why things 
-like the gcd are only well-defined up to units, and what that means. So,
-we could do a proper implementation of rational functions and polynomials. 
-<strong>A program that finds all roots</strong>.
-There's plenty of other stuff we could do here: Euclidean domains, Z[i],
-Z[(-1)^(1/3)]. This is all about abstract algebra of one variable.
-4. Abstract algebra with multiple variables: Groebner bases, various algos.
-5. It would be really cool to implement some of Katherine Stange's <a href="https://math.colorado.edu/~kstange/papers/Stange-short-exp.pdf">Visualizing imaginary quadratic fields</a></p>
 <h1 id="symbols-and-sicp-library-functions">Symbols and SICP Library Functions</h1>
 <h2 id="symbols-and-special-forms">Symbols and Special Forms</h2>
 <p><strong>Chapter 1.1:</strong></p>

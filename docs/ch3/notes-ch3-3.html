@@ -561,6 +561,32 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div></p>
 <h2 id="section-33">Section 3.3</h2>
 <h3 id="notes">Notes</h3>
+<div class="code-box">
+<div class="code-header"><a href="code/examples-3-3.rkt">code/examples-3-3.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">((</span><span class="ss">a</span><span class="w"> </span><span class="ss">b</span><span class="p">)</span><span class="w"> </span><span class="ss">c</span><span class="w"> </span><span class="ss">d</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&#39;</span><span class="p">(</span><span class="ss">e</span><span class="w"> </span><span class="ss">f</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">set-car!</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">set-car!</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">h</span><span class="p">)</span>
+<span class="n">x</span>
+<span class="n">y</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>((h f) c d)
+(h f)
+</pre>
+</div>
+</div>
+
 <h3 id="exercises">Exercises</h3>
 <h4 id="exercise-312">Exercise 3.12</h4>
 <p>The following procedure for
@@ -599,7 +625,7 @@ argument:</p>
 <span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">d</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="n">⟨@var</span><span class="p">{</span><span class="n">response</span><span class="p">}</span><span class="n">⟩</span>
+<span class="n">⟨response⟩</span>
 
 <span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="p">(</span><span class="n">append!</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
 
@@ -607,12 +633,63 @@ argument:</p>
 <span class="p">(</span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">c</span><span class="w"> </span><span class="n">d</span><span class="p">)</span>
 
 <span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
-<span class="n">⟨@var</span><span class="p">{</span><span class="n">response</span><span class="p">}</span><span class="n">⟩</span>
+<span class="n">⟨response⟩</span>
 </code></pre></div>
 
-<p>What are the missing <code>⟨</code>@var{response}<code>⟩</code>s?  Draw box-and-pointer diagrams to
+<p>What are the missing <code>⟨response⟩</code>s?  Draw box-and-pointer diagrams to
 explain your answer.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex3-12.rkt">code/ex3-12.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">append!</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="p">(</span><span class="nb">last-pair</span><span class="w"> </span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">  </span><span class="n">x</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">last-pair</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">      </span><span class="n">x</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">last-pair</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">a</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">b</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">c</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">d</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+
+<span class="n">z</span>
+<span class="c1">; (a b c d)</span>
+
+<span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="c1">; (b)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="p">(</span><span class="n">append!</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">))</span>
+<span class="c1">; (last-pair x) gives (cons &#39;b nil)</span>
+<span class="c1">; We set this pair&#39;s 2nd element to y, which is (cons &#39;c (cons &#39;d nil))</span>
+<span class="c1">; So x is now &#39;(a b c d)</span>
+
+<span class="n">w</span>
+<span class="c1">; (a b c d)</span>
+
+<span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="c1">; (b c d)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>(a b c d)
+(b)
+(a b c d)
+(b c d)
+</pre>
+</div>
+</div>
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-12.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
 <h4 id="exercise-313">Exercise 3.13</h4>
 <p>Consider the following
 <code>make-cycle</code> procedure, which uses the <code>last-pair</code> procedure defined
@@ -628,6 +705,12 @@ in Exercise 3.12:</p>
 
 <p>What happens if we try to compute <code>(last-pair z)</code>?</p>
 <h5>Solution</h5>
+<p>If we try to compute <code>(last-pair z)</code>, the algorithm will run
+until it finds a pair which has a cdr equal to nil. Unfortunately this will never happen!</p>
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-13.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
 <h4 id="exercise-314">Exercise 3.14</h4>
 <p>The following procedure is quite
 useful, although obscure:</p>
@@ -641,19 +724,72 @@ useful, although obscure:</p>
 <span class="w">  </span><span class="p">(</span><span class="n">loop</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
 </code></pre></div>
 
-<p><code>Loop</code> uses the <code>`temporary'' variable</code>temp<code>to hold the old value
-of the</code>cdr<code>of</code>x<code>, since the</code>set-cdr!<code>on the next line
-destroys the</code>cdr<code>.  Explain what</code>mystery<code>does in general.  Suppose</code>v<code>is defined by</code>(define v (list 'a 'b 'c 'd))<code>. Draw the
-box-and-pointer diagram that represents the list to which</code>v<code>is bound.
-Suppose that we now evaluate</code>(define w (mystery v))<code>. Draw
-box-and-pointer diagrams that show the structures</code>v<code>and</code>w<code>after
-evaluating this expression.  What would be printed as the values of</code>v<code>and</code>w`?</p>
+<p><code>Loop</code> uses the "temporary" variable <code>temp</code> to hold the old value
+of the <code>cdr</code> of <code>x</code>, since the <code>set-cdr!</code>  on the next line
+destroys the <code>cdr</code>.  Explain what <code>mystery</code> does in general.  Suppose
+<code>v</code> is defined by <code>(define v (list 'a 'b 'c 'd))</code>. Draw the
+box-and-pointer diagram that represents the list to which <code>v</code> is bound.
+Suppose that we now evaluate <code>(define w (mystery v))</code>. Draw
+box-and-pointer diagrams that show the structures <code>v</code> and <code>w</code> after
+evaluating this expression.  What would be printed as the values of <code>v</code>
+and <code>w</code>?</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex3-14.rkt">code/ex3-14.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="c1">; invariants: </span>
+<span class="c1">;   x and y together contain all original elements of x</span>
+<span class="c1">;   y contains elements of the original x in reversed order</span>
+<span class="c1">;   </span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mystery</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">loop</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">        </span><span class="n">y</span>
+<span class="w">        </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">temp</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="w">          </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">y</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="n">loop</span><span class="w"> </span><span class="n">temp</span><span class="w"> </span><span class="n">x</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">loop</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">a</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">b</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">c</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">d</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">w</span><span class="w"> </span><span class="p">(</span><span class="n">mystery</span><span class="w"> </span><span class="n">v</span><span class="p">))</span>
+
+<span class="n">w</span>
+<span class="n">v</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>(d c b a)
+(a)
+</pre>
+</div>
+</div>
+
+<p>This is a recursive algorithm for reversing a linked list.
+Recall that every pair in the linked list has a pointer to the element stored
+and a pointer to the next element stored. We want to change this second pointer 
+to point towards the previous element in the list. We do this by storing 
+the previous pair in the list as <code>y</code> and the rest of the not-updated list as <code>x</code>.</p>
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-14.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
 <h4 id="exercise-315">Exercise 3.15</h4>
 <p>Draw box-and-pointer diagrams to
 explain the effect of <code>set-to-wow!</code> on the structures <code>z1</code> and
 <code>z2</code> above.</p>
 <h5>Solution</h5>
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-15.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
+<p>So this explains why in the first case when we call <code>set-to-wow!</code> it seems like
+"both pairs" are changed. In fact we are changing the first pair, x, and it is pointed to
+twice.</p>
+<p>In the case of <code>z2</code>, these point to two separate lists.</p>
 <h4 id="exercise-316">Exercise 3.16</h4>
 <p>Ben Bitdiddle decides to write a
 procedure to count the number of pairs in any list structure.  <code>It's easy,''
