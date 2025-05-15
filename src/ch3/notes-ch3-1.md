@@ -22,7 +22,21 @@ Here's some useful code about the equality of different functions in the context
 @src(code/test.rkt)
 
 ### Meeting 05-11-2025
-Future 
+
+- Relating to the "order of updates", I recently stumbled across an interesting post by Dan Piponi about changing the order of updates of an iterative
+algorithm and looking at the result. [mathoverflow post](https://mathoverflow.net/questions/492197/what-is-this-modified-arithmetico-geometric-mean-function), [mathstodon.xyz post](https://mathstodon.xyz/@dpiponi/114468239096746615).
+
+- [Referential transparency](https://en.wikipedia.org/wiki/Side_effect_%28computer_science%29#Referential_transparency) : "Absence of side effects is a necessary, but not sufficient, condition for referential transparency. Referential transparency means that an expression (such as a function call) can be replaced with its value. This requires that the expression is pure, that is to say the expression must be deterministic (always give the same value for the same input) and side-effect free."
+
+Resources on writing a Lisp interpreter:
+
+- [https://craftinginterpreters.com/](https://craftinginterpreters.com/)
+- [https://norvig.com/lispy.html](https://norvig.com/lispy.html)
+- [https://buildyourownlisp.com/](https://buildyourownlisp.com/)
+
+Not related to this chapter, but I forgot about it until now:
+
+ - [Functional composition w/ Chris Ford](https://www.youtube.com/watch?v=jyNqHsN3pEc)
 
 ### Exercises
 

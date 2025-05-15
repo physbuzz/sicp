@@ -510,7 +510,230 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </head>
 <body>
     <div class="container">
-        <h1>More cool things that you can do with polynomials</h1>
+        <h1>The Abstract Algebra of Chapter 2.5</h1>
+<p>The system of generic operations discussed in SICP is perfect for starting a 
+discussion about abstract algebra, because we've already learned
+the mathematical details. So the code can be the foundation. 
+Part of this article is explaining the exact same foundation using 
+mathematical jargon, and then we can understand the systems and extend it to
+other interesting systems.</p>
+<h2>The Definition of a Ring</h2>
+<p>The properties that we saw in our system of generic operations center around
+a mathematical object called a ring. In SICP terms, this means that
+each of our types are equipped with a <code>'mul</code>, <code>'add</code>, and <code>'negate</code> operation,
+such that multiplication and addition "behave as expected." In addition, 
+we need an additive identity <code>(get 'my-type 'zero)</code> and a multiplicative
+identity <code>(get 'my-type 'one)</code>. </p>
+<p>Our type <code>'my-type</code> is a <strong>ring</strong> if it satisfies the following four 
+sets of properties. </p>
+<p><strong>0.</strong> The operations <code>'add</code>, <code>'mul</code>, and <code>'negate</code> are all closed under
+addition. That is, given arguments of type <code>'my-type</code>, we return values
+of type <code>'my-type</code>. In addition, <code>'zero</code> and <code>'one</code> are elements of type <code>'my-type</code>.</p>
+<p><strong>1.</strong> <code>'my-type</code> is an abelian group under addition, meaning the following comparisons return true for every input <code>a,b,c</code> of type <code>'my-input</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;; Addition is commutative</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">a</span><span class="p">))</span>
+<span class="c1">;; Addition is associative</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="nv">c</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">)))</span>
+<span class="c1">;; The zero element, which satisfies a+0 == a</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">zero</span><span class="w"> </span><span class="p">(</span><span class="nf">get</span><span class="w"> </span><span class="ss">&#39;my-type</span><span class="w"> </span><span class="ss">&#39;zero</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">zero</span><span class="p">)</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span>
+<span class="c1">;; Negation, there exists an additive inverse</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nb">negate</span><span class="w"> </span><span class="nv">a</span><span class="p">))</span><span class="w"> </span><span class="nv">zero</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>2.</strong> <code>'my-type</code> is a monoid under multiplication: </p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;; Multiplication is associative</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="nv">c</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">)))</span>
+<span class="c1">;; The multiplicative identity, which satisfies a*1 == 1*a == a</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="nv">one</span><span class="w"> </span><span class="p">(</span><span class="nf">get</span><span class="w"> </span><span class="ss">&#39;my-type</span><span class="w"> </span><span class="ss">&#39;one</span><span class="p">))</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">one</span><span class="p">)</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">one</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span>
+</code></pre></div>
+
+<p><strong>3.</strong> <code>'my-type</code> satisfies the distributive law with respect to addition: </p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;; Left-distributivity</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">a</span><span class="w"> </span><span class="nv">c</span><span class="p">)))</span>
+<span class="c1">;; Right-distributivity</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">c</span><span class="p">)</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">add</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">b</span><span class="w"> </span><span class="nv">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nf">mul</span><span class="w"> </span><span class="nv">c</span><span class="w"> </span><span class="nv">a</span><span class="p">)))</span>
+</code></pre></div>
+
+<h2>More Examples of Rings</h2>
+<p>Great! I'd like to emphasize that this is the full mathematical definition
+of a ring. As such it's very general. The examples given in SICP chapter
+2.5 are...</p>
+<ul>
+<li>The integers as <code>'scheme-number</code> (presumably). These are denoted
+by $\mathbb{Z}$. </li>
+<li>The rationals as <code>'rational</code>. These are denoted $\mathbb{Q}$. </li>
+<li>The complex numbers as <code>'complex</code>. These are denoted $\mathbb{C}$. (I am 
+completely glossing over the issues of floating point arithmetic here,
+which might break some of the equalities above)</li>
+<li>The polynomials <code>'polynomial</code> over any of the above rings. These are 
+denoted $\mathbb{Z}[x],$ $\mathbb{Q}[x],$ and $\mathbb{C}[x].$</li>
+</ul>
+<p>There are loads of other rings we could define. For example, let's look at 
+the integers modulo 12, denoted $\mathbb{Z}_{12}.$ These will have type <code>'int-mod-12</code> and multiplication
+operation</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;; inside (install-int-mod-12)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="nb">*</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="nb">remainder</span><span class="w"> </span><span class="mi">12</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Clearly then, we have an interesting situation where <code>(mul 4 3)</code> will 
+return $0$! $4$ and $3$ are called zero divisors, and we often want to work
+in a ring without zero divisors. Such a ring without any zero
+divisors is known as an <em>integral domain</em>, and I italicised that term because
+if you're ever going to take an abstract algebra course at a university you
+might as well put that on a flashcard and memorize it now!</p>
+<p>Another example is that of square n-by-n matrices for some given n. Let's say
+we define the type <code>'matrix-2x2</code>, and we care about matrices with integer 
+coefficients. This ring is denoted $M_2(\mathbb{Z}).$ Interestingly, this ring
+has zero divisors:</p>
+<p>$$\begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 0 \end{bmatrix}\begin{bmatrix} 0 &amp; 0 \\ 0 &amp; 1 \end{bmatrix} = \begin{bmatrix} 0 &amp; 0 \\ 0 &amp; 0 \end{bmatrix}$$</p>
+<p>We can also see that this is our first example of a noncommutative ring! We can see this by observing that
+$$\begin{bmatrix} 0 &amp; 1 \\ 0 &amp; 0 \end{bmatrix}\begin{bmatrix} 0 &amp; 0 \\ 1 &amp; 0 \end{bmatrix} = \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 0 \end{bmatrix},$$
+while
+$$\begin{bmatrix} 0 &amp; 0 \\ 1 &amp; 0 \end{bmatrix}\begin{bmatrix} 0 &amp; 1 \\ 0 &amp; 0 \end{bmatrix} = \begin{bmatrix} 0 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}.$$</p>
+<p>You could imagine any of these being problem sets in SICP: create a ring, 
+run <code>(install-ring)</code>, and demonstrate some of its interesting properties. </p>
+<h2>What properties did we see of polynomials?</h2>
+<p>Let's go back to the interesting properties of <em>commutative rings</em>. That is,
+rings where we have the additional property</p>
+<div class="codehilite"><pre><span></span><code><span class="c1">;; Commutativity of multiplication</span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">mul</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Given any ring $R$, we can define the polynomial ring $R[x].$ In fact since our
+code was implemented using generics, the multiplication and addition operations
+involve no extra effort on our part. The fact that $R[x]$ is a ring follows
+from the fact that $R$ is a ring.</p>
+<h3>A (sort of?) Interesting Isomorphism</h3>
+<p>Taking this "building polynomial rings" thing to its annoying conclusion, 
+what about $(R[y])[x]$? ie, polynomials
+in $x$ with coefficients taken from $R[y]$? In SICP, we were given the example
+of the following polynomial:</p>
+<p>$$(y^2+1)x^3+(2y)x+1$$</p>
+<p>which we might represent as the following data structure:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">x</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">y</span><span class="w"> </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">y</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="ss">polynomial</span><span class="w"> </span><span class="ss">y</span><span class="w"> </span><span class="p">(</span><span class="mi">0</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>In exercise 2.92, we're asked to redesign the polynomial system to work with
+multivariate polynomials natively. </p>
+<blockquote>
+<p><strong>Exercise 2.92:</strong> By imposing an ordering on variables, extend the polynomial package so that addition and multiplication of polynomials works for polynomials in different variables. (This is not easy!)</p>
+</blockquote>
+<p>This is an open-ended question, but in my solution, I would represent the 
+polynomial above: </p>
+<p>$$x^3y^2+x^3+2xy+1$$</p>
+<p>With the following Lisp representation:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&#39;</span><span class="p">(</span><span class="ss">polynomial-multivariate</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">2</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">2</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">1</span><span class="p">)))</span>
+<span class="w">  </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="p">((</span><span class="ss">x</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="ss">y</span><span class="w"> </span><span class="mi">0</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>Transforming between these two polynomial representations would be some 
+function that we'd have to define, and is an example of an isomorphism:
+a one-to-one invertible map that preserves multiplication/addition. 
+In mathematics, we'd write:</p>
+<p>$$(R[y])[x]\simeq R[x,y]$$</p>
+<p>I mean, this isn't that interesting because it's something we intuitively
+know. But it's a nice example where we really have to write a 
+Lisp function to coerce one type into another, and we end up with a mathematical
+isomorphism.</p>
+<h2>The property that made me write this article</h2>
+<p>Integer division: if $|b|\lt |a|$ and we want to compute <code>(remainder a b)</code>, 
+we subtract off as many copies of <code>b</code> as possible until we find an integer 
+with smaller absolute value than <code>b</code> or we reach zero.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;division by zero&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="n">b</span><span class="p">))</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">remainder</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="p">(</span><span class="nb">sgn</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">sgn</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>Polynomial division: we saw this in exercise 2.91, to get the remainder
+we subtract off the monomial with coefficient and order defined by 
+the code in the book:</p>
+<div class="codehilite"><pre><span></span><code><span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">new-c</span><span class="w"> </span><span class="p">(</span><span class="n">div</span><span class="w"> </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">t1</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                    </span><span class="p">(</span><span class="n">coeff</span><span class="w"> </span><span class="n">t2</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">new-o</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t1</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                  </span><span class="p">(</span><span class="n">order</span><span class="w"> </span><span class="n">t2</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>Because we have a division here, we should note that we only defined 
+polynomial division for $\mathbb{Q}[x]$! This is actually a deep insight, 
+and we cannot perform a simple Euclidean division algorithm over 
+$\mathbb{Z}[x].$ In fact, this is what exercise 2.95 shows: with our
+default algorithm, we find:
+$$\textrm{GCD}\left( (x^2-2x+1)(11x^2+7) , (x^2-2x+1)(13x+5)\right)=\frac{1458}{169}x^2-\frac{2916}{169} x + \frac{1458}{169}$$
+we say that "the GCD is only defined up to multiplication by units." In this 
+context a unit is an invertible element of the base ring $\mathbb{Q}.$ Because
+every element in $\mathbb{Q}$ except zero is invertible, our GCD is only 
+defined up to multiplication by rational numbers.</p>
+<p>What other rings have a Euclidean algorithm? Such domains are called 
+<em>Euclidean domains.</em> If you plan on going to grad school for math, 
+you might as well put this on a flash card and memorize it now! Well, 
+it's probably better to memorize the <a href="">wikipedia definition</a>. </p>
+<p>A Euclidean domain is a commutative ring $R$ with no zero divisors, endowed
+with a function $f:R\to \mathbb{Z}^{\ge 0}$ such that, we can perform division
+with remainder. eg, for any two elements $a$ and $b$, there exist $q$ and 
+$r$ such that $a=bq+r$ and either $r=0$ or $f(r)\lt f(b).$ </p>
+<p>So long as we have such a function, we can always perform the Euclidean
+GCD algorithm and, assuming that the elements $q$ and $r$ can be found 
+algorithmically, it will always terminate after a finite number of steps! </p>
+<p>Examples of Euclidean domains include...</p>
+<ul>
+<li>The Gaussian integers $\mathbb{Z}[i],$ that is complex numbers of the form
+${a+bi : (a,b)\in\mathbb{Z}^2}.$ This is also known as "the ring of integers of $\mathbb{Q}[\sqrt{-1}].$"</li>
+<li>The Eisenstein integers $\mathbb{Z}[e^{2\pi i/3}],$ that is complex numbers of the form
+${a+be^{2\pi i/3} : (a,b)\in\mathbb{Z}^2}.$ Note that $e^{2\pi i/3}=(-1+\sqrt{-3})/2,$ and so the Eistenstein integers are also "the ring of integers of $\mathbb{Q}[\sqrt{-3}].$"</li>
+<li>
+<p>The ring $\mathbb{Z}[\sqrt{2}],$ that is real numbers of the form ${a+b\sqrt{2} :  (a,b)\in\mathbb{Z}^2}.$ You guessed it, these are "the ring of integers of $\mathbb{Q}[\sqrt{2}].$"</p>
+</li>
+<li>
+<p>We saw how long division works for polynomials</p>
+</li>
+<li>The example with $P_1,$ $P_2,$ $P_3$ is particularly illustrative.</li>
+<li>In general, a division algorithm works on something called a Euclidean Domain.</li>
+</ul>
+<p>From Aluffi's "Algebra: Chapter 0", we have</p>
+<p><strong>Definition 2.7.</strong> A <em>Euclidean valuation</em> on an integral domain R is a function $v:R\setminus {0}\to \mathbb{Z}^{\ge 0}$ satisfying the following property: for all $a\in R$ and all nonzero $b\in R$ there exist
+$q, r \in R$ such that $a = qb + r,$ with either $r = 0$ or $v(r) &lt; v(b)$. An integral domain B is a Euclidean domain if it admits a Euclidean valuation.</p>
+<p>So, if we have such a property, then we can always do a GCD algorithm. Each time we apply Euclidean division, we get a remainder $r$ whose valuation is one lower. </p>
+<p>Our Euclidean algorithm is...</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">=zero?</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="n">a</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">remainder</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
+</code></pre></div>
+
+<p>At each step we reduce the valuation of our arguments by one. We may have a $b$ which isn't
+zero but with a zero valuation, but this means that on the next step $(remainder a b)$ 
+returns an element of the ring which either has lower valuation or which is equal to zero. 
+Since it's not possible to have a negative valuation, this must return zero. So this
+proves that the Euclidean algorithm terminates after a finite number of steps.</p>
+<p>As we saw, things are only defined up to <strong>units</strong>. So we have to define units somewhere here.</p>
+<p>Also, define coprime in this context. </p>
+<p>It would be nice to have a factorization algorithm, but this gets quite complicated. Kronecker's method can be mentioned.</p>
+<h2>The Gaussian integers</h2>
+<h3>SICP-style package for the Gaussian Integers</h3>
+<p>gcd algorithm</p>
+<p>frequency of coprime numbers</p>
+<h3>Gaussian coprime numbers</h3>
+<p>frequency of coprime numbers</p>
+<h3>Finding and plotting Gaussian primes</h3>
+<h2>The Eisenstein integers</h2>
+<p>gcd</p>
+<p>coprime</p>
+<p>https://www.semanticscholar.org/paper/A-Stroll-Through-the-Gaussian-Primes-Gethner-Wagon/7b7eb90bdbc4b37822ff92875870d0fa4d4fcc2a/figure/2
+https://www.semanticscholar.org/paper/A-Stroll-Through-the-Gaussian-Primes-Gethner-Wagon/7b7eb90bdbc4b37822ff92875870d0fa4d4fcc2a/figure/4
+https://www.mathpuzzle.com/Gaussians.html
+http://www.asiapacific-mathnews.com/06/0602/0010_0014.pdf</p>
+<h1>More cool things that you can do with polynomials</h1>
 <h2>Polynomial Rootfinding</h2>
 <ul>
 <li>Use a simple rootfinding algorithm to render algebraic number starscapes</li>
@@ -565,45 +788,6 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
  - Catalan-type sequences → rational or algebraic generating functions.</p>
 <p>Allegedly matrix exponentials relate to pade approximants:
 https://arxiv.org/pdf/2404.12789</p>
-<h1>The Abstract Algebra of Polynomial Division</h1>
-<h2>What properties did we see of polynomials?</h2>
-<ul>
-<li>We saw how long division works for polynomials</li>
-<li>The example with $P_1,$ $P_2,$ $P_3$ is particularly illustrative.</li>
-<li>In general, a division algorithm works on something called a Euclidean Domain.</li>
-</ul>
-<p>From Aluffi's "Algebra: Chapter 0", we have</p>
-<p><strong>Definition 2.7.</strong> A <em>Euclidean valuation</em> on an integral domain R is a function $v:R\setminus {0}\to \mathbb{Z}^{\ge 0}$ satisfying the following property: for all $a\in R$ and all nonzero $b\in R$ there exist
-$q, r \in R$ such that $a = qb + r,$ with either $r = 0$ or $v(r) &lt; v(b)$. An integral domain B is a Euclidean domain if it admits a Euclidean valuation.</p>
-<p>So, if we have such a property, then we can always do a GCD algorithm. Each time we apply Euclidean division, we get a remainder $r$ whose valuation is one lower. </p>
-<p>Our Euclidean algorithm is...</p>
-<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span>
-<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">=zero?</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="n">a</span>
-<span class="w">    </span><span class="p">(</span><span class="nb">gcd</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="p">(</span><span class="n">apply-generic</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">remainder</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">))))</span>
-</code></pre></div>
-
-<p>At each step we reduce the valuation of our arguments by one. We may have a $b$ which isn't
-zero but with a zero valuation, but this means that on the next step $(remainder a b)$ 
-returns an element of the ring which either has lower valuation or which is equal to zero. 
-Since it's not possible to have a negative valuation, this must return zero. So this
-proves that the Euclidean algorithm terminates after a finite number of steps.</p>
-<p>As we saw, things are only defined up to <strong>units</strong>. So we have to define units somewhere here.</p>
-<p>Also, define coprime in this context. </p>
-<p>It would be nice to have a factorization algorithm, but this gets quite complicated. Kronecker's method can be mentioned.</p>
-<h2>The Gaussian integers</h2>
-<h3>SICP-style package for the Gaussian Integers</h3>
-<p>gcd algorithm</p>
-<p>frequency of coprime numbers</p>
-<h3>Gaussian coprime numbers</h3>
-<p>frequency of coprime numbers</p>
-<h3>Finding and plotting Gaussian primes</h3>
-<h2>The Eisenstein integers</h2>
-<p>gcd</p>
-<p>coprime</p>
-<p>https://www.semanticscholar.org/paper/A-Stroll-Through-the-Gaussian-Primes-Gethner-Wagon/7b7eb90bdbc4b37822ff92875870d0fa4d4fcc2a/figure/2
-https://www.semanticscholar.org/paper/A-Stroll-Through-the-Gaussian-Primes-Gethner-Wagon/7b7eb90bdbc4b37822ff92875870d0fa4d4fcc2a/figure/4
-https://www.mathpuzzle.com/Gaussians.html
-http://www.asiapacific-mathnews.com/06/0602/0010_0014.pdf</p>
     </div>
 </body>
 </html>

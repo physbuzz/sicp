@@ -46,3 +46,8 @@
 - Discord: [https://www.codeandcoffee.dev/](https://www.codeandcoffee.dev/)
 - [Racket IDE](https://www.racket-lang.org/)
 
+## Extras
+
+- [1.2 Bonus chapter: Asymptotic Approximations](bonus/1-2-asymptotic-approximations-and-some-notes.html)
+- [2.5 Bonus chapter: Rings and More Polynomial Algorithms (WIP)](bonus/2-5-extra-polynomial-algorithms.html)
+- [bonus notes scratchwork](bonus-notes.html)
