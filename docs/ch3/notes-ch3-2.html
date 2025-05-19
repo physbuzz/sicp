@@ -524,6 +524,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><a href="#section-32">Section 3.2</a></li>
 <ul>
 <li><a href="#notes">Notes</a></li>
+<li><a href="#meeting-05-18-2025">Meeting 05-18-2025</a></li>
 <li><a href="#exercises" class="toc-exercises">Exercises</a>
 <div class="exercise-container">(
 <span class="exercise-list">
@@ -538,12 +539,57 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div></p>
 <h2 id="section-32">Section 3.2</h2>
 <h3 id="notes">Notes</h3>
+<p><strong>Definition of a frame.</strong> A frame is a table (dictionary) of bindings
+which associate variable names to their values, along with a 
+pointer to its enclosing environment. A single frame may 
+contain at most one binding for any variable. </p>
 <p>An environment is a sequence of frames.</p>
 <p>Each frame is a table of bindings.</p>
 <p>Each binding associates variable names with their corresponding values.</p>
 <p><code>define</code> creates definitions by adding bindings to frames.</p>
 <p>Note from chat: How do we write recursive lambdas anyways? rcr points out
 <code>auto factorial = []() { ... factorial(...); ... }</code> fails in C++. </p>
+<h3 id="meeting-05-18-2025">Meeting 05-18-2025</h3>
+<p>Environment and frame distinction: This is a bit confusing, but the definition
+in the book can be taken at face value:</p>
+<blockquote>
+<p>An environment is a sequence of frames. Each frame is a table (possibly empty) of bindings, which associate variable names with their corresponding values. (A single frame may contain at most one binding for any variable.) Each frame also has a pointer to its enclosing environment, unless, for the purposes of discussion, the frame is considered to be global.</p>
+</blockquote>
+<p>At first I thought that "each frame also has a pointer to the next frame in
+the sequence of frames" would be a better definition, and I still think of 
+each frame as storing a pointer to a frame rather than a pointer to an 
+environment (this matches the diagrams better anyways, where frames point to other frames), but I suppose that the pointer-to-frame can be considered to be an "environment". </p>
+<p>Some notes from our conversation:</p>
+<ul>
+<li>
+<p>Because it's so easy to confuse terms, it's probably best to watch the video
+chapters corresponding to this course! Ie <a href="https://www.youtube.com/watch?v=jl8EHP1WrWY">the 1986 MIT lectures</a> or <a href="https://www.youtube.com/watch?v=fSjVM0rHrMQ">Spring 2010 Berkeley</a>.</p>
+</li>
+<li>
+<p>All function calls will create frames, but special forms don't! So, <code>if</code> doesn't, for example. Gerry calls this out in his 1986 lecture.</p>
+</li>
+<li>We had a discussion about how to create deeply nested frames (or "deeply chained" frames). The way to do this isn't to call a procedure a bunch, but instead to declare lambdas-within-lambdas-within-lambdas. Calling a procedure a bunch will just create many frames which refer to the frame in which the procedure was defined, not a deep nesting.</li>
+<li>Lexical scope vs dynamic scope. It was mentioned that Mathematica is 
+dynamically scoped, with tools for lexical 
+scoping using <code>Block[]</code> and <code>Module[]</code> I've
+never thought about this from a deep systems / language POV before. An analogy
+I drew but I should be cautious of: dynamic scoping might be more like
+referencing a javascript object <code>var global;</code> to dynamically add and remove
+symbols from it. This issue of whether a symbol is defined is a matter of
+whether global[symbol] is undefined at a given time.</li>
+<li>Note that my first instinct on drawing the fibonacci procedure was wrong,
+I drew deeply nested environments but in fact it's 6 different environments
+and the tree is shallow and wide not narrow and deep.</li>
+</ul>
+<p>More stuff on Lisp compilers:</p>
+<ul>
+<li>https://en.wikipedia.org/wiki/Self-hosting_(compilers)</li>
+<li>https://www.paulgraham.com/lisphistory.html ("at least read <a href="https://www.paulgraham.com/thist.html">history of T</a>") (adjacent: https://www.paulgraham.com/hp.html )</li>
+<li>https://www.sbcl.org/porting.html</li>
+<li>https://texdraft.github.io/</li>
+<li>https://norvig.com/lispy.html</li>
+<li>https://gchandbook.org/</li>
+</ul>
 <h3 id="exercises">Exercises</h3>
 <h4 id="exercise-39">Exercise 3.9</h4>
 <p>In 1.2.1 we used the

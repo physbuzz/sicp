@@ -13,6 +13,11 @@
 
 ### Notes
 
+**Definition of a frame.** A frame is a table (dictionary) of bindings
+which associate variable names to their values, along with a 
+pointer to its enclosing environment. A single frame may 
+contain at most one binding for any variable. 
+
 An environment is a sequence of frames.
 
 Each frame is a table of bindings.
@@ -24,6 +29,47 @@ Each binding associates variable names with their corresponding values.
 
 Note from chat: How do we write recursive lambdas anyways? rcr points out
 `auto factorial = []() { ... factorial(...); ... }` fails in C++. 
+
+### Meeting 05-18-2025
+
+Environment and frame distinction: This is a bit confusing, but the definition
+in the book can be taken at face value:
+
+> An environment is a sequence of frames. Each frame is a table (possibly empty) of bindings, which associate variable names with their corresponding values. (A single frame may contain at most one binding for any variable.) Each frame also has a pointer to its enclosing environment, unless, for the purposes of discussion, the frame is considered to be global.
+
+At first I thought that "each frame also has a pointer to the next frame in
+the sequence of frames" would be a better definition, and I still think of 
+each frame as storing a pointer to a frame rather than a pointer to an 
+environment (this matches the diagrams better anyways, where frames point to other frames), but I suppose that the pointer-to-frame can be considered to be an "environment". 
+
+Some notes from our conversation:
+
+ - Because it's so easy to confuse terms, it's probably best to watch the video
+chapters corresponding to this course! Ie [the 1986 MIT lectures](https://www.youtube.com/watch?v=jl8EHP1WrWY) or [Spring 2010 Berkeley](https://www.youtube.com/watch?v=fSjVM0rHrMQ).
+
+ - All function calls will create frames, but special forms don't! So, `if` doesn't, for example. Gerry calls this out in his 1986 lecture.
+ - We had a discussion about how to create deeply nested frames (or "deeply chained" frames). The way to do this isn't to call a procedure a bunch, but instead to declare lambdas-within-lambdas-within-lambdas. Calling a procedure a bunch will just create many frames which refer to the frame in which the procedure was defined, not a deep nesting.
+ - Lexical scope vs dynamic scope. It was mentioned that Mathematica is 
+dynamically scoped, with tools for lexical 
+scoping using `Block[]` and `Module[]` I've
+never thought about this from a deep systems / language POV before. An analogy
+I drew but I should be cautious of: dynamic scoping might be more like
+referencing a javascript object `var global;` to dynamically add and remove
+symbols from it. This issue of whether a symbol is defined is a matter of
+whether global[symbol] is undefined at a given time.
+ - Note that my first instinct on drawing the fibonacci procedure was wrong,
+I drew deeply nested environments but in fact it's 6 different environments
+and the tree is shallow and wide not narrow and deep.
+
+
+More stuff on Lisp compilers:
+
+ - https://en.wikipedia.org/wiki/Self-hosting_(compilers)
+ - https://www.paulgraham.com/lisphistory.html ("at least read [history of T](https://www.paulgraham.com/thist.html)") (adjacent: https://www.paulgraham.com/hp.html )
+ - https://www.sbcl.org/porting.html
+ - https://texdraft.github.io/
+ - https://norvig.com/lispy.html
+ - https://gchandbook.org/
 
 ### Exercises
 
