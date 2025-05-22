@@ -1,6 +1,5 @@
 
 @toc 
-
 ## Extras
 
 Filling in stuff from [bonus-notes.md](bonus-notes.html) as time goes on. A lot of this is a big TODO. Anything with a ✯ next to it means it takes significant work.

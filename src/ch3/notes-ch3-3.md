@@ -146,8 +146,21 @@ and `w`?
 
 @src(code/ex3-14.rkt)
 
-This is a recursive algorithm for reversing a linked list.
-Recall that every pair in the linked list has a pointer to the element stored
+This is a recursive algorithm for reversing a linked list. One way to see this is
+to look at the invariant `(append (reverse y) x)`, which will always be equal to
+the original list. Certainly it's true for `y='()` and `x=list`. On subsequent steps,
+we can look at the function call `(loop temp x-modified)` and work backwards 
+(where I use `x-modified` to refer to x after being mutated with `set-cdr!`
+```rkt
+(append (reverse x-modified) temp)
+=(append (reverse (cons (car x) y)) (cdr x))
+=(append (reverse y) (cons (car x) (cdr x)))
+=(append (reverse y) x)
+```
+So the loop invariant is preserved, the length of the first argument decreases by one
+each step, and at the end when `x='()` we have `list = (reverse y)` so the list is reversed.
+
+Less proof-ey, more intuitively, recall that every pair in the linked list has a pointer to the element stored
 and a pointer to the next element stored. We want to change this second pointer 
 to point towards the previous element in the list. We do this by storing 
 the previous pair in the list as `y` and the rest of the not-updated list as `x`.
