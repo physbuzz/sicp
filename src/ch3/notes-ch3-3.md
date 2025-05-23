@@ -209,6 +209,15 @@ Ben's procedure would return 3; return 4; return 7; never return at all.
 
 ##### Solution
 
+@src(code/ex3-16.rkt)
+
+The explanation of the construction of the four different lists is explained
+in this image:
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-16.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
 #### Exercise 3.17
 
 Devise a correct version of the
@@ -219,6 +228,8 @@ been counted.)
 
 ##### Solution
 
+@src(code/ex3-17.rkt)
+
 #### Exercise 3.18
 
 Write a procedure that examines a
@@ -228,6 +239,8 @@ go into an infinite loop.  Exercise 3.13 constructed such lists.
 
 ##### Solution
 
+@src(code/ex3-18.rkt)
+
 #### Exercise 3.19
 
 Redo Exercise 3.18 using an
@@ -235,6 +248,11 @@ algorithm that takes only a constant amount of space.  (This requires a very
 clever idea.)
 
 ##### Solution
+
+@src(code/ex3-19.rkt)
+
+The idea here is to use two "racers", racer x takes one step every turn, 
+racer y takes two steps. If racer y ever passes racer x, there's a loop. 
 
 #### Exercise 3.20
 
