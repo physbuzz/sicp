@@ -589,8 +589,14 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 
 <ul>
-<li>It would be nice to have a proof that we can't construct an (efficient) queue
-without <code>set!</code>, or if that's true.</li>
+<li>
+<p>It would be nice to have a proof that we can't construct an (efficient) queue
+without <code>set!</code>, or if that's true.</p>
+</li>
+<li>
+<p>Impossibility of an efficient doubly linked list without mutability? 
+(there was a conversation about doubly linked lists in Rust)</p>
+</li>
 </ul>
 <h3 id="meeting-05-25-2025">Meeting 05-25-2025</h3>
 <ul>
@@ -1331,8 +1337,142 @@ the predicate <code>empty-deque?</code>, selectors <code>front-deque</code> and
 <code>rear-insert-deque!</code>, <code>front-delete-deque!</code>, 
 <code>rear-delete-deque!</code>.  Show how to represent deques using pairs, and give
 implementations of the operations.<br />
-All operations should be accomplished in ${\Theta(1)$} steps.</p>
+All operations should be accomplished in $\Theta(1)$ steps.</p>
 <h5>Solution</h5>
+<p>We have to roll our own doubly linked list, I'll have the list of the form:</p>
+<div class="codehilite"><pre><span></span><code><span class="o">&#39;</span><span class="p">((</span><span class="ss">el1</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span><span class="w"> </span><span class="p">(</span><span class="ss">el2</span><span class="w"> </span><span class="ss">prevptr2</span><span class="p">)</span><span class="w"> </span><span class="ss">...</span><span class="w"> </span><span class="p">(</span><span class="ss">elN</span><span class="w"> </span><span class="ss">prevptrN</span><span class="p">))</span>
+</code></pre></div>
+
+<p>We have to make sure that when we add an element on the end, prev-ptr
+is updated appropriately, and when we delete an element from the beginning
+the appropriate prev-ptr is set to <code>nil</code>.</p>
+<div class="code-box">
+<div class="code-header"><a href="code/ex3-23.rkt">code/ex3-23.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">deque</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">deque</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">set-car!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">empty-deque?</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-deque</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
+
+<span class="c1">;; Gets the first value in the deque</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">front-deque</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-deque?</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;FRONT called with an</span>
+<span class="s2">              empty deque&quot;</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">))))</span>
+
+<span class="c1">;; Gets the last value in the deque</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rear-deque</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-deque?</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;REAR called with an</span>
+<span class="s2">              empty deque&quot;</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rear-insert-deque!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">item</span><span class="p">)</span>
+<span class="w">  </span><span class="c1">;;cf ((new-pair (cons item &#39;())))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">new-pair</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-deque?</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">           </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="k">else</span><span class="w"> </span>
+<span class="w">              </span><span class="c1">;; 1. Update the new-pair&#39;s prev-ptr</span>
+<span class="w">              </span><span class="p">(</span><span class="n">set-car!</span><span class="w"> </span><span class="p">(</span><span class="nb">cdar</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">))</span>
+<span class="w">              </span><span class="c1">;; 2. Add it to the end of the list</span>
+<span class="w">              </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">              </span><span class="c1">;; 3. Update rear-ptr.</span>
+<span class="w">              </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">              </span><span class="n">deque</span><span class="p">))))</span>
+
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rear-delete-deque!</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-deque?</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;REAR-DELETE! called with </span>
+<span class="s2">                 an empty deque&quot;</span><span class="w"> </span><span class="n">deque</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span>
+<span class="w">          </span><span class="c1">;; 1. Save the value of the prev-ptr</span>
+<span class="w">          </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">prev-ptr</span><span class="w"> </span><span class="p">(</span><span class="nb">cadr</span><span class="w"> </span><span class="p">(</span><span class="n">rear-deque</span><span class="w"> </span><span class="n">deque</span><span class="p">))))</span>
+<span class="w">            </span><span class="c1">;; 2. If the prev ptr is null, set the queue to null</span>
+<span class="w">            </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">prev-ptr</span><span class="p">)</span><span class="w"> </span>
+<span class="w">              </span><span class="p">(</span><span class="k">begin</span><span class="w"> </span>
+<span class="w">                </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+<span class="w">                </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
+<span class="w">              </span><span class="c1">;; 3. Else, chop the list off and move</span>
+<span class="w">              </span><span class="c1">;; rear-ptr back one.</span>
+<span class="w">              </span><span class="p">(</span><span class="k">begin</span>
+<span class="w">                </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">prev-ptr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+<span class="w">                </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">prev-ptr</span><span class="p">)))</span>
+<span class="w">            </span><span class="n">deque</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">front-insert-deque!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">item</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">new-pair</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-deque?</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">           </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">                </span><span class="n">deque</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">front-delete-deque!</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-deque?</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;DELETE! called with </span>
+<span class="s2">                 an empty deque&quot;</span><span class="w"> </span><span class="n">deque</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">deque</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">)))</span>
+<span class="w">              </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">)))</span>
+<span class="w">                </span><span class="c1">;; Update the first element&#39;s prev-ptr to null</span>
+<span class="w">                </span><span class="p">(</span><span class="n">set-car!</span><span class="w"> </span><span class="p">(</span><span class="nb">cdar</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">))</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
+<span class="w">              </span><span class="n">deque</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="n">deque</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">print-deque-inner</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">lst</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;)&quot;</span><span class="p">))</span>
+<span class="w">          </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span>
+<span class="w">            </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="nb">caar</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;)&quot;</span><span class="p">))</span>
+<span class="w">          </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="nb">caar</span><span class="w"> </span><span class="n">lst</span><span class="p">))</span><span class="w"> </span>
+<span class="w">             </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+<span class="w">             </span><span class="p">(</span><span class="n">print-deque-inner</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">lst</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="s2">&quot;(&quot;</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">print-deque-inner</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">deque</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="p">(</span><span class="n">make-deque</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">rear-insert-deque!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">c</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">rear-insert-deque!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">d</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">rear-insert-deque!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">e</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">front-delete-deque!</span><span class="w"> </span><span class="n">q1</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">front-insert-deque!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">b</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">front-insert-deque!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">a</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">rear-delete-deque!</span><span class="w"> </span><span class="n">q1</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">rear-insert-deque!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">f</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">rear-delete-deque!</span><span class="w"> </span><span class="n">q1</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">front-delete-deque!</span><span class="w"> </span><span class="n">q1</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">front-delete-deque!</span><span class="w"> </span><span class="n">q1</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-deque</span><span class="w"> </span><span class="p">(</span><span class="n">rear-delete-deque!</span><span class="w"> </span><span class="n">q1</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>(c)
+(c d)
+(c d e)
+(d e)
+(b d e)
+(a b d e)
+(a b d)
+(a b d f)
+(a b d)
+(b d)
+(d)
+()
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-324">Exercise 3.24</h4>
 <p>In the table implementations
 above, the keys are tested for equality using <code>equal?</code> (called by
@@ -1340,10 +1480,97 @@ above, the keys are tested for equality using <code>equal?</code> (called by
 might have a table with numeric keys in which we don't need an exact match to
 the number we're looking up, but only a number within some tolerance of it.
 Design a table constructor <code>make-table</code> that takes as an argument a
-<code>same-key?</code> procedure that will be used to test <code>`equality'' of keys.</code>Make-table<code>should return a</code>dispatch<code>procedure that can be used to
-access appropriate</code>lookup<code>and</code>insert!` procedures for a local
+<code>same-key?</code> procedure that will be used to test "equality" of keys.
+<code>Make-table</code> should return a <code>dispatch</code> procedure that can be used to
+access appropriate <code>lookup</code> and <code>insert!</code> procedures for a local
 table.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex3-24.rkt">code/ex3-24.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">lookup</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">table</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">record</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">table</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">record</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">record</span><span class="p">)</span>
+<span class="w">        </span><span class="k">false</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">records</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">equal?</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">caar</span><span class="w"> </span><span class="n">records</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">records</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">records</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">assoc-custom</span><span class="w"> </span><span class="n">same-key?</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">records</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="n">same-key?</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">caar</span><span class="w"> </span><span class="n">records</span><span class="p">))</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">records</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">assoc-custom</span><span class="w"> </span><span class="n">same-key?</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">records</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-table</span><span class="w"> </span><span class="n">same-key?</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">local-table</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">*table*</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">lookup</span><span class="w"> </span><span class="n">key-1</span><span class="w"> </span><span class="n">key-2</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">subtable</span>
+<span class="w">             </span><span class="p">(</span><span class="n">assoc-custom</span><span class="w"> </span><span class="n">same-key?</span><span class="w"> </span><span class="n">key-1</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">local-table</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">subtable</span>
+<span class="w">            </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">record</span>
+<span class="w">                   </span><span class="p">(</span><span class="n">assoc-custom</span><span class="w"> </span><span class="n">same-key?</span><span class="w"> </span><span class="n">key-2</span>
+<span class="w">                          </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">subtable</span><span class="p">))))</span>
+<span class="w">              </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">record</span><span class="p">)</span><span class="w"> </span><span class="k">false</span><span class="p">))</span>
+<span class="w">            </span><span class="k">false</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">insert!</span><span class="w"> </span><span class="n">key-1</span><span class="w"> </span><span class="n">key-2</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">subtable</span>
+<span class="w">             </span><span class="p">(</span><span class="n">assoc-custom</span><span class="w"> </span><span class="n">same-key?</span><span class="w"> </span><span class="n">key-1</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">local-table</span><span class="p">))))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">subtable</span>
+<span class="w">            </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">record</span>
+<span class="w">                   </span><span class="p">(</span><span class="n">assoc-custom</span><span class="w"> </span><span class="n">same-key?</span><span class="w"> </span><span class="n">key-2</span>
+<span class="w">                          </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">subtable</span><span class="p">))))</span>
+<span class="w">              </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">record</span>
+<span class="w">                  </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="w">                  </span><span class="p">(</span><span class="n">set-cdr!</span>
+<span class="w">                   </span><span class="n">subtable</span>
+<span class="w">                   </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">key-2</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="w">                         </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">subtable</span><span class="p">)))))</span>
+<span class="w">            </span><span class="p">(</span><span class="n">set-cdr!</span>
+<span class="w">             </span><span class="n">local-table</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="n">key-1</span>
+<span class="w">                         </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">key-2</span><span class="w"> </span><span class="n">value</span><span class="p">))</span>
+<span class="w">                   </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">local-table</span><span class="p">)))))</span>
+<span class="w">      </span><span class="o">&#39;</span><span class="ss">ok</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">dispatch</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">lookup-proc</span><span class="p">)</span><span class="w"> </span><span class="n">lookup</span><span class="p">)</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">insert-proc!</span><span class="p">)</span><span class="w"> </span><span class="n">insert!</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Unknown operation:</span>
+<span class="s2">                          TABLE&quot;</span><span class="w"> </span><span class="n">m</span><span class="p">))))</span>
+<span class="w">    </span><span class="n">dispatch</span><span class="p">))</span>
+
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">fuzzy-equals?</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">&lt;</span><span class="w"> </span><span class="p">(</span><span class="nb">abs</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="n">a</span><span class="p">))</span><span class="w"> </span><span class="mf">0.05</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">operation-table</span><span class="w"> </span><span class="p">(</span><span class="n">make-table</span><span class="w"> </span><span class="n">fuzzy-equals?</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">get</span><span class="w"> </span><span class="p">(</span><span class="n">operation-table</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">lookup-proc</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">put</span><span class="w"> </span><span class="p">(</span><span class="n">operation-table</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">insert-proc!</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mf">0.1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">a</span><span class="p">)</span>
+<span class="p">(</span><span class="n">put</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mf">0.3</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">b</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">get</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mf">0.13</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">get</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mf">0.2</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">get</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mf">0.26</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>ok
+ok
+a
+#f
+b</pre>
+</div>
+</div>
+
 <h4 id="exercise-325">Exercise 3.25</h4>
 <p>Generalizing one- and
 two-dimensional tables, show how to implement a table in which values are
@@ -1360,6 +1587,21 @@ table implementation where the (key, value) records are organized using a
 binary tree, assuming that keys can be ordered in some way (e.g., numerically
 or alphabetically).  (Compare Exercise 2.66 of Chapter 2.)</p>
 <h5>Solution</h5>
+<p>This is a straightforward application of the binary trees we developed in chapter 2. There, the lookup pseudocode for <a href="../ch2/notes-ch2-3.html#exercise-266">problem 2.66</a> was...</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">lookup</span><span class="w"> </span><span class="n">given-key</span><span class="w"> </span><span class="n">records</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">given-key</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="n">records</span><span class="p">)))</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="n">record</span><span class="p">))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">&lt;</span><span class="w"> </span><span class="n">given-key</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="n">records</span><span class="p">)))</span>
+<span class="w">         </span><span class="p">(</span><span class="n">lookup</span><span class="w"> </span><span class="n">given-key</span><span class="w"> </span><span class="p">(</span><span class="n">left-branch</span><span class="w"> </span><span class="n">records</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">given-key</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="n">entry</span><span class="w"> </span><span class="n">records</span><span class="p">)))</span>
+<span class="w">         </span><span class="p">(</span><span class="n">lookup</span><span class="w"> </span><span class="n">given-key</span><span class="w"> </span><span class="p">(</span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="n">right-branch</span><span class="w"> </span><span class="n">records</span><span class="p">))))))</span>
+</code></pre></div>
+
+<p>To get this to actually work we need an ordering on keys.
+In Racket this can be done using <code>string&lt;?</code> and <code>symbol-&gt;string</code>, 
+I'm not sure if there's a better way. However, for example,
+we used this to define a lexicographic ordering on 
+monomials in <a href="../ch2/notes-ch2-5.html#exercise-292">problem 2.92</a></p>
 <h4 id="exercise-327">Exercise 3.27</h4>
 <p>Memoization (also
 called tabulation) is a technique that enables a procedure to record,
@@ -1407,6 +1649,74 @@ Explain why <code>memo-fib</code> computes the $n^{\text{th}}$ Fibonacci number 
 of steps proportional to $n$.  Would the scheme still work if we had simply
 defined <code>memo-fib</code> to be <code>(memoize fib)</code>?</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex3-27.rkt">code/ex3-27.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">lookup</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">table</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">record</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">table</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">record</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">record</span><span class="p">)</span>
+<span class="w">        </span><span class="k">false</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">records</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">null?</span><span class="w"> </span><span class="n">records</span><span class="p">)</span><span class="w"> </span><span class="k">false</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="nb">equal?</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">caar</span><span class="w"> </span><span class="n">records</span><span class="p">))</span><span class="w"> </span>
+<span class="w">         </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">records</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">records</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">insert!</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="n">table</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">record</span><span class="w"> </span><span class="p">(</span><span class="nb">assoc</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">table</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="n">record</span>
+<span class="w">        </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">record</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">table</span>
+<span class="w">                  </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="n">value</span><span class="p">)</span>
+<span class="w">                        </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">table</span><span class="p">)))))</span>
+<span class="w">  </span><span class="o">&#39;</span><span class="ss">ok</span><span class="p">)</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-table</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">*table*</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">memoize</span><span class="w"> </span><span class="n">f</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">table</span><span class="w"> </span><span class="p">(</span><span class="n">make-table</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">previously-computed-result</span>
+<span class="w">             </span><span class="p">(</span><span class="n">lookup</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">table</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="n">previously-computed-result</span>
+<span class="w">            </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">result</span><span class="w"> </span><span class="p">(</span><span class="n">f</span><span class="w"> </span><span class="n">x</span><span class="p">)))</span>
+<span class="w">              </span><span class="p">(</span><span class="n">insert!</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="n">table</span><span class="p">)</span>
+<span class="w">              </span><span class="n">result</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">memo-fib</span>
+<span class="w">  </span><span class="p">(</span><span class="n">memoize</span><span class="w"> </span>
+<span class="w">   </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">           </span><span class="p">((</span><span class="nb">=</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="k">else</span><span class="w"> </span>
+<span class="w">            </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="p">(</span><span class="n">memo-fib</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="w">               </span><span class="p">(</span><span class="n">memo-fib</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">2</span><span class="p">))))))))</span>
+
+<span class="p">(</span><span class="n">memo-fib</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>55
+</pre>
+</div>
+</div>
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-27.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
+<p><code>memo-fib</code> computes each value at most once, and after this value is cached
+it will simply be looked up the next time. </p>
+<p>I don't go into detail about all of the little environments created after
+evaluating fib n, but you can find a good diagram here:</p>
+<p><a href="https://github.com/kana/sicp/blob/master/ex-3.27.md">https://github.com/kana/sicp/blob/master/ex-3.27.md</a></p>
 <h4 id="exercise-328">Exercise 3.28</h4>
 <p>Define an or-gate as a primitive
 function box.  Your <code>or-gate</code> constructor should be similar to

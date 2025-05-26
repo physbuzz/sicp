@@ -18,6 +18,10 @@
  - It would be nice to have a proof that we can't construct an (efficient) queue
 without `set!`, or if that's true.
 
+
+ - Impossibility of an efficient doubly linked list without mutability? 
+(there was a conversation about doubly linked lists in Rust)
+
 ### Meeting 05-25-2025
 
 - Eric Grimson 2004 MIT lectures on SICP [13. Environment Model](https://www.youtube.com/watch?v=SDsxFreEYsc&list=PL7BcsI5ueSNFPCEisbaoQ0kXIDX9rR5FF&t=1962s).
@@ -368,9 +372,21 @@ the predicate `empty-deque?`, selectors `front-deque` and
 `rear-insert-deque!`, `front-delete-deque!`, 
 `rear-delete-deque!`.  Show how to represent deques using pairs, and give
 implementations of the operations.  
-All operations should be accomplished in ${\Theta(1)$} steps.
+All operations should be accomplished in $\Theta(1)$ steps.
 
 ##### Solution
+
+We have to roll our own doubly linked list, I'll have the list of the form:
+
+```rkt
+'((el1 '()) (el2 prevptr2) ... (elN prevptrN))
+```
+
+We have to make sure that when we add an element on the end, prev-ptr
+is updated appropriately, and when we delete an element from the beginning
+the appropriate prev-ptr is set to `nil`.
+
+@src(code/ex3-23.rkt)
 
 #### Exercise 3.24
 
@@ -380,12 +396,14 @@ above, the keys are tested for equality using `equal?` (called by
 might have a table with numeric keys in which we don't need an exact match to
 the number we're looking up, but only a number within some tolerance of it.
 Design a table constructor `make-table` that takes as an argument a
-`same-key?` procedure that will be used to test ``equality'' of keys.
+`same-key?` procedure that will be used to test "equality" of keys.
 `Make-table` should return a `dispatch` procedure that can be used to
 access appropriate `lookup` and `insert!` procedures for a local
 table.
 
 ##### Solution
+
+@src(code/ex3-24.rkt)
 
 #### Exercise 3.25
 
@@ -408,6 +426,25 @@ binary tree, assuming that keys can be ordered in some way (e.g., numerically
 or alphabetically).  (Compare Exercise 2.66 of Chapter 2.)
 
 ##### Solution
+
+This is a straightforward application of the binary trees we developed in chapter 2. There, the lookup pseudocode for [problem 2.66](../ch2/notes-ch2-3.html#exercise-266) was...
+
+```rkt
+(define (lookup given-key records)
+  (cond ((null? records) false)
+        ((= given-key (key (entry records))) (entry record))
+        ((< given-key (key (entry records)))
+         (lookup given-key (left-branch records)))
+        ((> given-key (key (entry records)))
+         (lookup given-key (key (right-branch records))))))
+```
+
+To get this to actually work we need an ordering on keys.
+In Racket this can be done using `string<?` and `symbol->string`, 
+I'm not sure if there's a better way. However, for example,
+we used this to define a lexicographic ordering on 
+monomials in [problem 2.92](../ch2/notes-ch2-5.html#exercise-292)
+
 
 #### Exercise 3.27
 
@@ -465,6 +502,20 @@ of steps proportional to $n$.  Would the scheme still work if we had simply
 defined `memo-fib` to be `(memoize fib)`?
 
 ##### Solution
+
+@src(code/ex3-27.rkt)
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-27.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
+`memo-fib` computes each value at most once, and after this value is cached
+it will simply be looked up the next time. 
+
+I don't go into detail about all of the little environments created after
+evaluating fib n, but you can find a good diagram here:
+
+[https://github.com/kana/sicp/blob/master/ex-3.27.md](https://github.com/kana/sicp/blob/master/ex-3.27.md)
 
 #### Exercise 3.28
 
