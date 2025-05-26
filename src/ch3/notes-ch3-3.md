@@ -15,6 +15,18 @@
 
 @src(code/examples-3-3.rkt)
 
+ - It would be nice to have a proof that we can't construct an (efficient) queue
+without `set!`, or if that's true.
+
+### Meeting 05-25-2025
+
+- Eric Grimson 2004 MIT lectures on SICP [13. Environment Model](https://www.youtube.com/watch?v=SDsxFreEYsc&list=PL7BcsI5ueSNFPCEisbaoQ0kXIDX9rR5FF&t=1962s).
+ - [From here to lambda and back again - Douglas Crockford at RacketCon](https://www.youtube.com/watch?v=vMDHpPN_p08)
+ - p-list vs a-list
+ - In the context of the end of chapter 3-3, constraint solvers: First order predicate and expert systems.
+
+ - Note on one of the problems: Given the implementation of `append!`, I had to intialize a supposedly empty list to a dummy pair `(list dummy '())`. Specifically I was referring to the line `(define tracker (list 'first-element))` in my solution to [exercise 17](https://physbuzz.github.io/sicp/ch3/notes-ch3-3.html#exercise-317)
+ - [Common lisp quick reference](http://clqr.boundp.org/)
 
 ### Exercises
 
@@ -275,6 +287,17 @@ Exercise 3.11.)
 
 ##### Solution
 
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-20.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
+Here's an incomplete answer to the question based on just some of the diagrams that I could have written.
+
+The blue E1 and E2 are created by the calls to cons. 
+
+The red environments are created by `set-car!`, `dispatch` and cons's version of 
+`set-x!`. I ignore the small environments created by calling `(car z)`, which would involve another call to `dispatch`. 
+
 #### Exercise 3.21
 
 Ben Bitdiddle decides to test the
@@ -297,19 +320,21 @@ interpreter and proceeds to try them out:
 (() b)
 ```
 
-``It's all wrong!'' he complains.  ``The interpreter's response shows that the
+"It's all wrong!" he complains.  "The interpreter's response shows that the
 last item is inserted into the queue twice.  And when I delete both items, the
 second `b` is still there, so the queue isn't empty, even though it's
-supposed to be.''  Eva Lu Ator suggests that Ben has misunderstood what is
-happening.  ``It's not that the items are going into the queue twice,'' she
-explains.  ``It's just that the standard Lisp printer doesn't know how to make
-sense of the queue representation.  If you want to see the queue printed
-correctly, you'll have to define your own print procedure for queues.'' Explain
+supposed to be."  Eva Lu Ator suggests that Ben has misunderstood what is
+happening. "It's not that the items are going into the queue twice," she
+explains.  "It's just that the standard Lisp printer doesn't know how to make
+sense of the queue representation. If you want to see the queue printed
+correctly, you'll have to define your own print procedure for queues." Explain
 what Eva Lu is talking about.  In particular, show why Ben's examples produce
 the printed results that they do.  Define a procedure `print-queue` that
 takes a queue as input and prints the sequence of items in the queue.
 
 ##### Solution
+
+@src(code/ex3-21.rkt)
 
 #### Exercise 3.22
 
@@ -320,10 +345,10 @@ ordinary list.  Thus, the `make-queue` procedure will have the form
 
 ```rkt
 (define (make-queue)
-  (let ((front-ptr @r{…} )
-        (rear-ptr @r{…} ))
+  (let ((front-ptr … )
+        (rear-ptr … ))
     ⟨@var{definitions of internal procedures}⟩
-    (define (dispatch m) @r{…})
+    (define (dispatch m) …)
     dispatch))
 ```
 
@@ -332,10 +357,11 @@ queue operations using this representation.
 
 ##### Solution
 
+@src(code/ex3-22.rkt)
+
 #### Exercise 3.23
 
-A deque (``double-ended
-                                                                 queue'') is a sequence in which items can be inserted and deleted at either the
+A deque (`double-ended queue`) is a sequence in which items can be inserted and deleted at either the
 front or the rear.  Operations on deques are the constructor `make-deque`,
 the predicate `empty-deque?`, selectors `front-deque` and
 `rear-deque`, and mutators `front-insert-deque!`,

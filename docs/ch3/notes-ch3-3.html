@@ -524,6 +524,7 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><a href="#section-33">Section 3.3</a></li>
 <ul>
 <li><a href="#notes">Notes</a></li>
+<li><a href="#meeting-05-25-2025">Meeting 05-25-2025</a></li>
 <li><a href="#exercises" class="toc-exercises">Exercises</a>
 <div class="exercise-container">(
 <span class="exercise-list">
@@ -587,6 +588,23 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div>
 </div>
 
+<ul>
+<li>It would be nice to have a proof that we can't construct an (efficient) queue
+without <code>set!</code>, or if that's true.</li>
+</ul>
+<h3 id="meeting-05-25-2025">Meeting 05-25-2025</h3>
+<ul>
+<li>Eric Grimson 2004 MIT lectures on SICP <a href="https://www.youtube.com/watch?v=SDsxFreEYsc&amp;list=PL7BcsI5ueSNFPCEisbaoQ0kXIDX9rR5FF&amp;t=1962s">13. Environment Model</a>.</li>
+<li><a href="https://www.youtube.com/watch?v=vMDHpPN_p08">From here to lambda and back again - Douglas Crockford at RacketCon</a></li>
+<li>p-list vs a-list</li>
+<li>
+<p>In the context of the end of chapter 3-3, constraint solvers: First order predicate and expert systems.</p>
+</li>
+<li>
+<p>Note on one of the problems: Given the implementation of <code>append!</code>, I had to intialize a supposedly empty list to a dummy pair <code>(list dummy '())</code>. Specifically I was referring to the line <code>(define tracker (list 'first-element))</code> in my solution to <a href="https://physbuzz.github.io/sicp/ch3/notes-ch3-3.html#exercise-317">exercise 17</a></p>
+</li>
+<li><a href="http://clqr.boundp.org/">Common lisp quick reference</a></li>
+</ul>
 <h3 id="exercises">Exercises</h3>
 <h4 id="exercise-312">Exercise 3.12</h4>
 <p>The following procedure for
@@ -1079,6 +1097,14 @@ illustrate the evaluation of the sequence of expressions</p>
 <p>using the procedural implementation of pairs given above.  (Compare
 Exercise 3.11.)</p>
 <h5>Solution</h5>
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-20.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
+<p>Here's an incomplete answer to the question based on just some of the diagrams that I could have written.</p>
+<p>The blue E1 and E2 are created by the calls to cons. </p>
+<p>The red environments are created by <code>set-car!</code>, <code>dispatch</code> and cons's version of 
+<code>set-x!</code>. I ignore the small environments created by calling <code>(car z)</code>, which would involve another call to <code>dispatch</code>. </p>
 <h4 id="exercise-321">Exercise 3.21</h4>
 <p>Ben Bitdiddle decides to test the
 queue implementation described above.  He types in the procedures to the Lisp
@@ -1098,39 +1124,212 @@ interpreter and proceeds to try them out:</p>
 <span class="p">(()</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
 </code></pre></div>
 
-<p><code>It's all wrong!'' he complains.</code>The interpreter's response shows that the
+<p>"It's all wrong!" he complains.  "The interpreter's response shows that the
 last item is inserted into the queue twice.  And when I delete both items, the
 second <code>b</code> is still there, so the queue isn't empty, even though it's
-supposed to be.''  Eva Lu Ator suggests that Ben has misunderstood what is
-happening.  <code>It's not that the items are going into the queue twice,'' she
-explains.</code>It's just that the standard Lisp printer doesn't know how to make
-sense of the queue representation.  If you want to see the queue printed
-correctly, you'll have to define your own print procedure for queues.'' Explain
+supposed to be."  Eva Lu Ator suggests that Ben has misunderstood what is
+happening. "It's not that the items are going into the queue twice," she
+explains.  "It's just that the standard Lisp printer doesn't know how to make
+sense of the queue representation. If you want to see the queue printed
+correctly, you'll have to define your own print procedure for queues." Explain
 what Eva Lu is talking about.  In particular, show why Ben's examples produce
 the printed results that they do.  Define a procedure <code>print-queue</code> that
 takes a queue as input and prints the sequence of items in the queue.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex3-21.rkt">code/ex3-21.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">queue</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">queue</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="n">set-car!</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">empty-queue?</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">queue</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-queue</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">front-queue</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-queue?</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;FRONT called with an</span>
+<span class="s2">              empty queue&quot;</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">queue</span><span class="p">))))</span>
+
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">insert-queue!</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="n">item</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">new-pair</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-queue?</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">           </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">           </span><span class="n">queue</span><span class="p">)</span>
+<span class="w">          </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span><span class="w"> </span>
+<span class="w">                          </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">                </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">queue</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">                </span><span class="n">queue</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">delete-queue!</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-queue?</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span>
+<span class="w">         </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;DELETE! called with </span>
+<span class="s2">                 an empty queue&quot;</span><span class="w"> </span><span class="n">queue</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span>
+<span class="w">               </span><span class="n">queue</span><span class="w"> </span>
+<span class="w">               </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">queue</span><span class="p">)))</span>
+<span class="w">              </span><span class="n">queue</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="n">queue</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="p">(</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">queue</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="p">(</span><span class="n">make-queue</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">insert-queue!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">a</span><span class="p">)</span>
+<span class="c1">;; ((a) a)</span>
+<span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="n">q1</span><span class="p">)(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="c1">;; (a)</span>
+
+<span class="p">(</span><span class="n">insert-queue!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">b</span><span class="p">)</span>
+<span class="c1">;; ((a b) b)</span>
+<span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="n">q1</span><span class="p">)(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="c1">;; (a )</span>
+
+<span class="p">(</span><span class="n">delete-queue!</span><span class="w"> </span><span class="n">q1</span><span class="p">)</span>
+<span class="c1">;; ((b) b)</span>
+<span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="n">q1</span><span class="p">)(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="c1">;; (b)</span>
+
+<span class="p">(</span><span class="n">delete-queue!</span><span class="w"> </span><span class="n">q1</span><span class="p">)</span>
+<span class="c1">;; (() b)</span>
+<span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="n">q1</span><span class="p">)(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="c1">;; ()</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>((a) a)
+(a)
+
+((a b) b)
+(a b)
+
+((b) b)
+(b)
+
+(() b)
+()
+
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-322">Exercise 3.22</h4>
 <p>Instead of representing a queue
 as a pair of pointers, we can build a queue as a procedure with local state.
 The local state will consist of pointers to the beginning and the end of an
 ordinary list.  Thus, the <code>make-queue</code> procedure will have the form</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-queue</span><span class="p">)</span>
-<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">@r</span><span class="p">{</span><span class="n">…</span><span class="p">}</span><span class="w"> </span><span class="p">)</span>
-<span class="w">        </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">@r</span><span class="p">{</span><span class="n">…</span><span class="p">}</span><span class="w"> </span><span class="p">))</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">front-ptr</span><span class="w"> </span><span class="n">…</span><span class="w"> </span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">…</span><span class="w"> </span><span class="p">))</span>
 <span class="w">    </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">definitions</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">internal</span><span class="w"> </span><span class="n">procedures</span><span class="p">}</span><span class="n">⟩</span>
-<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">dispatch</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="n">@r</span><span class="p">{</span><span class="n">…</span><span class="p">})</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">dispatch</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span><span class="n">…</span><span class="p">)</span>
 <span class="w">    </span><span class="n">dispatch</span><span class="p">))</span>
 </code></pre></div>
 
 <p>Complete the definition of <code>make-queue</code> and provide implementations of the
 queue operations using this representation.</p>
 <h5>Solution</h5>
+<div class="code-box">
+<div class="code-header"><a href="code/ex3-22.rkt">code/ex3-22.rkt</a></div>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">make-queue</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">front-ptr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())</span>
+<span class="w">        </span><span class="p">(</span><span class="n">rear-ptr</span><span class="w"> </span><span class="o">&#39;</span><span class="p">()))</span>
+
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">front-ptr</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">rear-ptr</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">empty-queue?</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">front-ptr</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">front-queue</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">empty-queue?</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;FRONT called with an</span>
+<span class="s2">               empty queue&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">front-ptr</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">insert-queue!</span><span class="w"> </span><span class="n">item</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">new-pair</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">item</span><span class="w"> </span><span class="o">&#39;</span><span class="p">())))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-queue?</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">               </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">               </span><span class="n">dispatch</span><span class="p">)</span><span class="w"> </span><span class="c1">;; Instead of queue, we return dispatch</span>
+<span class="w">                         </span><span class="c1">;; I&#39;m using this analogous to C++ &quot;this&quot; </span>
+<span class="w">          </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">set-cdr!</span><span class="w"> </span><span class="n">rear-ptr</span><span class="w"> </span>
+<span class="w">                          </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">                </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">new-pair</span><span class="p">)</span>
+<span class="w">                </span><span class="n">dispatch</span><span class="p">))))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">delete-queue!</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="n">empty-queue?</span><span class="p">)</span>
+<span class="w">             </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;DELETE! called with </span>
+<span class="s2">                    an empty queue&quot;</span><span class="p">))</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span>
+<span class="w">                            </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">front-ptr</span><span class="p">))))</span>
+<span class="w">      </span><span class="n">dispatch</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">print-queue</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">front-ptr</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">newline</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">dispatch</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">      </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">set-front-ptr!</span><span class="p">)</span><span class="w"> </span><span class="n">set-front-ptr!</span><span class="p">)</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">set-rear-ptr!</span><span class="p">)</span><span class="w"> </span><span class="n">set-rear-ptr!</span><span class="p">)</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">empty-queue?</span><span class="p">)</span><span class="w"> </span><span class="n">empty-queue?</span><span class="p">)</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">front-queue</span><span class="p">)</span><span class="w"> </span><span class="n">front-queue</span><span class="p">)</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">insert-queue!</span><span class="p">)</span><span class="w"> </span><span class="n">insert-queue!</span><span class="p">)</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">delete-queue!</span><span class="p">)</span><span class="w"> </span><span class="n">delete-queue!</span><span class="p">)</span>
+<span class="w">            </span><span class="p">((</span><span class="nb">eq?</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">print-queue</span><span class="p">)</span><span class="w"> </span><span class="n">print-queue</span><span class="p">)</span>
+<span class="w">            </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;DELETE! called with </span>
+<span class="s2">                    an empty queue&quot;</span><span class="p">))))</span>
+<span class="w">    </span><span class="n">dispatch</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">set-front-ptr!</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="n">item</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">((</span><span class="n">q</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">set-front-ptr!</span><span class="p">)</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">set-rear-ptr!</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="n">item</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">q</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">set-rear-ptr!</span><span class="p">)</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">empty-queue?</span><span class="w"> </span><span class="n">q</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">q</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">empty-queue?</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">front-queue</span><span class="w"> </span><span class="n">q</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">q</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">front-queue</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">insert-queue!</span><span class="w"> </span><span class="n">q</span><span class="w"> </span><span class="n">item</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">q</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">insert-queue!</span><span class="p">)</span><span class="w"> </span><span class="n">item</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">delete-queue!</span><span class="w"> </span><span class="n">q</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">q</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">delete-queue!</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="n">q</span><span class="p">)</span>
+<span class="w">  </span><span class="p">((</span><span class="n">q</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">print-queue</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="p">(</span><span class="n">make-queue</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="p">(</span><span class="n">insert-queue!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">a</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="p">(</span><span class="n">insert-queue!</span><span class="w"> </span><span class="n">q1</span><span class="w"> </span><span class="o">&#39;</span><span class="ss">b</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="p">(</span><span class="n">delete-queue!</span><span class="w"> </span><span class="n">q1</span><span class="p">))</span>
+<span class="p">(</span><span class="n">print-queue</span><span class="w"> </span><span class="p">(</span><span class="n">delete-queue!</span><span class="w"> </span><span class="n">q1</span><span class="p">))</span>
+</code></pre></div>
+
+
+<div class="code-output">
+<span>Output:</span>
+<pre>(a)
+(a b)
+(b)
+()
+</pre>
+</div>
+</div>
+
 <h4 id="exercise-323">Exercise 3.23</h4>
-<p>A deque (<code>`double-ended
-                                                                 queue'') is a sequence in which items can be inserted and deleted at either the
-front or the rear.  Operations on deques are the constructor</code>make-deque<code>,
-the predicate</code>empty-deque?<code>, selectors</code>front-deque<code>and</code>rear-deque<code>, and mutators</code>front-insert-deque!<code>,</code>rear-insert-deque!<code>,</code>front-delete-deque!<code>,</code>rear-delete-deque!`.  Show how to represent deques using pairs, and give
+<p>A deque (<code>double-ended queue</code>) is a sequence in which items can be inserted and deleted at either the
+front or the rear.  Operations on deques are the constructor <code>make-deque</code>,
+the predicate <code>empty-deque?</code>, selectors <code>front-deque</code> and
+<code>rear-deque</code>, and mutators <code>front-insert-deque!</code>,
+<code>rear-insert-deque!</code>, <code>front-delete-deque!</code>, 
+<code>rear-delete-deque!</code>.  Show how to represent deques using pairs, and give
 implementations of the operations.<br />
 All operations should be accomplished in ${\Theta(1)$} steps.</p>
 <h5>Solution</h5>
