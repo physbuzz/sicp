@@ -1722,6 +1722,28 @@ evaluating fib n, but you can find a good diagram here:</p>
 function box.  Your <code>or-gate</code> constructor should be similar to
 <code>and-gate</code>.</p>
 <h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">binary?</span><span class="w"> </span><span class="n">a</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">0</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">logical-or</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">b</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">cond</span><span class="w"> </span><span class="p">((</span><span class="k">or</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="n">b</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span>
+<span class="w">        </span><span class="p">((</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">binary?</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">binary?</span><span class="w"> </span><span class="n">b</span><span class="p">))</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="k">else</span><span class="w"> </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;Invalid signal&quot;</span><span class="w"> </span><span class="n">s</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">or-gate</span><span class="w"> </span><span class="n">a1</span><span class="w"> </span><span class="n">a2</span><span class="w"> </span><span class="n">output</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">or-action-procedure</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">new-value</span>
+<span class="w">           </span><span class="p">(</span><span class="n">logical-or</span><span class="w"> </span><span class="p">(</span><span class="n">get-signal</span><span class="w"> </span><span class="n">a1</span><span class="p">)</span>
+<span class="w">                       </span><span class="p">(</span><span class="n">get-signal</span><span class="w"> </span><span class="n">a2</span><span class="p">))))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">after-delay</span>
+<span class="w">       </span><span class="n">or-gate-delay</span>
+<span class="w">       </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span>
+<span class="w">         </span><span class="p">(</span><span class="n">set-signal!</span><span class="w"> </span><span class="n">output</span><span class="w"> </span><span class="n">new-value</span><span class="p">)))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">add-action!</span><span class="w"> </span><span class="n">a1</span><span class="w"> </span><span class="n">or-action-procedure</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">add-action!</span><span class="w"> </span><span class="n">a2</span><span class="w"> </span><span class="n">or-action-procedure</span><span class="p">)</span>
+<span class="w">  </span><span class="o">&#39;</span><span class="ss">ok</span><span class="p">)</span>
+</code></pre></div>
+
 <h4 id="exercise-329">Exercise 3.29</h4>
 <p>Another way to construct an
 or-gate is as a compound digital logic device, built from and-gates and
@@ -1729,6 +1751,21 @@ inverters.  Define a procedure <code>or-gate</code> that accomplishes this.  Wha
 the delay time of the or-gate in terms of <code>and-gate-delay</code> and
 <code>inverter-delay</code>?</p>
 <h5>Solution</h5>
+<p>We use De Morgan's law that <code>(or a b)</code> is equivalent to 
+<code>(not (and (not a) (not b)))</code>.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">or-gate2</span><span class="w"> </span><span class="n">a1</span><span class="w"> </span><span class="n">a2</span><span class="w"> </span><span class="n">output</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">a1inv</span><span class="w"> </span><span class="p">(</span><span class="n">make-wire</span><span class="p">))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">a2inv</span><span class="w"> </span><span class="p">(</span><span class="n">make-wire</span><span class="p">))</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">outputinv</span><span class="w"> </span><span class="p">(</span><span class="n">make-wire</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">inverter</span><span class="w"> </span><span class="n">a1</span><span class="w"> </span><span class="n">a1inv</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">inverter</span><span class="w"> </span><span class="n">a2</span><span class="w"> </span><span class="n">a2inv</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">and-gate</span><span class="w"> </span><span class="n">a1inv</span><span class="w"> </span><span class="n">a2inv</span><span class="w"> </span><span class="n">outputinv</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">inverter</span><span class="w"> </span><span class="n">outputinv</span><span class="w"> </span><span class="n">output</span><span class="p">)</span>
+<span class="w">    </span><span class="o">&#39;</span><span class="ss">ok</span><span class="p">))</span>
+</code></pre></div>
+
+<p>The total delay is </p>
+<p>$$2\times\textrm{inverter-delay} + \textrm{and-gate-delay}$$</p>
 <h4 id="exercise-330">Exercise 3.30</h4>
 <p>Figure 3.27 shows a
 ripple-carry adder formed by stringing together $n$ full-adders.
@@ -1747,6 +1784,55 @@ What is the delay needed to obtain the complete output from an $n$-bit
 ripple-carry adder, expressed in terms of the delays for and-gates, or-gates,
 and inverters?</p>
 <h5>Solution</h5>
+<p>My solution is:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">ripple-carry</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="n">c</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">ripple-carry-inner</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="n">c-out</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">null?</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span>
+<span class="w">      </span><span class="o">&#39;</span><span class="ss">ok</span>
+<span class="w">      </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">c-in</span><span class="w"> </span><span class="p">(</span><span class="n">make-wire</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">(</span><span class="n">full-adder</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">B</span><span class="p">)</span><span class="w"> </span><span class="n">c-in</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">S</span><span class="p">)</span><span class="w"> </span><span class="n">c-out</span><span class="p">)</span>
+<span class="w">        </span><span class="p">(</span><span class="n">ripple-carry-inner</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">A</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">B</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="n">S</span><span class="p">)</span><span class="w"> </span><span class="n">c-in</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">ripple-carry</span><span class="w"> </span><span class="n">A</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="n">c</span><span class="p">))</span>
+</code></pre></div>
+
+<p>As for delays, in the half-adder <code>S</code> has the correct value after delay</p>
+<p>$$
+\texttt{half-s}=\max(\texttt{and-delay}+\texttt{or-delay},2\cdot\texttt{or-delay}+\texttt{inv-delay}).
+$$</p>
+<p><code>C</code> has the correct value after delay equal to <code>or-delay</code>,</p>
+<p>$$
+\texttt{half-c}=\texttt{or-delay}.
+$$</p>
+<p>For a full-adder, <code>SUM</code> has the correct value after $2\texttt{half-s}$. 
+<code>Cout</code> has the correct value after </p>
+<div>$$\begin{align*}\texttt{full-c}&=\texttt{or-delay}+\max(\texttt{half-s}+\texttt{or-delay},\texttt{or-delay})\\
+&=\texttt{half-s}+2\texttt{or-delay}.
+\end{align*}$$</div>
+
+<p>So the first carry bit will be updated after time <code>full-c</code>. In general we need $n\texttt{C-delay}$ to get the correct output on the $C$ bit, and to get the correct output on $S_1$ we'll need $(n-1)\texttt{full-c}+\texttt{half-s}.$ 
+So the total time needed is the max of these two quantities.</p>
+<div>$$\begin{align*}\texttt{ripple-delay}&=
+(n-1)\texttt{full-c}+\max(\texttt{full-c},\texttt{half-s}) \\
+&=(n-1)(\texttt{half-s}+2\texttt{or-delay})\\
+&\; +\texttt{max}(\texttt{half-s}+2\texttt{or-delay}, \\
+&\; \texttt{and-delay}+\texttt{or-delay},2\texttt{or-delay}+\texttt{inv-delay}) \\
+&= (n-1)(\texttt{half-s}+2\texttt{or})+2\texttt{or}\\
+&\;+\max(\texttt{or}+\texttt{and},
+2\cdot\texttt{or}+\texttt{inv},2\cdot\texttt{and},2\cdot(\texttt{or}+\texttt{and})))\\
+&=(3n-1)\texttt{or}+(1+n)\max(\texttt{and},\texttt{inv}+\texttt{or})
+\end{align*}$$</div>
+
+<p>Where I got tired and omitted the <code>-delay</code> at the end! </p>
+<p>This can also be simplified using Mathematica:</p>
+<div class="codehilite"><pre><span></span><code><span class="n">halfS</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Max</span><span class="p">[</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">i</span><span class="p">];</span>
+<span class="n">halfC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">o</span><span class="p">;</span>
+<span class="n">fullC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">halfS</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">o</span><span class="p">;</span>
+<span class="n">FullSimplify</span><span class="p">[(</span><span class="n">n</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="n">fullC</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Max</span><span class="p">[</span><span class="n">fullC</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="n">halfS</span><span class="p">],</span><span class="w"> </span>
+<span class="w"> </span><span class="n">Assumptions</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p">{</span><span class="n">a</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">}]</span>
+
+<span class="n">Out</span><span class="p">[]</span><span class="w"> </span><span class="o">:=</span><span class="w"> </span><span class="p">(</span><span class="mi">-1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="n">Max</span><span class="p">[</span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">o</span><span class="p">]</span>
+</code></pre></div>
+
 <h4 id="exercise-331">Exercise 3.31</h4>
 <p>The internal procedure
 <code>accept-action-procedure!</code> defined in <code>make-wire</code> specifies that when

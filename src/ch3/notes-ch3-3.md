@@ -525,6 +525,30 @@ function box.  Your `or-gate` constructor should be similar to
 
 ##### Solution
 
+
+```rkt
+(define (binary? a)
+  (or (= a 1) (= a 0)))
+
+(define (logical-or a b)
+  (cond ((or (= a 1) (= b 1)) 1)
+        ((and (binary? a) (binary? b)) 0)
+        (else (error "Invalid signal" s))))
+
+(define (or-gate a1 a2 output)
+  (define (or-action-procedure)
+    (let ((new-value
+           (logical-or (get-signal a1)
+                       (get-signal a2))))
+      (after-delay
+       or-gate-delay
+       (lambda ()
+         (set-signal! output new-value)))))
+  (add-action! a1 or-action-procedure)
+  (add-action! a2 or-action-procedure)
+  'ok)
+```
+
 #### Exercise 3.29
 
 Another way to construct an
@@ -534,6 +558,25 @@ the delay time of the or-gate in terms of `and-gate-delay` and
 `inverter-delay`?
 
 ##### Solution
+
+We use De Morgan's law that `(or a b)` is equivalent to 
+`(not (and (not a) (not b)))`.
+
+```rkt
+(define (or-gate2 a1 a2 output)
+  (let ((a1inv (make-wire)) 
+        (a2inv (make-wire)) 
+        (outputinv (make-wire)))
+    (inverter a1 a1inv)
+    (inverter a2 a2inv)
+    (and-gate a1inv a2inv outputinv)
+    (inverter outputinv output)
+    'ok))
+```
+
+The total delay is 
+
+$$2\times\textrm{inverter-delay} + \textrm{and-gate-delay}$$
 
 #### Exercise 3.30
 
@@ -555,6 +598,66 @@ ripple-carry adder, expressed in terms of the delays for and-gates, or-gates,
 and inverters?
 
 ##### Solution
+
+My solution is:
+```rkt
+(define (ripple-carry A B S c)
+  (define (ripple-carry-inner A B S c-out)
+    (if (null? A) 
+      'ok
+      (let ((c-in (make-wire)))
+        (full-adder (car A) (car B) c-in (car S) c-out)
+        (ripple-carry-inner (cdr A) (cdr B) (cdr S) c-in))))
+  (ripple-carry A B S c))
+```
+
+As for delays, in the half-adder `S` has the correct value after delay
+
+$$
+\texttt{half-s}=\max(\texttt{and-delay}+\texttt{or-delay},2\cdot\texttt{or-delay}+\texttt{inv-delay}).
+$$
+
+`C` has the correct value after delay equal to `or-delay`,
+
+$$
+\texttt{half-c}=\texttt{or-delay}.
+$$
+
+For a full-adder, `SUM` has the correct value after $2\texttt{half-s}$. 
+`Cout` has the correct value after 
+
+<div>$$\begin{align*}\texttt{full-c}&=\texttt{or-delay}+\max(\texttt{half-s}+\texttt{or-delay},\texttt{or-delay})\\
+&=\texttt{half-s}+2\texttt{or-delay}.
+\end{align*}$$</div>
+
+So the first carry bit will be updated after time `full-c`. In general we need $n\texttt{C-delay}$ to get the correct output on the $C$ bit, and to get the correct output on $S_1$ we'll need $(n-1)\texttt{full-c}+\texttt{half-s}.$ 
+So the total time needed is the max of these two quantities.
+
+<div>$$\begin{align*}\texttt{ripple-delay}&=
+(n-1)\texttt{full-c}+\max(\texttt{full-c},\texttt{half-s}) \\
+&=(n-1)(\texttt{half-s}+2\texttt{or-delay})\\
+&\; +\texttt{max}(\texttt{half-s}+2\texttt{or-delay}, \\
+&\; \texttt{and-delay}+\texttt{or-delay},2\texttt{or-delay}+\texttt{inv-delay}) \\
+&= (n-1)(\texttt{half-s}+2\texttt{or})+2\texttt{or}\\
+&\;+\max(\texttt{or}+\texttt{and},
+2\cdot\texttt{or}+\texttt{inv},2\cdot\texttt{and},2\cdot(\texttt{or}+\texttt{and})))\\
+&=(3n-1)\texttt{or}+(1+n)\max(\texttt{and},\texttt{inv}+\texttt{or})
+\end{align*}$$</div>
+
+Where I got tired and omitted the `-delay` at the end! 
+
+This can also be simplified using Mathematica:
+
+```mathematica
+halfS = o + Max[a, o + i];
+halfC = o;
+fullC = halfS + 2 o;
+FullSimplify[(n - 1) fullC + Max[fullC, 2 halfS], 
+ Assumptions -> {a > 0, o > 0, i > 0, n > 0}]
+
+Out[] := (-1 + 3 n) o + (1 + n) Max[a, i + o]
+```
+
 
 #### Exercise 3.31
 
