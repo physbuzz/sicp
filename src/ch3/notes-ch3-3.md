@@ -17,10 +17,36 @@
 
  - It would be nice to have a proof that we can't construct an (efficient) queue
 without `set!`, or if that's true.
-
-
  - Impossibility of an efficient doubly linked list without mutability? 
 (there was a conversation about doubly linked lists in Rust)
+
+
+### Circuit example
+
+Running the example in section 3.3.4.
+
+@src(code/circuit.rkt, collapsed)
+
+#### Inserting in the middle of a list
+
+I saw this pattern inside `add-to-agenda!` which was kind of 
+interesting. Inserting into the middle of a list (except the first element) is easy with this function, which is basically how `add-to-segments!` works, except it uses a predicate instead of a index `n`.
+
+```rkt
+;; insert element el at position n of the list.
+;; except for position 0
+(define (insert! lst n el)
+  (if (= n 1)
+    (set-cdr! lst 
+        (cons el (cdr lst)))
+    (insert! (cdr lst) (- n 1) el)))
+```
+
+### Constraint solving example
+
+Running the example in section 3.3.5.
+
+@src(code/constraint.rkt, collapsed)
 
 ### Meeting 05-25-2025
 
@@ -415,6 +441,12 @@ procedures should take as input a list of keys used to access the table.
 
 ##### Solution
 
+I took the easy way out, and just used lists as keys instead of nested tables.
+This could have some performance implications if we don't apply the 
+binary search from exercise 3-26.
+
+@src(code/ex3-25.rkt)
+
 #### Exercise 3.26
 
 To search a table as implemented
@@ -583,11 +615,11 @@ $$2\times\textrm{inverter-delay} + \textrm{and-gate-delay}$$
 Figure 3.27 shows a
 ripple-carry adder formed by stringing together $n$ full-adders.
 This is the simplest form of parallel adder for adding two $n$-bit binary
-numbers.  The inputs $A_1$, $A_2$, $A_3$, @dots{}, $A_n$ and 
-$B_1$, $B_2$, $B_3$,
-@dots{}, $B_n$ are the two binary numbers to be added (each $A_k$ and
-$B_k$ is a 0 or a 1).  The circuit generates $S_1$, $S_2$, 
-$S_3$, @dots{}, $S_n$,
+numbers.  The inputs $A_1, A_2, A_3, \ldots, A_n$ and 
+$B_1, B_2, B_3, \ldots, B_n$
+are the two binary numbers to be added (each $A_k$ and
+$B_k$ is `a 0` or `a 1`). The circuit generates $S_1, S_2, 
+S_3, \ldots, S_n$,
 the $n$ bits of the sum, and $C$, the carry from the addition.  Write a
 procedure `ripple-carry-adder` that generates this circuit.  The procedure
 should take as arguments three lists of $n$ wires each---the $A_k$, the
@@ -614,50 +646,53 @@ My solution is:
 As for delays, in the half-adder `S` has the correct value after delay
 
 $$
-\texttt{half-s}=\max(\texttt{and-delay}+\texttt{or-delay},2\cdot\texttt{or-delay}+\texttt{inv-delay}).
+\texttt{half-s}=\max(\texttt{and-delay}+\texttt{or-delay},2\cdot\texttt{and-delay}+\texttt{inv-delay}).
 $$
 
-`C` has the correct value after delay equal to `or-delay`,
+`C` has the correct value after delay equal to `and-delay`,
 
 $$
-\texttt{half-c}=\texttt{or-delay}.
+\texttt{half-c}=\texttt{and-delay}.
 $$
 
 For a full-adder, `SUM` has the correct value after $2\texttt{half-s}$. 
 `Cout` has the correct value after 
 
-<div>$$\begin{align*}\texttt{full-c}&=\texttt{or-delay}+\max(\texttt{half-s}+\texttt{or-delay},\texttt{or-delay})\\
-&=\texttt{half-s}+2\texttt{or-delay}.
+<div>$$\begin{align*}\texttt{full-c}&=\texttt{or-delay}+\max(\texttt{half-s}+\texttt{and-delay},\texttt{and-delay})\\
+&=\texttt{half-s}+\texttt{or-delay}+\texttt{and-delay}.
 \end{align*}$$</div>
 
 So the first carry bit will be updated after time `full-c`. In general we need $n\texttt{C-delay}$ to get the correct output on the $C$ bit, and to get the correct output on $S_1$ we'll need $(n-1)\texttt{full-c}+\texttt{half-s}.$ 
 So the total time needed is the max of these two quantities.
 
 <div>$$\begin{align*}\texttt{ripple-delay}&=
-(n-1)\texttt{full-c}+\max(\texttt{full-c},\texttt{half-s}) \\
-&=(n-1)(\texttt{half-s}+2\texttt{or-delay})\\
-&\; +\texttt{max}(\texttt{half-s}+2\texttt{or-delay}, \\
-&\; \texttt{and-delay}+\texttt{or-delay},2\texttt{or-delay}+\texttt{inv-delay}) \\
-&= (n-1)(\texttt{half-s}+2\texttt{or})+2\texttt{or}\\
-&\;+\max(\texttt{or}+\texttt{and},
-2\cdot\texttt{or}+\texttt{inv},2\cdot\texttt{and},2\cdot(\texttt{or}+\texttt{and})))\\
-&=(3n-1)\texttt{or}+(1+n)\max(\texttt{and},\texttt{inv}+\texttt{or})
+(n-1)\texttt{full-c}+\max(\texttt{full-c},2\cdot\texttt{half-s}) \\
+&=(n-1)(\texttt{and-delay}+\texttt{or-delay}) \\
+&\quad +(n+1)\max(2\cdot\texttt{and-delay}+\texttt{inv-delay},\\
+&\qquad \texttt{and-delay}+\texttt{or-delay})
 \end{align*}$$</div>
 
-Where I got tired and omitted the `-delay` at the end! 
-
-This can also be simplified using Mathematica:
+We can also check this with Mathematica:
 
 ```mathematica
-halfS = o + Max[a, o + i];
-halfC = o;
-fullC = halfS + 2 o;
-FullSimplify[(n - 1) fullC + Max[fullC, 2 halfS], 
- Assumptions -> {a > 0, o > 0, i > 0, n > 0}]
+In[]:= halfS =  Max[a + o, 2 a + i];
+halfC = a;
+fullC = halfS +  o + a;
+FullSimplify[(n - 1) fullC + Max[fullC, 2 halfS], Assumptions -> {a > 0, o > 0, i > 0, n > 0}]
 
-Out[] := (-1 + 3 n) o + (1 + n) Max[a, i + o]
+Out[]= (-1 + n) (a + o) + (1 + n) Max[2 a + i, a + o]
 ```
 
+To check against other answers found online, I found [this solution](https://github.com/kana/sicp/blob/master/ex-3.30.scm):
+
+```rkt
+; Drs1 = max((3n+1)Da + (n+1)Di + (n-1)Do, 2n(Do + Da))
+; Drs0 = max(3nDa + n(Di + Do), 2n(Do + Da))
+```
+
+I took the max of these two quantities (I think there might be a typo, referring to `Drc0` and `Drs0`). If $2a+i\lt a+o$ we get the 
+second argument of `Drs0` and so the answer agrees. If $2a+i\gt a+o,$
+then we get the first argument of `Drs1`, so the answer agrees.
 
 #### Exercise 3.31
 
@@ -676,6 +711,24 @@ would differ if we had defined `accept-action-procedure!` as
 
 ##### Solution
 
+Initially all wires have value zero. This is a problem because in the half-adder
+there's a not gate, which should have default value 1. Running commands as they're passed in ensures that any circuit elements downstream of our element will be 
+updated / intialized correctly. 
+
+In the half-adder, if we didn't call this, we'd find the following weird behavior:
+
+```rkt
+(set-signal! input-1 1)
+(propagate)
+(display (get-signal sum)) (newline)
+; 0 -- incorrect!
+
+(set-signal! input-2 1)
+(propagate)
+(display (get-signal sum)) (newline)
+; 0 -- correct
+```
+
 #### Exercise 3.32
 
 The procedures to be run during
@@ -689,6 +742,39 @@ front (last in, first out).
 
 ##### Solution
 
+We're going to imagine that `a` and `b` are the wire inputs to the `and` gate,
+that they have initial values 0 and 1 respectively, and that
+we call the following commands:
+
+```rkt
+(set-signal! a 1)
+(set-signal! b 0)
+(propagate)
+```
+
+Each call to `set-signal!` runs the wires action procedures. The and gate's action
+procedure runs this function:
+
+```rkt
+  (define (and-action-procedure)
+    (let ((new-value
+           (logical-and (get-signal a1)
+                        (get-signal a2))))
+      (after-delay
+       and-gate-delay
+       (lambda ()
+         (set-signal! output new-value)))))
+```
+
+So we see we set the signal to the output value calculated **when the function is called.** This is different behavior than if our lambda was defined to calculate the logical and at the time that the output is updated. 
+The issue with the current setup is that `(set-signal! a 1)` would add a
+lambda `(set-signal! output 1)` to be ran later. 
+Then `(set-signal! b 0)` would add a
+lambda `(set-signal! output 0)` to be ran later. 
+
+If we run these commands in the order last-in, first-out, the output ends up being 1!
+
+
 #### Exercise 3.33
 
 Using primitive multiplier,
@@ -698,6 +784,18 @@ constraint that the value of `c` is the average of the values of `a`
 and `b`.
 
 ##### Solution
+
+```rkt
+(define (averager a b c)
+  (let ((u (make-connector))
+        (v (make-connector)))
+    (adder a b u)
+    (constant 2 v)
+    (multiplier c v u)
+    'ok))
+```
+
+@src(code/ex3-33.rkt, collapsed)
 
 #### Exercise 3.34
 
@@ -715,6 +813,39 @@ There is a serious flaw in this idea.  Explain.
 
 ##### Solution
 
+We should be tipped off that there's no `sqrt` in the definition of `multiplier`.
+
+I think that things will work fine when modifying `a`. `for-each-except` should 
+ensure that we don't get stuck in an infinite loop here. 
+
+However as soon as we modify b with no value set for `a`, then we won't get the 
+expected behavior of `a` updating; we'll simply notice that the two inputs (which 
+are both `a`) have not been assigned a value yet, and do nothing! 
+
+Okay, let's test if my guesses are correct:
+
+```rkt
+(define a (make-connector))
+(define b (make-connector))
+
+(define (squarer a b) (multiplier a a b))
+
+(probe "a" a)
+(probe "b" b)
+(squarer a b)
+
+(set-value! a 10 'user)
+
+(forget-value! a 'user)
+
+(set-value! b 100 'user)
+```
+
+@src(code/ex3-34.rkt,collapsed)
+
+
+So we don't get infinite recursion or anything, but `a` isn't updated from `?` like we'd want.
+
 #### Exercise 3.35
 
 Ben Bitdiddle tells Louis that
@@ -730,15 +861,47 @@ procedure to implement such a constraint:
             (error "square less than 0: 
                     SQUARER" 
                    (get-value b))
-            ⟨@var{alternative1}⟩)
-        ⟨@var{alternative2}⟩))
-  (define (process-forget-value) ⟨@var{body1}⟩)
-  (define (me request) ⟨@var{body2}⟩)
-  ⟨@var{rest of definition}⟩
+            ⟨alternative1⟩)
+        ⟨alternative2⟩))
+  (define (process-forget-value) ⟨body1⟩)
+  (define (me request) ⟨body2⟩)
+  ⟨rest of definition⟩
   me)
 ```
 
 ##### Solution
+
+```rkt
+(define (square a) (* a a))
+(define (squarer a b)
+  (define (process-new-value)
+    (if (has-value? b)
+        (if (< (get-value b) 0)
+            (error "square less than 0: 
+                    SQUARER" 
+                   (get-value b))
+            (set-value! a (sqrt (get-value b)) me))
+        (if (has-value? a) 
+          (set-value! b (square (get-value a)) me))))
+  (define (process-forget-value)
+    (forget-value! a me)
+    (forget-value! b me)
+    (process-new-value))
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value)
+           (process-new-value))
+          ((eq? request 'I-lost-my-value)
+           (process-forget-value))
+          (else
+           (error "Unknown request:
+                   SQUARER"
+                  request))))
+  (connect a me)
+  (connect b me)
+  me)
+```
+
+@src(code/ex3-35.rkt,collapsed)
 
 #### Exercise 3.36
 
@@ -763,6 +926,10 @@ Draw an environment diagram showing the environment in which the above
 expression is evaluated.
 
 ##### Solution
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-36.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
 
 #### Exercise 3.37
 
@@ -798,3 +965,4 @@ converter example above.
 
 ##### Solution
 
+@src(code/ex3-37.rkt,collapsed)
