@@ -13,21 +13,24 @@
 
 ### Notes
 
+First thing I notice is that none of this is coding! So it'll be much
+easier to make mistakes. --> should double check with online solutions.
+
 ### Exercises
 
 #### Exercise 3.38
 
 Suppose that Peter, Paul, and
-Mary share a joint bank account that initially contains $100.  Concurrently,
-Peter deposits $10, Paul withdraws $20, and Mary withdraws half the money in
+Mary share a joint bank account that initially contains \$100.  Concurrently,
+Peter deposits \$10, Paul withdraws \$20, and Mary withdraws half the money in
 the account, by executing the following commands:
 
-@example
+```
 Peter: (set! balance (+ balance 10))
 Paul:  (set! balance (- balance 20))
 Mary:  (set! balance (- balance 
                         (/ balance 2)))
-
+```
 
 **1.** List all the different possible values for `balance` after these three
 transactions have been completed, assuming that the banking system forces the
@@ -37,9 +40,30 @@ three processes to run sequentially in some order.
 processes to be interleaved?  Draw timing diagrams like the one in Figure 3.29 
 to explain how these values can occur.
 
-
-
 ##### Solution
+
+**Part 1.**
+
+- Peter $\rightarrow$ Paul $\rightarrow$ Mary: $45$
+- Paul $\rightarrow$ Peter $\rightarrow$ Mary: $45$
+- Mary $\rightarrow$ Paul $\rightarrow$ Peter: $40$ 
+- Mary $\rightarrow$ Peter $\rightarrow$ Paul: $40$
+- Peter $\rightarrow$ Mary $\rightarrow$ Paul: $35$
+- Paul $\rightarrow$ Mary $\rightarrow$ Peter: $50$
+
+**Part 2.**
+
+Suppose that first Peter executes, then Mary's first lookup to `balance`, then 
+Paul executes, then Mary's second lookup to balance. We'll do
+`(- 110 (/ 90 2))` which gives $65.$
+
+
+Alternatively if Paul's code executes first, then then Mary's first lookup to `balance`, then Peter's code, then Mary's second lookup to balance. We get
+`(- 80 (/ 90 2))` which gives $35.$
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-38.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
 
 #### Exercise 3.39
 
@@ -57,6 +81,17 @@ as follows:
 ```
 
 ##### Solution
+
+
+
+```rkt
+(define x 10)
+(define s (make-serializer))
+(parallel-execute 
+  (lambda () 
+    (set! x ((s (lambda () (* x x))))))
+  (s (lambda () (set! x (+ x 1)))))
+```
 
 #### Exercise 3.40
 
@@ -173,10 +208,10 @@ concurrency is allowed by these two versions of `make-account`?
 #### Exercise 3.43
 
 Suppose that the balances in
-three accounts start out as $10, $20, and $30, and that multiple processes run,
+three accounts start out as \$10, \$20, and \$30, and that multiple processes run,
 exchanging the balances in the accounts.  Argue that if the processes are run
 sequentially, after any number of concurrent exchanges, the account balances
-should be $10, $20, and $30 in some order.  Draw a timing diagram like the one
+should be \$10, \$20, and \$30 in some order.  Draw a timing diagram like the one
 in Figure 3.29 to show how this condition can be violated if the
 exchanges are implemented using the first version of the account-exchange
 program in this section.  On the other hand, argue that even with this

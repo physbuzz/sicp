@@ -547,17 +547,20 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div></p>
 <h2 id="section-34">Section 3.4</h2>
 <h3 id="notes">Notes</h3>
+<p>First thing I notice is that none of this is coding! So it'll be much
+easier to make mistakes. --&gt; should double check with online solutions.</p>
 <h3 id="exercises">Exercises</h3>
 <h4 id="exercise-338">Exercise 3.38</h4>
 <p>Suppose that Peter, Paul, and
-Mary share a joint bank account that initially contains $100.  Concurrently,
-Peter deposits $10, Paul withdraws $20, and Mary withdraws half the money in
+Mary share a joint bank account that initially contains \$100.  Concurrently,
+Peter deposits \$10, Paul withdraws \$20, and Mary withdraws half the money in
 the account, by executing the following commands:</p>
-<p>@example
-Peter: (set! balance (+ balance 10))
+<div class="codehilite"><pre><span></span><code>Peter: (set! balance (+ balance 10))
 Paul:  (set! balance (- balance 20))
 Mary:  (set! balance (- balance 
-                        (/ balance 2)))</p>
+                        (/ balance 2)))
+</code></pre></div>
+
 <p><strong>1.</strong> List all the different possible values for <code>balance</code> after these three
 transactions have been completed, assuming that the banking system forces the
 three processes to run sequentially in some order.</p>
@@ -565,6 +568,25 @@ three processes to run sequentially in some order.</p>
 processes to be interleaved?  Draw timing diagrams like the one in Figure 3.29 
 to explain how these values can occur.</p>
 <h5>Solution</h5>
+<p><strong>Part 1.</strong></p>
+<ul>
+<li>Peter $\rightarrow$ Paul $\rightarrow$ Mary: $45$</li>
+<li>Paul $\rightarrow$ Peter $\rightarrow$ Mary: $45$</li>
+<li>Mary $\rightarrow$ Paul $\rightarrow$ Peter: $40$ </li>
+<li>Mary $\rightarrow$ Peter $\rightarrow$ Paul: $40$</li>
+<li>Peter $\rightarrow$ Mary $\rightarrow$ Paul: $35$</li>
+<li>Paul $\rightarrow$ Mary $\rightarrow$ Peter: $50$</li>
+</ul>
+<p><strong>Part 2.</strong></p>
+<p>Suppose that first Peter executes, then Mary's first lookup to <code>balance</code>, then 
+Paul executes, then Mary's second lookup to balance. We'll do
+<code>(- 110 (/ 90 2))</code> which gives $65.$</p>
+<p>Alternatively if Paul's code executes first, then then Mary's first lookup to <code>balance</code>, then Peter's code, then Mary's second lookup to balance. We get
+<code>(- 80 (/ 90 2))</code> which gives $35.$</p>
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-38.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
 <h4 id="exercise-339">Exercise 3.39</h4>
 <p>Which of the five possibilities
 in the parallel execution shown above remain if we instead serialize execution
@@ -578,6 +600,14 @@ as follows:</p>
 </code></pre></div>
 
 <h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">10</span><span class="p">)</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="p">(</span><span class="n">make-serializer</span><span class="p">))</span>
+<span class="p">(</span><span class="n">parallel-execute</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">((</span><span class="n">s</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">x</span><span class="p">))))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">s</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="p">(</span><span class="k">set!</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+</code></pre></div>
+
 <h4 id="exercise-340">Exercise 3.40</h4>
 <p>Give all possible values of
 <code>x</code> that can result from executing</p>
@@ -675,10 +705,10 @@ concurrency is allowed by these two versions of <code>make-account</code>?</p>
 <h5>Solution</h5>
 <h4 id="exercise-343">Exercise 3.43</h4>
 <p>Suppose that the balances in
-three accounts start out as $10, $20, and $30, and that multiple processes run,
+three accounts start out as \$10, \$20, and \$30, and that multiple processes run,
 exchanging the balances in the accounts.  Argue that if the processes are run
 sequentially, after any number of concurrent exchanges, the account balances
-should be $10, $20, and $30 in some order.  Draw a timing diagram like the one
+should be \$10, \$20, and \$30 in some order.  Draw a timing diagram like the one
 in Figure 3.29 to show how this condition can be violated if the
 exchanges are implemented using the first version of the account-exchange
 program in this section.  On the other hand, argue that even with this
