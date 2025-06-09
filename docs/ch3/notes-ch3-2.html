@@ -653,11 +653,11 @@ explicitly, using <code>let</code>, as follows:</p>
 
 <p>Recall from 1.3.2 that <code>let</code> is simply syntactic sugar for a
 procedure call:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">var</span><span class="p">}</span><span class="n">⟩</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="nb">exp</span><span class="p">}</span><span class="n">⟩</span><span class="p">))</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">⟨var⟩</span><span class="w"> </span><span class="n">⟨exp⟩</span><span class="p">))</span><span class="w"> </span><span class="n">⟨body⟩</span><span class="p">)</span>
 </code></pre></div>
 
 <p>is interpreted as an alternate syntax for</p>
-<div class="codehilite"><pre><span></span><code><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">⟨@var</span><span class="p">{</span><span class="n">var</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="n">body</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span><span class="w"> </span><span class="n">⟨@var</span><span class="p">{</span><span class="nb">exp</span><span class="p">}</span><span class="n">⟩</span><span class="p">)</span>
+<div class="codehilite"><pre><span></span><code><span class="p">((</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">⟨var⟩</span><span class="p">)</span><span class="w"> </span><span class="n">⟨body⟩</span><span class="p">)</span><span class="w"> </span><span class="n">⟨exp⟩</span><span class="p">)</span>
 </code></pre></div>
 
 <p>Use the environment model to analyze this alternate version of
@@ -671,6 +671,10 @@ interactions</p>
 <p>Show that the two versions of <code>make-withdraw</code> create objects with the same
 behavior.  How do the environment structures differ for the two versions?</p>
 <h5>Solution</h5>
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-10.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
+
 <h4 id="exercise-311">Exercise 3.11</h4>
 <p>In 3.2.3 we saw how
 the environment model described the behavior of procedures with local state.
@@ -715,6 +719,9 @@ account</p>
 <p>How are the local states for the two accounts kept distinct?  Which parts of
 the environment structure are shared between <code>acc</code> and <code>acc2</code>?</p>
 <h5>Solution</h5>
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-11.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
     </div>
 </body>
 </html>

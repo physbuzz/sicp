@@ -150,14 +150,14 @@ Recall from 1.3.2 that `let` is simply syntactic sugar for a
 procedure call:
 
 ```rkt
-(let ((⟨@var{var}⟩ ⟨@var{exp}⟩)) ⟨@var{body}⟩)
+(let ((⟨var⟩ ⟨exp⟩)) ⟨body⟩)
 ```
 
 
 is interpreted as an alternate syntax for
 
 ```rkt
-((lambda (⟨@var{var}⟩) ⟨@var{body}⟩) ⟨@var{exp}⟩)
+((lambda (⟨var⟩) ⟨body⟩) ⟨exp⟩)
 ```
 
 Use the environment model to analyze this alternate version of
@@ -174,6 +174,9 @@ Show that the two versions of `make-withdraw` create objects with the same
 behavior.  How do the environment structures differ for the two versions?
 
 ##### Solution
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-10.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
 
 #### Exercise 3.11
 
@@ -227,3 +230,6 @@ How are the local states for the two accounts kept distinct?  Which parts of
 the environment structure are shared between `acc` and `acc2`?
 
 ##### Solution
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/ex3-11.svg" style="width: 70%; max-width: 800px;" alt="A box-and-pointer diagram, what do you want?">
+</div>
