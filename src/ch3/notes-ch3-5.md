@@ -10,7 +10,26 @@
 
 ## Section 3.5
 
-### Notes
+### Examples and Notes
+
+@src(code/example-3-5-1.rkt, collapsed)
+
+@src(code/example-3-5-2.rkt)
+
+@src(code/example-3-5-3.rkt)
+
+Note to self: I had a half-thought-out concern about the caching. In the solution
+to 3.55:
+
+```rkt
+(define (partial-sums s)
+  (cons-stream 0
+    (add-streams s (partial-sums s))))
+```
+
+I'd be concerned that if `(partial-sums s)` created a new stream with new 
+cached values at every step, that we wouldn't get the additive behavior we want?
+Does this make any sense? Can I replicate and understand this with just lambdas?
 
 ### Exercises
 
@@ -34,6 +53,45 @@ Footnote 78.
 ```
 
 ##### Solution
+
+```rkt
+(define (stream-map proc . argstreams)
+  (if (stream-null? (car argstreams))
+      the-empty-stream
+      (cons-stream
+       (apply proc (map stream-car argstreams))
+       (apply stream-map (cons proc (map stream-cdr argstreams))))))
+
+;; Enumerate every other triangular number
+;; ie every other entry from the sequence  
+;; 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, ... n*(n+1)/2
+(display-stream 
+  (stream-map 
+   * 
+   (stream-enumerate-evens 1 10)
+   (stream-enumerate-odds 1 10)
+   (stream-enumerate-constant 1/2 5)))
+```
+
+@src(code/ex3-50.rkt,collapsed)
+
+
+***Note*** I wrote a really really bad definition of stream-map on a first pass!!!
+The following definition has major issues because `rest` is evaluated immediately. 
+In fact it *has* to be inside cons-stream (where the second argument is delayed)
+to avoid infinite recursion in scenarios like in problem 3.53.
+
+```rkt
+;; bad awful definition of stream-map
+(define (stream-map proc . argstreams)
+  (if (stream-null? (car argstreams))
+      the-empty-stream
+      (let ((args (map stream-car argstreams))
+            (rest (map stream-cdr argstreams)))
+        (cons-stream
+         (apply proc args)
+         (apply stream-map (cons proc rest))))))
+```
 
 #### Exercise 3.51
 
@@ -61,6 +119,47 @@ the following sequence?
 ```
 
 ##### Solution
+
+Zero is printed right when we define x, 
+because with our definitions the first element of the 
+stream is computed right away.
+
+```rkt
+(define (show x)
+  (display-line x)
+  x)
+
+(define x
+  (stream-map
+   show
+   (stream-enumerate-interval 0 10)))
+; 0
+```
+
+Next, we compute stream-ref, and we print the following,
+no surprises yet:
+```rkt
+(stream-ref x 5)
+; 1
+; 2
+; 3
+; 4
+; 5 <- from (newline) (display 5)
+; 5 <- from the output of the function
+```
+
+When we print 7, we find that only the results for elements
+6 and 7 are printed, because all other entries have been 
+memoized.
+
+```rkt
+(stream-ref x 7)
+; 6
+; 7 <- from (newline) (display 5)
+; 7 <- from the output of the function
+```
+
+@src(code/ex3-51.rkt, collapsed)
 
 #### Exercise 3.52
 
@@ -93,10 +192,47 @@ expressions
 What is the value of `sum` after each of the above expressions is
 evaluated?  What is the printed response to evaluating the `stream-ref`
 and `display-stream` expressions?  Would these responses differ if we had
-implemented `(delay ⟨@var{exp}⟩)` simply as `(lambda () ⟨@var{exp}⟩)`
+implemented `(delay ⟨exp⟩)` simply as `(lambda () ⟨exp⟩)`
 without using the optimization provided by `memo-proc`?  Explain.
 
 ##### Solution
+
+The evaluations would be very different if we didn't memoize. Each time we evaluate a term
+using `stream-cdr`, we modify `sum`, and so if we wanted to regenerate the earlier portions of the list,
+we'd have to reset `sum` to zero every time we did an operation.
+
+With memoization we get the following:
+
+```rkt
+(define sum 0)
+
+(define (accum x)
+  (set! sum (+ x sum))
+  sum)
+
+(define seq 
+  (stream-map 
+   accum 
+   (stream-enumerate-interval 1 20)))
+;; display stream would print:
+;; 1, 3, 6, 10, 15, 21, 28, 36, 45, 55, 66, 78, 91, 105, 120, 136, 153, 171, 190, 210
+
+(define y (stream-filter even? seq))
+;; Evens: 6, 10, 28, 36, 66, 78, 120, 136, 190, 210
+
+(define z 
+  (stream-filter 
+   (lambda (x) 
+     (= (remainder x 5) 0)) seq))
+;; Divisible by 5: 10, 15, 45, 55, 105, 120, 190, 210
+
+(stream-ref y 7)
+;; 136, the seventh even triangular number
+(display-stream z)
+;; Prints 10, 15, 45, 55, 105, 120, 190, 210
+```
+
+@src(code/ex3-52.rkt, collapsed)
 
 #### Exercise 3.53
 
@@ -109,30 +245,78 @@ describe the elements of the stream defined by
 
 ##### Solution
 
+
+`stream-car` of s trivially runs fine and returns 1. 
+
+The interesting stuff is when we call 
+`stream-cdr`. We do `force` to evaluate `add-streams`, this looks something like
+
+```rkt
+(add-streams 
+  (cons-stream 1 (add-streams s s))
+  (cons-stream 1 (add-streams s s)))
+```
+
+We create a new stream which looks like this:
+
+```rkt
+(cons-stream
+  (+ 1 1)
+  (add-streams 
+    (add-streams s s)
+    (add-streams s s)))
+```
+
+We might expect this to give an infinite recursion, but in fact the second 
+argument is delayed, and so doesn't evaluate. (if it evaluated, we'd be in trouble.)
+
+Double checking by evaluating:
+
+@src(code/ex3-53.rkt, collapsed)
+
 #### Exercise 3.54
 
 Define a procedure
 `mul-streams`, analogous to `add-streams`, that produces the
 elementwise product of its two input streams.  Use this together with the
 stream of `integers` to complete the following definition of the stream
-whose $n^{\text{th}}$ element (counting from 0) is ${n + 1$} factorial:
+whose $n^{\text{th}}$ element (counting from 0) is $n + 1$ factorial:
 
 ```rkt
 (define factorials 
   (cons-stream 1 (mul-streams ⟨??⟩ ⟨??⟩)))
 ```
-
 ##### Solution
+
+```rkt
+(define (mul-streams s1 s2)
+  (stream-map * s1 s2))
+(define factorials
+  (cons-stream 1 (mul-streams integers factorials)))
+```
+
+@src(code/ex3-54.rkt, collapsed)
+
+
+
 
 #### Exercise 3.55
 
 Define a procedure
 `partial-sums` that takes as argument a stream $S$ and returns the
-stream whose elements are $S_0$, ${S_0 + S_1$}, ${S_0 + S_1$ + {S_2, \dots}}.  
+stream whose elements are $S_0$, $S_0 + S_1$, $S_0 + S_1 + S_2, \dots $.  
 For example, `(partial-sums integers)` should be the
-stream 1, 3, 6, 10, 15, @dots{}.
+stream 1, 3, 6, 10, 15, $\ldots$.
 
 ##### Solution
+
+```rkt
+(define (partial-sums s)
+  (cons-stream 0
+    (add-streams s (partial-sums s))))
+```
+
+@src(code/ex3-55.rkt, collapsed)
 
 #### Exercise 3.56
 

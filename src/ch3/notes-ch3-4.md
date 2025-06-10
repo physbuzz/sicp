@@ -16,6 +16,12 @@
 First thing I notice is that none of this is coding! So it'll be much
 easier to make mistakes. --> should double check with online solutions.
 
+
+### Meeting 06-08-2025
+ - Notably, the book treats the problem of parallelism as a combinatorial explosion problem.
+ - [Peterson's Algorithm](https://en.wikipedia.org/wiki/Peterson's_algorithm)
+ - [Dekker's algorithm](https://en.wikipedia.org/wiki/Dekker%27s_algorithm)
+
 ### Exercises
 
 #### Exercise 3.38
