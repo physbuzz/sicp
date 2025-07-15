@@ -329,23 +329,11 @@ integers get larger, fewer and fewer of them fit the requirement.  As an
 alternative, let us call the required stream of numbers `S` and notice the
 following facts about it.
 
-@itemize @bullet
-
-@item
-`S` begins with 1.
-
-@item
-The elements of `(scale-stream S 2)` are also
-elements of `S`.
-
-@item
-The same is true for `(scale-stream S 3)`
+- `S` begins with 1.
+- The elements of `(scale-stream S 2)` are also elements of `S`.
+- The same is true for `(scale-stream S 3)`
 and `(scale-stream S 5)`.
-
-@item
-These are all the elements of `S`.
-
-
+- These are all the elements of `S`.
 
 Now all we have to do is combine elements from these sources.  For this we
 define a procedure `merge` that combines two ordered streams into one
@@ -386,17 +374,26 @@ Fill in the missing expressions in the places marked `⟨??⟩` above.
 
 ##### Solution
 
+@src(code/ex3-56.rkt,collapsed)
+
 #### Exercise 3.57
 
 How many additions are performed
 when we compute the $n^{\text{th}}$ Fibonacci number using the definition of
 `fibs` based on the `add-streams` procedure?  Show that the number of
-additions would be exponentially greater if we had implemented `(delay ⟨@var{exp}⟩)` 
-simply as `(lambda () ⟨@var{exp}⟩)`, without using the
+additions would be exponentially greater if we had implemented `(delay ⟨exp⟩)` 
+simply as `(lambda () ⟨exp⟩)`, without using the
 optimization provided by the `memo-proc` procedure described in 
 3.5.1.
 
 ##### Solution
+
+With caching, we only call `+` once each time we iterate to
+the next value. 
+
+Without caching, we see that the only base cases are 0 and 1, so we call + at least `Fib(n)` times to calculate `Fib(n)`, probably more if many of them are adding `(+ n 0)`. 
+
+@src(code/ex3-57.rkt)
 
 #### Exercise 3.58
 
@@ -418,39 +415,64 @@ integers.)  What are the successive elements produced by `(expand 1 7
 
 ##### Solution
 
+This is a base-`radix` expansion of the rational number `(/ num den)`, where we expect 
+
+$$\frac{\texttt{num}}{\texttt{den}}\lt 1.$$
+
+The first digit in base-`radix` is $c_1=\lfloor \texttt{num}\cdot \texttt{rad}/\texttt{den}\rfloor.$
+
+Next we compute the remainder, 
+$$\frac{n}{d}=\frac{c_1}{r}+\frac{nr-c_1 d}{dr}.$$
+
+We note that the numerator is exactly `(remainder (* num radix) den)`. 
+
+For the next digit, we do the same thing. 
+
+$$\frac{n}{d}=\frac{c_1}{r}+\frac{c_2}{r^2}+\frac{(nr -c_1 d)r-c_2 d}{dr^2}.$$
+
+Where $c_2$ can be calculated as `(remainder (* num-new radix) den)`.
+
+So we can see how this could be turned into an inductive proof
+that our algorithm is correct.
+
+For the first example, `(expand 1 7 10)` will give the repeating
+decimal digits of 1/7. For `(expand 3 8 10)` we expect the 
+sequence `'(3 7 5 0 0 0 ...)`.
+
+@src(code/ex3-58.rkt, collapsed)
+
 #### Exercise 3.59
 
 In 2.5.3 we saw how
 to implement a polynomial arithmetic system representing polynomials as lists
 of terms.  In a similar way, we can work with power series, such as
 
-$$\begin{eqnarray}
-  e^x 	  &=& 1 + x + \frac{1}{2} x^2  + \frac{1}{3 \cdot 2} x^3  + \frac{1}{4 \cdot 3 \cdot 2} x^4  + \dots, \\
-  \cos x  &=& 1 - \frac{1}{2} x^2  + \frac{1}{4 \cdot 3 \cdot 2} x^4  - \dots, \\
-  \sin x  &=& x - \frac{1}{3 \cdot 2} x^3  + \frac{1}{5 \cdot 4 \cdot 3 \cdot 2} x^5  - \dots
-\end{eqnarray}
-$$
+<div>$$\begin{align*}
+  e^x &= 1 + x + \frac{1}{2} x^2  + \frac{1}{3 \cdot 2} x^3  + \frac{1}{4 \cdot 3 \cdot 2} x^4  + \dots \\
+  \cos x  &= 1 - \frac{1}{2} x^2  + \frac{1}{4 \cdot 3 \cdot 2} x^4  - \dots \\
+  \sin x  &= x - \frac{1}{3 \cdot 2} x^3  + \frac{1}{5 \cdot 4 \cdot 3 \cdot 2} x^5  - \dots
+\end{align*}
+$$</div>
 
+represented as infinite streams.  We will represent the series $a_0 +
+a_1 x + a_2 x^2 + a_3 x^3 + \dots$ as the stream whose
+elements are the coefficients $a_0$, $a_1$, $a_2$, $a_3$, $\cdots$.
 
-represented as infinite streams.  We will represent the series ${a_0 +
-a_1 x$ + {a_2 x^2} + {a_3 x^3 + \dots}} as the stream whose
-elements are the coefficients $a_0$, $a_1$, $a_2$, $a_3$, @dots{}.
+**1.** The integral of the series $a_0 + a_1 x + a_2 x^2 + a_3 x^3 + \dots$ is the series
 
-**1.** The integral of the series ${a_0 + a_1 x$ + {a_2 x^2} + {a_3 x^3 + \dots}} is the series
-
-$$c + {a_0 x} + {\frac{1}{2} a_1 x^2} + {\frac{1}{3} a_2 x^3} + {\frac{1}{4} a_3 x^4 + \dots,}  $$
+$$c + {a_0 x} + {\frac{1}{2} a_1 x^2} + {\frac{1}{3} a_2 x^3} + {\frac{1}{4} a_3 x^4 + \dots,}$$
 
 
 where $c$ is any constant.  Define a procedure `integrate-series` that
-takes as input a stream $a_0$, $a_1$, $a_2$, @dots{} representing a power
-series and returns the stream $a_0$, ${{1\over2}a_1$}, ${{1\over3}a_2$}, @dots{} of
+takes as input a stream $a_0$, $a_1$, $a_2$, $\ldots$ representing a power
+series and returns the stream $a_0$, ${{1\over2}a_1}$, ${{1\over3}a_2}$, $\ldots$ of
 coefficients of the non-constant terms of the integral of the series.  (Since
 the result has no constant term, it doesn't represent a power series; when we
 use `integrate-series`, we will `cons` on the appropriate constant.)
 
-**2.** The function ${x \mapsto e^x$} is its own derivative.  This implies that
+**2.** The function ${x \mapsto e^x}$ is its own derivative.  This implies that
 $e^x$ and the integral of $e^x$ are the same series, except for the
-constant term, which is ${e^0 = 1$}.  Accordingly, we can generate the series
+constant term, which is ${e^0 = 1}$.  Accordingly, we can generate the series
 for $e^x$ as
 
 ```rkt
@@ -471,9 +493,22 @@ negative of sine:
   (cons-stream 0 ⟨??⟩))
 ```
 
-
-
 ##### Solution
+
+We just define the series as integrals as each other:
+
+```rkt
+(define cosine-series
+  (cons-stream 1 
+    (integrate-series 
+      (negate-series sine-series))))
+(define sine-series
+  (cons-stream 0 
+    (integrate-series cosine-series)))
+```
+
+@src(code/ex3-59.rkt,collapsed)
+
 
 #### Exercise 3.60
 
@@ -491,6 +526,24 @@ You can test your procedure by verifying that ${\sin^2x + \cos^2x = 1,$}
 using the series from Exercise 3.59.
 
 ##### Solution
+
+Take two formal power series $P_1=\sum_{n=0}^\infty P^1_n x^n$ and $P_2=\sum_{n=0}^\infty P^2_n x^n.$ We'll call 
+$\texttt{CAR}(P_1)=P^1_0$ and $\texttt{CDR}(P_1)=\sum_{n=1}^\infty P^1_0.$
+Then we apply a recursive definition of polynomial multiplication:
+
+$$P_1\times P_2 = \texttt{CAR}(P_1)\cdot P_2 + (0 + \texttt{CDR}(P_1)\times P_2)$$
+
+This is realized in the following algorithm:
+```rkt
+(define (mul-series s1 s2)
+  (add-streams 
+    (scale-stream s2 (stream-car s1))
+    (cons-stream 0 (mul-series (stream-cdr s1) s2))))
+```
+
+Using the sum of cosine and sine squared as a test case:
+
+@src(code/ex3-60.rkt,collapsed)
 
 #### Exercise 3.61
 

@@ -1,3 +1,4 @@
+# Claude Generated
 # Add these CSS rules to the get_base_css function, find the section with
 # "--- Styles for Collapsible Code Blocks ---" and modify it
 
