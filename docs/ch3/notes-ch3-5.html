@@ -2201,22 +2201,142 @@ cos^2+sin^2 series:
 <h4 id="exercise-361">Exercise 3.61</h4>
 <p>Let $S$ be a power series
 (Exercise 3.59) whose constant term is 1.  Suppose we want to find the
-power series ${1 / S$}, that is, the series $X$ such that ${SX = 1$}.
-Write ${S = 1 + S_R$} where $S_R$ is the part of $S$ after the
+power series $1 / S$, that is, the series $X$ such that $SX = 1$.
+Write $S = 1 + S_R$ where $S_R$ is the part of $S$ after the
 constant term.  Then we can solve for $X$ as follows:</p>
-<p>$$\begin{eqnarray}
-  S \cdot X           &amp;=&amp;   1, \
-  (1 + S_R) \cdot X   &amp;=&amp;   1, \
-  X + S_R \cdot X     &amp;=&amp;   1, \
-  X                   &amp;=&amp;   1 - S_R \cdot X.
-\end{eqnarray}
-$$</p>
+<div>$$\begin{align*}
+  S \cdot X           &=   1, \\
+  (1 + S_R) \cdot X   &=   1, \\
+  X + S_R \cdot X     &=   1, \\
+  X                   &=   1 - S_R \cdot X.
+\end{align*}$$</div>
+
 <p>In other words, $X$ is the power series whose constant term is 1 and whose
 higher-order terms are given by the negative of $S_R$ times $X$.  Use
-this idea to write a procedure <code>invert-unit-series</code> that computes ${1 / S$}
+this idea to write a procedure <code>invert-unit-series</code> that computes $1 / S$
 for a power series $S$ with constant term 1.  You will need to use
 <code>mul-series</code> from Exercise 3.60.</p>
 <h5>Solution</h5>
+<p>It feels like it should be more complicated than this, but this works
+perfectly well!</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">defie</span><span class="w"> </span><span class="p">(</span><span class="n">invert-unit-series</span><span class="w"> </span><span class="n">S</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">S</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;In invert-unit-series first element is not 1!&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">SR</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">S</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">X</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">negate-series</span><span class="w"> </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="n">SR</span><span class="w"> </span><span class="n">X</span><span class="p">))))</span>
+<span class="w">      </span><span class="n">X</span><span class="p">)))</span>
+</code></pre></div>
+
+<div class="code-box">
+<details class="collapsible-code">
+<summary class="code-summary"><a href="code/ex3-61.rkt">code/ex3-61.rkt</a> <span class="expand-hint">(click to expand)</span></summary>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="k">stream</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="k">stream</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="k">stream</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">force</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="k">stream</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">display-stream-first-n</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="n">stream-null?</span><span class="w"> </span><span class="n">s</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">begin</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="n">display-line</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">s</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">display-stream-first-n</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">display-line</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">integers-starting-from</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span>
+<span class="w">   </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">integers-starting-from</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">integers</span><span class="w"> </span><span class="p">(</span><span class="n">integers-starting-from</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">argstreams</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stream-null?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">argstreams</span><span class="p">))</span>
+<span class="w">      </span><span class="n">the-empty-stream</span>
+<span class="w">      </span><span class="p">(</span><span class="n">cons-stream</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">stream-car</span><span class="w"> </span><span class="n">argstreams</span><span class="p">))</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">stream-map</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">argstreams</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">negate-series</span><span class="w"> </span><span class="n">S</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="nb">-</span><span class="w"> </span><span class="n">S</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-streams</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-streams</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">scale-stream</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">m</span><span class="p">))</span><span class="w"> </span><span class="n">S</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">add-streams</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="n">scale-stream</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">s1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">s1</span><span class="p">)</span><span class="w"> </span><span class="n">s2</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">invert-unit-series</span><span class="w"> </span><span class="n">S</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">S</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;In invert-unit-series first element is not 1!&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">SR</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">S</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">X</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">negate-series</span><span class="w"> </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="n">SR</span><span class="w"> </span><span class="n">X</span><span class="p">))))</span>
+<span class="w">      </span><span class="n">X</span><span class="p">)))</span>
+
+<span class="c1">; 1+ x + x^2 + x^3 + ... == {1, 1, 1, 1, ...}</span>
+<span class="c1">; == 1/(1-x), so inverting this should give us {1, -1, 0, 0, ...}</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">ones</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">ones</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">display-line</span><span class="w"> </span><span class="s2">&quot;1/(1-x)&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">display-stream-first-n</span><span class="w"> </span><span class="n">ones</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+
+<span class="p">(</span><span class="n">display-line</span><span class="w"> </span><span class="s2">&quot;(invert-unit-series 1/(1-x))&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">display-stream-first-n</span><span class="w"> </span><span class="p">(</span><span class="n">invert-unit-series</span><span class="w"> </span><span class="n">ones</span><span class="p">)</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+
+
+<span class="c1">;; (define (integrate-series S)</span>
+<span class="c1">;;   (stream-map / S integers))</span>
+<span class="c1">;; </span>
+<span class="c1">;; (define exp-series</span>
+<span class="c1">;;   (cons-stream</span>
+<span class="c1">;;    1 (integrate-series exp-series)))</span>
+<span class="c1">;; (define cosine-series</span>
+<span class="c1">;;   (cons-stream 1 (integrate-series (negate-series sine-series))))</span>
+<span class="c1">;; (define sine-series</span>
+<span class="c1">;;   (cons-stream 0 (integrate-series cosine-series)))</span>
+<span class="c1">;; (define sum-squared-stream</span>
+<span class="c1">;;   (add-streams (mul-series sine-series sine-series)</span>
+<span class="c1">;;                (mul-series cosine-series cosine-series)))</span>
+<span class="c1">;; </span>
+<span class="c1">;; (display-line &quot;cos^2+sin^2 series:&quot;)</span>
+<span class="c1">;; (display-stream-first-n sum-squared-stream 8)</span>
+<span class="c1">;; </span>
+</code></pre></div>
+
+
+</details>
+<div class="code-output">
+<span>Output:</span>
+<pre>
+1/(1-x)
+1
+1
+1
+1
+1
+1
+1
+1
+(invert-unit-series 1/(1-x))
+1
+-1
+0
+0
+0
+0
+0
+0</pre>
+</div>
+</div>
+
 <h4 id="exercise-362">Exercise 3.62</h4>
 <p>Use the results of Exercise 3.60 
 and Exercise 3.61 to define a procedure <code>div-series</code> that
@@ -2226,6 +2346,114 @@ the denominator has a zero constant term, then <code>div-series</code> should si
 an error.)  Show how to use <code>div-series</code> together with the result of
 Exercise 3.59 to generate the power series for tangent.</p>
 <h5>Solution</h5>
+<p>Pretty straightforward:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">invert-series</span><span class="w"> </span><span class="n">S</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">S</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;In invert-series first element cannot be 0.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">S0</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">S</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">scale-stream</span><span class="w"> </span><span class="p">(</span><span class="n">invert-unit-series</span><span class="w"> </span><span class="p">(</span><span class="n">scale-stream</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">S0</span><span class="p">)))</span>
+<span class="w">                    </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">S0</span><span class="p">)))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">div-series</span><span class="w"> </span><span class="n">S1</span><span class="w"> </span><span class="n">S2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="n">S1</span><span class="w"> </span><span class="p">(</span><span class="n">invert-series</span><span class="w"> </span><span class="n">S2</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tan-series</span>
+<span class="w">  </span><span class="p">(</span><span class="n">div-series</span><span class="w"> </span><span class="n">sine-series</span><span class="w"> </span><span class="n">cosine-series</span><span class="p">))</span>
+</code></pre></div>
+
+<div class="code-box">
+<details class="collapsible-code">
+<summary class="code-summary"><a href="code/ex3-62.rkt">code/ex3-62.rkt</a> <span class="expand-hint">(click to expand)</span></summary>
+
+<div class="codehilite"><pre><span></span><code><span class="kn">#lang </span><span class="nn">sicp</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="k">stream</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="k">stream</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="k">stream</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">force</span><span class="w"> </span><span class="p">(</span><span class="nb">cdr</span><span class="w"> </span><span class="k">stream</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">display-stream-first-n</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="n">stream-null?</span><span class="w"> </span><span class="n">s</span><span class="p">))</span><span class="w"> </span><span class="p">(</span><span class="nb">&gt;</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="k">begin</span><span class="w"> </span>
+<span class="w">      </span><span class="p">(</span><span class="n">display-line</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">s</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">display-stream-first-n</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">-</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">display-line</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">newline</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">display</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">integers-starting-from</span><span class="w"> </span><span class="n">n</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span>
+<span class="w">   </span><span class="n">n</span><span class="w"> </span><span class="p">(</span><span class="n">integers-starting-from</span><span class="w"> </span><span class="p">(</span><span class="nb">+</span><span class="w"> </span><span class="n">n</span><span class="w"> </span><span class="mi">1</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">integers</span><span class="w"> </span><span class="p">(</span><span class="n">integers-starting-from</span><span class="w"> </span><span class="mi">1</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">argstreams</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">stream-null?</span><span class="w"> </span><span class="p">(</span><span class="nb">car</span><span class="w"> </span><span class="n">argstreams</span><span class="p">))</span>
+<span class="w">      </span><span class="n">the-empty-stream</span>
+<span class="w">      </span><span class="p">(</span><span class="n">cons-stream</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">stream-car</span><span class="w"> </span><span class="n">argstreams</span><span class="p">))</span>
+<span class="w">       </span><span class="p">(</span><span class="nb">apply</span><span class="w"> </span><span class="nb">stream-map</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">proc</span><span class="w"> </span><span class="p">(</span><span class="nb">map</span><span class="w"> </span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">argstreams</span><span class="p">))))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">negate-series</span><span class="w"> </span><span class="n">S</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="nb">-</span><span class="w"> </span><span class="n">S</span><span class="p">))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">add-streams</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="nb">+</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-streams</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="nb">*</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">scale-stream</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="n">m</span><span class="p">)</span><span class="w"> </span>
+<span class="w">  </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">*</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="n">m</span><span class="p">))</span><span class="w"> </span><span class="n">S</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="n">s1</span><span class="w"> </span><span class="n">s2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">add-streams</span><span class="w"> </span>
+<span class="w">    </span><span class="p">(</span><span class="n">scale-stream</span><span class="w"> </span><span class="n">s2</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">s1</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">s1</span><span class="p">)</span><span class="w"> </span><span class="n">s2</span><span class="p">))))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">invert-unit-series</span><span class="w"> </span><span class="n">S</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">S</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;In invert-unit-series first element is not 1!&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">SR</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">S</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">X</span><span class="w"> </span>
+<span class="w">        </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">negate-series</span><span class="w"> </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="n">SR</span><span class="w"> </span><span class="n">X</span><span class="p">))))</span>
+<span class="w">      </span><span class="n">X</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">invert-series</span><span class="w"> </span><span class="n">S</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nb">=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">S</span><span class="p">))</span>
+<span class="w">    </span><span class="p">(</span><span class="nb">error</span><span class="w"> </span><span class="s2">&quot;In invert-series first element cannot be 0.&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="k">let</span><span class="w"> </span><span class="p">((</span><span class="n">S0</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">S</span><span class="p">)))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">scale-stream</span><span class="w"> </span><span class="p">(</span><span class="n">invert-unit-series</span><span class="w"> </span><span class="p">(</span><span class="n">scale-stream</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">S0</span><span class="p">)))</span>
+<span class="w">                    </span><span class="p">(</span><span class="nb">/</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="n">S0</span><span class="p">)))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">div-series</span><span class="w"> </span><span class="n">S1</span><span class="w"> </span><span class="n">S2</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="n">mul-series</span><span class="w"> </span><span class="n">S1</span><span class="w"> </span><span class="p">(</span><span class="n">invert-series</span><span class="w"> </span><span class="n">S2</span><span class="p">)))</span>
+
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">integrate-series</span><span class="w"> </span><span class="n">S</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="nb">/</span><span class="w"> </span><span class="n">S</span><span class="w"> </span><span class="n">integers</span><span class="p">))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">exp-series</span>
+<span class="w">  </span><span class="p">(</span><span class="n">cons-stream</span>
+<span class="w">   </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">integrate-series</span><span class="w"> </span><span class="n">exp-series</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">cosine-series</span>
+<span class="w">  </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">integrate-series</span><span class="w"> </span><span class="p">(</span><span class="n">negate-series</span><span class="w"> </span><span class="n">sine-series</span><span class="p">))))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">sine-series</span>
+<span class="w">  </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="n">integrate-series</span><span class="w"> </span><span class="n">cosine-series</span><span class="p">)))</span>
+<span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="n">tan-series</span>
+<span class="w">  </span><span class="p">(</span><span class="n">div-series</span><span class="w"> </span><span class="n">sine-series</span><span class="w"> </span><span class="n">cosine-series</span><span class="p">))</span>
+
+<span class="p">(</span><span class="n">display-line</span><span class="w"> </span><span class="s2">&quot;Series for tan(x)&quot;</span><span class="p">)</span>
+<span class="p">(</span><span class="n">display-stream-first-n</span><span class="w"> </span><span class="n">tan-series</span><span class="w"> </span><span class="mi">8</span><span class="p">)</span>
+</code></pre></div>
+
+
+</details>
+<div class="code-output">
+<span>Output:</span>
+<pre>
+Series for tan(x)
+0
+1
+0
+1/3
+0
+2/15
+0
+17/315</pre>
+</div>
+</div>
+
 <h4 id="exercise-363">Exercise 3.63</h4>
 <p>Louis Reasoner asks why the
 <code>sqrt-stream</code> procedure was not written in the following more
@@ -2244,6 +2472,20 @@ answer.  Would the two versions still differ in efficiency if our
 implementation of <code>delay</code> used only <code>(lambda () ⟨@var{exp}⟩)</code> without
 using the optimization provided by <code>memo-proc</code> (3.5.1)?</p>
 <h5>Solution</h5>
+<p>This was quite confusing to me, but here is another way to "sabotage" the original code:
+replace "guesses" with a function.</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">sqrt-stream</span><span class="w"> </span><span class="n">x</span><span class="p">)</span>
+<span class="w">  </span><span class="p">(</span><span class="k">define</span><span class="w"> </span><span class="p">(</span><span class="n">guesses</span><span class="p">)</span>
+<span class="w">    </span><span class="p">(</span><span class="n">cons-stream</span><span class="w"> </span>
+<span class="w">     </span><span class="mf">1.0</span>
+<span class="w">     </span><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">guess</span><span class="p">)</span>
+<span class="w">                   </span><span class="p">(</span><span class="n">sqrt-improve</span><span class="w"> </span><span class="n">guess</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
+<span class="w">                 </span><span class="p">(</span><span class="n">guesses</span><span class="p">))))</span>
+<span class="w">  </span><span class="p">(</span><span class="n">guesses</span><span class="p">))</span>
+</code></pre></div>
+
+<p>Right, the point here is that every call to <code>(guesses)</code> has to build the stream
+again from scratch. Since this is called recursively, that's a big problem! </p>
 <h4 id="exercise-364">Exercise 3.64</h4>
 <p>Write a procedure
 <code>stream-limit</code> that takes as arguments a stream and a number (the

@@ -524,6 +524,11 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 <li><a href="#section-44">Section 4.4</a></li>
 <ul>
 <li><a href="#notes">Notes</a></li>
+<ul>
+<li><a href="#confusion-on-append-to-form">Confusion on append-to-form</a></li>
+<li><a href="#comment-on-appendo">Comment on "appendo"</a></li>
+<li><a href="#mathematica-analogy">Mathematica Analogy</a></li>
+</ul>
 <li><a href="#exercises" class="toc-exercises">Exercises</a>
 <div class="exercise-container">(
 <span class="exercise-list">
@@ -560,6 +565,76 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
 </div></p>
 <h2 id="section-44">Section 4.4</h2>
 <h3 id="notes">Notes</h3>
+<h4 id="confusion-on-append-to-form">Confusion on append-to-form</h4>
+<p>Definition 4.4 of append:</p>
+<p>Is this saying that there's an implicit definition of append,
+as... it's the symbol such that</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="n">v</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="n">z</span><span class="p">)</span><span class="w"> </span>
+<span class="k">=&gt;</span><span class="w"> </span>
+<span class="p">(</span><span class="nb">equal?</span><span class="w"> </span><span class="p">(</span><span class="nb">append</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="n">v</span><span class="p">)</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="nb">cons</span><span class="w"> </span><span class="n">u</span><span class="w"> </span><span class="n">z</span><span class="p">))</span>
+</code></pre></div>
+
+<p>This definition is bonkers. However it makes more sense in rule notation:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">rule</span><span class="w"> </span><span class="p">(</span><span class="n">append-to-form</span><span class="w"> </span><span class="p">()</span><span class="w"> </span><span class="n">?y</span><span class="w"> </span><span class="n">?y</span><span class="p">))</span>
+<span class="p">(</span><span class="n">rule</span><span class="w"> </span><span class="p">(</span><span class="n">append-to-form</span><span class="w"> </span><span class="p">(</span><span class="n">?u</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">?v</span><span class="p">)</span><span class="w"> </span><span class="n">?y</span><span class="w"> </span><span class="p">(</span><span class="n">?u</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">?z</span><span class="p">))</span>
+<span class="w">      </span><span class="p">(</span><span class="n">append-to-form</span><span class="w"> </span><span class="n">?v</span><span class="w"> </span><span class="n">?y</span><span class="w"> </span><span class="n">?z</span><span class="p">))</span>
+</code></pre></div>
+
+<p>It's not fair to call this a crazy implicit definition of 
+append-to-form, we can see by how the dotted tail notation 
+pattern is constructed, we're going to consume one element
+of the list <code>?u</code> every time something is matched, thereby
+iterating through the list recursively. </p>
+<p>TODO: This would be really fun to do in mathematica. </p>
+<h4 id="comment-on-appendo">Comment on "appendo"</h4>
+<p>The book The Reasoned Schemer goes into detail about 
+relational programming, where I think 
+<code>append-to-form</code> is <code>appendo</code>? (thanks happyNora!)</p>
+<h4 id="mathematica-analogy">Mathematica Analogy</h4>
+<p>Basic patterns could be matched like this:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">;</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="o">?</span><span class="n">x</span><span class="w"> </span><span class="p">(</span><span class="n">computer</span><span class="w"> </span><span class="n">programmer</span><span class="p">))</span>
+<span class="n">facts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">job</span><span class="p">[</span><span class="s">&quot;Hacker Alyssa P&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">computer</span><span class="p">,</span><span class="w"> </span><span class="n">programmer</span><span class="p">}],</span><span class="w"> </span>
+<span class="w">   </span><span class="n">address</span><span class="p">[</span><span class="s">&quot;Hacker Alyssa P&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Cambridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Mass Ave&quot;</span><span class="p">},</span><span class="w"> </span><span class="mi">78</span><span class="p">}],</span><span class="w"> </span>
+<span class="w">   </span><span class="n">job</span><span class="p">[</span><span class="s">&quot;Fect Cy D&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">computer</span><span class="p">,</span><span class="w"> </span><span class="n">programmer</span><span class="p">}],</span><span class="w"> </span>
+<span class="w">   </span><span class="n">address</span><span class="p">[</span><span class="s">&quot;Fect Cy D&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Cambridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Ames Street&quot;</span><span class="p">},</span><span class="w"> </span><span class="mi">3</span><span class="p">}],</span><span class="w"> </span>
+<span class="w">   </span><span class="n">job</span><span class="p">[</span><span class="s">&quot;Foo Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">waiter</span><span class="p">}]};</span>
+<span class="n">Cases</span><span class="p">[</span><span class="n">facts</span><span class="p">,</span><span class="w"> </span><span class="n">job</span><span class="p">[</span><span class="nv">p_</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">computer</span><span class="p">,</span><span class="w"> </span><span class="n">programmer</span><span class="p">}]]</span>
+
+<span class="p">{</span><span class="n">job</span><span class="p">[</span><span class="s">&quot;Hacker Alyssa P&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">computer</span><span class="p">,</span><span class="w"> </span><span class="n">programmer</span><span class="p">}],</span><span class="w"> </span>
+<span class="w"> </span><span class="n">job</span><span class="p">[</span><span class="s">&quot;Fect Cy D&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">computer</span><span class="p">,</span><span class="w"> </span><span class="n">programmer</span><span class="p">}]}</span>
+</code></pre></div>
+
+<p>More complicated stuff gets more complicated, it doesn't match one-to-one.
+Say we want to implement this:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?person</span><span class="w"> </span><span class="p">(</span><span class="n">computer</span><span class="w"> </span><span class="n">programmer</span><span class="p">))</span>
+<span class="w">     </span><span class="p">(</span><span class="n">address</span><span class="w"> </span><span class="n">?person</span><span class="w"> </span><span class="n">?where</span><span class="p">))</span>
+</code></pre></div>
+
+<p>I couldn't get a solution working using <code>Cases</code> or <code>ReplaceAll</code>. But two 
+tricks got it to work:</p>
+<ol>
+<li>The <code>Orderless</code> attribute. If a function has this, then by default all
+arguments are sorted into canonical order; but also the behavior of pattern
+matching is changed so that all possible orderings are considered.</li>
+<li><code>ReplaceList</code> explicitly tries to list all possible matches, instead of
+trying to find single matches with a list of elements.</li>
+</ol>
+<p>With this, we have the working match code. No idea if the algorithmic complexity renders this feasible, sometimes Mathematica's pattern matching is magical enough to make this O(N).</p>
+<div class="codehilite"><pre><span></span><code><span class="n">In</span><span class="p">[]</span><span class="o">:=</span><span class="w"> </span><span class="n">SetAttributes</span><span class="p">[</span><span class="n">factBase</span><span class="p">,</span><span class="w"> </span><span class="n">Orderless</span><span class="p">];</span>
+<span class="n">facts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factBase</span><span class="p">[</span><span class="n">job</span><span class="p">[</span><span class="s">&quot;Hacker Alyssa P&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">computer</span><span class="p">,</span><span class="w"> </span><span class="n">programmer</span><span class="p">}],</span><span class="w"> </span>
+<span class="w">   </span><span class="n">address</span><span class="p">[</span><span class="s">&quot;Hacker Alyssa P&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Cambridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Mass Ave&quot;</span><span class="p">},</span><span class="w"> </span><span class="mi">78</span><span class="p">}],</span><span class="w"> </span>
+<span class="w">   </span><span class="n">job</span><span class="p">[</span><span class="s">&quot;Fect Cy D&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">computer</span><span class="p">,</span><span class="w"> </span><span class="n">programmer</span><span class="p">}],</span><span class="w"> </span>
+<span class="w">   </span><span class="n">address</span><span class="p">[</span><span class="s">&quot;Fect Cy D&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Cambridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Ames Street&quot;</span><span class="p">},</span><span class="w"> </span><span class="mi">3</span><span class="p">}],</span><span class="w"> </span>
+<span class="w">   </span><span class="n">job</span><span class="p">[</span><span class="s">&quot;Foo Bar&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">waiter</span><span class="p">}]];</span>
+<span class="n">ReplaceList</span><span class="p">[</span><span class="n">facts</span><span class="p">,</span>
+<span class="w"> </span><span class="n">factBase</span><span class="p">[</span>
+<span class="w">   </span><span class="n">address</span><span class="p">[</span><span class="nv">p_</span><span class="p">,</span><span class="w"> </span><span class="nv">where_</span><span class="p">],</span><span class="w"> </span><span class="n">job</span><span class="p">[</span><span class="nv">p_</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="n">computer</span><span class="p">,</span><span class="w"> </span><span class="n">programmer</span><span class="p">}],</span><span class="w"> </span><span class="nv">___</span><span class="p">]</span>
+<span class="w">  </span><span class="o">:&gt;</span><span class="w"> </span><span class="p">{</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">where</span><span class="p">}]</span>
+
+<span class="n">Out</span><span class="p">[]</span><span class="o">=</span><span class="w"> </span><span class="p">{{</span><span class="s">&quot;Fect Cy D&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Cambridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Ames Street&quot;</span><span class="p">},</span><span class="w"> </span>
+<span class="w">   </span><span class="mi">3</span><span class="p">}},</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Hacker Alyssa P&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Cambridge&quot;</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;Mass Ave&quot;</span><span class="p">},</span><span class="w"> </span><span class="mi">78</span><span class="p">}}}</span>
+</code></pre></div>
+
 <h3 id="exercises">Exercises</h3>
 <h4 id="exercise-455">Exercise 4.55</h4>
 <p>Give simple queries that retrieve
@@ -568,6 +643,14 @@ the following information from the data base:</p>
 <p><strong>2.</strong> the names and jobs of all people in the accounting division;</p>
 <p><strong>3.</strong> the names and addresses of all people who live in Slumerville.</p>
 <h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="c1">; 1.</span>
+<span class="p">(</span><span class="n">supervisor</span><span class="w"> </span><span class="n">?x</span><span class="w"> </span><span class="p">(</span><span class="n">Bitdiddle</span><span class="w"> </span><span class="n">Ben</span><span class="p">))</span><span class="w"> </span>
+<span class="c1">; 2. </span>
+<span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?name</span><span class="w"> </span><span class="p">(</span><span class="n">accounting</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">?type</span><span class="p">))</span>
+<span class="c1">; 3.</span>
+<span class="p">(</span><span class="n">address</span><span class="w"> </span><span class="n">?name</span><span class="w"> </span><span class="p">(</span><span class="n">Slumerville</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">?address</span><span class="p">))</span>
+</code></pre></div>
+
 <h4 id="exercise-456">Exercise 4.56</h4>
 <p>Formulate compound queries that
 retrieve the following information:</p>
@@ -578,6 +661,19 @@ salary and Ben Bitdiddle's salary;</p>
 <p><strong>3.</strong> all people who are supervised by someone who is not in the computer division,
 together with the supervisor's name and job.</p>
 <h5>Solution</h5>
+<div class="codehilite"><pre><span></span><code><span class="c1">; 1.</span>
+<span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">supervisor</span><span class="w"> </span><span class="n">?x</span><span class="w"> </span><span class="p">(</span><span class="n">Bitdiddle</span><span class="w"> </span><span class="n">Ben</span><span class="p">))</span>
+<span class="w">     </span><span class="p">(</span><span class="n">address</span><span class="w"> </span><span class="n">?x</span><span class="w"> </span><span class="n">?address</span><span class="p">))</span>
+<span class="c1">; 2. </span>
+<span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">salary</span><span class="w"> </span><span class="p">(</span><span class="n">Bitdiddle</span><span class="w"> </span><span class="n">Ben</span><span class="p">)</span><span class="w"> </span><span class="n">?benamount</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="n">salary</span><span class="w"> </span><span class="n">?person</span><span class="w"> </span><span class="n">?personamount</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="n">lisp-value</span><span class="w"> </span><span class="nb">&lt;</span><span class="w"> </span><span class="n">?personamount</span><span class="w"> </span><span class="n">?benamount</span><span class="p">))</span>
+<span class="c1">; 3.</span>
+<span class="p">(</span><span class="k">and</span><span class="w"> </span><span class="p">(</span><span class="n">supervisor</span><span class="w"> </span><span class="n">?person</span><span class="w"> </span><span class="n">?super</span><span class="p">)</span>
+<span class="w">     </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?super</span><span class="w"> </span><span class="p">(</span><span class="n">?division</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">?type</span><span class="p">))</span>
+<span class="w">     </span><span class="p">(</span><span class="nb">not</span><span class="w"> </span><span class="p">(</span><span class="n">job</span><span class="w"> </span><span class="n">?super</span><span class="w"> </span><span class="p">(</span><span class="n">computer</span><span class="w"> </span><span class="o">.</span><span class="w"> </span><span class="n">?type</span><span class="p">))))</span>
+</code></pre></div>
+
 <h4 id="exercise-457">Exercise 4.57</h4>
 <p>Define a rule that says that
 person 1 can replace person 2 if either person 1 does the same job as person 2

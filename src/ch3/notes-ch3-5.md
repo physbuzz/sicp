@@ -549,25 +549,39 @@ Using the sum of cosine and sine squared as a test case:
 
 Let $S$ be a power series
 (Exercise 3.59) whose constant term is 1.  Suppose we want to find the
-power series ${1 / S$}, that is, the series $X$ such that ${SX = 1$}.
-Write ${S = 1 + S_R$} where $S_R$ is the part of $S$ after the
+power series $1 / S$, that is, the series $X$ such that $SX = 1$.
+Write $S = 1 + S_R$ where $S_R$ is the part of $S$ after the
 constant term.  Then we can solve for $X$ as follows:
 
-$$\begin{eqnarray}
-  S \cdot X           &=&   1, \\
-  (1 + S_R) \cdot X   &=&   1, \\
-  X + S_R \cdot X     &=&   1, \\
-  X                   &=&   1 - S_R \cdot X.
-\end{eqnarray}
-$$
+<div>$$\begin{align*}
+  S \cdot X           &=   1, \\
+  (1 + S_R) \cdot X   &=   1, \\
+  X + S_R \cdot X     &=   1, \\
+  X                   &=   1 - S_R \cdot X.
+\end{align*}$$</div>
 
 In other words, $X$ is the power series whose constant term is 1 and whose
 higher-order terms are given by the negative of $S_R$ times $X$.  Use
-this idea to write a procedure `invert-unit-series` that computes ${1 / S$}
+this idea to write a procedure `invert-unit-series` that computes $1 / S$
 for a power series $S$ with constant term 1.  You will need to use
 `mul-series` from Exercise 3.60.
 
 ##### Solution
+
+It feels like it should be more complicated than this, but this works
+perfectly well!
+
+```rkt
+(defie (invert-unit-series S)
+  (if (not (= 1 (stream-car S)))
+    (error "In invert-unit-series first element is not 1!")
+    (let ((SR (stream-cdr S)))
+      (define X 
+        (cons-stream 1 (negate-series (mul-series SR X))))
+      X)))
+```
+
+@src(code/ex3-61.rkt, collapsed)
 
 #### Exercise 3.62
 
@@ -580,6 +594,25 @@ an error.)  Show how to use `div-series` together with the result of
 Exercise 3.59 to generate the power series for tangent.
 
 ##### Solution
+
+Pretty straightforward:
+
+```rkt
+(define (invert-series S)
+  (if (= 0 (stream-car S))
+    (error "In invert-series first element cannot be 0.")
+    (let ((S0 (stream-car S)))
+      (scale-stream (invert-unit-series (scale-stream S (/ 1 S0)))
+                    (/ 1 S0)))))
+
+(define (div-series S1 S2)
+  (mul-series S1 (invert-series S2)))
+
+(define tan-series
+  (div-series sine-series cosine-series))
+```
+
+@src(code/ex3-62.rkt,collapsed)
 
 #### Exercise 3.63
 
@@ -603,6 +636,25 @@ implementation of `delay` used only `(lambda () ⟨@var{exp}⟩)` without
 using the optimization provided by `memo-proc` (3.5.1)?
 
 ##### Solution
+
+This was quite confusing to me, but here is another way to "sabotage" the original code:
+replace "guesses" with a function.
+
+```rkt
+(define (sqrt-stream x)
+  (define (guesses)
+    (cons-stream 
+     1.0
+     (stream-map (lambda (guess)
+                   (sqrt-improve guess x))
+                 (guesses))))
+  (guesses))
+```
+
+Right, the point here is that every call to `(guesses)` has to build the stream
+again from scratch. Since this is called recursively, that's a big problem! 
+
+
 
 #### Exercise 3.64
 

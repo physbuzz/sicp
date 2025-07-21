@@ -12,6 +12,97 @@
 
 ### Notes
 
+
+#### Confusion on append-to-form
+Definition 4.4 of append:
+
+
+Is this saying that there's an implicit definition of append,
+as... it's the symbol such that
+
+```rkt
+(equal? (append v y) z) 
+=> 
+(equal? (append (cons u v) y) (cons u z))
+```
+
+This definition is bonkers. However it makes more sense in rule notation:
+
+```rkt
+(rule (append-to-form () ?y ?y))
+(rule (append-to-form (?u . ?v) ?y (?u . ?z))
+      (append-to-form ?v ?y ?z))
+```
+
+It's not fair to call this a crazy implicit definition of 
+append-to-form, we can see by how the dotted tail notation 
+pattern is constructed, we're going to consume one element
+of the list `?u` every time something is matched, thereby
+iterating through the list recursively. 
+
+TODO: This would be really fun to do in mathematica. 
+
+#### Comment on "appendo"
+
+The book The Reasoned Schemer goes into detail about 
+relational programming, where I think 
+`append-to-form` is `appendo`? (thanks happyNora!)
+
+
+#### Mathematica Analogy
+
+Basic patterns could be matched like this:
+```mathematica
+; (job ?x (computer programmer))
+facts = {job["Hacker Alyssa P", {computer, programmer}], 
+   address["Hacker Alyssa P", {"Cambridge", {"Mass Ave"}, 78}], 
+   job["Fect Cy D", {computer, programmer}], 
+   address["Fect Cy D", {"Cambridge", {"Ames Street"}, 3}], 
+   job["Foo Bar", {waiter}]};
+Cases[facts, job[p_, {computer, programmer}]]
+
+{job["Hacker Alyssa P", {computer, programmer}], 
+ job["Fect Cy D", {computer, programmer}]}
+```
+
+More complicated stuff gets more complicated, it doesn't match one-to-one.
+Say we want to implement this:
+```rkt
+(and (job ?person (computer programmer))
+     (address ?person ?where))
+```
+
+I couldn't get a solution working using `Cases` or `ReplaceAll`. But two 
+tricks got it to work:
+
+1. The `Orderless` attribute. If a function has this, then by default all
+arguments are sorted into canonical order; but also the behavior of pattern
+matching is changed so that all possible orderings are considered.
+2. `ReplaceList` explicitly tries to list all possible matches, instead of
+trying to find single matches with a list of elements.
+
+With this, we have the working match code. No idea if the algorithmic complexity renders this feasible, sometimes Mathematica's pattern matching is magical enough to make this O(N).
+
+```mathematica
+In[]:= SetAttributes[factBase, Orderless];
+facts = factBase[job["Hacker Alyssa P", {computer, programmer}], 
+   address["Hacker Alyssa P", {"Cambridge", {"Mass Ave"}, 78}], 
+   job["Fect Cy D", {computer, programmer}], 
+   address["Fect Cy D", {"Cambridge", {"Ames Street"}, 3}], 
+   job["Foo Bar", {waiter}]];
+ReplaceList[facts,
+ factBase[
+   address[p_, where_], job[p_, {computer, programmer}], ___]
+  :> {p, where}]
+
+Out[]= {{"Fect Cy D", {"Cambridge", {"Ames Street"}, 
+   3}}, {"Hacker Alyssa P", {"Cambridge", {"Mass Ave"}, 78}}}
+```
+
+
+
+
+
 ### Exercises
 
 #### Exercise 4.55
@@ -27,6 +118,15 @@ the following information from the data base:
 
 ##### Solution
 
+```rkt
+; 1.
+(supervisor ?x (Bitdiddle Ben)) 
+; 2. 
+(job ?name (accounting . ?type))
+; 3.
+(address ?name (Slumerville . ?address))
+```
+
 #### Exercise 4.56
 
 Formulate compound queries that
@@ -41,9 +141,22 @@ salary and Ben Bitdiddle's salary;
 **3.** all people who are supervised by someone who is not in the computer division,
 together with the supervisor's name and job.
 
-
-
 ##### Solution
+
+```rkt
+; 1.
+(and (supervisor ?x (Bitdiddle Ben))
+     (address ?x ?address))
+; 2. 
+(and (salary (Bitdiddle Ben) ?benamount)
+     (salary ?person ?personamount)
+     (lisp-value < ?personamount ?benamount))
+; 3.
+(and (supervisor ?person ?super)
+     (job ?super (?division . ?type))
+     (not (job ?super (computer . ?type))))
+```
+
 
 #### Exercise 4.57
 

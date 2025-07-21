@@ -1,0 +1,47 @@
+```
+#lang sicp
+(equal? '(a b c) (list 'a 'b 'c))
+
+;; 
+(eq? '(a b c) '(a b c))
+
+;; These three are equivalent: 
+nil
+'()
+(list)
+
+;; These are ~equivalent ...?
+'(a b c)
+(quote (a b c))
+(list 'a 'b 'c)
+(list (quote a) (quote b) (quote c))
+```
+
+https://somethingorotherwhatever.com/shunting-yard-animation/
+
+https://practical-scheme.net/gauche/man/gauche-refe/Equality-and-comparison.html
+
+https://www.gnu.org/software/guile/manual/html_node/Equality.html
+
+guile is the GNU implementation of scheme
+" If obj1 and obj2 are both aggregate types, equal? compares its elements recursively."
+you could say scheme is a minimal lisp
+
+
+```
+Scheme Procedure: eq? …
+C Function: scm_eq_p (x, y)
+```
+
+https://github.com/zv/SICP-guile
+
+
+https://static.ias.edu/pitp/archive/2012files/Hamming_CHs1-3.pdf
+
+https://norvig.com/ngrams/
+
+https://news.ycombinator.com/item?id=13918465 - useful links in here! Some of the links are dead but can be accessed with internet archive.
+
+https://github.com/physbuzz/sicp/tree/master/src/_problemsmd
+
+https://www.youtube.com/watch?v=ZtTqRH1uwu4 - mesa college
