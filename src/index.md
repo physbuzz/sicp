@@ -51,4 +51,5 @@
 
 - [1.2 Bonus chapter: Asymptotic Approximations](bonus/1-2-asymptotic-approximations-and-some-notes.html)
 - [2.5 Bonus chapter: Rings and More Polynomial Algorithms (WIP)](bonus/2-5-extra-polynomial-algorithms.html)
+- [4.4 Bonus chapter: Building the Query System from the Ground Up](bonus/4-4-building-queries.html)
 - [bonus notes scratchwork](bonus-notes.html)
