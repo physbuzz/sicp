@@ -8,9 +8,35 @@
 
 @toc
 
+
 ## Section 4.4
 
 ### Notes
+
+#### This chapter, briefly.
+
+The handling of simple queries is just a very straightforward depth-first traversal 
+of the tree with a 
+greedy algorithm that assigns values to the queries as we go. 
+In this case, a greedy algorithm is enough. So this is like a chapter 2 thing.
+
+Compound queries and `not` are just done with filtering and stream gymnastics. 
+So this is like a chapter 3.5 thing. 
+
+The database and indexing work seems like it would be a mutability exercise in chapter
+3. 
+
+And so that really just leaves the unification algorithm and how rules are handled
+-- still reading about that.
+
+
+
+
+
+### Outdated Notes
+
+(I wrote these a while ago and have since come to understand stuff a lot better, so I'll
+need to reread these)
 
 
 #### Confusion on append-to-form
