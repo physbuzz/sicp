@@ -13,21 +13,44 @@
 
 ### Notes
 
-#### This chapter, briefly.
+#### Writing the Unifier
 
-The handling of simple queries is just a very straightforward depth-first traversal 
-of the tree with a 
-greedy algorithm that assigns values to the queries as we go. 
-In this case, a greedy algorithm is enough. So this is like a chapter 2 thing.
+The core algorithm that I struggled with this chapter is `unify-match`
+and its simpler cousin, `pattern-match`.
+These algorithms are nice because they can be studied without the whole
+database system, and they deal with a single frame instead of streams of 
+frames. 
 
-Compound queries and `not` are just done with filtering and stream gymnastics. 
-So this is like a chapter 3.5 thing. 
+Some texts use the word to "expressions" instead of patterns, and "substitutions" instead of frames. 
+Take the following example:
 
-The database and indexing work seems like it would be a mutability exercise in chapter
-3. 
+$$a = 3+(7\times z)$$
+$$b = y+(x\times 2)$$
+$$S = \\{y\mapsto 3, x\mapsto 7, z\mapsto 2\\}$$
 
-And so that really just leaves the unification algorithm and how rules are handled
--- still reading about that.
+We say that $S$ is a unifying substitution for the expressions $a$ and $b,$ 
+because it makes them the same expression. In our syntax
+and terminology, we have two patterns 
+`a` and `b`, and we can call `unify-match` to find a frame that unifies both
+expressions.
+
+```rkt
+(define initial-frame '())
+(define a '(+ 3 (* 7 (? z))))
+(define b '(+ (? y) (* (? x) 2)))
+(define S (unify-match a b initial-frame))
+(display S)
+;; (((? z) . 2) ((? x) . 7) ((? y) . 3))
+```
+
+I'm fairly certain that the algorithm for `unify-match` is the same as described in
+Robinson 1965, A Machine-Oriented Logic Based on the Resolution Principle, section 5.8. However
+it's pretty old-school and hard to read. A better way to construct the algorithm is to 
+first implement `pattern-match`, where one argument is a pattern and the second is a data with no 
+pattern avriables in it, and then extend the algorithm bit by bit until we have handled all of the 
+possible cases.
+
+There are some very weird cases, so it's impressive to me that a general unifier can be written. 
 
 
 

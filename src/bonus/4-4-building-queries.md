@@ -244,9 +244,84 @@ we need.
 ### 1.5. Input-output-driver for compound queries
 @src(code/4-4-compound-queries.rkt,collapsed)
 
-## Rules and Unification
+## 2. Rules and Unification
 
-###
+### 2.1 Unification (Extending Simple Pattern Matching)
+
+We defined `(pattern-match pat dat frame)` in section 1.2 of this note.
+Now, we allow `dat` to also be a pattern. So our new function will be
+more complicated but a bit more symmetric, `(unify-match p1 p2 frame)`.
+
+
+
+If we imagine performing a match where one of `p1` or `p2` contain no
+pattern variables, then the behavior is exactly like `pattern-match`.
+Therefore, we want the following behavior:
+
+```rkt
+(display 
+  (unify-match '(+ (? x) (* 5 4)) '(+ 3 (* 5 4)) '()))
+;; (((? x) . 3))
+(display 
+  (unify-match '(+ 3 (* 5 4)) '(+ 3 (* 5 (? w))) '()))
+;; (((? w) . 4))
+```
+
+It's very easy to write this in a way such that the generic case 
+with non-conflicting patterns on both sides is handled correctly. Just like
+`query-pattern`, we do a depth first search from left-to-right.
+
+```rkt
+(display 
+  (unify-match '(+ (? x) (* (? y) 4)) '(+ 3 (* 5 (? w))) '()))
+;; (((? w) . 4) ((? y) . 5) ((? x) . 3))
+```
+
+Now, the slightly clever stuff, we also handle cases where 
+the substitution values are themselves variables.
+
+```rkt
+(display 
+  (unify-match '(+ (? x) (* (? y) 4)) 
+               '(+ 3 (* (? z) (? w))) '()))
+;; (((? w) . 4) ((? y) ? z) ((? x) . 3))
+
+(display 
+  (unify-match '(+ (? x) (* (? y) 4)) 
+               '(+ 3 (* (? y) (? w))) '()))
+;; (((? w) . 4) ((? x) . 3))
+
+(display 
+  (unify-match '(+ (? x) (* 5 (? y))) 
+               '(+ (f (? y)) (* 5 4)) '()))
+;; (((? y) . 4) ((? x) f (? y)))
+```
+
+In the third example, note that the `instantiate` function handles the rule
+substitution properly.
+
+There are cases where the left-to-right 
+
+```
+(display 
+  (unify-match '(+ (f (? x)) (* 5 (? x))) 
+               '(+ (? y) (* 5 4)) '()))
+;; (((? x) . 4) ((? y) f (? x)))
+
+(display 
+  (unify-match '(+ (? x) (* (? y) (? z))) 
+               '(+ (? z) (* (? x) (? y))) '()))
+;; (((? y) ? z) ((? x) ? z))
+```
+
+
+
+The goal of `unify-match` is to find a frame
+extension that makes both patterns equal to each other,  
+
+
+`(define 
+
 
 ###
 

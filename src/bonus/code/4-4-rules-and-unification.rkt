@@ -639,9 +639,47 @@
 
 (build-database)
 
-(display-stream
- (run-query 
-  '(lives-near ?x (Bitdiddle Ben))))
-(run-query 
-  '(lives-near ?x (Bitdiddle Ben)))
+;; (display-stream
+;;  (run-query 
+;;   '(lives-near ?x (Bitdiddle Ben))))
+;; (run-query 
+;;   '(lives-near ?x (Bitdiddle Ben)))
+
+;;(display (unify-match '(+ (? x) (* (? y) 4)) '(+ 3 (* (? y) (? w))) '()))
+(define testp1 '(+ (? x) (* 5 (? y))))
+(define testp2 '(+ (f (? y)) (* 5 4)))
+(define testframe (unify-match '(+ (? x) (* 5 (? y))) '(+ (f (? y)) (* 5 4)) '()))
+(newline)
+(display (instantiate testp1 testframe 
+ (lambda (v f)
+   (contract-question-mark v))))
+(newline)
+(display (instantiate testp2 testframe 
+ (lambda (v f)
+   (contract-question-mark v))))
+(newline)
+
+(define (display-unify-instantiate p1 p2)
+  (define func (lambda (v f)
+    (contract-question-mark v)))
+  (let ((frame (unify-match p1 p2 '())))
+    (display "unified frame: ") (display frame) (newline)
+    
+    (display "instantiated pattern 1: ") 
+    (display (instantiate p1 frame func)) (newline)
+    (display "instantiated pattern 2: ") 
+    (display (instantiate p2 frame func)) (newline)))
+
+(display-unify-instantiate '(+ (? x) (* 5 (? y))) '(+ (f (? y)) (* 5 4)))
+
+(newline)(newline)
+(display (unify-match '(+ (? x) (* 5 (? y))) '(+ (f (? y)) (* 5 4)) '()))
+;; (((? y) . 4) ((? x) f (? y)))
+(newline)
+(display (unify-match '(+ (f (? x)) (* 5 (? x))) '(+ (? y) (* 5 4)) '()))
+;; (((? x) . 4) ((? y) f (? x)))
+(newline)
+(display (unify-match '(+ (? x) (* (? y) (? z))) '(+ (? z) (* (? x) (? y))) '()))
+;; (((? y) ? z) ((? x) ? z))
+(newline)
 (display "done")
