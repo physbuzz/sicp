@@ -632,7 +632,7 @@ straightforward way, without the local variable `guesses`:
 Alyssa P. Hacker replies that this version of the procedure is considerably
 less efficient because it performs redundant computation.  Explain Alyssa's
 answer.  Would the two versions still differ in efficiency if our
-implementation of `delay` used only `(lambda () ⟨@var{exp}⟩)` without
+implementation of `delay` used only `(lambda () ⟨exp⟩)` without
 using the optimization provided by `memo-proc` (3.5.1)?
 
 ##### Solution
@@ -672,6 +672,18 @@ to a given tolerance by
 
 ##### Solution
 
+```rkt
+(define (stream-limit stream tol)
+  (define (iter str last-elem)
+    (let ((this-elem (stream-car str)))
+      (if (< (abs (- this-elem last-elem)) tol) 
+        this-elem
+        (iter (stream-cdr str) this-elem))))
+  (iter (stream-cdr stream) (stream-car stream)))
+```
+
+@src(code/ex3-64.rkt,collapsed)
+
 #### Exercise 3.65
 
 Use the series
@@ -683,8 +695,17 @@ to compute three sequences of approximations to the natural logarithm of 2, in
 the same way we did above for $\pi$.  How rapidly do these sequences
 converge?
 
+
 ##### Solution
 
+Very trivial modifications of the pi code above. Note the exact value to 
+sixteen places is
+
+$$\ln(2)=0.6931471805599453\ldots$$
+
+We get 12 digits of accuracy after 6 steps (excluding the first 0).
+
+@src(code/ex3-65.rkt,collapsed)
 #### Exercise 3.66
 
 Examine the stream `(pairs
@@ -696,11 +717,60 @@ more qualitative answers if you find yourself getting bogged down.)
 
 ##### Solution
 
+It's easier to look at a grid. In the following grid, the value placed at row i and column j is the 
+position in the sequence where the pair $(i,j)$ occurs. 
+
+<div>$$\begin{array}{c|cccccc}
+i\overset{\LARGE\setminus}{\phantom{.}}\overset{\Large j}{\phantom{l}} 
+    & 1 & 2 & 3 & 4 & 5 & 6 \\ 
+\hline
+1 & 1 & 2 & 4 & 6 & 8 & 10\\
+2 &   & 3 & 5 & 9 & 13 & 17\\
+3 &   &   & 7 & 11 & 19 & 27\\
+4 &   &   &   & 15 & 23 & 39\\
+5 &   &   &   &    & 31 & 47\\
+6 &   &   &   &    &    & 63\\
+\end{array}$$</div>
+
+<!-- 
+bigger version:
+\left(
+\begin{array}{cccccccccc}
+ 1 & 2 & 4 & 6 & 8 & 10 & 12 & 14 & 16 & 18 \\
+ 0 & 3 & 5 & 9 & 13 & 17 & 21 & 25 & 29 & 33 \\
+ 0 & 0 & 7 & 11 & 19 & 27 & 35 & 43 & 51 & 59 \\
+ 0 & 0 & 0 & 15 & 23 & 39 & 55 & 71 & 87 & 103 \\
+ 0 & 0 & 0 & 0 & 31 & 47 & 79 & 111 & 143 & 175 \\
+ 0 & 0 & 0 & 0 & 0 & 63 & 95 & 159 & 223 & 287 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 127 & 191 & 319 & 447 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 0 & 255 & 383 & 639 \\
+ 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 511 & 767 \\
+\end{array}
+\right)
+-->
+
+We immediately see some patterns:
+
+1. The main diagonal is of the form $2^i-1.$
+2. Each row $i$ follows the pattern: Start at $2^i-1$, skip $2^{i-1}$ once, then skip $2^{i}$ each time afterwards.
+
+For example row 4 starts at $2^4-1=15,$ then skips by $2^3=8$ to $23,$ then thereafter skips by $2^4=16$ to $39,$ then
+$55,$ then $71$ and so on. So we can answer with general $N:$
+
+1. The pair $(1,N)$ is preceded by $2N-3$ elements.
+2. The pair $(N,N)$ is preceded by $2^N-2$ elements.
+3. The pair $(N-1,N)$ is preceded by $2^{N-1}+2^{N-2}-2$ elements.
+
+For $N=100$ these are $197,$ $1.27\times 10^{30},$ and $9.5\times 10^{29}$ respectively (of course this answer isn't a proof).
+
+@src(code/ex3-66.rkt,collapsed)
+
+
 #### Exercise 3.67
 
 Modify the `pairs` procedure
 so that `(pairs integers integers)` will produce the stream of *all*
-pairs of integers ${(i, j)$} (without the condition ${i \le j$}).  Hint:
+pairs of integers $(i, j)$(without the condition $i \le j$).  Hint:
 You will need to mix in an additional stream.
 
 ##### Solution
@@ -709,7 +779,7 @@ You will need to mix in an additional stream.
 
 Louis Reasoner thinks that
 building a stream of pairs from three parts is unnecessarily complicated.
-Instead of separating the pair ${(S_0, T_0)$} from the rest of the pairs in
+Instead of separating the pair $(S_0, T_0)$ from the rest of the pairs in
 the first row, he proposes to work with the whole first row, as follows:
 
 ```rkt
@@ -732,10 +802,10 @@ integers)` using Louis's definition of `pairs`.
 
 Write a procedure `triples`
 that takes three infinite streams, $S$, $T$, and $U$, and produces the
-stream of triples ${(S_i, T_j, U_k)$} such that ${i \le j \le k$}.  
+stream of triples $(S_i, T_j, U_k)$ such that $i \le j \le k$.  
 Use `triples` to generate the stream of all Pythagorean
-triples of positive integers, i.e., the triples ${(i, j, k)$} such that
-${i \le j$} and ${i^2 + j^2 = k^2$}.
+triples of positive integers, i.e., the triples $(i, j, k)$ such that
+$i \le j$ and $i^2 + j^2 = k^2$.
 
 ##### Solution
 
@@ -745,10 +815,10 @@ It would be nice to be able to
 generate streams in which the pairs appear in some useful order, rather than in
 the order that results from an *ad hoc* interleaving process.  We can use
 a technique similar to the `merge` procedure of Exercise 3.56, if we
-define a way to say that one pair of integers is ``less than'' another.  One
-way to do this is to define a ``weighting function'' ${W(i, j)$} and
-stipulate that ${(i_1, j_1)$} is less than ${(i_2, j_2)$} if
-${W(i_1, j_1) \lt$ {W(i_2, j_2)}}.  Write a procedure
+define a way to say that one pair of integers is "less than" another.  One
+way to do this is to define a "weighting function" $W(i, j)$ and
+stipulate that $(i_1, j_1)$ is less than $(i_2, j_2)$ if
+$W(i_1, j_1) \lt W(i_2, j_2)$.  Write a procedure
 `merge-weighted` that is like `merge`, except that
 `merge-weighted` takes an additional argument `weight`, which is a
 procedure that computes the weight of a pair, and is used to determine the
@@ -758,14 +828,12 @@ stream.  Using this, generalize `pairs` to a procedure
 computes a weighting function, and generates the stream of pairs, ordered
 according to weight.  Use your procedure to generate
 
-**1.** the stream of all pairs of positive integers ${(i, j)$} with ${i \le j$}
-ordered according to the sum ${i + j$},
+**1.** the stream of all pairs of positive integers $(i, j)$ with $i \le j$
+ordered according to the sum $i + j,$
 
-**2.** the stream of all pairs of positive integers ${(i, j)$} with ${i \le j$},
+**2.** the stream of all pairs of positive integers $(i, j)$ with $i \le j,$
 where neither $i$ nor $j$ is divisible by 2, 3, or 5, and the pairs are
-ordered according to the sum ${2i + 3j + 5ij$}.
-
-
+ordered according to the sum $2i + 3j + 5ij.$
 
 ##### Solution
 
@@ -777,10 +845,10 @@ Ramanujan numbers, in honor of the mathematician Srinivasa
 Ramanujan. Ordered streams of pairs provide an elegant
 solution to the problem of computing these numbers.  To find a number that can
 be written as the sum of two cubes in two different ways, we need only generate
-the stream of pairs of integers ${(i, j)$} weighted according to the sum
-${i^3 + j^3$} (see Exercise 3.70), then search the stream for two
+the stream of pairs of integers $(i, j)$ weighted according to the sum
+$i^3 + j^3$ (see Exercise 3.70), then search the stream for two
 consecutive pairs with the same weight.  Write a procedure to generate the
-Ramanujan numbers.  The first such number is 1,729.  What are the next five?
+Ramanujan numbers.  The first such number is $1729.$  What are the next five?
 
 ##### Solution
 
@@ -802,17 +870,12 @@ The voltage response $v$ of the circuit to an injected current $i$ is
 determined by the formula in Figure 3.33, whose structure is shown by the
 accompanying signal-flow diagram.
 
-@float
-@anchor{Figure 3.33}
-
-@iftex
-![Image: fig/chap3/Fig3.33a,125mm,,,.std.svg](/images/sicp/fig/chap3/Fig3.33a,125mm,,,.std.svg.png)
-@caption{@strong{Figure 3.33:} An RC circuit and the associated signal-flow diagram.}
-
-
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/fig3-33.png" style="width: 70%; max-width: 800px;" alt="Figure 3.33: An RC circuit and the associated signal-flow diagram.">
+</div>
 
 Write a procedure `RC` that models this circuit.  `RC` should take as
-inputs the values of $R$, $C$, and ${dt$} and should return a procedure
+inputs the values of $R$, $C$, and $\text{d}t$ and should return a procedure
 that takes as inputs a stream representing the current $i$ and an initial
 value for the capacitor voltage $v_0$ and produces as output the stream of
 voltages $v$.  For example, you should be able to use `RC` to model an
@@ -828,22 +891,22 @@ initial capacitor voltage and produces the output stream of voltages.
 Alyssa P. Hacker is designing a
 system to process signals coming from physical sensors.  One important feature
 she wishes to produce is a signal that describes the zero crossings
-of the input signal.  That is, the resulting signal should be ${+1$} whenever the
-input signal changes from negative to positive, ${-1$} whenever the input signal
+of the input signal.  That is, the resulting signal should be $+1$ whenever the
+input signal changes from negative to positive, $-1$ whenever the input signal
 changes from positive to negative, and $0$ otherwise.  (Assume that the sign of a
 $0$ input is positive.)  For example, a typical input signal with its associated
 zero-crossing signal would be
 
 ```rkt
-@r{…} 1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4 @r{…}
-@r{…} 0 0  0  0  0   -1   0  0  0   0   1  0 0 @r{…}
+… 1 2 1.5 1 0.5 -0.1 -2 -3 -2 -0.5 0.2 3 4 …
+… 0 0  0  0  0   -1   0  0  0   0   1  0 0 …
 ```
 
 In Alyssa's system, the signal from the sensor is represented as a stream
 `sense-data` and the stream `zero-crossings` is the corresponding
 stream of zero crossings.  Alyssa first writes a procedure
 `sign-change-detector` that takes two values as arguments and compares the
-signs of the values to produce an appropriate $0$, $1$, or ${-1$}.  She then
+signs of the values to produce an appropriate $0$, $1$, or $-1$.  She then
 constructs her zero-crossing stream as follows:
 
 ```rkt
@@ -869,10 +932,10 @@ version of `stream-map` from Exercise 3.50:
 (define zero-crossings
   (stream-map sign-change-detector 
               sense-data 
-              ⟨@var{expression}⟩))
+              ⟨expression⟩))
 ```
 
-Complete the program by supplying the indicated `⟨`@var{expression}`⟩`.
+Complete the program by supplying the indicated `⟨expression⟩`.
 
 ##### Solution
 
@@ -959,12 +1022,12 @@ differential equation
 $$\frac{d^2 y}{dt^2} - {a \frac{dy}{dt}} - {by} \,=\, {0.}  $$
 
 The output stream, modeling $y$, is generated by a network that contains a
-loop. This is because the value of ${d^2 y / dt^2$} depends upon the
-values of $y$ and ${dy / dt$} and both of these are determined by
-integrating ${d^2 y / dt^2$}.  The diagram we would like to encode is
+loop. This is because the value of $d^2 y / dt^2$ depends upon the
+values of $y$ and $dy / dt$ and both of these are determined by
+integrating $d^2 y / dt^2$.  The diagram we would like to encode is
 shown in Figure 3.35.  Write a procedure `solve-2nd` that takes as
-arguments the constants $a$, $b$, and ${dt$} and the initial values
-$y_0$ and ${dy_0$} for $y$ and ${dy / dt$} and generates the
+arguments the constants $a$, $b$, and $dt$ and the initial values
+$y_0$ and $dy_0$ for $y$ and $dy / dt$ and generates the
 stream of successive values of $y$.
 
 ##### Solution
@@ -973,8 +1036,8 @@ stream of successive values of $y$.
 
 Generalize the `solve-2nd`
 procedure of Exercise 3.78 so that it can be used to solve general
-second-order differential equations ${d^2 y / dt^2$ =
-{f(dy / dt, y)}}.
+second-order differential equations $d^2 y / dt^2 =
+f(dy / dt, y)$.
 
 ##### Solution
 
@@ -1022,7 +1085,7 @@ shown in Figure 3.37.
 
 Exercise 3.6 discussed
 generalizing the random-number generator to allow one to reset the
-random-number sequence so as to produce repeatable sequences of ``random''
+random-number sequence so as to produce repeatable sequences of random
 numbers.  Produce a stream formulation of this same generator that operates on
 an input stream of requests to `generate` a new random number or to
 `reset` the sequence to a specified value and that produces the desired
