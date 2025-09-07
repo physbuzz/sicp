@@ -775,6 +775,56 @@ You will need to mix in an additional stream.
 
 ##### Solution
 
+
+In my solution, we have the same chunks as in the table of 
+`(s0 t0)` values. The top left is this:
+
+```rkt
+(list (stream-car s) (stream-car t))
+```
+
+The top-right row piece is
+
+```rkt
+(stream-map (lambda (x)
+              (list (stream-car s) x))
+            (stream-cdr t))
+```
+
+
+The recursive bottom-right grid is this:
+```rkt
+(pairs (stream-cdr s) (stream-cdr t))))))
+```
+
+But now we have to include a bottom-left column consisting of all
+pairs `(sn, t0)`:
+```rkt
+(stream-map (lambda (y)
+                    (list y (stream-car t)))
+                  (stream-cdr s))
+```
+
+We just interleave them together to get the result:
+
+```rkt
+(define (pairs-all s t)
+  (cons-stream
+   (list (stream-car s) (stream-car t))
+   (interleave 
+    (stream-map (lambda (y)
+                        (list y (stream-car t)))
+                      (stream-cdr s))
+     (interleave
+      (stream-map (lambda (x)
+                    (list (stream-car s) x))
+                  (stream-cdr t))
+      (pairs (stream-cdr s) (stream-cdr t))))))
+
+(display-stream-first-n (pairs-all integers integers) 16)
+```
+@src(code/ex3-67.rkt,collapsed)
+
 #### Exercise 3.68
 
 Louis Reasoner thinks that
@@ -798,6 +848,13 @@ integers)` using Louis's definition of `pairs`.
 
 ##### Solution
 
+The difference is that if we have a recursive call to get the next 
+elements of the stream, we need to make sure the next elements are `delay`ed. 
+With Louis's version, the call to `pairs` is evaluated immediately.
+
+One could imagine a version of `interleave` that uses a special form which
+ delays its second argument, and if we did that Louis's approach would work.
+
 #### Exercise 3.69
 
 Write a procedure `triples`
@@ -808,6 +865,80 @@ triples of positive integers, i.e., the triples $(i, j, k)$ such that
 $i \le j$ and $i^2 + j^2 = k^2$.
 
 ##### Solution
+
+It's a bit harder to draw the 3D version of our table, but I did my best:
+
+<div style="text-align: center; margin: 20px 0;">
+  <img src="img/stu-optimized.gif" style="width: 70%; max-width: 800px;" alt="Visualization of the different pieces we're chopping our pairs into.">
+</div>
+
+<!-- 
+test[s_, t_, u_] := 
+  If[Not[s <= t <= u], 0, 
+   If[s == t == u == 1, 1, If[s == 1 && t == 1, 2, If[s == 1, 3, 4]]]];
+plt[interp_] := 
+  ArrayPlot3D[Array[test, {5, 5, 5}], Axes -> True, 
+   AxesLabel -> {"u", "t", "s"}, 
+   ColorRules -> {1 -> Green, 2 -> Blue, 3 -> Red, 4 -> Purple}, 
+   SphericalRegion -> True, 
+   ViewPoint -> { 2 Cos[interp 2 Pi], 2 Sin[interp 2 Pi], 2}];
+(* 
+Manipulate[plt[interp],{interp,0,1}] *)
+nframes = 360;
+fps = 60;
+resolution = 400;
+frames = ParallelTable[
+   Rasterize[plt[interp], ImageSize -> {resolution, resolution}],
+   {interp, 0, 1 - 1/nframes, 1/nframes}];
+Export["stu.gif", frames, "AnimationRepetitions" -> Infinity, 
+ "DisplayDurations" -> 1/fps, ImageSize -> {resolution, resolution}]
+
+-->
+
+The idea is that we now interleave the pieces one-by-one. The green cube is 
+just a single element, and the others (a line, a triangle, and a tetrahedron) 
+have to be constructed specifically. This also should give us an idea of how 
+to generalize if we wanted n-tuples.
+
+```rkt
+(define (triples s t u)
+  (cons-stream
+   ; Green single element
+   (list (stream-car s) (stream-car t) (stream-car u))
+   (interleave
+    ; Blue 1D list
+    (stream-map (lambda (x)
+                  (list (stream-car s) (stream-car t) x))
+                (stream-cdr u))
+    (interleave 
+      ; Red triangle
+      (stream-map (lambda (x)
+                    (cons (stream-car s) x))
+                  (pairs (stream-cdr t) (stream-cdr u)))
+      ; Purple simplex
+      (triples (stream-cdr s) (stream-cdr t) (stream-cdr u))))))
+```
+
+
+We might wonder where the tuple `(N N N)` occurs. After some investigation,
+I find (empirically) it occurs at position $(4^N-1)/3$ in the list.
+
+@src(code/ex3-69.rkt,collapsed)
+
+
+For enumerating pythagorean triples, this takes a super long time but 
+we can enumerate the first three that we find:
+
+```rkt
+(display-stream-first-n 
+  (stream-filter (lambda (x) 
+    (let ((a (car x))
+          (b (cadr x))
+          (c (caddr x)))
+      (= (+ (square a) (square b)) (square c))))
+  (triples integers integers integers)) 3)
+```
+@src(code/ex3-69-2.rkt,collapsed)
 
 #### Exercise 3.70
 
@@ -837,6 +968,58 @@ ordered according to the sum $2i + 3j + 5ij.$
 
 ##### Solution
 
+The key code is this:
+```rkt
+(define (merge-weighted s1 s2 W)
+  (cond ((stream-null? s1) s2)
+        ((stream-null? s2) s1)
+        (else
+         (let ((s1car (stream-car s1))
+               (s2car (stream-car s2)))
+           (cond ((<= (W s1car) (W s2car))
+                  (cons-stream 
+                   s1car 
+                   (merge-weighted (stream-cdr s1) 
+                                   s2 
+                                   W)))
+                 (else
+                  (cons-stream 
+                   s2car 
+                   (merge-weighted s1 
+                                   (stream-cdr s2)
+                                   W))))))))
+
+(define (weighted-pairs s t W)
+  (cons-stream
+   (list (stream-car s) (stream-car t))
+   (merge-weighted
+    (stream-map (lambda (x)
+                  (list (stream-car s) x))
+                (stream-cdr t))
+    (weighted-pairs (stream-cdr s) (stream-cdr t) W) 
+    W)))
+
+(define my-not-divisible
+  (stream-filter 
+    (lambda (i) 
+      (and (not (= 0 (remainder i 2)))
+           (not (= 0 (remainder i 3)))
+           (not (= 0 (remainder i 5))))) integers))
+
+(display-line "Integers sorted by i+j")
+(display-stream-first-n (weighted-pairs integers integers
+  (lambda (x) (let ((i (car x)) (j (cadr x))) 
+    (+ i j)))) 10)
+
+(display-line "Integers with weird rules:")
+
+(display-stream-first-n (weighted-pairs my-not-divisible my-not-divisible
+  (lambda (x) (let ((i (car x)) (j (cadr x))) 
+    (+ (* 2 i) (* 3 j) (* 5 i j))))) 20)
+```
+
+@src(code/ex3-70.rkt,collapsed)
+
 #### Exercise 3.71
 
 Numbers that can be expressed as
@@ -852,6 +1035,41 @@ Ramanujan numbers.  The first such number is $1729.$  What are the next five?
 
 ##### Solution
 
+First we generate a stream of consecutive pairs, then 
+we filter the stream to check if any have equal weights.
+
+```rkt
+(define (cube x) (* x x x))
+(define (my-W x) 
+  (let ((i (car x)) (j (cadr x))) 
+    (+ (cube i) (cube j))))
+(define cube-sorted-stream 
+  (weighted-pairs integers integers my-W))
+
+(define (walking-pairs s)
+  (let* ((s0 (stream-car s))
+         (s-rest (stream-cdr s))
+         (s1 (stream-car s-rest)))
+    (cons-stream (list s0 s1) (walking-pairs s-rest))))
+(define ramanujan-stream
+  (stream-filter 
+        (lambda (x)
+          (= (my-W (car x)) (my-W (cadr x))))
+        (walking-pairs cube-sorted-stream)))
+
+(define (display-n-with-weight s n W)
+  (if (and (not (stream-null? s)) (> n 0))
+    (begin 
+      (display (stream-car s))
+      (display " : Weight = ")
+      (display (W (stream-car s))) (newline)
+      (display-n-with-weight (stream-cdr s) (- n 1) W))))
+
+(display-n-with-weight ramanujan-stream 6 (lambda (x) (my-W (car x))))
+```
+
+@src(code/ex3-71.rkt,collapsed)
+
 #### Exercise 3.72
 
 In a similar way to Exercise 3.71 
@@ -859,6 +1077,33 @@ generate a stream of all numbers that can be written as the sum of two
 squares in three different ways (showing how they can be so written).
 
 ##### Solution
+
+```rkt
+(define (my-W x) 
+  (let ((i (car x)) (j (cadr x))) 
+    (+ (square i) (square j))))
+(define square-sorted-stream 
+  (weighted-pairs integers integers my-W))
+
+(define (walking-triples s)
+  (let* ((s0 (stream-car s))
+         (s-rest (stream-cdr s))
+         (s1 (stream-car s-rest))
+         (s-rest-rest (stream-cdr s-rest))
+         (s2 (stream-car s-rest-rest)))
+    (cons-stream (list s0 s1 s2) (walking-triples s-rest))))
+
+(define problem-72-stream
+  (stream-filter 
+        (lambda (x)
+          (and (= (my-W (car x)) (my-W (cadr x)))
+               (= (my-W (cadr x)) (my-W (caddr x)))))
+        (walking-triples square-sorted-stream)))
+
+(display-n-with-weight problem-72-stream 10 (lambda (x) (my-W (car x))))
+```
+@src(code/ex3-72.rkt,collapsed)
+
 
 #### Exercise 3.73
 
@@ -885,6 +1130,22 @@ procedure that takes a stream representing the time sequence of currents and an
 initial capacitor voltage and produces the output stream of voltages.
 
 ##### Solution
+
+Not too bad, here it is with a constant current input $i=1.$
+```rkt
+(define (RC R C dt)
+  (lambda (i v0)
+    (let ((cap-voltage 
+        (stream-map (lambda (x) (+ x v0)) (scale-stream (integral i 0 dt) (/ 1.0 C))))
+          (resistor-voltage (scale-stream i R)))
+      (add-streams cap-voltage resistor-voltage))))
+
+
+(define RC1 (RC 5 1 0.5))
+(display-stream-first-n (RC1 (constant-stream 1) 1.0) 10)
+```
+
+@src(code/ex3-73.rkt,collapsed)
 
 #### Exercise 3.74
 
