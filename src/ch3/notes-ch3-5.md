@@ -783,7 +783,7 @@ In my solution, we have the same chunks as in the table of
 (list (stream-car s) (stream-car t))
 ```
 
-The top-right row piece is
+The top-right row of all `(s0 tn)` pairs is is
 
 ```rkt
 (stream-map (lambda (x)
@@ -792,9 +792,9 @@ The top-right row piece is
 ```
 
 
-The recursive bottom-right grid is this:
+The recursive bottom-right part of all `(sn tn)` pairs with $n\ge 1$ is this:
 ```rkt
-(pairs (stream-cdr s) (stream-cdr t))))))
+(pairs (stream-cdr s) (stream-cdr t))
 ```
 
 But now we have to include a bottom-left column consisting of all

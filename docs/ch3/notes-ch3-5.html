@@ -2867,14 +2867,14 @@ You will need to mix in an additional stream.</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">t</span><span class="p">))</span>
 </code></pre></div>
 
-<p>The top-right row piece is</p>
+<p>The top-right row of all <code>(s0 tn)</code> pairs is is</p>
 <div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="nb">stream-map</span><span class="w"> </span><span class="p">(</span><span class="k">lambda</span><span class="w"> </span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
 <span class="w">              </span><span class="p">(</span><span class="nb">list</span><span class="w"> </span><span class="p">(</span><span class="n">stream-car</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="n">x</span><span class="p">))</span>
 <span class="w">            </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">t</span><span class="p">))</span>
 </code></pre></div>
 
-<p>The recursive bottom-right grid is this:</p>
-<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">pairs</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">t</span><span class="p">))</span><span class="err">))))</span>
+<p>The recursive bottom-right part of all <code>(sn tn)</code> pairs with $n\ge 1$ is this:</p>
+<div class="codehilite"><pre><span></span><code><span class="p">(</span><span class="n">pairs</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">s</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">stream-cdr</span><span class="w"> </span><span class="n">t</span><span class="p">))</span>
 </code></pre></div>
 
 <p>But now we have to include a bottom-left column consisting of all
